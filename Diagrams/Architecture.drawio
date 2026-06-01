@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mxfile host="app.diagrams.net" agent="SmartMed" version="24.0.0" type="device">
+  <diagram id="architecture" name="SmartMed Architecture">
+    <mxGraphModel dx="1200" dy="800" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1200" pageHeight="1100" math="0" shadow="0" background="none">
+      <root>
+        <mxCell id="0"/>
+        <mxCell id="1" parent="0"/>
+        <mxCell id="title" value="&lt;b&gt;SmartMed — Layered Software Architecture&lt;/b&gt;&lt;br&gt;C# .NET Framework | Windows Forms | Local data store" style="text;html=1;strokeColor=none;fillColor=none;align=center;fontSize=14;" vertex="1" parent="1">
+          <mxGeometry x="200" y="10" width="800" height="40" as="geometry"/>
+        </mxCell>
+        <mxCell id="layer_ui" value="Presentation Layer — Windows Forms (separate Admin &amp;amp; Customer UI)" style="swimlane;startSize=32;fillColor=#dae8fc;strokeColor=#6c8ebf;fontStyle=1;html=1;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="40" y="60" width="1120" height="200" as="geometry"/>
+        </mxCell>
+        <mxCell id="ui_login" value="LoginForm" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#6c8ebf;" vertex="1" parent="layer_ui">
+          <mxGeometry x="30" y="50" width="110" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="ui_admin_dash" value="AdminDashboardForm" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#6c8ebf;" vertex="1" parent="layer_ui">
+          <mxGeometry x="155" y="50" width="140" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="ui_med" value="MedicineManagementForm" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#6c8ebf;" vertex="1" parent="layer_ui">
+          <mxGeometry x="310" y="50" width="160" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="ui_cust_admin" value="CustomerManagementForm" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#6c8ebf;" vertex="1" parent="layer_ui">
+          <mxGeometry x="485" y="50" width="160" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="ui_orders_admin" value="OrderManagementForm" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#6c8ebf;" vertex="1" parent="layer_ui">
+          <mxGeometry x="660" y="50" width="150" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="ui_reports" value="ReportsForm" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#6c8ebf;" vertex="1" parent="layer_ui">
+          <mxGeometry x="825" y="50" width="110" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="ui_reg" value="RegisterForm" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#6c8ebf;" vertex="1" parent="layer_ui">
+          <mxGeometry x="30" y="120" width="110" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="ui_search" value="MedicineSearchForm" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#6c8ebf;" vertex="1" parent="layer_ui">
+          <mxGeometry x="155" y="120" width="140" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="ui_cart" value="CartForm" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#6c8ebf;" vertex="1" parent="layer_ui">
+          <mxGeometry x="310" y="120" width="100" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="ui_track" value="OrderTrackingForm" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#6c8ebf;" vertex="1" parent="layer_ui">
+          <mxGeometry x="425" y="120" width="140" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="ui_profile" value="ProfileForm" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#6c8ebf;" vertex="1" parent="layer_ui">
+          <mxGeometry x="580" y="120" width="110" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="ui_nav" value="Navigation / Menu" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;dashed=1;" vertex="1" parent="layer_ui">
+          <mxGeometry x="950" y="85" width="140" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="layer_svc" value="Business / Service Layer" style="swimlane;startSize=32;fillColor=#d5e8d4;strokeColor=#82b366;fontStyle=1;html=1;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="40" y="290" width="1120" height="160" as="geometry"/>
+        </mxCell>
+        <mxCell id="svc_auth" value="AuthService" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#82b366;" vertex="1" parent="layer_svc">
+          <mxGeometry x="30" y="50" width="110" height="45" as="geometry"/>
+        </mxCell>
+        <mxCell id="svc_med" value="MedicineService" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#82b366;" vertex="1" parent="layer_svc">
+          <mxGeometry x="155" y="50" width="120" height="45" as="geometry"/>
+        </mxCell>
+        <mxCell id="svc_cust" value="CustomerService" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#82b366;" vertex="1" parent="layer_svc">
+          <mxGeometry x="290" y="50" width="120" height="45" as="geometry"/>
+        </mxCell>
+        <mxCell id="svc_order" value="OrderService" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#82b366;" vertex="1" parent="layer_svc">
+          <mxGeometry x="425" y="50" width="110" height="45" as="geometry"/>
+        </mxCell>
+        <mxCell id="svc_report" value="ReportService" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#82b366;" vertex="1" parent="layer_svc">
+          <mxGeometry x="550" y="50" width="110" height="45" as="geometry"/>
+        </mxCell>
+        <mxCell id="svc_search" value="SearchService&lt;br&gt;(linear / filter / sort)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#82b366;" vertex="1" parent="layer_svc">
+          <mxGeometry x="675" y="45" width="140" height="55" as="geometry"/>
+        </mxCell>
+        <mxCell id="svc_promo" value="PromotionService" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#82b366;dashed=1;" vertex="1" parent="layer_svc">
+          <mxGeometry x="830" y="50" width="120" height="45" as="geometry"/>
+        </mxCell>
+        <mxCell id="svc_export" value="ExportService&lt;br&gt;(PDF / Excel)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#82b366;dashed=1;" vertex="1" parent="layer_svc">
+          <mxGeometry x="965" y="45" width="120" height="55" as="geometry"/>
+        </mxCell>
+        <mxCell id="layer_domain" value="Domain Model Layer (core OOP entities)" style="swimlane;startSize=32;fillColor=#fff2cc;strokeColor=#d6b656;fontStyle=1;html=1;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="40" y="480" width="1120" height="130" as="geometry"/>
+        </mxCell>
+        <mxCell id="mod_med" value="Medicine" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#d6b656;fontStyle=1;" vertex="1" parent="layer_domain">
+          <mxGeometry x="80" y="50" width="100" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="mod_cust" value="Customer" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#d6b656;fontStyle=1;" vertex="1" parent="layer_domain">
+          <mxGeometry x="220" y="50" width="100" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="mod_order" value="Order" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#d6b656;fontStyle=1;" vertex="1" parent="layer_domain">
+          <mxGeometry x="360" y="50" width="100" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="mod_admin" value="Admin" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#d6b656;fontStyle=1;" vertex="1" parent="layer_domain">
+          <mxGeometry x="500" y="50" width="100" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="mod_oi" value="OrderItem" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#d6b656;" vertex="1" parent="layer_domain">
+          <mxGeometry x="640" y="50" width="100" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="mod_iuser" value="&amp;lt;&amp;lt;interface&amp;gt;&amp;gt;&lt;br&gt;IAuthenticatable" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;dashed=1;fontStyle=2;" vertex="1" parent="layer_domain">
+          <mxGeometry x="780" y="45" width="130" height="55" as="geometry"/>
+        </mxCell>
+        <mxCell id="inherit1" value="" style="endArrow=block;endFill=0;dashed=1;html=1;" edge="1" source="mod_admin" target="mod_iuser" parent="layer_domain">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="inherit2" value="" style="endArrow=block;endFill=0;dashed=1;html=1;" edge="1" source="mod_cust" target="mod_iuser" parent="layer_domain">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="layer_dal" value="Data Access Layer (Repositories)" style="swimlane;startSize=32;fillColor=#e1d5e7;strokeColor=#9673a6;fontStyle=1;html=1;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="40" y="640" width="1120" height="120" as="geometry"/>
+        </mxCell>
+        <mxCell id="repo_med" value="IMedicineRepository" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#9673a6;fontStyle=2;" vertex="1" parent="layer_dal">
+          <mxGeometry x="80" y="50" width="150" height="45" as="geometry"/>
+        </mxCell>
+        <mxCell id="repo_cust" value="ICustomerRepository" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#9673a6;fontStyle=2;" vertex="1" parent="layer_dal">
+          <mxGeometry x="260" y="50" width="150" height="45" as="geometry"/>
+        </mxCell>
+        <mxCell id="repo_order" value="IOrderRepository" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#9673a6;fontStyle=2;" vertex="1" parent="layer_dal">
+          <mxGeometry x="440" y="50" width="140" height="45" as="geometry"/>
+        </mxCell>
+        <mxCell id="repo_admin" value="IAdminRepository" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#9673a6;fontStyle=2;" vertex="1" parent="layer_dal">
+          <mxGeometry x="610" y="50" width="140" height="45" as="geometry"/>
+        </mxCell>
+        <mxCell id="repo_impl" value="Sql*Repository / Json*Repository" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#9673a6;" vertex="1" parent="layer_dal">
+          <mxGeometry x="780" y="50" width="200" height="45" as="geometry"/>
+        </mxCell>
+        <mxCell id="layer_data" value="Data Storage (local)" style="swimlane;startSize=32;fillColor=#f8cecc;strokeColor=#b85450;fontStyle=1;html=1;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="40" y="790" width="1120" height="100" as="geometry"/>
+        </mxCell>
+        <mxCell id="db_sql" value="SQL Server Database&lt;br&gt;(SmartMedDb)" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=12;fillColor=#ffffff;strokeColor=#b85450;" vertex="1" parent="layer_data">
+          <mxGeometry x="200" y="45" width="140" height="45" as="geometry"/>
+        </mxCell>
+        <mxCell id="db_json" value="JSON / XML Data Files&lt;br&gt;(Data/*.json)" style="shape=note;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#b85450;size=12;" vertex="1" parent="layer_data">
+          <mxGeometry x="500" y="40" width="160" height="55" as="geometry"/>
+        </mxCell>
+        <mxCell id="db_or" value="— OR —" style="text;html=1;strokeColor=none;fillColor=none;align=center;fontStyle=1;" vertex="1" parent="layer_data">
+          <mxGeometry x="400" y="50" width="60" height="30" as="geometry"/>
+        </mxCell>
+        <mxCell id="utils" value="Cross-cutting: ValidationHelper, ExceptionHandler, Program.cs" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;dashed=1;align=left;spacingLeft=8;" vertex="1" parent="1">
+          <mxGeometry x="40" y="920" width="400" height="40" as="geometry"/>
+        </mxCell>
+        <mxCell id="dep_ui_svc" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;jettySize=auto;orthogonalLoop=1;endArrow=open;endFill=0;strokeWidth=2;html=1;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" edge="1" source="layer_ui" target="layer_svc" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="dep_svc_dom" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;endArrow=open;endFill=0;strokeWidth=2;html=1;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" edge="1" source="layer_svc" target="layer_domain" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="dep_svc_dal" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;endArrow=open;endFill=0;strokeWidth=2;html=1;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" edge="1" source="layer_svc" target="layer_dal" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="dep_dal_data" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;endArrow=open;endFill=0;strokeWidth=2;html=1;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" edge="1" source="layer_dal" target="layer_data" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="lbl_dep1" value="uses" style="text;html=1;align=center;" vertex="1" parent="1">
+          <mxGeometry x="580" y="265" width="40" height="20" as="geometry"/>
+        </mxCell>
+        <mxCell id="lbl_dep2" value="persists via" style="text;html=1;align=center;" vertex="1" parent="1">
+          <mxGeometry x="560" y="760" width="80" height="20" as="geometry"/>
+        </mxCell>
+        <mxCell id="vs_box" value="Visual Studio 2015+ Solution&lt;br&gt;SmartMed.sln → SmartMed (WinForms .NET Framework)" style="shape=folder;tabWidth=120;tabHeight=24;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;align=left;spacingLeft=10;verticalAlign=top;" vertex="1" parent="1">
+          <mxGeometry x="480" y="920" width="380" height="60" as="geometry"/>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

@@ -1,0 +1,213 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mxfile host="app.diagrams.net" agent="SmartMed" version="24.0.0" type="device">
+  <diagram id="er" name="SmartMed ER Diagram (Chen)">
+    <mxGraphModel dx="1400" dy="900" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1600" pageHeight="1200" math="0" shadow="0" background="none">
+      <root>
+        <mxCell id="0"/>
+        <mxCell id="1" parent="0"/>
+        <mxCell id="title" value="&lt;b&gt;SmartMed — Entity-Relationship Diagram (Chen notation)&lt;/b&gt;&lt;br&gt;Rectangle = entity | Ellipse = attribute | Diamond = relationship | &lt;u&gt;underlined&lt;/u&gt; = key" style="text;html=1;strokeColor=none;fillColor=none;align=center;fontSize=13;" vertex="1" parent="1">
+          <mxGeometry x="400" y="10" width="800" height="45" as="geometry"/>
+        </mxCell>
+
+        <!-- ENTITIES (rectangles — not class/table boxes) -->
+        <mxCell id="ent_admin" value="ADMIN" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#000000;fontStyle=1;fontSize=13;" vertex="1" parent="1">
+          <mxGeometry x="80" y="120" width="100" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="ent_medicine" value="MEDICINE" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#000000;fontStyle=1;fontSize=13;" vertex="1" parent="1">
+          <mxGeometry x="720" y="120" width="110" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="ent_customer" value="CUSTOMER" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#000000;fontStyle=1;fontSize=13;" vertex="1" parent="1">
+          <mxGeometry x="80" y="520" width="110" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="ent_order" value="ORDER" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#000000;fontStyle=1;fontSize=13;" vertex="1" parent="1">
+          <mxGeometry x="400" y="520" width="100" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="ent_order_item" value="ORDER_ITEM" style="shape=ext;double=1;rounded=0;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#000000;fontStyle=1;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="680" y="520" width="120" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="ent_prescription" value="PRESCRIPTION" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontStyle=1;fontSize=12;dashed=1;" vertex="1" parent="1">
+          <mxGeometry x="400" y="820" width="130" height="50" as="geometry"/>
+        </mxCell>
+
+        <!-- RELATIONSHIPS (diamonds) -->
+        <mxCell id="rel_manages" value="Manages" style="rhombus;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#000000;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="380" y="115" width="90" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="rel_places" value="Places" style="rhombus;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#000000;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="250" y="515" width="90" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="rel_contains" value="Contains" style="rhombus;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#000000;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="540" y="515" width="90" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="rel_includes" value="Includes" style="rhombus;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#000000;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="720" y="320" width="90" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="rel_uploads" value="Uploads" style="rhombus;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#666666;fontSize=11;dashed=1;" vertex="1" parent="1">
+          <mxGeometry x="200" y="700" width="90" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="rel_for_med" value="For" style="rhombus;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#666666;fontSize=11;dashed=1;" vertex="1" parent="1">
+          <mxGeometry x="620" y="700" width="70" height="55" as="geometry"/>
+        </mxCell>
+
+        <!-- ADMIN attributes -->
+        <mxCell id="a_admin_id" value="&lt;u&gt;admin_id&lt;/u&gt;" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="20" y="40" width="80" height="40" as="geometry"/>
+        </mxCell>
+        <mxCell id="a_username" value="username" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="110" y="30" width="80" height="40" as="geometry"/>
+        </mxCell>
+        <mxCell id="a_password" value="password" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="200" y="50" width="80" height="40" as="geometry"/>
+        </mxCell>
+        <mxCell id="a_fullname" value="full_name" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="30" y="200" width="80" height="40" as="geometry"/>
+        </mxCell>
+
+        <!-- MEDICINE attributes -->
+        <mxCell id="a_med_id" value="&lt;u&gt;medicine_id&lt;/u&gt;" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="900" y="40" width="95" height="40" as="geometry"/>
+        </mxCell>
+        <mxCell id="a_name" value="name" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="1020" y="60" width="70" height="40" as="geometry"/>
+        </mxCell>
+        <mxCell id="a_category" value="category" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="1100" y="130" width="75" height="40" as="geometry"/>
+        </mxCell>
+        <mxCell id="a_dosage" value="dosage" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="1080" y="200" width="70" height="40" as="geometry"/>
+        </mxCell>
+        <mxCell id="a_price" value="price" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="980" y="220" width="60" height="40" as="geometry"/>
+        </mxCell>
+        <mxCell id="a_stock" value="stock" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="880" y="200" width="60" height="40" as="geometry"/>
+        </mxCell>
+        <mxCell id="a_supplier" value="supplier" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="820" y="40" width="70" height="40" as="geometry"/>
+        </mxCell>
+        <mxCell id="a_expiry" value="expiry_date" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#666666;fontSize=10;dashed=1;" vertex="1" parent="1">
+          <mxGeometry x="760" y="30" width="85" height="40" as="geometry"/>
+        </mxCell>
+
+        <!-- CUSTOMER attributes -->
+        <mxCell id="a_cust_id" value="&lt;u&gt;customer_id&lt;/u&gt;" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="20" y="450" width="95" height="40" as="geometry"/>
+        </mxCell>
+        <mxCell id="a_cust_name" value="full_name" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="10" y="600" width="75" height="40" as="geometry"/>
+        </mxCell>
+        <mxCell id="a_email" value="email" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="30" y="680" width="60" height="40" as="geometry"/>
+        </mxCell>
+        <mxCell id="a_phone" value="phone" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="200" y="600" width="60" height="40" as="geometry"/>
+        </mxCell>
+        <mxCell id="a_address" value="address" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="210" y="450" width="65" height="40" as="geometry"/>
+        </mxCell>
+
+        <!-- ORDER attributes -->
+        <mxCell id="a_ord_id" value="&lt;u&gt;order_id&lt;/u&gt;" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="400" y="430" width="80" height="40" as="geometry"/>
+        </mxCell>
+        <mxCell id="a_ord_date" value="order_date" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="520" y="430" width="85" height="40" as="geometry"/>
+        </mxCell>
+        <mxCell id="a_status" value="status" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="530" y="600" width="60" height="40" as="geometry"/>
+        </mxCell>
+        <mxCell id="a_total" value="total_amount" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="350" y="600" width="90" height="40" as="geometry"/>
+        </mxCell>
+
+        <!-- ORDER_ITEM attributes (on associative entity) -->
+        <mxCell id="a_qty" value="quantity" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="860" y="480" width="70" height="40" as="geometry"/>
+        </mxCell>
+        <mxCell id="a_unit" value="unit_price" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="860" y="560" width="75" height="40" as="geometry"/>
+        </mxCell>
+
+        <!-- PRESCRIPTION attributes (optional) -->
+        <mxCell id="a_rx_id" value="&lt;u&gt;prescription_id&lt;/u&gt;" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#666666;fontSize=10;dashed=1;" vertex="1" parent="1">
+          <mxGeometry x="300" y="900" width="110" height="40" as="geometry"/>
+        </mxCell>
+        <mxCell id="a_filepath" value="file_path" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#666666;fontSize=10;dashed=1;" vertex="1" parent="1">
+          <mxGeometry x="480" y="900" width="75" height="40" as="geometry"/>
+        </mxCell>
+        <mxCell id="a_uploaddate" value="uploaded_date" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#666666;fontSize=10;dashed=1;" vertex="1" parent="1">
+          <mxGeometry x="580" y="900" width="100" height="40" as="geometry"/>
+        </mxCell>
+
+        <!-- Entity–relationship links (no crow's-foot PK/FK arrows) -->
+        <mxCell id="e_admin_manages" style="endArrow=none;html=1;strokeColor=#000000;" edge="1" source="ent_admin" target="rel_manages" parent="1"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e_manages_med" style="endArrow=none;html=1;strokeColor=#000000;" edge="1" source="rel_manages" target="ent_medicine" parent="1"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="card_m1" value="1" style="text;html=1;align=center;fontStyle=1;" vertex="1" parent="1"><mxGeometry x="200" y="130" width="20" height="20" as="geometry"/></mxCell>
+        <mxCell id="card_mn" value="N" style="text;html=1;align=center;fontStyle=1;" vertex="1" parent="1"><mxGeometry x="650" y="130" width="20" height="20" as="geometry"/></mxCell>
+
+        <mxCell id="e_cust_places" style="endArrow=none;html=1;strokeColor=#000000;" edge="1" source="ent_customer" target="rel_places" parent="1"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e_places_ord" style="endArrow=none;html=1;strokeColor=#000000;" edge="1" source="rel_places" target="ent_order" parent="1"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="card_p1" value="1" style="text;html=1;align=center;fontStyle=1;" vertex="1" parent="1"><mxGeometry x="200" y="540" width="20" height="20" as="geometry"/></mxCell>
+        <mxCell id="card_pn" value="N" style="text;html=1;align=center;fontStyle=1;" vertex="1" parent="1"><mxGeometry x="360" y="540" width="20" height="20" as="geometry"/></mxCell>
+
+        <mxCell id="e_ord_contains" style="endArrow=none;html=1;strokeColor=#000000;" edge="1" source="ent_order" target="rel_contains" parent="1"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e_contains_oi" style="endArrow=none;html=1;strokeColor=#000000;" edge="1" source="rel_contains" target="ent_order_item" parent="1"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="card_c1" value="1" style="text;html=1;align=center;fontStyle=1;" vertex="1" parent="1"><mxGeometry x="510" y="540" width="20" height="20" as="geometry"/></mxCell>
+        <mxCell id="card_cn" value="N" style="text;html=1;align=center;fontStyle=1;" vertex="1" parent="1"><mxGeometry x="640" y="540" width="20" height="20" as="geometry"/></mxCell>
+
+        <mxCell id="e_med_includes" style="endArrow=none;html=1;strokeColor=#000000;" edge="1" source="ent_medicine" target="rel_includes" parent="1"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e_includes_oi" style="endArrow=none;html=1;strokeColor=#000000;" edge="1" source="rel_includes" target="ent_order_item" parent="1"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="card_i1" value="1" style="text;html=1;align=center;fontStyle=1;" vertex="1" parent="1"><mxGeometry x="770" y="280" width="20" height="20" as="geometry"/></mxCell>
+        <mxCell id="card_in" value="N" style="text;html=1;align=center;fontStyle=1;" vertex="1" parent="1"><mxGeometry x="750" y="480" width="20" height="20" as="geometry"/></mxCell>
+
+        <mxCell id="e_cust_uploads" style="endArrow=none;html=1;strokeColor=#666666;dashed=1;" edge="1" source="ent_customer" target="rel_uploads" parent="1"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e_uploads_rx" style="endArrow=none;html=1;strokeColor=#666666;dashed=1;" edge="1" source="rel_uploads" target="ent_prescription" parent="1"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e_rx_for" style="endArrow=none;html=1;strokeColor=#666666;dashed=1;" edge="1" source="ent_prescription" target="rel_for_med" parent="1"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e_for_med" style="endArrow=none;html=1;strokeColor=#666666;dashed=1;" edge="1" source="rel_for_med" target="ent_medicine" parent="1"><mxGeometry relative="1" as="geometry"/></mxCell>
+
+        <!-- Entity–attribute links -->
+        <mxCell id="ea1" style="endArrow=none;html=1;" edge="1" source="a_admin_id" target="ent_admin" parent="1"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="ea2" style="endArrow=none;html=1;" edge="1" source="a_username" target="ent_admin" parent="1"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="ea3" style="endArrow=none;html=1;" edge="1" source="a_password" target="ent_admin" parent="1"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="ea4" style="endArrow=none;html=1;" edge="1" source="a_fullname" target="ent_admin" parent="1"><mxGeometry relative="1" as="geometry"/></mxCell>
+
+        <mxCell id="em1" style="endArrow=none;html=1;" edge="1" source="a_med_id" target="ent_medicine" parent="1"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="em2" style="endArrow=none;html=1;" edge="1" source="a_name" target="ent_medicine" parent="1"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="em3" style="endArrow=none;html=1;" edge="1" source="a_category" target="ent_medicine" parent="1"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="em4" style="endArrow=none;html=1;" edge="1" source="a_dosage" target="ent_medicine" parent="1"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="em5" style="endArrow=none;html=1;" edge="1" source="a_price" target="ent_medicine" parent="1"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="em6" style="endArrow=none;html=1;" edge="1" source="a_stock" target="ent_medicine" parent="1"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="em7" style="endArrow=none;html=1;" edge="1" source="a_supplier" target="ent_medicine" parent="1"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="em8" style="endArrow=none;html=1;dashed=1;" edge="1" source="a_expiry" target="ent_medicine" parent="1"><mxGeometry relative="1" as="geometry"/></mxCell>
+
+        <mxCell id="ec1" style="endArrow=none;html=1;" edge="1" source="a_cust_id" target="ent_customer" parent="1"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="ec2" style="endArrow=none;html=1;" edge="1" source="a_cust_name" target="ent_customer" parent="1"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="ec3" style="endArrow=none;html=1;" edge="1" source="a_email" target="ent_customer" parent="1"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="ec4" style="endArrow=none;html=1;" edge="1" source="a_phone" target="ent_customer" parent="1"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="ec5" style="endArrow=none;html=1;" edge="1" source="a_address" target="ent_customer" parent="1"><mxGeometry relative="1" as="geometry"/></mxCell>
+
+        <mxCell id="eo1" style="endArrow=none;html=1;" edge="1" source="a_ord_id" target="ent_order" parent="1"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="eo2" style="endArrow=none;html=1;" edge="1" source="a_ord_date" target="ent_order" parent="1"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="eo3" style="endArrow=none;html=1;" edge="1" source="a_status" target="ent_order" parent="1"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="eo4" style="endArrow=none;html=1;" edge="1" source="a_total" target="ent_order" parent="1"><mxGeometry relative="1" as="geometry"/></mxCell>
+
+        <mxCell id="eoi1" style="endArrow=none;html=1;" edge="1" source="a_qty" target="ent_order_item" parent="1"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="eoi2" style="endArrow=none;html=1;" edge="1" source="a_unit" target="ent_order_item" parent="1"><mxGeometry relative="1" as="geometry"/></mxCell>
+
+        <mxCell id="erx1" style="endArrow=none;html=1;dashed=1;" edge="1" source="a_rx_id" target="ent_prescription" parent="1"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="erx2" style="endArrow=none;html=1;dashed=1;" edge="1" source="a_filepath" target="ent_prescription" parent="1"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="erx3" style="endArrow=none;html=1;dashed=1;" edge="1" source="a_uploaddate" target="ent_prescription" parent="1"><mxGeometry relative="1" as="geometry"/></mxCell>
+
+        <mxCell id="note_status" value="order.status: Pending | Ready for Pickup | Delivered" style="text;html=1;strokeColor=#b85450;fillColor=#ffe6e6;align=left;spacingLeft=6;rounded=1;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="950" y="520" width="280" height="35" as="geometry"/>
+        </mxCell>
+        <mxCell id="note_m2m" value="ORDER_ITEM resolves M:N between ORDER and MEDICINE" style="text;html=1;strokeColor=#9673a6;fillColor=#f3e8ff;align=left;spacingLeft=6;rounded=1;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="950" y="570" width="300" height="35" as="geometry"/>
+        </mxCell>
+        <mxCell id="legend" value="&lt;b&gt;Not a class diagram:&lt;/b&gt; no methods, no PK/FK columns, no UML compartments.&lt;br&gt;Dashed = optional extension (prescription upload, expiry)." style="text;html=1;strokeColor=#666666;fillColor=#ffffff;align=left;spacingLeft=8;rounded=1;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="80" y="980" width="520" height="45" as="geometry"/>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

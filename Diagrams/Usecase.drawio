@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mxfile host="app.diagrams.net" agent="SmartMed" version="24.0.0" type="device">
+  <diagram id="usecase" name="SmartMed Use Cases">
+    <mxGraphModel dx="1200" dy="800" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1400" pageHeight="1000" math="0" shadow="0" background="none">
+      <root>
+        <mxCell id="0"/>
+        <mxCell id="1" parent="0"/>
+        <mxCell id="title" value="&lt;b&gt;SmartMed Pharmacy — Use Case Diagram&lt;/b&gt;&lt;br&gt;(CS6004ES — per Document.md)" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;fontSize=16;" vertex="1" parent="1">
+          <mxGeometry x="400" y="10" width="600" height="40" as="geometry"/>
+        </mxCell>
+        <mxCell id="boundary" value="SmartMed Windows Forms Application" style="rounded=0;whiteSpace=wrap;html=1;dashed=1;dashPattern=8 8;fillColor=#f5f5f5;strokeColor=#666666;verticalAlign=top;align=left;spacingLeft=10;fontStyle=1;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="180" y="60" width="1040" height="900" as="geometry"/>
+        </mxCell>
+        <mxCell id="actor_admin" value="Admin" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="60" y="380" width="40" height="80" as="geometry"/>
+        </mxCell>
+        <mxCell id="actor_customer" value="Customer" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
+          <mxGeometry x="1300" y="380" width="40" height="80" as="geometry"/>
+        </mxCell>
+        <mxCell id="pkg_admin" value="Admin features" style="swimlane;startSize=28;fillColor=#dae8fc;strokeColor=#6c8ebf;fontStyle=1;html=1;" vertex="1" parent="1">
+          <mxGeometry x="220" y="100" width="320" height="520" as="geometry"/>
+        </mxCell>
+        <mxCell id="uc_admin_login" value="Admin Login" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#6c8ebf;" vertex="1" parent="pkg_admin">
+          <mxGeometry x="60" y="50" width="200" height="55" as="geometry"/>
+        </mxCell>
+        <mxCell id="uc_manage_medicine" value="Manage Medicine Details&lt;br&gt;(add, update, delete)" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#6c8ebf;" vertex="1" parent="pkg_admin">
+          <mxGeometry x="40" y="120" width="240" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="uc_manage_customer" value="Manage Customer Details&lt;br&gt;(view, update)" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#6c8ebf;" vertex="1" parent="pkg_admin">
+          <mxGeometry x="40" y="195" width="240" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="uc_manage_orders" value="Manage Orders&lt;br&gt;(view, update status)" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#6c8ebf;" vertex="1" parent="pkg_admin">
+          <mxGeometry x="40" y="270" width="240" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="uc_reports" value="Generate Reports&lt;br&gt;(sales, stock, order history)" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#6c8ebf;" vertex="1" parent="pkg_admin">
+          <mxGeometry x="40" y="345" width="240" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="uc_dashboard" value="View Dashboard&lt;br&gt;(sales, stock, active orders)" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#6c8ebf;" vertex="1" parent="pkg_admin">
+          <mxGeometry x="40" y="420" width="240" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="pkg_customer" value="Customer features" style="swimlane;startSize=28;fillColor=#d5e8d4;strokeColor=#82b366;fontStyle=1;html=1;" vertex="1" parent="1">
+          <mxGeometry x="860" y="100" width="320" height="520" as="geometry"/>
+        </mxCell>
+        <mxCell id="uc_register" value="Register" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#82b366;" vertex="1" parent="pkg_customer">
+          <mxGeometry x="70" y="45" width="180" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="uc_customer_login" value="Customer Login" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#82b366;" vertex="1" parent="pkg_customer">
+          <mxGeometry x="60" y="110" width="200" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="uc_search" value="Search Medicines&lt;br&gt;(name, category, price range)" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#82b366;" vertex="1" parent="pkg_customer">
+          <mxGeometry x="35" y="175" width="250" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="uc_place_order" value="Place Orders&lt;br&gt;(cart, checkout)" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#82b366;" vertex="1" parent="pkg_customer">
+          <mxGeometry x="55" y="250" width="210" height="55" as="geometry"/>
+        </mxCell>
+        <mxCell id="uc_track" value="Track Orders" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#82b366;" vertex="1" parent="pkg_customer">
+          <mxGeometry x="65" y="320" width="190" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="uc_profile" value="Profile Management" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#82b366;" vertex="1" parent="pkg_customer">
+          <mxGeometry x="50" y="385" width="220" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="pkg_shared" value="Shared / system" style="swimlane;startSize=28;fillColor=#fff2cc;strokeColor=#d6b656;fontStyle=1;html=1;" vertex="1" parent="1">
+          <mxGeometry x="560" y="100" width="280" height="200" as="geometry"/>
+        </mxCell>
+        <mxCell id="uc_validate" value="Validate Input" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#d6b656;" vertex="1" parent="pkg_shared">
+          <mxGeometry x="50" y="50" width="180" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="uc_exception" value="Handle Exceptions" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#d6b656;" vertex="1" parent="pkg_shared">
+          <mxGeometry x="45" y="120" width="190" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="pkg_optional" value="Additional features (optional extensions)" style="swimlane;startSize=28;fillColor=#e1d5e7;strokeColor=#9673a6;fontStyle=1;html=1;dashed=1;dashPattern=4 4;" vertex="1" parent="1">
+          <mxGeometry x="220" y="650" width="960" height="280" as="geometry"/>
+        </mxCell>
+        <mxCell id="uc_discount" value="Apply Discounts / Promotions" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#9673a6;dashed=1;" vertex="1" parent="pkg_optional">
+          <mxGeometry x="40" y="60" width="200" height="55" as="geometry"/>
+        </mxCell>
+        <mxCell id="uc_expiry" value="Expiry Tracking Notifications" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#9673a6;dashed=1;" vertex="1" parent="pkg_optional">
+          <mxGeometry x="270" y="60" width="210" height="55" as="geometry"/>
+        </mxCell>
+        <mxCell id="uc_prescription" value="Upload Prescription" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#9673a6;dashed=1;" vertex="1" parent="pkg_optional">
+          <mxGeometry x="510" y="60" width="180" height="55" as="geometry"/>
+        </mxCell>
+        <mxCell id="uc_export" value="Export Order History&lt;br&gt;(PDF / Excel)" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#9673a6;dashed=1;" vertex="1" parent="pkg_optional">
+          <mxGeometry x="720" y="55" width="200" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="note_status" value="Order status values:&lt;br&gt;Pending → Ready for Pickup → Delivered" style="shape=note;whiteSpace=wrap;html=1;backgroundOutline=1;darkOpacity=0.05;fillColor=#ffffcc;strokeColor=#d6b656;size=14;align=left;spacingLeft=8;" vertex="1" parent="1">
+          <mxGeometry x="560" y="330" width="280" height="70" as="geometry"/>
+        </mxCell>
+        <mxCell id="e_a1" style="endArrow=none;html=1;strokeWidth=1;" edge="1" source="actor_admin" target="uc_admin_login" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e_a2" style="endArrow=none;html=1;" edge="1" source="actor_admin" target="uc_manage_medicine" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e_a3" style="endArrow=none;html=1;" edge="1" source="actor_admin" target="uc_manage_customer" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e_a4" style="endArrow=none;html=1;" edge="1" source="actor_admin" target="uc_manage_orders" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e_a5" style="endArrow=none;html=1;" edge="1" source="actor_admin" target="uc_reports" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e_a6" style="endArrow=none;html=1;" edge="1" source="actor_admin" target="uc_dashboard" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e_c1" style="endArrow=none;html=1;" edge="1" source="actor_customer" target="uc_register" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e_c2" style="endArrow=none;html=1;" edge="1" source="actor_customer" target="uc_customer_login" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e_c3" style="endArrow=none;html=1;" edge="1" source="actor_customer" target="uc_search" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e_c4" style="endArrow=none;html=1;" edge="1" source="actor_customer" target="uc_place_order" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e_c5" style="endArrow=none;html=1;" edge="1" source="actor_customer" target="uc_track" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e_c6" style="endArrow=none;html=1;" edge="1" source="actor_customer" target="uc_profile" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e_ext1" value="&amp;lt;&amp;lt;extend&amp;gt;&amp;gt;" style="endArrow=open;dashed=1;html=1;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" edge="1" source="uc_place_order" target="uc_discount" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e_ext2" value="&amp;lt;&amp;lt;extend&amp;gt;&amp;gt;" style="endArrow=open;dashed=1;html=1;" edge="1" source="uc_place_order" target="uc_prescription" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e_ext3" value="&amp;lt;&amp;lt;extend&amp;gt;&amp;gt;" style="endArrow=open;dashed=1;html=1;" edge="1" source="uc_track" target="uc_export" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e_inc1" value="&amp;lt;&amp;lt;include&amp;gt;&amp;gt;" style="endArrow=open;dashed=1;html=1;" edge="1" source="uc_manage_medicine" target="uc_validate" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e_inc2" value="&amp;lt;&amp;lt;include&amp;gt;&amp;gt;" style="endArrow=open;dashed=1;html=1;" edge="1" source="uc_place_order" target="uc_validate" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
