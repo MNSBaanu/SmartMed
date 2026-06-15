@@ -141,6 +141,9 @@ namespace SmartMed.UI.Theming
 
         public static void ApplyNavButtonState(Button btn, bool active, bool customerPortal = false)
         {
+            if (btn.Tag is NavButtonTag tag)
+                btn.Tag = new NavButtonTag(tag.Icon, tag.Text, active, customerPortal);
+
             if (active)
             {
                 if (customerPortal)
@@ -166,8 +169,8 @@ namespace SmartMed.UI.Theming
         public static void SetActiveNav(Button active, bool customerPortal, params Button[] all)
         {
             foreach (var btn in all)
-                if (btn.Tag is NavButtonTag tag)
-                    ApplyNavButtonState(btn, btn == active, tag.CustomerPortal);
+                if (btn.Tag is NavButtonTag)
+                    ApplyNavButtonState(btn, btn == active, customerPortal);
         }
 
         public static Panel CreatePageHeader(string title, string subtitle)
