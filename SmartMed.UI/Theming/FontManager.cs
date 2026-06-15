@@ -1,7 +1,9 @@
 using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Text;
 using System.IO;
+using System.Reflection;
 using System.Windows.Forms;
 
 namespace SmartMed.UI.Theming
@@ -19,12 +21,36 @@ namespace SmartMed.UI.Theming
             if (_initialized) return;
             _initialized = true;
 
-            var fontPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Fonts", "Inter.ttf");
-            if (!File.Exists(fontPath)) return;
+            foreach (var fontPath in ResolveFontPaths())
+            {
+                if (!File.Exists(fontPath)) continue;
+                Collection.AddFontFile(fontPath);
+                if (Collection.Families.Length > 0)
+                {
+                    _interFamily = Collection.Families[0];
+                    return;
+                }
+            }
+        }
 
-            Collection.AddFontFile(fontPath);
-            if (Collection.Families.Length > 0)
-                _interFamily = Collection.Families[0];
+        private static string[] ResolveFontPaths()
+        {
+            var paths = new List<string>();
+            var baseDir = AppDomain.CurrentDomain.BaseDirectory;
+            paths.Add(Path.Combine(baseDir, "Fonts", "Inter.ttf"));
+
+            var assemblyDir = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+            if (!string.IsNullOrEmpty(assemblyDir))
+                paths.Add(Path.Combine(assemblyDir, "Fonts", "Inter.ttf"));
+
+            var dir = assemblyDir ?? baseDir;
+            for (var i = 0; i < 6 && !string.IsNullOrEmpty(dir); i++)
+            {
+                paths.Add(Path.Combine(dir, "Fonts", "Inter.ttf"));
+                dir = Directory.GetParent(dir)?.FullName;
+            }
+
+            return paths.ToArray();
         }
 
         public static Font Get(float size, FontStyle style = FontStyle.Regular)
@@ -42,19 +68,12 @@ namespace SmartMed.UI.Theming
 
         public static void ApplyInterFont(Control control)
         {
-            if (control == null || IsDesignMode(control)) return;
+            if (control == null) return;
 
             Initialize();
             if (!IsAvailable) return;
 
             ApplyInterFontRecursive(control);
-        }
-
-        private static bool IsDesignMode(Control control)
-        {
-            if (System.ComponentModel.LicenseManager.UsageMode == System.ComponentModel.LicenseUsageMode.Designtime)
-                return true;
-            return control.Site?.DesignMode ?? false;
         }
 
         private static void ApplyInterFontRecursive(Control control)

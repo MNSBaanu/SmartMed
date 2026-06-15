@@ -16,7 +16,7 @@ namespace SmartMed.UI
         public LoginForm()
         {
             InitializeComponent();
-            FontManager.ApplyInterFont(this);
+            UiFactory.ApplyFormDefaults(this);
             cmbRole.SelectedIndex = 0;
             cmbRole.SelectedIndexChanged += (s, e) => UpdateRoleUi();
             panelCard.Paint += PanelCard_Paint;

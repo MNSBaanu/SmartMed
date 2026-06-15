@@ -1,52 +1,45 @@
 using System;
-using System.Drawing;
 using System.Windows.Forms;
 using SmartMed.Business.Services;
 using SmartMed.UI.Theming;
 
 namespace SmartMed.UI.Views
 {
-    public class CustomerSelectDialog : Form
+    public partial class CustomerSelectDialog : Form
     {
-        private ComboBox cmb;
         private readonly CustomerService _service = new CustomerService();
         public int? SelectedCustomerId { get; private set; }
 
         public CustomerSelectDialog()
         {
+            InitializeComponent();
             UiFactory.StyleAuthForm(this);
-            Text = "Select Customer";
+            UiFactory.CenterControlOnForm(this, panelCard);
+        }
 
-            var card = UiFactory.CreateCardPanel(340, 130);
-            Controls.Add(card);
-            UiFactory.CenterControlOnForm(this, card);
+        private void CustomerSelectDialog_Load(object sender, EventArgs e)
+        {
+            UiFactory.ApplyComboBoxStyle(cmbCustomer, 280);
 
-            var lbl = UiFactory.CreateFieldLabel("Customer");
-            lbl.Location = new Point(ClinicalPrecisionTheme.ContainerPadding, ClinicalPrecisionTheme.StackMd);
-            card.Controls.Add(lbl);
+            if (UiFactory.IsDesignMode(this)) return;
 
-            cmb = new ComboBox { Location = new Point(ClinicalPrecisionTheme.ContainerPadding, 36), DropDownStyle = ComboBoxStyle.DropDownList };
-            UiFactory.ApplyComboBoxStyle(cmb, 280);
             foreach (var c in _service.GetAll())
-                cmb.Items.Add(new ComboItem(c.CustomerID, c.Name));
-            if (cmb.Items.Count > 0) cmb.SelectedIndex = 0;
-            card.Controls.Add(cmb);
+                cmbCustomer.Items.Add(new ComboItem(c.CustomerID, c.Name));
+            if (cmbCustomer.Items.Count > 0) cmbCustomer.SelectedIndex = 0;
+        }
 
-            var btnOk = UiFactory.CreatePrimaryButton("OK", 80);
-            var btnCancel = UiFactory.CreateSecondaryButton("Cancel", 80);
-            btnOk.Location = new Point(ClinicalPrecisionTheme.ContainerPadding, 76);
-            btnCancel.Location = new Point(ClinicalPrecisionTheme.ContainerPadding + 90, 76);
-            btnOk.Click += (s, e) =>
+        private void BtnOk_Click(object sender, EventArgs e)
+        {
+            if (cmbCustomer.SelectedItem is ComboItem item)
             {
-                if (cmb.SelectedItem is ComboItem item)
-                {
-                    SelectedCustomerId = item.Id;
-                    DialogResult = DialogResult.OK;
-                }
-            };
-            btnCancel.Click += (s, e) => DialogResult = DialogResult.Cancel;
-            card.Controls.Add(btnOk);
-            card.Controls.Add(btnCancel);
+                SelectedCustomerId = item.Id;
+                DialogResult = DialogResult.OK;
+            }
+        }
+
+        private void BtnCancel_Click(object sender, EventArgs e)
+        {
+            DialogResult = DialogResult.Cancel;
         }
 
         private class ComboItem

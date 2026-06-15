@@ -21,6 +21,7 @@ namespace SmartMed.UI
             this.btnLogout = new System.Windows.Forms.Button();
             this.panelMain = new System.Windows.Forms.Panel();
             this.contentHost = new System.Windows.Forms.Panel();
+            this.searchMedicinesPreview = new SmartMed.UI.Views.SearchMedicinesView();
             this.sidebarPanel = new System.Windows.Forms.Panel();
             this.lblWelcome = new System.Windows.Forms.Label();
             this.btnSearch = new System.Windows.Forms.Button();
@@ -92,12 +93,21 @@ namespace SmartMed.UI
             // contentHost
             // 
             this.contentHost.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(249)))), ((int)(((byte)(249)))), ((int)(((byte)(249)))));
+            this.contentHost.Controls.Add(this.searchMedicinesPreview);
             this.contentHost.Dock = System.Windows.Forms.DockStyle.Fill;
             this.contentHost.Location = new System.Drawing.Point(420, 0);
             this.contentHost.Name = "contentHost";
             this.contentHost.Padding = new System.Windows.Forms.Padding(24);
             this.contentHost.Size = new System.Drawing.Size(860, 672);
             this.contentHost.TabIndex = 1;
+            // 
+            // searchMedicinesPreview
+            // 
+            this.searchMedicinesPreview.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.searchMedicinesPreview.Location = new System.Drawing.Point(24, 24);
+            this.searchMedicinesPreview.Name = "searchMedicinesPreview";
+            this.searchMedicinesPreview.Size = new System.Drawing.Size(812, 624);
+            this.searchMedicinesPreview.TabIndex = 0;
             // 
             // sidebarPanel
             // 
@@ -217,5 +227,6 @@ namespace SmartMed.UI
         private System.Windows.Forms.Button btnTrack;
         private System.Windows.Forms.Button btnProfile;
         private System.Windows.Forms.Panel contentHost;
+        private Views.SearchMedicinesView searchMedicinesPreview;
     }
 }

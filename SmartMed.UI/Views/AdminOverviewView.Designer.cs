@@ -149,6 +149,7 @@ namespace SmartMed.UI.Views
             this.Controls.Add(this.panelStock);
             this.Controls.Add(this.panelSales);
             this.Controls.Add(this.lblSectionHeader);
+            this.Dock = System.Windows.Forms.DockStyle.Fill;
             this.Font = new System.Drawing.Font("Segoe UI", 9.75F);
             this.Name = "AdminOverviewView";
             this.Size = new System.Drawing.Size(812, 624);

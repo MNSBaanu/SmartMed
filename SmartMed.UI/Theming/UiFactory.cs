@@ -241,6 +241,13 @@ namespace SmartMed.UI.Theming
             comboBox.BackColor = ClinicalPrecisionTheme.SurfaceContainerLowest;
         }
 
+        public static void ApplyViewChrome(UserControl view)
+        {
+            view.BackColor = ClinicalPrecisionTheme.Surface;
+            view.Dock = DockStyle.Fill;
+            FontManager.ApplyInterFont(view);
+        }
+
         public static void ApplyDataGridStyle(DataGridView grid)
         {
             grid.Font = ClinicalPrecisionTheme.DataGridFont;

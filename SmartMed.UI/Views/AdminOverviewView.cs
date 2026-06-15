@@ -10,9 +10,9 @@ namespace SmartMed.UI.Views
         public AdminOverviewView()
         {
             InitializeComponent();
-            FontManager.ApplyInterFont(this);
-            Dock = DockStyle.Fill;
-            Resize += AdminOverviewView_Resize;
+            UiFactory.ApplyViewChrome(this);
+            LayoutCards();
+            Resize += (s, e) => LayoutCards();
         }
 
         private void AdminOverviewView_Load(object sender, EventArgs e)
@@ -23,9 +23,10 @@ namespace SmartMed.UI.Views
             lblSalesValue.Text = $"LKR {service.TotalSales:N2}";
             lblStockValue.Text = service.MedicinesInStock.ToString("N0") + " units";
             lblOrdersValue.Text = service.ActiveOrders.ToString();
+            LayoutCards();
         }
 
-        private void AdminOverviewView_Resize(object sender, EventArgs e)
+        private void LayoutCards()
         {
             int cardWidth = Math.Max(200, (ClientSize.Width - 48) / 3);
             panelSales.SetBounds(0, 40, cardWidth, 100);

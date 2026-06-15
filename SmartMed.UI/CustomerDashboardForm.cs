@@ -11,9 +11,9 @@ namespace SmartMed.UI
         public CustomerDashboardForm()
         {
             InitializeComponent();
+            UiFactory.ApplyFormDefaults(this);
             if (!UiFactory.IsDesignMode(this))
                 UiFactory.ApplyFullScreen(this);
-            FontManager.ApplyInterFont(this);
         }
 
         private void CustomerDashboardForm_Load(object sender, EventArgs e)

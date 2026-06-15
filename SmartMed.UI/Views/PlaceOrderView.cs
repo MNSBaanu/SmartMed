@@ -9,89 +9,56 @@ using SmartMed.UI.Theming;
 
 namespace SmartMed.UI.Views
 {
-    public class PlaceOrderView : UserControl
+    public partial class PlaceOrderView : UserControl
     {
-        private DataGridView gridMedicines, gridCart;
         private readonly MedicineService _medicineService = new MedicineService();
         private readonly OrderService _orderService = new OrderService();
         private readonly List<OrderItemRecord> _cart = new List<OrderItemRecord>();
 
         public PlaceOrderView()
         {
-            BackColor = ClinicalPrecisionTheme.Surface;
-            Dock = DockStyle.Fill;
+            InitializeComponent();
+            UiFactory.ApplyViewChrome(this);
+        }
 
-            var header = UiFactory.CreateSectionHeader("Place Order");
-            header.Dock = DockStyle.Top;
-            Controls.Add(header);
-
-            var split = new Panel { Dock = DockStyle.Fill, Padding = new Padding(0, ClinicalPrecisionTheme.StackMd, 0, 0) };
-            Controls.Add(split);
-
-            gridMedicines = new DataGridView
-            {
-                Location = new Point(0, 0),
-                Size = new Size(400, 320),
-                Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Bottom,
-                ReadOnly = true,
-                SelectionMode = DataGridViewSelectionMode.FullRowSelect,
-                AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill
-            };
+        private void PlaceOrderView_Load(object sender, EventArgs e)
+        {
             UiFactory.ApplyDataGridStyle(gridMedicines);
-
-            var lblCart = UiFactory.CreateFieldLabel("Shopping Cart");
-            lblCart.Location = new Point(420, 0);
-
-            gridCart = new DataGridView
-            {
-                Location = new Point(420, 24),
-                Size = new Size(400, 260),
-                Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right | AnchorStyles.Bottom,
-                ReadOnly = true,
-                AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill
-            };
             UiFactory.ApplyDataGridStyle(gridCart);
-
-            var lblQty = UiFactory.CreateFieldLabel("Qty:");
-            lblQty.Location = new Point(0, 330);
-            var txtQty = new TextBox { Location = new Point(40, 326), Width = 50, Text = "1" };
+            gridMedicines.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+            gridCart.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
             UiFactory.ApplyTextBoxStyle(txtQty, 50);
-            var btnAdd = UiFactory.CreatePrimaryButton("Add to Cart", 110);
-            btnAdd.Location = new Point(100, 324);
-            btnAdd.Click += (s, e) => AddToCart(txtQty);
 
-            var btnPlace = UiFactory.CreatePrimaryButton("Place Order", 120);
-            var btnClear = UiFactory.CreateSecondaryButton("Clear Cart", 100);
-            btnPlace.Location = new Point(420, 300);
-            btnClear.Location = new Point(550, 300);
-            btnPlace.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
-            btnClear.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
-            btnPlace.Click += BtnPlace_Click;
-            btnClear.Click += (s, e) => { _cart.Clear(); RefreshCart(); };
+            LayoutSplit();
+            splitPanel.Resize += SplitPanel_Resize;
+            Resize += (s, ev) => LayoutSplit();
 
-            split.Controls.AddRange(new Control[] { gridMedicines, lblCart, gridCart, lblQty, txtQty, btnAdd, btnPlace, btnClear });
-
-            split.Resize += (s, e) =>
-            {
-                int half = (split.ClientSize.Width - 20) / 2;
-                gridMedicines.Width = half;
-                gridMedicines.Height = split.ClientSize.Height - 50;
-                lblCart.Location = new Point(half + 20, 0);
-                gridCart.Location = new Point(half + 20, 24);
-                gridCart.Width = split.ClientSize.Width - half - 20;
-                gridCart.Height = split.ClientSize.Height - 80;
-                btnPlace.Location = new Point(half + 20, split.ClientSize.Height - 44);
-                btnClear.Location = new Point(half + 150, split.ClientSize.Height - 44);
-                lblQty.Location = new Point(0, split.ClientSize.Height - 40);
-                txtQty.Location = new Point(40, split.ClientSize.Height - 44);
-                btnAdd.Location = new Point(100, split.ClientSize.Height - 46);
-            };
-
+            if (UiFactory.IsDesignMode(this)) return;
             gridMedicines.DataSource = _medicineService.GetAll();
             RefreshCart();
         }
 
-        private void AddToCart(TextBox txtQty)
+        private void SplitPanel_Resize(object sender, EventArgs e) => LayoutSplit();
+
+        private void LayoutSplit()
+        {
+            int half = (splitPanel.ClientSize.Width - 20) / 2;
+            gridMedicines.Width = half;
+            gridMedicines.Height = splitPanel.ClientSize.Height - 50;
+            lblCart.Location = new Point(half + 20, 0);
+            gridCart.Location = new Point(half + 20, 24);
+            gridCart.Width = splitPanel.ClientSize.Width - half - 20;
+            gridCart.Height = splitPanel.ClientSize.Height - 80;
+            btnPlace.Location = new Point(half + 20, splitPanel.ClientSize.Height - 44);
+            btnClear.Location = new Point(half + 150, splitPanel.ClientSize.Height - 44);
+            lblQty.Location = new Point(0, splitPanel.ClientSize.Height - 40);
+            txtQty.Location = new Point(40, splitPanel.ClientSize.Height - 44);
+            btnAdd.Location = new Point(100, splitPanel.ClientSize.Height - 46);
+        }
+
+        private void BtnAdd_Click(object sender, EventArgs e) => AddToCart();
+
+        private void AddToCart()
         {
             if (!(gridMedicines.CurrentRow?.DataBoundItem is MedicineItem medicine))
             {
@@ -109,6 +76,12 @@ namespace SmartMed.UI.Views
                 UnitPrice = medicine.Price,
                 Subtotal = medicine.Price * qty
             });
+            RefreshCart();
+        }
+
+        private void BtnClear_Click(object sender, EventArgs e)
+        {
+            _cart.Clear();
             RefreshCart();
         }
 
