@@ -1,266 +1,51 @@
 <mxfile host="Electron" agent="SmartMed">
   <diagram name="SmartMed Architecture Diagram" id="smartmed-arch">
-    <mxGraphModel dx="1987" dy="1489" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1600" pageHeight="900" math="0" shadow="0">
+    <mxGraphModel dx="900" dy="1200" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="700" pageHeight="1300" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
-        <mxCell id="title" parent="1" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;fontFamily=Helvetica;fontColor=#003296;fontSize=18;fontStyle=1;" value="SmartMed Pharmacy System - Three-Tier Architecture" vertex="1">
-          <mxGeometry height="40" width="800" x="400" y="15" as="geometry" />
+
+        <mxCell id="title" parent="1" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;fontFamily=Helvetica;fontColor=#003296;fontSize=18;fontStyle=1;" value="SmartMed Pharmacy System&#xa;Three-Tier Architecture" vertex="1">
+          <mxGeometry x="80" y="20" width="540" height="50" as="geometry" />
         </mxCell>
-        <mxCell id="users-bg" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#F2F2F2;strokeColor=#003296;strokeWidth=1.5;verticalAlign=top;align=center;fontFamily=Helvetica;fontColor=#003296;fontSize=12;fontStyle=1;spacingTop=8;" value="USERS" vertex="1">
-          <mxGeometry height="540" width="130" x="40" y="80" as="geometry" />
+
+        <mxCell id="layer-pres" value="Presentation Layer" style="swimlane;fontStyle=1;childLayout=stackLayout;horizontal=1;startSize=34;fillColor=#003296;fontColor=#ffffff;strokeColor=#003296;strokeWidth=1.5;html=1;collapsible=0;whiteSpace=wrap;fontFamily=Helvetica;align=center;" vertex="1" parent="1">
+          <mxGeometry x="80" y="90" width="540" height="280" as="geometry" />
         </mxCell>
-        <mxCell id="pres-bg" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#B4CBF9;strokeColor=#003296;strokeWidth=1.5;verticalAlign=top;align=center;fontFamily=Helvetica;fontColor=#003296;fontSize=12;fontStyle=1;spacingTop=8;" value="PRESENTATION TIER" vertex="1">
-          <mxGeometry height="540" width="300" x="200" y="80" as="geometry" />
+        <mxCell id="layer-pres-body" value="Windows Forms UI&#xa;&#xa;• Login Form&#xa;• Registration Form&#xa;• Admin Dashboard&#xa;• Customer Dashboard&#xa;• Medicine Management Form&#xa;• Customer Management Form&#xa;• Order Management Form&#xa;• Reports Form&#xa;• Profile Management Form" style="text;strokeColor=#003296;fillColor=#B4CBF9;align=left;verticalAlign=top;spacingLeft=14;spacingTop=10;fontFamily=Helvetica;fontColor=#003296;fontSize=11;html=1;whiteSpace=wrap;strokeWidth=1.5;" vertex="1" parent="layer-pres">
+          <mxGeometry y="34" width="540" height="246" as="geometry" />
         </mxCell>
-        <mxCell id="app-bg" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=light-dark(#b4cbf9, #281d00);strokeColor=#003296;strokeWidth=1.5;verticalAlign=top;align=center;fontFamily=Helvetica;fontColor=#003296;fontSize=12;fontStyle=1;spacingTop=8;" value="BUSINESS LOGIC TIER" vertex="1">
-          <mxGeometry height="530" width="300" x="590" y="90" as="geometry" />
-        </mxCell>
-        <mxCell id="data-bg" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=light-dark(#b4cbf9, #1f2f1e);strokeColor=#003296;strokeWidth=1.5;verticalAlign=top;align=center;fontFamily=Helvetica;fontColor=#003296;fontSize=12;fontStyle=1;spacingTop=8;" value="DATA ACCESS TIER" vertex="1">
-          <mxGeometry height="540" width="510" x="1030" y="80" as="geometry" />
-        </mxCell>
-        <mxCell id="tech-pres" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#003296;fontColor=#003296;fontSize=9;fontStyle=1;fontFamily=Helvetica;strokeWidth=1.5;arcSize=12;" value="Windows Forms  |  C# .NET" vertex="1">
-          <mxGeometry height="28" width="240" x="230" y="115" as="geometry" />
-        </mxCell>
-        <mxCell id="tech-app" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#003296;fontColor=#003296;fontSize=9;fontStyle=1;fontFamily=Helvetica;strokeWidth=1.5;arcSize=12;" value=".NET Framework  |  C# Classes" vertex="1">
-          <mxGeometry height="28" width="240" x="620" y="125" as="geometry" />
-        </mxCell>
-        <mxCell id="tech-data" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#003296;fontColor=#003296;fontSize=9;fontStyle=1;fontFamily=Helvetica;strokeWidth=1.5;arcSize=12;" value="SQL Server Database" vertex="1">
-          <mxGeometry height="28" width="240" x="1060" y="115" as="geometry" />
-        </mxCell>
-        <mxCell id="user-admin" parent="1" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;strokeColor=#003296;fillColor=none;fontColor=#003296;fontSize=10;strokeWidth=1.5;fontStyle=1;fontFamily=Helvetica;" value="Admin" vertex="1">
-          <mxGeometry height="55" width="30" x="85" y="200" as="geometry" />
-        </mxCell>
-        <mxCell id="user-customer" parent="1" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;strokeColor=#003296;fillColor=none;fontColor=#003296;fontSize=10;strokeWidth=1.5;fontStyle=1;fontFamily=Helvetica;" value="Customer" vertex="1">
-          <mxGeometry height="55" width="30" x="85" y="480" as="geometry" />
-        </mxCell>
-        <mxCell id="pf-login" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#003296;fontColor=#003296;fontSize=10;fontStyle=0;fontFamily=Helvetica;strokeWidth=1.5;arcSize=12;" value="Login Form" vertex="1">
-          <mxGeometry height="32" width="240" x="230" y="160" as="geometry" />
-        </mxCell>
-        <mxCell id="pf-reg" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#003296;fontColor=#003296;fontSize=10;fontStyle=0;fontFamily=Helvetica;strokeWidth=1.5;arcSize=12;" value="Registration Form" vertex="1">
-          <mxGeometry height="32" width="240" x="230" y="208" as="geometry" />
-        </mxCell>
-        <mxCell id="pf-adash" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#003296;fontColor=#003296;fontSize=10;fontStyle=0;fontFamily=Helvetica;strokeWidth=1.5;arcSize=12;" value="Admin Dashboard" vertex="1">
-          <mxGeometry height="32" width="240" x="230" y="256" as="geometry" />
-        </mxCell>
-        <mxCell id="pf-cdash" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#003296;fontColor=#003296;fontSize=10;fontStyle=0;fontFamily=Helvetica;strokeWidth=1.5;arcSize=12;" value="Customer Dashboard" vertex="1">
-          <mxGeometry height="32" width="240" x="230" y="304" as="geometry" />
-        </mxCell>
-        <mxCell id="pf-med" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#003296;fontColor=#003296;fontSize=10;fontStyle=0;fontFamily=Helvetica;strokeWidth=1.5;arcSize=12;" value="Medicine Management Form" vertex="1">
-          <mxGeometry height="32" width="240" x="230" y="352" as="geometry" />
-        </mxCell>
-        <mxCell id="pf-cust" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#003296;fontColor=#003296;fontSize=10;fontStyle=0;fontFamily=Helvetica;strokeWidth=1.5;arcSize=12;" value="Customer Management Form" vertex="1">
-          <mxGeometry height="32" width="240" x="230" y="400" as="geometry" />
-        </mxCell>
-        <mxCell id="pf-ord" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#003296;fontColor=#003296;fontSize=10;fontStyle=0;fontFamily=Helvetica;strokeWidth=1.5;arcSize=12;" value="Order Management Form" vertex="1">
-          <mxGeometry height="32" width="240" x="230" y="448" as="geometry" />
-        </mxCell>
-        <mxCell id="pf-rep" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#003296;fontColor=#003296;fontSize=10;fontStyle=0;fontFamily=Helvetica;strokeWidth=1.5;arcSize=12;" value="Reports Form" vertex="1">
-          <mxGeometry height="32" width="240" x="230" y="496" as="geometry" />
-        </mxCell>
-        <mxCell id="pf-prof" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#003296;fontColor=#003296;fontSize=10;fontStyle=0;fontFamily=Helvetica;strokeWidth=1.5;arcSize=12;" value="Profile Management Form" vertex="1">
-          <mxGeometry height="32" width="240" x="230" y="544" as="geometry" />
-        </mxCell>
-        <mxCell id="am-auth" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#003296;fontColor=#003296;fontSize=10;fontStyle=0;fontFamily=Helvetica;strokeWidth=1.5;arcSize=12;" value="Authentication &amp;amp; Authorization" vertex="1">
-          <mxGeometry height="32" width="240" x="620" y="170" as="geometry" />
-        </mxCell>
-        <mxCell id="am-val" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#003296;fontColor=#003296;fontSize=10;fontStyle=0;fontFamily=Helvetica;strokeWidth=1.5;arcSize=12;" value="Validation &amp;amp; Exception Handling" vertex="1">
-          <mxGeometry height="32" width="240" x="620" y="218" as="geometry" />
-        </mxCell>
-        <mxCell id="am-med" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#003296;fontColor=#003296;fontSize=10;fontStyle=0;fontFamily=Helvetica;strokeWidth=1.5;arcSize=12;" value="Medicine Management" vertex="1">
-          <mxGeometry height="32" width="240" x="620" y="266" as="geometry" />
-        </mxCell>
-        <mxCell id="am-cust" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#003296;fontColor=#003296;fontSize=10;fontStyle=0;fontFamily=Helvetica;strokeWidth=1.5;arcSize=12;" value="Customer Management" vertex="1">
-          <mxGeometry height="32" width="240" x="620" y="314" as="geometry" />
-        </mxCell>
-        <mxCell id="am-ord" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#003296;fontColor=#003296;fontSize=10;fontStyle=0;fontFamily=Helvetica;strokeWidth=1.5;arcSize=12;" value="Order Processing" vertex="1">
-          <mxGeometry height="32" width="240" x="620" y="362" as="geometry" />
-        </mxCell>
-        <mxCell id="am-search" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#003296;fontColor=#003296;fontSize=10;fontStyle=0;fontFamily=Helvetica;strokeWidth=1.5;arcSize=12;" value="Search Algorithms" vertex="1">
-          <mxGeometry height="32" width="240" x="620" y="410" as="geometry" />
-        </mxCell>
-        <mxCell id="am-rep" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#003296;fontColor=#003296;fontSize=10;fontStyle=0;fontFamily=Helvetica;strokeWidth=1.5;arcSize=12;" value="Report Generation" vertex="1">
-          <mxGeometry height="32" width="240" x="620" y="458" as="geometry" />
-        </mxCell>
-        <mxCell id="am-disc" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#003296;fontColor=#003296;fontSize=10;fontStyle=0;fontFamily=Helvetica;strokeWidth=1.5;arcSize=12;" value="Discount &amp;amp; Expiry Checking" vertex="1">
-          <mxGeometry height="32" width="240" x="620" y="506" as="geometry" />
-        </mxCell>
-        <mxCell id="dt-helper" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#003296;fontColor=#003296;fontSize=10;fontStyle=0;fontFamily=Helvetica;strokeWidth=1.5;arcSize=12;" value="Database Helper" vertex="1">
-          <mxGeometry height="32" width="240" x="1060" y="160" as="geometry" />
-        </mxCell>
-        <mxCell id="dt-adm" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#003296;fontColor=#003296;fontSize=10;fontStyle=0;fontFamily=Helvetica;strokeWidth=1.5;arcSize=12;" value="Admin Repository" vertex="1">
-          <mxGeometry height="32" width="240" x="1060" y="208" as="geometry" />
-        </mxCell>
-        <mxCell id="dt-cust" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#003296;fontColor=#003296;fontSize=10;fontStyle=0;fontFamily=Helvetica;strokeWidth=1.5;arcSize=12;" value="Customer Repository" vertex="1">
-          <mxGeometry height="32" width="240" x="1060" y="256" as="geometry" />
-        </mxCell>
-        <mxCell id="dt-med" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#003296;fontColor=#003296;fontSize=10;fontStyle=0;fontFamily=Helvetica;strokeWidth=1.5;arcSize=12;" value="Medicine Repository" vertex="1">
-          <mxGeometry height="32" width="240" x="1060" y="304" as="geometry" />
-        </mxCell>
-        <mxCell id="dt-ord" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#003296;fontColor=#003296;fontSize=10;fontStyle=0;fontFamily=Helvetica;strokeWidth=1.5;arcSize=12;" value="Order Repository" vertex="1">
-          <mxGeometry height="32" width="240" x="1060" y="352" as="geometry" />
-        </mxCell>
-        <mxCell id="tbl-admin" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#003296;fontColor=#003296;fontSize=9;fontStyle=0;fontFamily=Helvetica;strokeWidth=1.5;arcSize=12;" value="Admin" vertex="1">
-          <mxGeometry height="30" width="72" x="1070" y="420" as="geometry" />
-        </mxCell>
-        <mxCell id="tbl-customer" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#003296;fontColor=#003296;fontSize=9;fontStyle=0;fontFamily=Helvetica;strokeWidth=1.5;arcSize=12;" value="Customer" vertex="1">
-          <mxGeometry height="30" width="72" x="1148" y="420" as="geometry" />
-        </mxCell>
-        <mxCell id="tbl-medicine" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#003296;fontColor=#003296;fontSize=9;fontStyle=0;fontFamily=Helvetica;strokeWidth=1.5;arcSize=12;" value="Medicine" vertex="1">
-          <mxGeometry height="30" width="72" x="1226" y="420" as="geometry" />
-        </mxCell>
-        <mxCell id="tbl-order" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#003296;fontColor=#003296;fontSize=9;fontStyle=0;fontFamily=Helvetica;strokeWidth=1.5;arcSize=12;" value="Order" vertex="1">
-          <mxGeometry height="30" width="72" x="1070" y="462" as="geometry" />
-        </mxCell>
-        <mxCell id="tbl-orderitem" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#003296;fontColor=#003296;fontSize=9;fontStyle=0;fontFamily=Helvetica;strokeWidth=1.5;arcSize=12;" value="OrderItem" vertex="1">
-          <mxGeometry height="30" width="72" x="1148" y="462" as="geometry" />
-        </mxCell>
-        <mxCell id="tbl-prescription" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#003296;fontColor=#003296;fontSize=9;fontStyle=0;fontFamily=Helvetica;strokeWidth=1.5;arcSize=12;" value="Prescription" vertex="1">
-          <mxGeometry height="30" width="72" x="1226" y="462" as="geometry" />
-        </mxCell>
-        <mxCell id="db" parent="1" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=12;fillColor=#ffffff;strokeColor=#003296;fontColor=#003296;fontSize=11;fontStyle=1;fontFamily=Helvetica;strokeWidth=1.5;" value="SQL Server" vertex="1">
-          <mxGeometry height="70" width="100" x="1410" y="250" as="geometry" />
-        </mxCell>
-        <mxCell id="lbl-mc" parent="1" style="text;html=1;strokeColor=none;fillColor=none;align=center;fontFamily=Helvetica;fontColor=#003296;fontSize=10;fontStyle=1;" value="METHOD CALLS" vertex="1">
-          <mxGeometry height="20" width="120" x="500" y="88" as="geometry" />
-        </mxCell>
-        <mxCell id="lbl-db" parent="1" style="text;html=1;strokeColor=none;fillColor=none;align=center;fontFamily=Helvetica;fontColor=#003296;fontSize=10;fontStyle=1;" value="DB REQUEST / RETURN" vertex="1">
-          <mxGeometry height="20" width="160" x="820" y="88" as="geometry" />
-        </mxCell>
-        <mxCell id="tier12" edge="1" parent="1" style="endArrow=classic;startArrow=classic;html=1;strokeColor=#003296;strokeWidth=1.5;fontFamily=Helvetica;">
-          <mxGeometry relative="1" as="geometry">
-            <mxPoint x="500" y="105" as="sourcePoint" />
-            <mxPoint x="530" y="105" as="targetPoint" />
-          </mxGeometry>
-        </mxCell>
-        <mxCell id="tier23" edge="1" parent="1" style="endArrow=classic;startArrow=classic;html=1;strokeColor=#003296;strokeWidth=1.5;fontFamily=Helvetica;">
-          <mxGeometry relative="1" as="geometry">
-            <mxPoint x="890" y="115" as="sourcePoint" />
-            <mxPoint x="920" y="115" as="targetPoint" />
-          </mxGeometry>
-        </mxCell>
-        <mxCell id="av0" edge="1" parent="1" source="am-auth" style="html=1;strokeColor=#003296;strokeWidth=1;fontFamily=Helvetica;endArrow=classic;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" target="am-val">
+
+        <mxCell id="arrow1" edge="1" parent="1" source="layer-pres" target="layer-biz" style="endArrow=classic;html=1;strokeColor=#003296;strokeWidth=1.5;fontFamily=Helvetica;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="av1" edge="1" parent="1" source="am-val" style="html=1;strokeColor=#003296;strokeWidth=1;fontFamily=Helvetica;endArrow=classic;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" target="am-med">
+
+        <mxCell id="layer-biz" value="Business Logic Layer" style="swimlane;fontStyle=1;childLayout=stackLayout;horizontal=1;startSize=34;fillColor=#003296;fontColor=#ffffff;strokeColor=#003296;strokeWidth=1.5;html=1;collapsible=0;whiteSpace=wrap;fontFamily=Helvetica;align=center;" vertex="1" parent="1">
+          <mxGeometry x="80" y="400" width="540" height="340" as="geometry" />
+        </mxCell>
+        <mxCell id="layer-biz-body" value="Core Classes&#xa;&#xa;• Admin&#xa;• Customer&#xa;• Medicine&#xa;• Order&#xa;• OrderItem&#xa;• Prescription&#xa;&#xa;Business Functions&#xa;&#xa;• Validation&#xa;• Exception Handling&#xa;• Search Algorithms&#xa;• Discount Calculations&#xa;• Expiry Checking&#xa;• Report Generation" style="text;strokeColor=#003296;fillColor=#B4CBF9;align=left;verticalAlign=top;spacingLeft=14;spacingTop=10;fontFamily=Helvetica;fontColor=#003296;fontSize=11;html=1;whiteSpace=wrap;strokeWidth=1.5;" vertex="1" parent="layer-biz">
+          <mxGeometry y="34" width="540" height="306" as="geometry" />
+        </mxCell>
+
+        <mxCell id="arrow2" edge="1" parent="1" source="layer-biz" target="layer-dal" style="endArrow=classic;html=1;strokeColor=#003296;strokeWidth=1.5;fontFamily=Helvetica;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="av2" edge="1" parent="1" source="am-med" style="html=1;strokeColor=#003296;strokeWidth=1;fontFamily=Helvetica;endArrow=classic;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" target="am-cust">
+
+        <mxCell id="layer-dal" value="Data Access Layer" style="swimlane;fontStyle=1;childLayout=stackLayout;horizontal=1;startSize=34;fillColor=#003296;fontColor=#ffffff;strokeColor=#003296;strokeWidth=1.5;html=1;collapsible=0;whiteSpace=wrap;fontFamily=Helvetica;align=center;" vertex="1" parent="1">
+          <mxGeometry x="80" y="770" width="540" height="280" as="geometry" />
+        </mxCell>
+        <mxCell id="layer-dal-body" value="Database Components&#xa;&#xa;• Database Helper&#xa;• Admin Repository&#xa;• Customer Repository&#xa;• Medicine Repository&#xa;• Order Repository&#xa;&#xa;Operations&#xa;&#xa;• Insert&#xa;• Update&#xa;• Delete&#xa;• Retrieve&#xa;• Execute Queries" style="text;strokeColor=#003296;fillColor=#B4CBF9;align=left;verticalAlign=top;spacingLeft=14;spacingTop=10;fontFamily=Helvetica;fontColor=#003296;fontSize=11;html=1;whiteSpace=wrap;strokeWidth=1.5;" vertex="1" parent="layer-dal">
+          <mxGeometry y="34" width="540" height="246" as="geometry" />
+        </mxCell>
+
+        <mxCell id="arrow3" edge="1" parent="1" source="layer-dal" target="db" style="endArrow=classic;html=1;strokeColor=#003296;strokeWidth=1.5;fontFamily=Helvetica;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;entryPerimeter=0;">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="av3" edge="1" parent="1" source="am-cust" style="html=1;strokeColor=#003296;strokeWidth=1;fontFamily=Helvetica;endArrow=classic;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" target="am-ord">
-          <mxGeometry relative="1" as="geometry" />
+
+        <mxCell id="db" value="SQL Server&#xa;Database" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=12;fillColor=#ffffff;strokeColor=#003296;fontColor=#003296;fontSize=12;fontStyle=1;fontFamily=Helvetica;strokeWidth=1.5;" vertex="1" parent="1">
+          <mxGeometry x="300" y="1090" width="100" height="80" as="geometry" />
         </mxCell>
-        <mxCell id="av4" edge="1" parent="1" source="am-ord" style="html=1;strokeColor=#003296;strokeWidth=1;fontFamily=Helvetica;endArrow=classic;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" target="am-search">
-          <mxGeometry relative="1" as="geometry" />
-        </mxCell>
-        <mxCell id="av5" edge="1" parent="1" source="am-search" style="html=1;strokeColor=#003296;strokeWidth=1;fontFamily=Helvetica;endArrow=classic;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" target="am-rep">
-          <mxGeometry relative="1" as="geometry" />
-        </mxCell>
-        <mxCell id="av6" edge="1" parent="1" source="am-rep" style="html=1;strokeColor=#003296;strokeWidth=1;fontFamily=Helvetica;endArrow=classic;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" target="am-disc">
-          <mxGeometry relative="1" as="geometry" />
-        </mxCell>
-        <mxCell id="ul0" edge="1" parent="1" source="user-admin" style="html=1;strokeColor=#003296;strokeWidth=1;fontFamily=Helvetica;endArrow=none;dashed=1;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" target="pf-login">
-          <mxGeometry relative="1" as="geometry" />
-        </mxCell>
-        <mxCell id="ul1" edge="1" parent="1" source="user-admin" style="html=1;strokeColor=#003296;strokeWidth=1;fontFamily=Helvetica;endArrow=none;dashed=1;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" target="pf-adash">
-          <mxGeometry relative="1" as="geometry" />
-        </mxCell>
-        <mxCell id="ul2" edge="1" parent="1" source="user-admin" style="html=1;strokeColor=#003296;strokeWidth=1;fontFamily=Helvetica;endArrow=none;dashed=1;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" target="pf-med">
-          <mxGeometry relative="1" as="geometry" />
-        </mxCell>
-        <mxCell id="ul3" edge="1" parent="1" source="user-admin" style="html=1;strokeColor=#003296;strokeWidth=1;fontFamily=Helvetica;endArrow=none;dashed=1;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" target="pf-cust">
-          <mxGeometry relative="1" as="geometry" />
-        </mxCell>
-        <mxCell id="ul4" edge="1" parent="1" source="user-admin" style="html=1;strokeColor=#003296;strokeWidth=1;fontFamily=Helvetica;endArrow=none;dashed=1;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" target="pf-ord">
-          <mxGeometry relative="1" as="geometry" />
-        </mxCell>
-        <mxCell id="ul5" edge="1" parent="1" source="user-admin" style="html=1;strokeColor=#003296;strokeWidth=1;fontFamily=Helvetica;endArrow=none;dashed=1;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" target="pf-rep">
-          <mxGeometry relative="1" as="geometry" />
-        </mxCell>
-        <mxCell id="ul6" edge="1" parent="1" source="user-customer" style="html=1;strokeColor=#003296;strokeWidth=1;fontFamily=Helvetica;endArrow=none;dashed=1;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" target="pf-login">
-          <mxGeometry relative="1" as="geometry" />
-        </mxCell>
-        <mxCell id="ul7" edge="1" parent="1" source="user-customer" style="html=1;strokeColor=#003296;strokeWidth=1;fontFamily=Helvetica;endArrow=none;dashed=1;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" target="pf-reg">
-          <mxGeometry relative="1" as="geometry" />
-        </mxCell>
-        <mxCell id="ul8" edge="1" parent="1" source="user-customer" style="html=1;strokeColor=#003296;strokeWidth=1;fontFamily=Helvetica;endArrow=none;dashed=1;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" target="pf-cdash">
-          <mxGeometry relative="1" as="geometry" />
-        </mxCell>
-        <mxCell id="ul9" edge="1" parent="1" source="user-customer" style="html=1;strokeColor=#003296;strokeWidth=1;fontFamily=Helvetica;endArrow=none;dashed=1;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" target="pf-ord">
-          <mxGeometry relative="1" as="geometry" />
-        </mxCell>
-        <mxCell id="ul10" edge="1" parent="1" source="user-customer" style="html=1;strokeColor=#003296;strokeWidth=1;fontFamily=Helvetica;endArrow=none;dashed=1;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" target="pf-prof">
-          <mxGeometry relative="1" as="geometry" />
-        </mxCell>
-        <mxCell id="pa0" edge="1" parent="1" source="pf-login" style="html=1;strokeColor=#003296;strokeWidth=1;fontFamily=Helvetica;endArrow=classic;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" target="am-auth">
-          <mxGeometry relative="1" as="geometry" />
-        </mxCell>
-        <mxCell id="pa1" edge="1" parent="1" source="pf-reg" style="html=1;strokeColor=#003296;strokeWidth=1;fontFamily=Helvetica;endArrow=classic;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" target="am-auth">
-          <mxGeometry relative="1" as="geometry" />
-        </mxCell>
-        <mxCell id="pa2" edge="1" parent="1" source="pf-med" style="html=1;strokeColor=#003296;strokeWidth=1;fontFamily=Helvetica;endArrow=classic;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" target="am-med">
-          <mxGeometry relative="1" as="geometry" />
-        </mxCell>
-        <mxCell id="pa3" edge="1" parent="1" source="pf-cust" style="html=1;strokeColor=#003296;strokeWidth=1;fontFamily=Helvetica;endArrow=classic;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" target="am-cust">
-          <mxGeometry relative="1" as="geometry" />
-        </mxCell>
-        <mxCell id="pa4" edge="1" parent="1" source="pf-ord" style="html=1;strokeColor=#003296;strokeWidth=1;fontFamily=Helvetica;endArrow=classic;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" target="am-ord">
-          <mxGeometry relative="1" as="geometry" />
-        </mxCell>
-        <mxCell id="pa5" edge="1" parent="1" source="pf-rep" style="html=1;strokeColor=#003296;strokeWidth=1;fontFamily=Helvetica;endArrow=classic;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" target="am-rep">
-          <mxGeometry relative="1" as="geometry" />
-        </mxCell>
-        <mxCell id="pa6" edge="1" parent="1" source="pf-prof" style="html=1;strokeColor=#003296;strokeWidth=1;fontFamily=Helvetica;endArrow=classic;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" target="am-cust">
-          <mxGeometry relative="1" as="geometry" />
-        </mxCell>
-        <mxCell id="pa7" edge="1" parent="1" source="pf-adash" style="html=1;strokeColor=#003296;strokeWidth=1;fontFamily=Helvetica;endArrow=classic;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" target="am-rep">
-          <mxGeometry relative="1" as="geometry" />
-        </mxCell>
-        <mxCell id="pa8" edge="1" parent="1" source="pf-cdash" style="html=1;strokeColor=#003296;strokeWidth=1;fontFamily=Helvetica;endArrow=classic;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" target="am-ord">
-          <mxGeometry relative="1" as="geometry" />
-        </mxCell>
-        <mxCell id="ad0" edge="1" parent="1" source="am-auth" style="html=1;strokeColor=#003296;strokeWidth=1;fontFamily=Helvetica;endArrow=classic;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" target="dt-adm">
-          <mxGeometry relative="1" as="geometry" />
-        </mxCell>
-        <mxCell id="ad1" edge="1" parent="1" source="am-auth" style="html=1;strokeColor=#003296;strokeWidth=1;fontFamily=Helvetica;endArrow=classic;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" target="dt-cust">
-          <mxGeometry relative="1" as="geometry" />
-        </mxCell>
-        <mxCell id="ad2" edge="1" parent="1" source="am-med" style="html=1;strokeColor=#003296;strokeWidth=1;fontFamily=Helvetica;endArrow=classic;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" target="dt-med">
-          <mxGeometry relative="1" as="geometry" />
-        </mxCell>
-        <mxCell id="ad3" edge="1" parent="1" source="am-cust" style="html=1;strokeColor=#003296;strokeWidth=1;fontFamily=Helvetica;endArrow=classic;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" target="dt-cust">
-          <mxGeometry relative="1" as="geometry" />
-        </mxCell>
-        <mxCell id="ad4" edge="1" parent="1" source="am-ord" style="html=1;strokeColor=#003296;strokeWidth=1;fontFamily=Helvetica;endArrow=classic;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" target="dt-ord">
-          <mxGeometry relative="1" as="geometry" />
-        </mxCell>
-        <mxCell id="ad5" edge="1" parent="1" source="am-rep" style="html=1;strokeColor=#003296;strokeWidth=1;fontFamily=Helvetica;endArrow=classic;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" target="dt-ord">
-          <mxGeometry relative="1" as="geometry" />
-        </mxCell>
-        <mxCell id="ad6" edge="1" parent="1" source="am-val" style="html=1;strokeColor=#003296;strokeWidth=1;fontFamily=Helvetica;endArrow=classic;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" target="dt-helper">
-          <mxGeometry relative="1" as="geometry" />
-        </mxCell>
-        <mxCell id="ad7" edge="1" parent="1" source="am-search" style="html=1;strokeColor=#003296;strokeWidth=1;fontFamily=Helvetica;endArrow=classic;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" target="dt-med">
-          <mxGeometry relative="1" as="geometry" />
-        </mxCell>
-        <mxCell id="rs0" edge="1" parent="1" source="dt-helper" style="html=1;strokeColor=#003296;strokeWidth=1;fontFamily=Helvetica;endArrow=classic;exitX=1;exitY=0.75;entryX=0;entryY=0.286;entryDx=0;entryDy=0;entryPerimeter=0;exitDx=0;exitDy=0;" target="db">
-          <mxGeometry relative="1" as="geometry" />
-        </mxCell>
-        <mxCell id="rs1" edge="1" parent="1" source="dt-adm" style="html=1;strokeColor=#003296;strokeWidth=1;fontFamily=Helvetica;endArrow=classic;exitX=1;exitY=0.5;entryX=0.014;entryY=0.386;entryDx=0;entryDy=0;entryPerimeter=0;exitDx=0;exitDy=0;" target="db">
-          <mxGeometry relative="1" as="geometry" />
-        </mxCell>
-        <mxCell id="rs2" edge="1" parent="1" source="dt-cust" style="html=1;strokeColor=#003296;strokeWidth=1;fontFamily=Helvetica;endArrow=classic;exitX=1;exitY=0.5;entryX=-0.011;entryY=0.533;entryDx=0;entryDy=0;entryPerimeter=0;exitDx=0;exitDy=0;" target="db">
-          <mxGeometry relative="1" as="geometry" />
-        </mxCell>
-        <mxCell id="rs3" edge="1" parent="1" style="html=1;strokeColor=#003296;strokeWidth=1;fontFamily=Helvetica;endArrow=classic;entryX=-0.017;entryY=0.673;entryDx=0;entryDy=0;entryPerimeter=0;" target="db">
-          <mxGeometry relative="1" as="geometry">
-            <mxPoint x="1300" y="320" as="sourcePoint" />
-          </mxGeometry>
-        </mxCell>
-        <mxCell id="rs4" edge="1" parent="1" source="dt-ord" style="html=1;strokeColor=#003296;strokeWidth=1;fontFamily=Helvetica;endArrow=classic;exitX=1;exitY=0.5;entryX=-0.002;entryY=0.775;entryDx=0;entryDy=0;entryPerimeter=0;exitDx=0;exitDy=0;" target="db">
-          <mxGeometry relative="1" as="geometry" />
-        </mxCell>
+
       </root>
     </mxGraphModel>
   </diagram>
