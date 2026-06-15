@@ -15,8 +15,10 @@ namespace SmartMed.UI.Views
 
         private void InitializeComponent()
         {
-            this.lblHeader = new System.Windows.Forms.Label();
+            this.pageHeader = new System.Windows.Forms.Panel();
             this.splitPanel = new System.Windows.Forms.Panel();
+            this.medicinesCard = new System.Windows.Forms.Panel();
+            this.cartCard = new System.Windows.Forms.Panel();
             this.btnClear = new System.Windows.Forms.Button();
             this.btnPlace = new System.Windows.Forms.Button();
             this.btnAdd = new System.Windows.Forms.Button();
@@ -26,61 +28,74 @@ namespace SmartMed.UI.Views
             this.lblCart = new System.Windows.Forms.Label();
             this.gridMedicines = new System.Windows.Forms.DataGridView();
             this.splitPanel.SuspendLayout();
+            this.medicinesCard.SuspendLayout();
+            this.cartCard.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.gridCart)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.gridMedicines)).BeginInit();
             this.SuspendLayout();
             // 
-            // lblHeader
+            // pageHeader
             // 
-            this.lblHeader.AutoSize = true;
-            this.lblHeader.Dock = System.Windows.Forms.DockStyle.Top;
-            this.lblHeader.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold);
-            this.lblHeader.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(31)))), ((int)(((byte)(102)))));
-            this.lblHeader.Location = new System.Drawing.Point(0, 0);
-            this.lblHeader.Name = "lblHeader";
-            this.lblHeader.Padding = new System.Windows.Forms.Padding(0, 0, 0, 16);
-            this.lblHeader.Size = new System.Drawing.Size(95, 37);
-            this.lblHeader.TabIndex = 0;
-            this.lblHeader.Text = "Place Order";
+            this.pageHeader.Dock = System.Windows.Forms.DockStyle.Top;
+            this.pageHeader.Location = new System.Drawing.Point(0, 0);
+            this.pageHeader.Name = "pageHeader";
+            this.pageHeader.Size = new System.Drawing.Size(812, 44);
+            this.pageHeader.TabIndex = 0;
             // 
             // splitPanel
             // 
-            this.splitPanel.Controls.Add(this.btnClear);
-            this.splitPanel.Controls.Add(this.btnPlace);
-            this.splitPanel.Controls.Add(this.btnAdd);
-            this.splitPanel.Controls.Add(this.txtQty);
-            this.splitPanel.Controls.Add(this.lblQty);
-            this.splitPanel.Controls.Add(this.gridCart);
-            this.splitPanel.Controls.Add(this.lblCart);
-            this.splitPanel.Controls.Add(this.gridMedicines);
+            this.splitPanel.Controls.Add(this.cartCard);
+            this.splitPanel.Controls.Add(this.medicinesCard);
             this.splitPanel.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.splitPanel.Location = new System.Drawing.Point(0, 37);
+            this.splitPanel.Location = new System.Drawing.Point(0, 44);
             this.splitPanel.Name = "splitPanel";
             this.splitPanel.Padding = new System.Windows.Forms.Padding(0, 16, 0, 0);
             this.splitPanel.Size = new System.Drawing.Size(812, 587);
             this.splitPanel.TabIndex = 1;
             // 
+            // medicinesCard
+            // 
+            this.medicinesCard.Controls.Add(this.btnAdd);
+            this.medicinesCard.Controls.Add(this.txtQty);
+            this.medicinesCard.Controls.Add(this.lblQty);
+            this.medicinesCard.Controls.Add(this.gridMedicines);
+            this.medicinesCard.Location = new System.Drawing.Point(0, 16);
+            this.medicinesCard.Name = "medicinesCard";
+            this.medicinesCard.Size = new System.Drawing.Size(396, 571);
+            this.medicinesCard.TabIndex = 0;
+            // 
             // gridMedicines
             // 
-            this.gridMedicines.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left)));
+            this.gridMedicines.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.gridMedicines.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.gridMedicines.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.gridMedicines.Location = new System.Drawing.Point(0, 16);
+            this.gridMedicines.Location = new System.Drawing.Point(8, 8);
             this.gridMedicines.Name = "gridMedicines";
             this.gridMedicines.ReadOnly = true;
             this.gridMedicines.RowHeadersWidth = 51;
             this.gridMedicines.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.gridMedicines.Size = new System.Drawing.Size(396, 521);
+            this.gridMedicines.Size = new System.Drawing.Size(380, 505);
             this.gridMedicines.TabIndex = 0;
+            // 
+            // cartCard
+            // 
+            this.cartCard.Controls.Add(this.btnClear);
+            this.cartCard.Controls.Add(this.btnPlace);
+            this.cartCard.Controls.Add(this.gridCart);
+            this.cartCard.Controls.Add(this.lblCart);
+            this.cartCard.Location = new System.Drawing.Point(416, 16);
+            this.cartCard.Name = "cartCard";
+            this.cartCard.Size = new System.Drawing.Size(396, 571);
+            this.cartCard.TabIndex = 1;
             // 
             // lblCart
             // 
             this.lblCart.AutoSize = true;
-            this.lblCart.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
-            this.lblCart.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(68)))), ((int)(((byte)(70)))), ((int)(((byte)(82)))));
-            this.lblCart.Location = new System.Drawing.Point(416, 16);
+            this.lblCart.Location = new System.Drawing.Point(8, 8);
             this.lblCart.Name = "lblCart";
-            this.lblCart.Size = new System.Drawing.Size(88, 15);
+            this.lblCart.Size = new System.Drawing.Size(88, 17);
             this.lblCart.TabIndex = 1;
             this.lblCart.Text = "Shopping Cart";
             // 
@@ -89,21 +104,20 @@ namespace SmartMed.UI.Views
             this.gridCart.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.gridCart.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.gridCart.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.gridCart.Location = new System.Drawing.Point(416, 40);
+            this.gridCart.Location = new System.Drawing.Point(8, 32);
             this.gridCart.Name = "gridCart";
             this.gridCart.ReadOnly = true;
             this.gridCart.RowHeadersWidth = 51;
-            this.gridCart.Size = new System.Drawing.Size(396, 457);
+            this.gridCart.Size = new System.Drawing.Size(380, 481);
             this.gridCart.TabIndex = 2;
             // 
             // lblQty
             // 
             this.lblQty.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.lblQty.AutoSize = true;
-            this.lblQty.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
-            this.lblQty.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(68)))), ((int)(((byte)(70)))), ((int)(((byte)(82)))));
-            this.lblQty.Location = new System.Drawing.Point(0, 547);
+            this.lblQty.Location = new System.Drawing.Point(8, 531);
             this.lblQty.Name = "lblQty";
             this.lblQty.Size = new System.Drawing.Size(29, 15);
             this.lblQty.TabIndex = 3;
@@ -114,7 +128,7 @@ namespace SmartMed.UI.Views
             this.txtQty.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.txtQty.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.txtQty.Font = new System.Drawing.Font("Segoe UI", 9.75F);
-            this.txtQty.Location = new System.Drawing.Point(40, 543);
+            this.txtQty.Location = new System.Drawing.Point(48, 527);
             this.txtQty.Name = "txtQty";
             this.txtQty.Size = new System.Drawing.Size(50, 25);
             this.txtQty.TabIndex = 4;
@@ -127,7 +141,7 @@ namespace SmartMed.UI.Views
             this.btnAdd.FlatAppearance.BorderSize = 0;
             this.btnAdd.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnAdd.Font = new System.Drawing.Font("Segoe UI", 9.75F);
-            this.btnAdd.Location = new System.Drawing.Point(100, 541);
+            this.btnAdd.Location = new System.Drawing.Point(108, 525);
             this.btnAdd.Name = "btnAdd";
             this.btnAdd.Size = new System.Drawing.Size(110, 36);
             this.btnAdd.TabIndex = 5;
@@ -142,7 +156,7 @@ namespace SmartMed.UI.Views
             this.btnPlace.FlatAppearance.BorderSize = 0;
             this.btnPlace.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnPlace.Font = new System.Drawing.Font("Segoe UI", 9.75F);
-            this.btnPlace.Location = new System.Drawing.Point(416, 541);
+            this.btnPlace.Location = new System.Drawing.Point(8, 525);
             this.btnPlace.Name = "btnPlace";
             this.btnPlace.Size = new System.Drawing.Size(120, 36);
             this.btnPlace.TabIndex = 6;
@@ -157,7 +171,7 @@ namespace SmartMed.UI.Views
             this.btnClear.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(196)))), ((int)(((byte)(197)))), ((int)(((byte)(212)))));
             this.btnClear.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnClear.Font = new System.Drawing.Font("Segoe UI", 9.75F);
-            this.btnClear.Location = new System.Drawing.Point(546, 541);
+            this.btnClear.Location = new System.Drawing.Point(138, 525);
             this.btnClear.Name = "btnClear";
             this.btnClear.Size = new System.Drawing.Size(100, 36);
             this.btnClear.TabIndex = 7;
@@ -171,24 +185,28 @@ namespace SmartMed.UI.Views
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(249)))), ((int)(((byte)(249)))), ((int)(((byte)(249)))));
             this.Controls.Add(this.splitPanel);
-            this.Controls.Add(this.lblHeader);
+            this.Controls.Add(this.pageHeader);
             this.Dock = System.Windows.Forms.DockStyle.Fill;
             this.Font = new System.Drawing.Font("Segoe UI", 9.75F);
             this.Name = "PlaceOrderView";
             this.Size = new System.Drawing.Size(812, 624);
             this.Load += new System.EventHandler(this.PlaceOrderView_Load);
             this.splitPanel.ResumeLayout(false);
-            this.splitPanel.PerformLayout();
+            this.medicinesCard.ResumeLayout(false);
+            this.medicinesCard.PerformLayout();
+            this.cartCard.ResumeLayout(false);
+            this.cartCard.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.gridCart)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.gridMedicines)).EndInit();
             this.ResumeLayout(false);
-            this.PerformLayout();
         }
 
         #endregion
 
-        private System.Windows.Forms.Label lblHeader;
+        private System.Windows.Forms.Panel pageHeader;
         private System.Windows.Forms.Panel splitPanel;
+        private System.Windows.Forms.Panel medicinesCard;
+        private System.Windows.Forms.Panel cartCard;
         private System.Windows.Forms.DataGridView gridMedicines;
         private System.Windows.Forms.Label lblCart;
         private System.Windows.Forms.DataGridView gridCart;

@@ -15,9 +15,10 @@ namespace SmartMed.UI.Views
 
         private void InitializeComponent()
         {
-            this.lblHeader = new System.Windows.Forms.Label();
+            this.pageHeader = new System.Windows.Forms.Panel();
             this.body = new System.Windows.Forms.Panel();
             this.formPanel = new System.Windows.Forms.Panel();
+            this.gridCard = new System.Windows.Forms.Panel();
             this.btnClear = new System.Windows.Forms.Button();
             this.btnDelete = new System.Windows.Forms.Button();
             this.btnUpdate = new System.Windows.Forms.Button();
@@ -40,38 +41,44 @@ namespace SmartMed.UI.Views
             this.grid = new System.Windows.Forms.DataGridView();
             this.body.SuspendLayout();
             this.formPanel.SuspendLayout();
+            this.gridCard.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.grid)).BeginInit();
             this.SuspendLayout();
             // 
-            // lblHeader
+            // pageHeader
             // 
-            this.lblHeader.AutoSize = true;
-            this.lblHeader.Dock = System.Windows.Forms.DockStyle.Top;
-            this.lblHeader.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold);
-            this.lblHeader.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(31)))), ((int)(((byte)(102)))));
-            this.lblHeader.Location = new System.Drawing.Point(0, 0);
-            this.lblHeader.Name = "lblHeader";
-            this.lblHeader.Padding = new System.Windows.Forms.Padding(0, 0, 0, 16);
-            this.lblHeader.Size = new System.Drawing.Size(149, 37);
-            this.lblHeader.TabIndex = 0;
-            this.lblHeader.Text = "Manage Medicines";
+            this.pageHeader.Dock = System.Windows.Forms.DockStyle.Top;
+            this.pageHeader.Location = new System.Drawing.Point(0, 0);
+            this.pageHeader.Name = "pageHeader";
+            this.pageHeader.Size = new System.Drawing.Size(812, 64);
+            this.pageHeader.TabIndex = 0;
             // 
             // body
             // 
             this.body.Controls.Add(this.formPanel);
-            this.body.Controls.Add(this.grid);
+            this.body.Controls.Add(this.gridCard);
             this.body.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.body.Location = new System.Drawing.Point(0, 37);
+            this.body.Location = new System.Drawing.Point(0, 64);
             this.body.Name = "body";
             this.body.Padding = new System.Windows.Forms.Padding(0, 16, 0, 0);
             this.body.Size = new System.Drawing.Size(812, 587);
             this.body.TabIndex = 1;
             // 
+            // gridCard
+            // 
+            this.gridCard.Controls.Add(this.grid);
+            this.gridCard.Dock = System.Windows.Forms.DockStyle.Top;
+            this.gridCard.Location = new System.Drawing.Point(0, 16);
+            this.gridCard.Name = "gridCard";
+            this.gridCard.Size = new System.Drawing.Size(812, 200);
+            this.gridCard.TabIndex = 0;
+            // 
             // grid
             // 
+            this.grid.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.grid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.grid.Dock = System.Windows.Forms.DockStyle.Top;
-            this.grid.Location = new System.Drawing.Point(0, 16);
+            this.grid.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.grid.Location = new System.Drawing.Point(0, 0);
             this.grid.Name = "grid";
             this.grid.ReadOnly = true;
             this.grid.RowHeadersWidth = 51;
@@ -320,7 +327,7 @@ namespace SmartMed.UI.Views
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(249)))), ((int)(((byte)(249)))), ((int)(((byte)(249)))));
             this.Controls.Add(this.body);
-            this.Controls.Add(this.lblHeader);
+            this.Controls.Add(this.pageHeader);
             this.Dock = System.Windows.Forms.DockStyle.Fill;
             this.Font = new System.Drawing.Font("Segoe UI", 9.75F);
             this.Name = "MedicineManagementView";
@@ -329,15 +336,16 @@ namespace SmartMed.UI.Views
             this.body.ResumeLayout(false);
             this.formPanel.ResumeLayout(false);
             this.formPanel.PerformLayout();
+            this.gridCard.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.grid)).EndInit();
             this.ResumeLayout(false);
-            this.PerformLayout();
         }
 
         #endregion
 
-        private System.Windows.Forms.Label lblHeader;
+        private System.Windows.Forms.Panel pageHeader;
         private System.Windows.Forms.Panel body;
+        private System.Windows.Forms.Panel gridCard;
         private System.Windows.Forms.DataGridView grid;
         private System.Windows.Forms.Panel formPanel;
         private System.Windows.Forms.Label lblName;

@@ -18,6 +18,15 @@ namespace SmartMed.UI.Views
 
         private void ProfileManagementView_Load(object sender, EventArgs e)
         {
+            StitchUiHelper.SetupPageHeader(pageHeader, "Manage Profile",
+                "Update your personal and contact information.");
+            StitchUiHelper.StyleFormCard(formPanel);
+            StitchUiHelper.ApplyPrimaryAccentButton(btnSave);
+            StitchUiHelper.ApplyFieldLabel(lblName);
+            StitchUiHelper.ApplyFieldLabel(lblEmail);
+            StitchUiHelper.ApplyFieldLabel(lblPhone);
+            StitchUiHelper.ApplyFieldLabel(lblAddress);
+
             UiFactory.ApplyTextBoxStyle(txtName, 300);
             UiFactory.ApplyTextBoxStyle(txtEmail, 300);
             UiFactory.ApplyTextBoxStyle(txtPhone, 300);

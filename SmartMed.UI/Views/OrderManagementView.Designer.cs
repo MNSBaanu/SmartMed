@@ -15,52 +15,73 @@ namespace SmartMed.UI.Views
 
         private void InitializeComponent()
         {
-            this.lblHeader = new System.Windows.Forms.Label();
+            this.pageHeader = new System.Windows.Forms.Panel();
             this.body = new System.Windows.Forms.Panel();
             this.actionPanel = new System.Windows.Forms.Panel();
             this.btnUpdate = new System.Windows.Forms.Button();
             this.cmbStatus = new System.Windows.Forms.ComboBox();
             this.lblStatus = new System.Windows.Forms.Label();
+            this.gridItemsCard = new System.Windows.Forms.Panel();
             this.gridItems = new System.Windows.Forms.DataGridView();
             this.lblItems = new System.Windows.Forms.Label();
+            this.gridOrdersCard = new System.Windows.Forms.Panel();
             this.gridOrders = new System.Windows.Forms.DataGridView();
+            this.lblOrders = new System.Windows.Forms.Label();
             this.body.SuspendLayout();
             this.actionPanel.SuspendLayout();
+            this.gridItemsCard.SuspendLayout();
+            this.gridOrdersCard.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.gridItems)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.gridOrders)).BeginInit();
             this.SuspendLayout();
             // 
-            // lblHeader
+            // pageHeader
             // 
-            this.lblHeader.AutoSize = true;
-            this.lblHeader.Dock = System.Windows.Forms.DockStyle.Top;
-            this.lblHeader.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold);
-            this.lblHeader.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(31)))), ((int)(((byte)(102)))));
-            this.lblHeader.Location = new System.Drawing.Point(0, 0);
-            this.lblHeader.Name = "lblHeader";
-            this.lblHeader.Padding = new System.Windows.Forms.Padding(0, 0, 0, 16);
-            this.lblHeader.Size = new System.Drawing.Size(125, 37);
-            this.lblHeader.TabIndex = 0;
-            this.lblHeader.Text = "Manage Orders";
+            this.pageHeader.Dock = System.Windows.Forms.DockStyle.Top;
+            this.pageHeader.Location = new System.Drawing.Point(0, 0);
+            this.pageHeader.Name = "pageHeader";
+            this.pageHeader.Size = new System.Drawing.Size(812, 44);
+            this.pageHeader.TabIndex = 0;
             // 
             // body
             // 
             this.body.Controls.Add(this.actionPanel);
-            this.body.Controls.Add(this.gridItems);
+            this.body.Controls.Add(this.gridItemsCard);
             this.body.Controls.Add(this.lblItems);
-            this.body.Controls.Add(this.gridOrders);
+            this.body.Controls.Add(this.gridOrdersCard);
+            this.body.Controls.Add(this.lblOrders);
             this.body.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.body.Location = new System.Drawing.Point(0, 37);
+            this.body.Location = new System.Drawing.Point(0, 44);
             this.body.Name = "body";
             this.body.Padding = new System.Windows.Forms.Padding(0, 16, 0, 0);
             this.body.Size = new System.Drawing.Size(812, 587);
             this.body.TabIndex = 1;
             // 
+            // lblOrders
+            // 
+            this.lblOrders.Dock = System.Windows.Forms.DockStyle.Top;
+            this.lblOrders.Location = new System.Drawing.Point(0, 16);
+            this.lblOrders.Name = "lblOrders";
+            this.lblOrders.Padding = new System.Windows.Forms.Padding(0, 0, 0, 8);
+            this.lblOrders.Size = new System.Drawing.Size(812, 28);
+            this.lblOrders.TabIndex = 0;
+            this.lblOrders.Text = "Recent Orders";
+            // 
+            // gridOrdersCard
+            // 
+            this.gridOrdersCard.Controls.Add(this.gridOrders);
+            this.gridOrdersCard.Dock = System.Windows.Forms.DockStyle.Top;
+            this.gridOrdersCard.Location = new System.Drawing.Point(0, 44);
+            this.gridOrdersCard.Name = "gridOrdersCard";
+            this.gridOrdersCard.Size = new System.Drawing.Size(812, 160);
+            this.gridOrdersCard.TabIndex = 1;
+            // 
             // gridOrders
             // 
+            this.gridOrders.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.gridOrders.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.gridOrders.Dock = System.Windows.Forms.DockStyle.Top;
-            this.gridOrders.Location = new System.Drawing.Point(0, 16);
+            this.gridOrders.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.gridOrders.Location = new System.Drawing.Point(0, 0);
             this.gridOrders.Name = "gridOrders";
             this.gridOrders.ReadOnly = true;
             this.gridOrders.RowHeadersWidth = 51;
@@ -72,25 +93,33 @@ namespace SmartMed.UI.Views
             // lblItems
             // 
             this.lblItems.Dock = System.Windows.Forms.DockStyle.Top;
-            this.lblItems.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
-            this.lblItems.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(68)))), ((int)(((byte)(70)))), ((int)(((byte)(82)))));
-            this.lblItems.Location = new System.Drawing.Point(0, 176);
+            this.lblItems.Location = new System.Drawing.Point(0, 204);
             this.lblItems.Name = "lblItems";
             this.lblItems.Padding = new System.Windows.Forms.Padding(0, 16, 0, 8);
             this.lblItems.Size = new System.Drawing.Size(812, 39);
-            this.lblItems.TabIndex = 1;
+            this.lblItems.TabIndex = 2;
             this.lblItems.Text = "Order Items";
+            // 
+            // gridItemsCard
+            // 
+            this.gridItemsCard.Controls.Add(this.gridItems);
+            this.gridItemsCard.Dock = System.Windows.Forms.DockStyle.Top;
+            this.gridItemsCard.Location = new System.Drawing.Point(0, 243);
+            this.gridItemsCard.Name = "gridItemsCard";
+            this.gridItemsCard.Size = new System.Drawing.Size(812, 140);
+            this.gridItemsCard.TabIndex = 3;
             // 
             // gridItems
             // 
+            this.gridItems.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.gridItems.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.gridItems.Dock = System.Windows.Forms.DockStyle.Top;
-            this.gridItems.Location = new System.Drawing.Point(0, 215);
+            this.gridItems.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.gridItems.Location = new System.Drawing.Point(0, 0);
             this.gridItems.Name = "gridItems";
             this.gridItems.ReadOnly = true;
             this.gridItems.RowHeadersWidth = 51;
             this.gridItems.Size = new System.Drawing.Size(812, 140);
-            this.gridItems.TabIndex = 2;
+            this.gridItems.TabIndex = 0;
             // 
             // actionPanel
             // 
@@ -98,7 +127,7 @@ namespace SmartMed.UI.Views
             this.actionPanel.Controls.Add(this.cmbStatus);
             this.actionPanel.Controls.Add(this.lblStatus);
             this.actionPanel.Dock = System.Windows.Forms.DockStyle.Top;
-            this.actionPanel.Location = new System.Drawing.Point(0, 355);
+            this.actionPanel.Location = new System.Drawing.Point(0, 383);
             this.actionPanel.Name = "actionPanel";
             this.actionPanel.Padding = new System.Windows.Forms.Padding(0, 16, 0, 0);
             this.actionPanel.Size = new System.Drawing.Size(812, 50);
@@ -149,7 +178,7 @@ namespace SmartMed.UI.Views
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(249)))), ((int)(((byte)(249)))), ((int)(((byte)(249)))));
             this.Controls.Add(this.body);
-            this.Controls.Add(this.lblHeader);
+            this.Controls.Add(this.pageHeader);
             this.Dock = System.Windows.Forms.DockStyle.Fill;
             this.Font = new System.Drawing.Font("Segoe UI", 9.75F);
             this.Name = "OrderManagementView";
@@ -158,18 +187,22 @@ namespace SmartMed.UI.Views
             this.body.ResumeLayout(false);
             this.actionPanel.ResumeLayout(false);
             this.actionPanel.PerformLayout();
+            this.gridItemsCard.ResumeLayout(false);
+            this.gridOrdersCard.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.gridItems)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.gridOrders)).EndInit();
             this.ResumeLayout(false);
-            this.PerformLayout();
         }
 
         #endregion
 
-        private System.Windows.Forms.Label lblHeader;
+        private System.Windows.Forms.Panel pageHeader;
         private System.Windows.Forms.Panel body;
+        private System.Windows.Forms.Label lblOrders;
+        private System.Windows.Forms.Panel gridOrdersCard;
         private System.Windows.Forms.DataGridView gridOrders;
         private System.Windows.Forms.Label lblItems;
+        private System.Windows.Forms.Panel gridItemsCard;
         private System.Windows.Forms.DataGridView gridItems;
         private System.Windows.Forms.Panel actionPanel;
         private System.Windows.Forms.Label lblStatus;

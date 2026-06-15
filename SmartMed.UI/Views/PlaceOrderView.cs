@@ -23,6 +23,15 @@ namespace SmartMed.UI.Views
 
         private void PlaceOrderView_Load(object sender, EventArgs e)
         {
+            StitchUiHelper.SetupPageHeader(pageHeader, "Place Order");
+            StitchUiHelper.StyleGridCard(medicinesCard);
+            StitchUiHelper.StyleGridCard(cartCard);
+            StitchUiHelper.ApplySectionHeader(lblCart);
+            StitchUiHelper.ApplyFieldLabel(lblQty);
+            StitchUiHelper.ApplyPrimaryAccentButton(btnAdd);
+            StitchUiHelper.ApplyPrimaryAccentButton(btnPlace);
+            StitchUiHelper.ApplySecondaryButton(btnClear);
+
             UiFactory.ApplyDataGridStyle(gridMedicines);
             UiFactory.ApplyDataGridStyle(gridCart);
             gridMedicines.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
@@ -42,18 +51,12 @@ namespace SmartMed.UI.Views
 
         private void LayoutSplit()
         {
-            int half = (splitPanel.ClientSize.Width - 20) / 2;
-            gridMedicines.Width = half;
-            gridMedicines.Height = splitPanel.ClientSize.Height - 50;
-            lblCart.Location = new Point(half + 20, 0);
-            gridCart.Location = new Point(half + 20, 24);
-            gridCart.Width = splitPanel.ClientSize.Width - half - 20;
-            gridCart.Height = splitPanel.ClientSize.Height - 80;
-            btnPlace.Location = new Point(half + 20, splitPanel.ClientSize.Height - 44);
-            btnClear.Location = new Point(half + 150, splitPanel.ClientSize.Height - 44);
-            lblQty.Location = new Point(0, splitPanel.ClientSize.Height - 40);
-            txtQty.Location = new Point(40, splitPanel.ClientSize.Height - 44);
-            btnAdd.Location = new Point(100, splitPanel.ClientSize.Height - 46);
+            int gap = 20;
+            int half = (splitPanel.ClientSize.Width - gap) / 2;
+            int top = 16;
+            int height = splitPanel.ClientSize.Height - top;
+            medicinesCard.SetBounds(0, top, half, height);
+            cartCard.SetBounds(half + gap, top, splitPanel.ClientSize.Width - half - gap, height);
         }
 
         private void BtnAdd_Click(object sender, EventArgs e) => AddToCart();

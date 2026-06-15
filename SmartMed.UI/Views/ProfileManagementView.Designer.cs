@@ -15,7 +15,7 @@ namespace SmartMed.UI.Views
 
         private void InitializeComponent()
         {
-            this.lblHeader = new System.Windows.Forms.Label();
+            this.pageHeader = new System.Windows.Forms.Panel();
             this.formPanel = new System.Windows.Forms.Panel();
             this.btnSave = new System.Windows.Forms.Button();
             this.txtAddress = new System.Windows.Forms.TextBox();
@@ -29,18 +29,13 @@ namespace SmartMed.UI.Views
             this.formPanel.SuspendLayout();
             this.SuspendLayout();
             // 
-            // lblHeader
+            // pageHeader
             // 
-            this.lblHeader.AutoSize = true;
-            this.lblHeader.Dock = System.Windows.Forms.DockStyle.Top;
-            this.lblHeader.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold);
-            this.lblHeader.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(31)))), ((int)(((byte)(102)))));
-            this.lblHeader.Location = new System.Drawing.Point(0, 0);
-            this.lblHeader.Name = "lblHeader";
-            this.lblHeader.Padding = new System.Windows.Forms.Padding(0, 0, 0, 16);
-            this.lblHeader.Size = new System.Drawing.Size(127, 37);
-            this.lblHeader.TabIndex = 0;
-            this.lblHeader.Text = "Manage Profile";
+            this.pageHeader.Dock = System.Windows.Forms.DockStyle.Top;
+            this.pageHeader.Location = new System.Drawing.Point(0, 0);
+            this.pageHeader.Name = "pageHeader";
+            this.pageHeader.Size = new System.Drawing.Size(812, 64);
+            this.pageHeader.TabIndex = 0;
             // 
             // formPanel
             // 
@@ -54,7 +49,7 @@ namespace SmartMed.UI.Views
             this.formPanel.Controls.Add(this.txtName);
             this.formPanel.Controls.Add(this.lblName);
             this.formPanel.Dock = System.Windows.Forms.DockStyle.Top;
-            this.formPanel.Location = new System.Drawing.Point(0, 37);
+            this.formPanel.Location = new System.Drawing.Point(0, 64);
             this.formPanel.Name = "formPanel";
             this.formPanel.Padding = new System.Windows.Forms.Padding(0, 16, 0, 0);
             this.formPanel.Size = new System.Drawing.Size(812, 260);
@@ -161,7 +156,7 @@ namespace SmartMed.UI.Views
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(249)))), ((int)(((byte)(249)))), ((int)(((byte)(249)))));
             this.Controls.Add(this.formPanel);
-            this.Controls.Add(this.lblHeader);
+            this.Controls.Add(this.pageHeader);
             this.Dock = System.Windows.Forms.DockStyle.Fill;
             this.Font = new System.Drawing.Font("Segoe UI", 9.75F);
             this.Name = "ProfileManagementView";
@@ -170,12 +165,11 @@ namespace SmartMed.UI.Views
             this.formPanel.ResumeLayout(false);
             this.formPanel.PerformLayout();
             this.ResumeLayout(false);
-            this.PerformLayout();
         }
 
         #endregion
 
-        private System.Windows.Forms.Label lblHeader;
+        private System.Windows.Forms.Panel pageHeader;
         private System.Windows.Forms.Panel formPanel;
         private System.Windows.Forms.Label lblName;
         private System.Windows.Forms.TextBox txtName;

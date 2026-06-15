@@ -19,6 +19,22 @@ namespace SmartMed.UI.Views
 
         private void MedicineManagementView_Load(object sender, EventArgs e)
         {
+            StitchUiHelper.SetupPageHeader(pageHeader, "Manage Medicines",
+                "Update and monitor pharmaceutical inventory levels.");
+            StitchUiHelper.StyleGridCard(gridCard);
+            StitchUiHelper.StyleFormCard(formPanel);
+            StitchUiHelper.ApplyPrimaryAccentButton(btnAdd);
+            StitchUiHelper.ApplySecondaryAccentButton(btnUpdate);
+            StitchUiHelper.ApplySecondaryButton(btnDelete);
+            StitchUiHelper.ApplySecondaryButton(btnClear);
+            StitchUiHelper.ApplyFieldLabel(lblName);
+            StitchUiHelper.ApplyFieldLabel(lblCategory);
+            StitchUiHelper.ApplyFieldLabel(lblDosage);
+            StitchUiHelper.ApplyFieldLabel(lblPrice);
+            StitchUiHelper.ApplyFieldLabel(lblStock);
+            StitchUiHelper.ApplyFieldLabel(lblSupplier);
+            StitchUiHelper.ApplyFieldLabel(lblExpiry);
+
             UiFactory.ApplyDataGridStyle(grid);
             grid.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
             UiFactory.ApplyTextBoxStyle(txtName, 170);

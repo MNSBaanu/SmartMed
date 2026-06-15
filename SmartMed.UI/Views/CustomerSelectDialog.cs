@@ -19,7 +19,15 @@ namespace SmartMed.UI.Views
 
         private void CustomerSelectDialog_Load(object sender, EventArgs e)
         {
-            UiFactory.ApplyComboBoxStyle(cmbCustomer, 280);
+            panelCard.Width = 400;
+            panelHeader.BackColor = ClinicalPrecisionTheme.Primary;
+            lblHeader.Font = ClinicalPrecisionTheme.LabelFont;
+            lblHeader.ForeColor = ClinicalPrecisionTheme.OnPrimary;
+            StitchUiHelper.StyleFilterCard(panelBody);
+            StitchUiHelper.ApplyFieldLabel(lblCustomer);
+            StitchUiHelper.ApplyPrimaryAccentButton(btnOk);
+            StitchUiHelper.ApplySecondaryAccentButton(btnCancel);
+            UiFactory.ApplyComboBoxStyle(cmbCustomer, 360);
 
             if (UiFactory.IsDesignMode(this)) return;
 

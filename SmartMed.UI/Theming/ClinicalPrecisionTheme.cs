@@ -7,11 +7,17 @@ namespace SmartMed.UI.Theming
     {
         public static readonly Color Primary = Color.FromArgb(0, 31, 102);
         public static readonly Color PrimaryContainer = Color.FromArgb(0, 50, 150);
-        public static readonly Color SecondaryContainer = Color.FromArgb(180, 203, 249);
+        public static readonly Color SecondaryContainer = Color.FromArgb(184, 207, 254);
+        public static readonly Color OnSecondaryContainer = Color.FromArgb(66, 88, 128);
+        public static readonly Color NavActiveCustomer = Color.FromArgb(135, 162, 255);
+        public static readonly Color AccentBlue = Color.FromArgb(180, 203, 249);
         public static readonly Color Surface = Color.FromArgb(249, 249, 249);
+        public static readonly Color SurfaceContainer = Color.FromArgb(238, 238, 238);
+        public static readonly Color SurfaceContainerLow = Color.FromArgb(243, 243, 243);
         public static readonly Color ModalOverlay = Color.FromArgb(149, 162, 190);
         public static readonly Color SurfaceContainerLowest = Color.White;
         public static readonly Color SurfaceContainerHigh = Color.FromArgb(232, 232, 232);
+        public static readonly Color SurfaceVariant = Color.FromArgb(226, 226, 226);
         public static readonly Color OnSurface = Color.FromArgb(27, 27, 27);
         public static readonly Color OnSurfaceVariant = Color.FromArgb(68, 70, 82);
         public static readonly Color OnPrimary = Color.White;
@@ -34,11 +40,11 @@ namespace SmartMed.UI.Theming
         public const int StackSm = 8;
         public const int ButtonHeight = 36;
 
-        public static Font AppTitleFont => FontManager.Get(14f, FontStyle.Bold);
-        public static Font SectionHeaderFont => FontManager.Get(12f, FontStyle.Bold);
-        public static Font LabelFont => FontManager.Get(9f, FontStyle.Bold);
-        public static Font BodyFont => FontManager.Get(9.75f, FontStyle.Regular);
-        public static Font DataGridFont => FontManager.Get(9f, FontStyle.Regular);
+        public static Font AppTitleFont => FontManager.Get(18.6f, FontStyle.Bold);
+        public static Font SectionHeaderFont => FontManager.Get(16f, FontStyle.Bold);
+        public static Font LabelFont => FontManager.Get(12f, FontStyle.Bold);
+        public static Font BodyFont => FontManager.Get(14.6f, FontStyle.Regular);
+        public static Font DataGridFont => FontManager.Get(13f, FontStyle.Regular);
         public static Font SmallFont => FontManager.Get(8.25f, FontStyle.Bold);
         public static Font VersionFont => FontManager.Get(7.5f, FontStyle.Italic);
     }

@@ -11,18 +11,33 @@ namespace SmartMed.UI
         public AdminDashboardForm()
         {
             InitializeComponent();
+            ApplyStitchShell();
             UiFactory.ApplyFormDefaults(this);
             if (!UiFactory.IsDesignMode(this))
                 UiFactory.ApplyFullScreen(this);
         }
 
+        private void ApplyStitchShell()
+        {
+            StitchUiHelper.ApplyAdminShell(this, headerPanel, lblHeaderTitle, txtGlobalSearch,
+                sidebarPanel, lblBrandTitle, lblBrandSubtitle, btnLogout);
+
+            StitchUiHelper.StyleNavButton(btnOverview, StitchUiHelper.NavIcon.Dashboard, "Dashboard Overview", true);
+            StitchUiHelper.StyleNavButton(btnMedicines, StitchUiHelper.NavIcon.Medicines, "Manage Medicines", false);
+            StitchUiHelper.StyleNavButton(btnCustomers, StitchUiHelper.NavIcon.Customers, "Manage Customers", false);
+            StitchUiHelper.StyleNavButton(btnOrders, StitchUiHelper.NavIcon.Orders, "Manage Orders", false);
+            StitchUiHelper.StyleNavButton(btnReports, StitchUiHelper.NavIcon.Reports, "Generate Reports", false);
+
+            btnOverview.Location = new System.Drawing.Point(24, 88);
+            btnMedicines.Location = new System.Drawing.Point(24, 132);
+            btnCustomers.Location = new System.Drawing.Point(24, 176);
+            btnOrders.Location = new System.Drawing.Point(24, 220);
+            btnReports.Location = new System.Drawing.Point(24, 264);
+        }
+
         private void AdminDashboardForm_Load(object sender, EventArgs e)
         {
             if (UiFactory.IsDesignMode(this)) return;
-
-            var welcome = Session.CurrentAdmin?.Username ?? "Admin";
-            lblWelcome.Text = $"Welcome, {welcome}";
-            lblHeaderSubtitle.Text = $"Admin Dashboard  |  {welcome}";
             Navigate(new AdminOverviewView(), btnOverview);
         }
 
@@ -41,7 +56,7 @@ namespace SmartMed.UI
 
         private void Navigate(UserControl view, Button active)
         {
-            UiFactory.NavigateTo(contentHost, view, active, btnOverview, btnMedicines, btnCustomers, btnOrders, btnReports);
+            UiFactory.NavigateTo(contentHost, view, active, false, btnOverview, btnMedicines, btnCustomers, btnOrders, btnReports);
         }
     }
 }

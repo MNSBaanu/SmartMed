@@ -18,6 +18,16 @@ namespace SmartMed.UI.Views
 
         private void CustomerManagementView_Load(object sender, EventArgs e)
         {
+            StitchUiHelper.SetupPageHeader(pageHeader, "Manage Customers",
+                "View and update registered customer records.");
+            StitchUiHelper.StyleGridCard(gridCard);
+            StitchUiHelper.StyleFormCard(formPanel);
+            StitchUiHelper.ApplySecondaryAccentButton(btnUpdate);
+            StitchUiHelper.ApplyFieldLabel(lblName);
+            StitchUiHelper.ApplyFieldLabel(lblEmail);
+            StitchUiHelper.ApplyFieldLabel(lblPhone);
+            StitchUiHelper.ApplyFieldLabel(lblAddress);
+
             UiFactory.ApplyDataGridStyle(grid);
             grid.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
             UiFactory.ApplyTextBoxStyle(txtName, 300);

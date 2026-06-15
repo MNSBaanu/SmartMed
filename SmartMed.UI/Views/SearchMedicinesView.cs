@@ -17,6 +17,17 @@ namespace SmartMed.UI.Views
 
         private void SearchMedicinesView_Load(object sender, EventArgs e)
         {
+            StitchUiHelper.SetupPageHeaderWithRightLabel(
+                pageHeader, "Search Medicines", $"Last updated: {DateTime.Now:h:mm tt}");
+            StitchUiHelper.StyleFilterCard(filterPanel);
+            StitchUiHelper.StyleGridCard(gridCard);
+            StitchUiHelper.ApplyPrimaryAccentButton(btnSearch);
+            StitchUiHelper.ApplySecondaryAccentButton(btnShowAll);
+            StitchUiHelper.ApplyFieldLabel(lblName);
+            StitchUiHelper.ApplyFieldLabel(lblCategory);
+            StitchUiHelper.ApplyFieldLabel(lblMin);
+            StitchUiHelper.ApplyFieldLabel(lblMax);
+
             UiFactory.ApplyTextBoxStyle(txtName, 140);
             UiFactory.ApplyTextBoxStyle(txtCategory, 140);
             UiFactory.ApplyTextBoxStyle(txtMinPrice, 60);

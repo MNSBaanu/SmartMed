@@ -1,5 +1,6 @@
 using System;
 using System.Windows.Forms;
+using SmartMed.Business;
 using SmartMed.Business.Services;
 using SmartMed.UI.Theming;
 
@@ -11,27 +12,56 @@ namespace SmartMed.UI.Views
         {
             InitializeComponent();
             UiFactory.ApplyViewChrome(this);
-            LayoutCards();
-            Resize += (s, e) => LayoutCards();
+            Resize += (s, e) => LayoutDashboard();
+            LayoutDashboard();
         }
 
         private void AdminOverviewView_Load(object sender, EventArgs e)
         {
-            if (UiFactory.IsDesignMode(this)) return;
+            StitchUiHelper.StyleStatCard(panelInventory);
+            StitchUiHelper.StyleStatCard(panelOrders);
+            StitchUiHelper.StyleStatCard(panelRevenue);
+            StitchUiHelper.StyleGridCard(panelActivity);
+            UiFactory.ApplyDataGridStyle(gridActivity);
+
+            if (UiFactory.IsDesignMode(this))
+            {
+                lblWelcome.Text = "Welcome, admin";
+                return;
+            }
+
+            var welcome = Session.CurrentAdmin?.Username ?? "Admin";
+            lblWelcome.Text = $"Welcome, {welcome}";
 
             var service = new DashboardService();
-            lblSalesValue.Text = $"LKR {service.TotalSales:N2}";
-            lblStockValue.Text = service.MedicinesInStock.ToString("N0") + " units";
+            lblInventoryValue.Text = service.MedicinesInStock.ToString("N0");
             lblOrdersValue.Text = service.ActiveOrders.ToString();
-            LayoutCards();
+            lblRevenueValue.Text = $"LKR {service.TotalSales:N2}";
+
+            try
+            {
+                gridActivity.DataSource = new OrderService().GetAllOrders();
+                if (gridActivity.Columns.Contains("OrderID")) gridActivity.Columns["OrderID"].Visible = false;
+            }
+            catch { }
+
+            LayoutDashboard();
         }
 
-        private void LayoutCards()
+        private void LayoutDashboard()
         {
-            int cardWidth = Math.Max(200, (ClientSize.Width - 48) / 3);
-            panelSales.SetBounds(0, 40, cardWidth, 100);
-            panelStock.SetBounds(cardWidth + 16, 40, cardWidth, 100);
-            panelOrders.SetBounds((cardWidth + 16) * 2, 40, cardWidth, 100);
+            int w = ClientSize.Width;
+            if (w < 100) return;
+            int cardW = Math.Max(180, (w - 32) / 3);
+            panelInventory.SetBounds(0, 72, cardW, 110);
+            panelOrders.SetBounds(cardW + 16, 72, cardW, 110);
+            panelRevenue.SetBounds((cardW + 16) * 2, 72, cardW, 110);
+
+            int below = 200;
+            int activityW = Math.Max(400, (int)(w * 0.62));
+            panelActivity.SetBounds(0, below, activityW, 220);
+            panelQuickFulfillment.SetBounds(activityW + 16, below, w - activityW - 16, 104);
+            panelStockAlerts.SetBounds(activityW + 16, below + 120, w - activityW - 16, 100);
         }
     }
 }

@@ -18,6 +18,14 @@ namespace SmartMed.UI.Views
 
         private void OrderManagementView_Load(object sender, EventArgs e)
         {
+            StitchUiHelper.SetupPageHeader(pageHeader, "Manage Orders");
+            StitchUiHelper.ApplySectionHeader(lblOrders);
+            StitchUiHelper.ApplySectionHeader(lblItems);
+            StitchUiHelper.StyleGridCard(gridOrdersCard);
+            StitchUiHelper.StyleGridCard(gridItemsCard);
+            StitchUiHelper.ApplyPrimaryAccentButton(btnUpdate);
+            StitchUiHelper.ApplyFieldLabel(lblStatus);
+
             UiFactory.ApplyDataGridStyle(gridOrders);
             UiFactory.ApplyDataGridStyle(gridItems);
             gridOrders.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;

@@ -175,9 +175,9 @@ namespace SmartMed.UI.Theming
                 Width = width,
                 Height = ClinicalPrecisionTheme.ButtonHeight,
                 FlatStyle = FlatStyle.Flat,
-                BackColor = ClinicalPrecisionTheme.SecondaryContainer,
+                BackColor = ClinicalPrecisionTheme.AccentBlue,
                 ForeColor = ClinicalPrecisionTheme.OnSurface,
-                Font = ClinicalPrecisionTheme.BodyFont,
+                Font = ClinicalPrecisionTheme.LabelFont,
                 Cursor = Cursors.Hand
             };
             btn.FlatAppearance.BorderSize = 0;
@@ -289,12 +289,17 @@ namespace SmartMed.UI.Theming
 
         public static void NavigateTo(Panel contentHost, UserControl view, Button activeNav, params Button[] allNavButtons)
         {
+            NavigateTo(contentHost, view, activeNav, false, allNavButtons);
+        }
+
+        public static void NavigateTo(Panel contentHost, UserControl view, Button activeNav, bool customerPortal, params Button[] allNavButtons)
+        {
             contentHost.Controls.Clear();
             view.Dock = DockStyle.Fill;
             contentHost.Controls.Add(view);
             FontManager.ApplyInterFont(view);
             if (activeNav != null)
-                SetActiveNav(activeNav, allNavButtons);
+                StitchUiHelper.SetActiveNav(activeNav, customerPortal, allNavButtons);
         }
     }
 }

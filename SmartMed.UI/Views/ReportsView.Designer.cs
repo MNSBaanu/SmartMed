@@ -15,28 +15,25 @@ namespace SmartMed.UI.Views
 
         private void InitializeComponent()
         {
-            this.lblHeader = new System.Windows.Forms.Label();
+            this.pageHeader = new System.Windows.Forms.Panel();
             this.toolbar = new System.Windows.Forms.Panel();
+            this.gridCard = new System.Windows.Forms.Panel();
             this.btnHistory = new System.Windows.Forms.Button();
             this.btnStock = new System.Windows.Forms.Button();
             this.btnSales = new System.Windows.Forms.Button();
             this.grid = new System.Windows.Forms.DataGridView();
             this.toolbar.SuspendLayout();
+            this.gridCard.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.grid)).BeginInit();
             this.SuspendLayout();
             // 
-            // lblHeader
+            // pageHeader
             // 
-            this.lblHeader.AutoSize = true;
-            this.lblHeader.Dock = System.Windows.Forms.DockStyle.Top;
-            this.lblHeader.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold);
-            this.lblHeader.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(31)))), ((int)(((byte)(102)))));
-            this.lblHeader.Location = new System.Drawing.Point(0, 0);
-            this.lblHeader.Name = "lblHeader";
-            this.lblHeader.Padding = new System.Windows.Forms.Padding(0, 0, 0, 16);
-            this.lblHeader.Size = new System.Drawing.Size(143, 37);
-            this.lblHeader.TabIndex = 0;
-            this.lblHeader.Text = "Generate Reports";
+            this.pageHeader.Dock = System.Windows.Forms.DockStyle.Top;
+            this.pageHeader.Location = new System.Drawing.Point(0, 0);
+            this.pageHeader.Name = "pageHeader";
+            this.pageHeader.Size = new System.Drawing.Size(812, 44);
+            this.pageHeader.TabIndex = 0;
             // 
             // toolbar
             // 
@@ -44,7 +41,7 @@ namespace SmartMed.UI.Views
             this.toolbar.Controls.Add(this.btnStock);
             this.toolbar.Controls.Add(this.btnSales);
             this.toolbar.Dock = System.Windows.Forms.DockStyle.Top;
-            this.toolbar.Location = new System.Drawing.Point(0, 37);
+            this.toolbar.Location = new System.Drawing.Point(0, 44);
             this.toolbar.Name = "toolbar";
             this.toolbar.Padding = new System.Windows.Forms.Padding(0, 16, 0, 0);
             this.toolbar.Size = new System.Drawing.Size(812, 50);
@@ -92,40 +89,51 @@ namespace SmartMed.UI.Views
             this.btnHistory.UseVisualStyleBackColor = false;
             this.btnHistory.Click += new System.EventHandler(this.BtnHistory_Click);
             // 
+            // gridCard
+            // 
+            this.gridCard.Controls.Add(this.grid);
+            this.gridCard.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.gridCard.Location = new System.Drawing.Point(0, 94);
+            this.gridCard.Name = "gridCard";
+            this.gridCard.Size = new System.Drawing.Size(812, 530);
+            this.gridCard.TabIndex = 2;
+            // 
             // grid
             // 
+            this.grid.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.grid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.grid.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.grid.Location = new System.Drawing.Point(0, 87);
+            this.grid.Location = new System.Drawing.Point(0, 0);
             this.grid.Name = "grid";
             this.grid.ReadOnly = true;
             this.grid.RowHeadersWidth = 51;
-            this.grid.Size = new System.Drawing.Size(812, 537);
-            this.grid.TabIndex = 2;
+            this.grid.Size = new System.Drawing.Size(812, 530);
+            this.grid.TabIndex = 0;
             // 
             // ReportsView
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 17F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(249)))), ((int)(((byte)(249)))), ((int)(((byte)(249)))));
-            this.Controls.Add(this.grid);
+            this.Controls.Add(this.gridCard);
             this.Controls.Add(this.toolbar);
-            this.Controls.Add(this.lblHeader);
+            this.Controls.Add(this.pageHeader);
             this.Dock = System.Windows.Forms.DockStyle.Fill;
             this.Font = new System.Drawing.Font("Segoe UI", 9.75F);
             this.Name = "ReportsView";
             this.Size = new System.Drawing.Size(812, 624);
             this.Load += new System.EventHandler(this.ReportsView_Load);
             this.toolbar.ResumeLayout(false);
+            this.gridCard.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.grid)).EndInit();
             this.ResumeLayout(false);
-            this.PerformLayout();
         }
 
         #endregion
 
-        private System.Windows.Forms.Label lblHeader;
+        private System.Windows.Forms.Panel pageHeader;
         private System.Windows.Forms.Panel toolbar;
+        private System.Windows.Forms.Panel gridCard;
         private System.Windows.Forms.Button btnSales;
         private System.Windows.Forms.Button btnStock;
         private System.Windows.Forms.Button btnHistory;

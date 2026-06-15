@@ -11,18 +11,31 @@ namespace SmartMed.UI
         public CustomerDashboardForm()
         {
             InitializeComponent();
+            ApplyStitchShell();
             UiFactory.ApplyFormDefaults(this);
             if (!UiFactory.IsDesignMode(this))
                 UiFactory.ApplyFullScreen(this);
         }
 
+        private void ApplyStitchShell()
+        {
+            StitchUiHelper.ApplyCustomerShell(this, headerPanel, lblHeaderTitle, txtGlobalSearch,
+                sidebarPanel, lblBrandTitle, lblBrandSubtitle, btnLogout);
+
+            StitchUiHelper.StyleNavButton(btnSearch, StitchUiHelper.NavIcon.Search, "Search Medicines", true, true);
+            StitchUiHelper.StyleNavButton(btnPlace, StitchUiHelper.NavIcon.Cart, "Place Order", false, true);
+            StitchUiHelper.StyleNavButton(btnTrack, StitchUiHelper.NavIcon.Track, "Track Orders", false, true);
+            StitchUiHelper.StyleNavButton(btnProfile, StitchUiHelper.NavIcon.Profile, "Manage Profile", false, true);
+
+            btnSearch.Location = new System.Drawing.Point(24, 88);
+            btnPlace.Location = new System.Drawing.Point(24, 132);
+            btnTrack.Location = new System.Drawing.Point(24, 176);
+            btnProfile.Location = new System.Drawing.Point(24, 220);
+        }
+
         private void CustomerDashboardForm_Load(object sender, EventArgs e)
         {
             if (UiFactory.IsDesignMode(this)) return;
-
-            var welcome = Session.CurrentCustomer?.Name ?? "Customer";
-            lblWelcome.Text = $"Welcome, {welcome}";
-            lblHeaderSubtitle.Text = $"Customer Portal  |  {welcome}";
             Navigate(new SearchMedicinesView(), btnSearch);
         }
 
@@ -40,7 +53,7 @@ namespace SmartMed.UI
 
         private void Navigate(UserControl view, Button active)
         {
-            UiFactory.NavigateTo(contentHost, view, active, btnSearch, btnPlace, btnTrack, btnProfile);
+            UiFactory.NavigateTo(contentHost, view, active, true, btnSearch, btnPlace, btnTrack, btnProfile);
         }
     }
 }

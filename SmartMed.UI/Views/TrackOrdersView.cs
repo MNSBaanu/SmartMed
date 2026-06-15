@@ -18,6 +18,11 @@ namespace SmartMed.UI.Views
 
         private void TrackOrdersView_Load(object sender, EventArgs e)
         {
+            StitchUiHelper.SetupPageHeader(pageHeader, "Track Orders");
+            StitchUiHelper.ApplySectionHeader(lblItems);
+            StitchUiHelper.StyleGridCard(gridOrdersCard);
+            StitchUiHelper.StyleGridCard(gridItemsCard);
+
             UiFactory.ApplyDataGridStyle(gridOrders);
             UiFactory.ApplyDataGridStyle(gridItems);
             gridOrders.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;

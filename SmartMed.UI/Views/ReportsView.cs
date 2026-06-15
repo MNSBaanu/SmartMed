@@ -17,6 +17,12 @@ namespace SmartMed.UI.Views
 
         private void ReportsView_Load(object sender, EventArgs e)
         {
+            StitchUiHelper.SetupPageHeader(pageHeader, "Generate Reports");
+            StitchUiHelper.StyleGridCard(gridCard);
+            StitchUiHelper.ApplyPrimaryAccentButton(btnSales);
+            StitchUiHelper.ApplyPrimaryAccentButton(btnStock);
+            StitchUiHelper.ApplyPrimaryAccentButton(btnHistory);
+
             UiFactory.ApplyDataGridStyle(grid);
             grid.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
 
