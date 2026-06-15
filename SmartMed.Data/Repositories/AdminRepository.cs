@@ -1,0 +1,31 @@
+using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Data.SqlClient;
+using SmartMed.Data.Models;
+
+namespace SmartMed.Data.Repositories
+{
+    public class AdminRepository
+    {
+        public AdminUser GetByCredentials(string username, string password)
+        {
+            var table = DatabaseHelper.ExecuteQuery(
+                "SELECT AdminID, Username, Password, Email FROM Admin WHERE Username=@u AND Password=@p",
+                new SqlParameter("@u", username),
+                new SqlParameter("@p", password));
+
+            if (table.Rows.Count == 0) return null;
+
+            var row = table.Rows[0];
+            return new AdminUser
+            {
+                AdminID = Convert.ToInt32(row["AdminID"]),
+                Username = row["Username"].ToString(),
+                Password = row["Password"].ToString(),
+                Email = row["Email"].ToString(),
+                Name = row["Username"].ToString()
+            };
+        }
+    }
+}
