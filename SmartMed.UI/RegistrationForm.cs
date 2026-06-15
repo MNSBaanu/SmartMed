@@ -15,6 +15,7 @@ namespace SmartMed.UI
         public RegistrationForm()
         {
             InitializeComponent();
+            FontManager.ApplyInterFont(this);
             panelCard.Paint += PanelCard_Paint;
             SetupPlaceholders();
             UiFactory.ConfigureAuthForm(this, panelCard);

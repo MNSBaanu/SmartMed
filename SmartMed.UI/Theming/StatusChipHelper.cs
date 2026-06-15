@@ -15,7 +15,7 @@ namespace SmartMed.UI.Theming
             GetStatusColors(status, out Color back, out Color fore);
             e.CellStyle.BackColor = back;
             e.CellStyle.ForeColor = fore;
-            e.CellStyle.Font = new Font(ClinicalPrecisionTheme.DataGridFont, FontStyle.Bold);
+            e.CellStyle.Font = FontManager.Get(ClinicalPrecisionTheme.DataGridFont.Size, FontStyle.Bold);
             e.CellStyle.SelectionBackColor = back;
             e.CellStyle.SelectionForeColor = fore;
         }

@@ -1,5 +1,6 @@
 using System;
 using System.Windows.Forms;
+using SmartMed.UI.Theming;
 
 namespace SmartMed.UI
 {
@@ -8,6 +9,7 @@ namespace SmartMed.UI
         [STAThread]
         static void Main()
         {
+            FontManager.Initialize();
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             Application.Run(new LoginForm());

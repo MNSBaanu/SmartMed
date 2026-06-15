@@ -16,8 +16,10 @@ namespace SmartMed.UI.Theming
 
         public static void ApplyFormDefaults(Form form)
         {
+            FontManager.Initialize();
             form.Font = ClinicalPrecisionTheme.BodyFont;
             form.BackColor = ClinicalPrecisionTheme.Surface;
+            FontManager.ApplyInterFont(form);
         }
 
         public static void ApplyFullScreen(Form form)
@@ -160,7 +162,7 @@ namespace SmartMed.UI.Theming
                 var isActive = btn == active;
                 btn.BackColor = isActive ? ClinicalPrecisionTheme.SecondaryContainer : ClinicalPrecisionTheme.SurfaceContainerLowest;
                 btn.Font = isActive
-                    ? new Font(ClinicalPrecisionTheme.BodyFont, FontStyle.Bold)
+                    ? FontManager.Get(ClinicalPrecisionTheme.BodyFont.Size, FontStyle.Bold)
                     : ClinicalPrecisionTheme.BodyFont;
             }
         }
@@ -283,6 +285,7 @@ namespace SmartMed.UI.Theming
             contentHost.Controls.Clear();
             view.Dock = DockStyle.Fill;
             contentHost.Controls.Add(view);
+            FontManager.ApplyInterFont(view);
             if (activeNav != null)
                 SetActiveNav(activeNav, allNavButtons);
         }

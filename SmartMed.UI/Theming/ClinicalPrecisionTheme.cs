@@ -34,10 +34,12 @@ namespace SmartMed.UI.Theming
         public const int StackSm = 8;
         public const int ButtonHeight = 36;
 
-        public static readonly Font AppTitleFont = new Font("Segoe UI", 14f, FontStyle.Bold);
-        public static readonly Font SectionHeaderFont = new Font("Segoe UI", 12f, FontStyle.Bold);
-        public static readonly Font LabelFont = new Font("Segoe UI", 9f, FontStyle.Bold);
-        public static readonly Font BodyFont = new Font("Segoe UI", 9.75f, FontStyle.Regular);
-        public static readonly Font DataGridFont = new Font("Segoe UI", 9f, FontStyle.Regular);
+        public static Font AppTitleFont => FontManager.Get(14f, FontStyle.Bold);
+        public static Font SectionHeaderFont => FontManager.Get(12f, FontStyle.Bold);
+        public static Font LabelFont => FontManager.Get(9f, FontStyle.Bold);
+        public static Font BodyFont => FontManager.Get(9.75f, FontStyle.Regular);
+        public static Font DataGridFont => FontManager.Get(9f, FontStyle.Regular);
+        public static Font SmallFont => FontManager.Get(8.25f, FontStyle.Bold);
+        public static Font VersionFont => FontManager.Get(7.5f, FontStyle.Italic);
     }
 }

@@ -10,6 +10,7 @@ namespace SmartMed.UI.Views
         public AdminOverviewView()
         {
             InitializeComponent();
+            FontManager.ApplyInterFont(this);
             Dock = DockStyle.Fill;
             Resize += AdminOverviewView_Resize;
         }

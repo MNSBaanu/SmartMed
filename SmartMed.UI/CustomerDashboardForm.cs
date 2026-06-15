@@ -13,6 +13,7 @@ namespace SmartMed.UI
             InitializeComponent();
             if (!UiFactory.IsDesignMode(this))
                 UiFactory.ApplyFullScreen(this);
+            FontManager.ApplyInterFont(this);
         }
 
         private void CustomerDashboardForm_Load(object sender, EventArgs e)
