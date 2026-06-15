@@ -1,0 +1,10 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net48</TargetFramework>
+    <RootNamespace>SmartMed.Business</RootNamespace>
+    <AssemblyName>SmartMed.Business</AssemblyName>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\SmartMed.Data\SmartMed.Data.csproj" />
+  </ItemGroup>
+</Project>
