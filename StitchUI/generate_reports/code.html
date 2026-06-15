@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>SmartMed Pharmacy - Reports</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Theme Configuration -->
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "on-surface": "#1b1b1b",
+                    "inverse-surface": "#303030",
+                    "on-primary-container": "#87a2ff",
+                    "surface-container-low": "#f3f3f3",
+                    "on-background": "#1b1b1b",
+                    "error": "#ba1a1a",
+                    "on-tertiary-fixed-variant": "#444749",
+                    "tertiary": "#242728",
+                    "tertiary-fixed-dim": "#c5c6c8",
+                    "inverse-primary": "#b5c4ff",
+                    "secondary-fixed": "#d6e3ff",
+                    "tertiary-fixed": "#e1e2e4",
+                    "on-tertiary": "#ffffff",
+                    "on-surface-variant": "#444652",
+                    "on-error-container": "#93000a",
+                    "surface-container-highest": "#e2e2e2",
+                    "outline": "#747684",
+                    "on-tertiary-fixed": "#191c1e",
+                    "secondary-fixed-dim": "#b0c7f5",
+                    "error-container": "#ffdad6",
+                    "primary": "#001f66",
+                    "inverse-on-surface": "#f1f1f1",
+                    "surface-dim": "#dadada",
+                    "secondary-container": "#b8cffe",
+                    "surface-bright": "#f9f9f9",
+                    "on-secondary-fixed-variant": "#30476e",
+                    "secondary": "#485f87",
+                    "surface-container-high": "#e8e8e8",
+                    "surface-tint": "#3658ba",
+                    "on-tertiary-container": "#a5a6a8",
+                    "on-primary-fixed": "#00164e",
+                    "primary-container": "#003296",
+                    "surface": "#f9f9f9",
+                    "on-primary": "#ffffff",
+                    "primary-fixed-dim": "#b5c4ff",
+                    "background": "#f9f9f9",
+                    "surface-variant": "#e2e2e2",
+                    "on-secondary-fixed": "#001b3e",
+                    "outline-variant": "#c4c5d4",
+                    "surface-container": "#eeeeee",
+                    "on-primary-fixed-variant": "#173ea1",
+                    "primary-fixed": "#dce1ff",
+                    "on-secondary-container": "#425880",
+                    "on-secondary": "#ffffff",
+                    "tertiary-container": "#3a3c3e",
+                    "on-error": "#ffffff",
+                    "surface-container-lowest": "#ffffff"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.125rem",
+                    "lg": "0.25rem",
+                    "xl": "0.5rem",
+                    "full": "0.75rem"
+            },
+            "spacing": {
+                    "nav-width": "420px",
+                    "nav-item-height": "40px",
+                    "stack-sm": "8px",
+                    "gutter": "16px",
+                    "container-padding": "24px",
+                    "stack-md": "16px"
+            },
+            "fontFamily": {
+                    "label": ["Inter"],
+                    "body-regular": ["Inter"],
+                    "data-grid": ["Inter"],
+                    "app-title": ["Inter"],
+                    "section-header": ["Inter"]
+            },
+            "fontSize": {
+                    "label": ["12px", {"lineHeight": "16px", "fontWeight": "600"}],
+                    "body-regular": ["14.6px", {"lineHeight": "20px", "fontWeight": "400"}],
+                    "data-grid": ["13px", {"lineHeight": "18px", "fontWeight": "400"}],
+                    "app-title": ["18.6px", {"lineHeight": "24px", "letterSpacing": "-0.01em", "fontWeight": "700"}],
+                    "section-header": ["16px", {"lineHeight": "20px", "fontWeight": "700"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f9f9f9;
+            color: #1b1b1b;
+            overflow: hidden;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            vertical-align: middle;
+        }
+        /* Custom scrollbar for Windows-like feel */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #c4c5d4;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #747684;
+        }
+        .active-tab {
+            background-color: #ffffff;
+            border-bottom: 2px solid #3658ba;
+            color: #001f66;
+        }
+    </style>
+</head>
+<body class="flex flex-col h-screen">
+<!-- TopAppBar -->
+<header class="flex justify-between items-center h-12 px-4 w-full bg-primary dark:bg-primary-container docked full-width top-0 z-50">
+<div class="flex items-center gap-4">
+<span class="font-app-title text-app-title text-on-primary dark:text-on-primary-container select-none">SmartMed Pharmacy</span>
+</div>
+<div class="flex items-center gap-2">
+<div class="flex items-center bg-white/10 rounded px-2 py-0.5">
+<span class="material-symbols-outlined text-on-primary text-[18px] mr-2">search</span>
+<input class="bg-transparent border-none text-on-primary placeholder:text-on-primary/50 text-[13px] focus:ring-0 p-0 w-48" placeholder="Global Search..." type="text"/>
+</div>
+<div class="flex">
+<button class="w-10 h-10 flex items-center justify-center text-on-primary hover:bg-primary-fixed-dim/20 transition-colors"><span class="material-symbols-outlined">minimize</span></button>
+<button class="w-10 h-10 flex items-center justify-center text-on-primary hover:bg-primary-fixed-dim/20 transition-colors"><span class="material-symbols-outlined">fullscreen</span></button>
+<button class="w-10 h-10 flex items-center justify-center text-on-primary hover:bg-error transition-colors"><span class="material-symbols-outlined">close</span></button>
+</div>
+</div>
+</header>
+<div class="flex flex-1 overflow-hidden">
+<!-- SideNavBar -->
+<aside class="hidden md:flex flex-col h-[calc(100vh-48px)] w-[420px] bg-surface dark:bg-surface-dim border-r border-outline-variant dark:border-outline py-stack-md shrink-0">
+<div class="px-gutter mb-6">
+<h2 class="font-section-header text-section-header text-primary dark:text-primary-fixed-dim">SmartMed</h2>
+<p class="font-label text-label text-on-surface-variant/70 uppercase tracking-wider">Pharmacy Management</p>
+</div>
+<nav class="flex-1">
+<a class="flex items-center w-full h-[40px] text-on-surface-variant dark:text-on-tertiary-container px-gutter hover:bg-secondary-container dark:hover:bg-secondary-fixed-dim transition-all" href="#">
+<span class="material-symbols-outlined mr-3">prescriptions</span>
+<span class="font-label text-label">Prescriptions</span>
+</a>
+<a class="flex items-center w-full h-[40px] text-on-surface-variant dark:text-on-tertiary-container px-gutter hover:bg-secondary-container dark:hover:bg-secondary-fixed-dim transition-all" href="#">
+<span class="material-symbols-outlined mr-3">inventory_2</span>
+<span class="font-label text-label">Inventory</span>
+</a>
+<a class="flex items-center w-full h-[40px] text-on-surface-variant dark:text-on-tertiary-container px-gutter hover:bg-secondary-container dark:hover:bg-secondary-fixed-dim transition-all" href="#">
+<span class="material-symbols-outlined mr-3">group</span>
+<span class="font-label text-label">Customers</span>
+</a>
+<a class="flex items-center w-full h-[40px] text-on-surface-variant dark:text-on-tertiary-container px-gutter hover:bg-secondary-container dark:hover:bg-secondary-fixed-dim transition-all" href="#">
+<span class="material-symbols-outlined mr-3">receipt_long</span>
+<span class="font-label text-label">Orders</span>
+</a>
+<!-- Active Item: Reports -->
+<a class="flex items-center w-full h-[40px] bg-on-primary-container text-on-primary font-bold px-gutter scale-[0.99] transition-transform duration-100" href="#">
+<span class="material-symbols-outlined mr-3" style="font-variation-settings: 'FILL' 1;">assessment</span>
+<span class="font-label text-label">Reports</span>
+</a>
+</nav>
+<div class="mt-auto pt-4 border-t border-outline-variant">
+<a class="flex items-center w-full h-[40px] text-on-surface-variant px-gutter hover:bg-secondary-container transition-all" href="#">
+<span class="material-symbols-outlined mr-3">settings</span>
+<span class="font-label text-label">Settings</span>
+</a>
+<a class="flex items-center w-full h-[40px] text-on-surface-variant px-gutter hover:bg-secondary-container transition-all" href="#">
+<span class="material-symbols-outlined mr-3">help</span>
+<span class="font-label text-label">Support</span>
+</a>
+</div>
+</aside>
+<!-- Main Content (Reports) -->
+<main class="flex-1 bg-background p-gutter flex flex-col items-center">
+<div class="w-[800px] h-[480px] bg-surface-container-lowest border border-outline-variant rounded shadow-sm flex flex-col overflow-hidden">
+<!-- Toolbar / Tabs -->
+<div class="flex items-end bg-surface-container h-12 border-b border-outline-variant px-2">
+<button class="w-[120px] h-9 flex items-center justify-center font-label text-label active-tab cursor-pointer transition-all border-x border-t border-transparent rounded-t-sm" id="sales-tab" onclick="switchTab('sales')">
+                        Sales Report
+                    </button>
+<button class="w-[120px] h-9 flex items-center justify-center font-label text-label text-on-surface-variant hover:bg-surface-variant transition-all border-x border-t border-transparent rounded-t-sm" id="stock-tab" onclick="switchTab('stock')">
+                        Stock Report
+                    </button>
+<button class="w-[180px] h-9 flex items-center justify-center font-label text-label text-on-surface-variant hover:bg-surface-variant transition-all border-x border-t border-transparent rounded-t-sm" id="history-tab" onclick="switchTab('history')">
+                        Customer Order History
+                    </button>
+<div class="ml-auto flex items-center gap-2 h-full pb-1">
+<button class="bg-secondary text-on-secondary font-label text-[11px] px-3 py-1 rounded-sm flex items-center gap-1 hover:brightness-95 transition-all">
+<span class="material-symbols-outlined text-[14px]">file_download</span> EXPORT PDF
+                        </button>
+<button class="bg-primary text-on-primary font-label text-[11px] px-3 py-1 rounded-sm flex items-center gap-1 hover:brightness-110 transition-all">
+<span class="material-symbols-outlined text-[14px]">print</span> PRINT
+                        </button>
+</div>
+</div>
+<!-- Report Content Wrapper -->
+<div class="flex-1 p-stack-md">
+<!-- Statistics Summary -->
+<div class="grid grid-cols-4 gap-stack-md mb-stack-md">
+<div class="bg-primary-container/5 border border-primary-container/20 p-stack-sm rounded">
+<p class="font-label text-[10px] text-on-surface-variant uppercase opacity-70">Total Revenue</p>
+<p class="font-section-header text-section-header text-primary">LKR 1,245,300.00</p>
+</div>
+<div class="bg-primary-container/5 border border-primary-container/20 p-stack-sm rounded">
+<p class="font-label text-[10px] text-on-surface-variant uppercase opacity-70">Total Orders</p>
+<p class="font-section-header text-section-header text-primary">142</p>
+</div>
+<div class="bg-primary-container/5 border border-primary-container/20 p-stack-sm rounded">
+<p class="font-label text-[10px] text-on-surface-variant uppercase opacity-70">Average Margin</p>
+<p class="font-section-header text-section-header text-primary">18.4%</p>
+</div>
+<div class="bg-primary-container/5 border border-primary-container/20 p-stack-sm rounded">
+<p class="font-label text-[10px] text-on-surface-variant uppercase opacity-70">Outstanding</p>
+<p class="font-section-header text-section-header text-error">LKR 45,200.00</p>
+</div>
+</div>
+<!-- Large DataGrid (740x350 approx) -->
+<div class="w-full h-[320px] border border-outline-variant overflow-auto relative">
+<table class="w-full border-collapse text-left font-data-grid text-data-grid">
+<thead class="sticky top-0 bg-surface-container-high z-10">
+<tr>
+<th class="border-b border-r border-outline-variant px-2 py-2 text-on-surface font-bold w-12 text-center">ID</th>
+<th class="border-b border-r border-outline-variant px-3 py-2 text-on-surface font-bold">Item Name</th>
+<th class="border-b border-r border-outline-variant px-3 py-2 text-on-surface font-bold text-center">Qty</th>
+<th class="border-b border-r border-outline-variant px-3 py-2 text-on-surface font-bold text-right">Unit Price</th>
+<th class="border-b border-r border-outline-variant px-3 py-2 text-on-surface font-bold text-right">Total (LKR)</th>
+<th class="border-b border-outline-variant px-3 py-2 text-on-surface font-bold">Status</th>
+</tr>
+</thead>
+<tbody id="report-grid-body">
+<!-- Data Rows -->
+<tr class="hover:bg-secondary-container/10 transition-colors border-b border-outline-variant">
+<td class="px-2 py-1.5 text-center border-r border-outline-variant">001</td>
+<td class="px-3 py-1.5 border-r border-outline-variant">Amoxicillin 500mg (Cap)</td>
+<td class="px-3 py-1.5 border-r border-outline-variant text-center">200</td>
+<td class="px-3 py-1.5 border-r border-outline-variant text-right">45.00</td>
+<td class="px-3 py-1.5 border-r border-outline-variant text-right font-bold">9,000.00</td>
+<td class="px-3 py-1.5">
+<span class="bg-green-100 text-green-800 text-[10px] font-bold px-2 py-0.5 rounded-sm">FULFILLED</span>
+</td>
+</tr>
+<tr class="bg-secondary-container/20 border-b border-outline-variant">
+<td class="px-2 py-1.5 text-center border-r border-outline-variant">002</td>
+<td class="px-3 py-1.5 border-r border-outline-variant">Paracetamol 500mg</td>
+<td class="px-3 py-1.5 border-r border-outline-variant text-center">1,200</td>
+<td class="px-3 py-1.5 border-r border-outline-variant text-right">3.50</td>
+<td class="px-3 py-1.5 border-r border-outline-variant text-right font-bold">4,200.00</td>
+<td class="px-3 py-1.5">
+<span class="bg-green-100 text-green-800 text-[10px] font-bold px-2 py-0.5 rounded-sm">FULFILLED</span>
+</td>
+</tr>
+<tr class="hover:bg-secondary-container/10 transition-colors border-b border-outline-variant">
+<td class="px-2 py-1.5 text-center border-r border-outline-variant">003</td>
+<td class="px-3 py-1.5 border-r border-outline-variant">Insulin Glargine Pen</td>
+<td class="px-3 py-1.5 border-r border-outline-variant text-center">15</td>
+<td class="px-3 py-1.5 border-r border-outline-variant text-right">3,500.00</td>
+<td class="px-3 py-1.5 border-r border-outline-variant text-right font-bold">52,500.00</td>
+<td class="px-3 py-1.5">
+<span class="bg-amber-100 text-amber-800 text-[10px] font-bold px-2 py-0.5 rounded-sm">PENDING</span>
+</td>
+</tr>
+<tr class="hover:bg-secondary-container/10 transition-colors border-b border-outline-variant">
+<td class="px-2 py-1.5 text-center border-r border-outline-variant">004</td>
+<td class="px-3 py-1.5 border-r border-outline-variant">Metformin 850mg</td>
+<td class="px-3 py-1.5 border-r border-outline-variant text-center">500</td>
+<td class="px-3 py-1.5 border-r border-outline-variant text-right">12.00</td>
+<td class="px-3 py-1.5 border-r border-outline-variant text-right font-bold">6,000.00</td>
+<td class="px-3 py-1.5">
+<span class="bg-green-100 text-green-800 text-[10px] font-bold px-2 py-0.5 rounded-sm">FULFILLED</span>
+</td>
+</tr>
+<tr class="hover:bg-secondary-container/10 transition-colors border-b border-outline-variant">
+<td class="px-2 py-1.5 text-center border-r border-outline-variant">005</td>
+<td class="px-3 py-1.5 border-r border-outline-variant">Atorvastatin 20mg</td>
+<td class="px-3 py-1.5 border-r border-outline-variant text-center">300</td>
+<td class="px-3 py-1.5 border-r border-outline-variant text-right">25.00</td>
+<td class="px-3 py-1.5 border-r border-outline-variant text-right font-bold">7,500.00</td>
+<td class="px-3 py-1.5">
+<span class="bg-red-100 text-red-800 text-[10px] font-bold px-2 py-0.5 rounded-sm">OUT_STOCK</span>
+</td>
+</tr>
+<tr class="hover:bg-secondary-container/10 transition-colors border-b border-outline-variant">
+<td class="px-2 py-1.5 text-center border-r border-outline-variant">006</td>
+<td class="px-3 py-1.5 border-r border-outline-variant">Augmentin 625mg</td>
+<td class="px-3 py-1.5 border-r border-outline-variant text-center">50</td>
+<td class="px-3 py-1.5 border-r border-outline-variant text-right">180.00</td>
+<td class="px-3 py-1.5 border-r border-outline-variant text-right font-bold">9,000.00</td>
+<td class="px-3 py-1.5">
+<span class="bg-green-100 text-green-800 text-[10px] font-bold px-2 py-0.5 rounded-sm">FULFILLED</span>
+</td>
+</tr>
+<tr class="hover:bg-secondary-container/10 transition-colors border-b border-outline-variant">
+<td class="px-2 py-1.5 text-center border-r border-outline-variant">007</td>
+<td class="px-3 py-1.5 border-r border-outline-variant">Vicks Vaporub 50g</td>
+<td class="px-3 py-1.5 border-r border-outline-variant text-center">20</td>
+<td class="px-3 py-1.5 border-r border-outline-variant text-right">450.00</td>
+<td class="px-3 py-1.5 border-r border-outline-variant text-right font-bold">9,000.00</td>
+<td class="px-3 py-1.5">
+<span class="bg-green-100 text-green-800 text-[10px] font-bold px-2 py-0.5 rounded-sm">FULFILLED</span>
+</td>
+</tr>
+<tr class="hover:bg-secondary-container/10 transition-colors border-b border-outline-variant">
+<td class="px-2 py-1.5 text-center border-r border-outline-variant">008</td>
+<td class="px-3 py-1.5 border-r border-outline-variant">Panadol Syrup</td>
+<td class="px-3 py-1.5 border-r border-outline-variant text-center">45</td>
+<td class="px-3 py-1.5 border-r border-outline-variant text-right">380.00</td>
+<td class="px-3 py-1.5 border-r border-outline-variant text-right font-bold">17,100.00</td>
+<td class="px-3 py-1.5">
+<span class="bg-green-100 text-green-800 text-[10px] font-bold px-2 py-0.5 rounded-sm">FULFILLED</span>
+</td>
+</tr>
+<tr class="hover:bg-secondary-container/10 transition-colors border-b border-outline-variant">
+<td class="px-2 py-1.5 text-center border-r border-outline-variant">009</td>
+<td class="px-3 py-1.5 border-r border-outline-variant">Cetirizine 10mg</td>
+<td class="px-3 py-1.5 border-r border-outline-variant text-center">1000</td>
+<td class="px-3 py-1.5 border-r border-outline-variant text-right">2.50</td>
+<td class="px-3 py-1.5 border-r border-outline-variant text-right font-bold">2,500.00</td>
+<td class="px-3 py-1.5">
+<span class="bg-green-100 text-green-800 text-[10px] font-bold px-2 py-0.5 rounded-sm">FULFILLED</span>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<!-- Footer Status Bar -->
+<div class="h-8 bg-surface-container-high border-t border-outline-variant px-gutter flex items-center justify-between font-label text-[10px] text-on-surface-variant">
+<div class="flex gap-4">
+<span>Items: 142 Total</span>
+<span>Selection: Row 2 Active</span>
+</div>
+<div class="flex gap-4">
+<span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-green-500"></span> Server Connected</span>
+<span>02:45 PM | 2023-10-24</span>
+</div>
+</div>
+</div>
+<!-- Bento Contextual Widgets (Visual Polish) -->
+<div class="w-[800px] mt-gutter grid grid-cols-3 gap-stack-md">
+<div class="bg-white border border-outline-variant p-stack-sm rounded shadow-sm">
+<div class="flex items-center gap-2 mb-2">
+<span class="material-symbols-outlined text-primary text-[18px]">trending_up</span>
+<h3 class="font-label text-label">Monthly Forecast</h3>
+</div>
+<p class="font-body-regular text-body-regular text-on-surface-variant text-[12px]">Projected growth of <span class="font-bold text-green-600">+12.4%</span> based on current sales trajectory for insulin products.</p>
+</div>
+<div class="bg-white border border-outline-variant p-stack-sm rounded shadow-sm">
+<div class="flex items-center gap-2 mb-2">
+<span class="material-symbols-outlined text-primary text-[18px]">notifications</span>
+<h3 class="font-label text-label">Stock Alerts</h3>
+</div>
+<p class="font-body-regular text-body-regular text-on-surface-variant text-[12px]"><span class="font-bold text-error">3 Items</span> are critically low. Reorder sequence recommended for Ibuprofen and Metformin.</p>
+</div>
+<div class="bg-white border border-outline-variant p-stack-sm rounded shadow-sm relative overflow-hidden">
+<div class="flex items-center gap-2 mb-2">
+<span class="material-symbols-outlined text-primary text-[18px]">query_stats</span>
+<h3 class="font-label text-label">Live Traffic</h3>
+</div>
+<div class="h-10 w-full bg-surface-container flex items-end gap-1 px-1">
+<div class="w-1/6 bg-primary h-[40%] rounded-t-sm"></div>
+<div class="w-1/6 bg-primary h-[60%] rounded-t-sm"></div>
+<div class="w-1/6 bg-primary h-[90%] rounded-t-sm"></div>
+<div class="w-1/6 bg-primary h-[30%] rounded-t-sm"></div>
+<div class="w-1/6 bg-primary h-[50%] rounded-t-sm"></div>
+<div class="w-1/6 bg-primary h-[75%] rounded-t-sm"></div>
+</div>
+</div>
+</div>
+</main>
+</div>
+<script>
+        function switchTab(tab) {
+            const tabs = ['sales', 'stock', 'history'];
+            const buttons = {
+                sales: document.getElementById('sales-tab'),
+                stock: document.getElementById('stock-tab'),
+                history: document.getElementById('history-tab')
+            };
+
+            tabs.forEach(t => {
+                buttons[t].classList.remove('active-tab', 'bg-white');
+                buttons[t].classList.add('text-on-surface-variant', 'hover:bg-surface-variant');
+            });
+
+            buttons[tab].classList.add('active-tab');
+            buttons[tab].classList.remove('text-on-surface-variant', 'hover:bg-surface-variant');
+
+            // Simulate content change in DataGrid
+            const gridBody = document.getElementById('report-grid-body');
+            if (tab === 'stock') {
+                gridBody.innerHTML = `
+                    <tr class="hover:bg-secondary-container/10 border-b border-outline-variant">
+                        <td class="px-2 py-1.5 text-center border-r border-outline-variant">SKU-90</td>
+                        <td class="px-3 py-1.5 border-r border-outline-variant">Ciprofloxacin 250mg</td>
+                        <td class="px-3 py-1.5 border-r border-outline-variant text-center">45</td>
+                        <td class="px-3 py-1.5 border-r border-outline-variant text-right">120.00</td>
+                        <td class="px-3 py-1.5 border-r border-outline-variant text-right font-bold">5,400.00</td>
+                        <td class="px-3 py-1.5"><span class="bg-amber-100 text-amber-800 text-[10px] font-bold px-2 py-0.5 rounded-sm">LOW STOCK</span></td>
+                    </tr>
+                    <tr class="bg-secondary-container/20 border-b border-outline-variant">
+                        <td class="px-2 py-1.5 text-center border-r border-outline-variant">SKU-91</td>
+                        <td class="px-3 py-1.5 border-r border-outline-variant">Loratadine 10mg</td>
+                        <td class="px-3 py-1.5 border-r border-outline-variant text-center">0</td>
+                        <td class="px-3 py-1.5 border-r border-outline-variant text-right">8.00</td>
+                        <td class="px-3 py-1.5 border-r border-outline-variant text-right font-bold">0.00</td>
+                        <td class="px-3 py-1.5"><span class="bg-red-100 text-red-800 text-[10px] font-bold px-2 py-0.5 rounded-sm">OUT OF STOCK</span></td>
+                    </tr>
+                `;
+            } else if (tab === 'history') {
+                gridBody.innerHTML = `
+                    <tr class="hover:bg-secondary-container/10 border-b border-outline-variant">
+                        <td class="px-2 py-1.5 text-center border-r border-outline-variant">#9920</td>
+                        <td class="px-3 py-1.5 border-r border-outline-variant">Silva, Kamal (0712928111)</td>
+                        <td class="px-3 py-1.5 border-r border-outline-variant text-center">3 Items</td>
+                        <td class="px-3 py-1.5 border-r border-outline-variant text-right">Oct 22, 2023</td>
+                        <td class="px-3 py-1.5 border-r border-outline-variant text-right font-bold">2,150.00</td>
+                        <td class="px-3 py-1.5"><span class="bg-blue-100 text-blue-800 text-[10px] font-bold px-2 py-0.5 rounded-sm">DELIVERED</span></td>
+                    </tr>
+                `;
+            } else {
+                location.reload(); // Quick reset for Sales
+            }
+        }
+    </script>
+</body></html>

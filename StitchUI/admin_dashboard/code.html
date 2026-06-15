@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>SmartMed - Admin Dashboard</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "on-surface": "#1b1b1b",
+                    "inverse-surface": "#303030",
+                    "on-primary-container": "#87a2ff",
+                    "surface-container-low": "#f3f3f3",
+                    "on-background": "#1b1b1b",
+                    "error": "#ba1a1a",
+                    "on-tertiary-fixed-variant": "#444749",
+                    "tertiary": "#242728",
+                    "tertiary-fixed-dim": "#c5c6c8",
+                    "inverse-primary": "#b5c4ff",
+                    "secondary-fixed": "#d6e3ff",
+                    "tertiary-fixed": "#e1e2e4",
+                    "on-tertiary": "#ffffff",
+                    "on-surface-variant": "#444652",
+                    "on-error-container": "#93000a",
+                    "surface-container-highest": "#e2e2e2",
+                    "outline": "#747684",
+                    "on-tertiary-fixed": "#191c1e",
+                    "secondary-fixed-dim": "#b0c7f5",
+                    "error-container": "#ffdad6",
+                    "primary": "#001f66",
+                    "inverse-on-surface": "#f1f1f1",
+                    "surface-dim": "#dadada",
+                    "secondary-container": "#b8cffe",
+                    "surface-bright": "#f9f9f9",
+                    "on-secondary-fixed-variant": "#30476e",
+                    "secondary": "#485f87",
+                    "surface-container-high": "#e8e8e8",
+                    "surface-tint": "#3658ba",
+                    "on-tertiary-container": "#a5a6a8",
+                    "on-primary-fixed": "#00164e",
+                    "primary-container": "#003296",
+                    "surface": "#f9f9f9",
+                    "on-primary": "#ffffff",
+                    "primary-fixed-dim": "#b5c4ff",
+                    "background": "#f9f9f9",
+                    "surface-variant": "#e2e2e2",
+                    "on-secondary-fixed": "#001b3e",
+                    "outline-variant": "#c4c5d4",
+                    "surface-container": "#eeeeee",
+                    "on-primary-fixed-variant": "#173ea1",
+                    "primary-fixed": "#dce1ff",
+                    "on-secondary-container": "#425880",
+                    "on-secondary": "#ffffff",
+                    "tertiary-container": "#3a3c3e",
+                    "on-error": "#ffffff",
+                    "surface-container-lowest": "#ffffff"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.125rem",
+                    "lg": "0.25rem",
+                    "xl": "0.5rem",
+                    "full": "0.75rem"
+            },
+            "spacing": {
+                    "nav-width": "420px",
+                    "nav-item-height": "40px",
+                    "stack-sm": "8px",
+                    "gutter": "16px",
+                    "container-padding": "24px",
+                    "stack-md": "16px"
+            },
+            "fontFamily": {
+                    "label": ["Inter"],
+                    "body-regular": ["Inter"],
+                    "data-grid": ["Inter"],
+                    "app-title": ["Inter"],
+                    "section-header": ["Inter"]
+            },
+            "fontSize": {
+                    "label": ["12px", {"lineHeight": "16px", "fontWeight": "600"}],
+                    "body-regular": ["14.6px", {"lineHeight": "20px", "fontWeight": "400"}],
+                    "data-grid": ["13px", {"lineHeight": "18px", "fontWeight": "400"}],
+                    "app-title": ["18.6px", {"lineHeight": "24px", "letterSpacing": "-0.01em", "fontWeight": "700"}],
+                    "section-header": ["16px", {"lineHeight": "20px", "fontWeight": "700"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        body { font-family: 'Inter', sans-serif; }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            vertical-align: middle;
+        }
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: #f1f1f1; }
+        ::-webkit-scrollbar-thumb { background: #c4c5d4; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #747684; }
+    </style>
+</head>
+<body class="bg-background text-on-background h-screen overflow-hidden flex flex-col">
+<!-- TopAppBar -->
+<header class="flex justify-between items-center h-12 px-4 w-full bg-primary dark:bg-primary-container z-50">
+<div class="flex items-center gap-4">
+<span class="font-app-title text-app-title text-on-primary">SmartMed Pharmacy</span>
+<div class="hidden md:flex gap-4 ml-8">
+<span class="font-label text-label text-on-primary font-bold cursor-default">Admin Dashboard</span>
+</div>
+</div>
+<div class="flex items-center gap-2">
+<div class="flex items-center bg-primary-container/30 px-3 py-1 rounded text-on-primary mr-4">
+<span class="material-symbols-outlined text-[18px] mr-2">search</span>
+<input class="bg-transparent border-none focus:ring-0 text-[12px] p-0 placeholder-on-primary/50 w-48" placeholder="Global Search..." type="text"/>
+</div>
+<button class="text-on-primary p-1 hover:bg-primary-fixed-dim/20 transition-colors rounded"><span class="material-symbols-outlined">minimize</span></button>
+<button class="text-on-primary p-1 hover:bg-primary-fixed-dim/20 transition-colors rounded"><span class="material-symbols-outlined">fullscreen</span></button>
+<button class="text-on-primary p-1 hover:bg-primary-fixed-dim/20 transition-colors rounded"><span class="material-symbols-outlined">close</span></button>
+</div>
+</header>
+<div class="flex flex-1 overflow-hidden">
+<!-- SideNavBar -->
+<nav class="fixed left-0 top-12 h-[calc(100vh-48px)] w-[420px] flex flex-col py-stack-md bg-surface border-r border-outline-variant z-40">
+<div class="px-gutter mb-8">
+<h1 class="font-app-title text-app-title text-primary">SmartMed</h1>
+<p class="font-label text-label text-on-surface-variant opacity-70">Pharmacy Management System</p>
+</div>
+<div class="flex-1 flex flex-col gap-1">
+<!-- Dashboard Overview (Active) -->
+<a class="flex items-center w-full h-[nav-item-height] bg-secondary-container text-on-secondary-container font-bold px-gutter hover:bg-secondary-container transition-all scale-[0.99] duration-100" href="#">
+<span class="material-symbols-outlined mr-3" data-icon="dashboard">dashboard</span>
+<span class="font-label text-label">Dashboard Overview</span>
+</a>
+<a class="flex items-center w-full h-[nav-item-height] text-on-surface-variant px-gutter hover:bg-secondary-container/50 transition-all" href="#">
+<span class="material-symbols-outlined mr-3" data-icon="inventory_2">inventory_2</span>
+<span class="font-label text-label">Manage Medicines</span>
+</a>
+<a class="flex items-center w-full h-[nav-item-height] text-on-surface-variant px-gutter hover:bg-secondary-container/50 transition-all" href="#">
+<span class="material-symbols-outlined mr-3" data-icon="group">group</span>
+<span class="font-label text-label">Manage Customers</span>
+</a>
+<a class="flex items-center w-full h-[nav-item-height] text-on-surface-variant px-gutter hover:bg-secondary-container/50 transition-all" href="#">
+<span class="material-symbols-outlined mr-3" data-icon="receipt_long">receipt_long</span>
+<span class="font-label text-label">Manage Orders</span>
+</a>
+<a class="flex items-center w-full h-[nav-item-height] text-on-surface-variant px-gutter hover:bg-secondary-container/50 transition-all" href="#">
+<span class="material-symbols-outlined mr-3" data-icon="assessment">assessment</span>
+<span class="font-label text-label">Generate Reports</span>
+</a>
+</div>
+<div class="mt-auto flex flex-col gap-1 pt-stack-md border-t border-outline-variant/30">
+<a class="flex items-center w-full h-[nav-item-height] text-on-surface-variant px-gutter hover:bg-secondary-container/50 transition-all" href="#">
+<span class="material-symbols-outlined mr-3" data-icon="settings">settings</span>
+<span class="font-label text-label">Settings</span>
+</a>
+<a class="flex items-center w-full h-[nav-item-height] text-on-surface-variant px-gutter hover:bg-secondary-container/50 transition-all" href="#">
+<span class="material-symbols-outlined mr-3" data-icon="help">help</span>
+<span class="font-label text-label">Support</span>
+</a>
+<button class="flex items-center w-full h-[nav-item-height] text-error px-gutter hover:bg-error-container transition-all mt-4">
+<span class="material-symbols-outlined mr-3" data-icon="logout">logout</span>
+<span class="font-label text-label">Logout</span>
+</button>
+</div>
+</nav>
+<!-- Main Content Canvas -->
+<main class="ml-[420px] flex-1 overflow-y-auto bg-background p-container-padding">
+<!-- Hero Header -->
+<div class="mb-8">
+<h2 class="font-section-header text-section-header text-primary mb-1">Welcome, {admin_username}</h2>
+<p class="font-body-regular text-body-regular text-on-surface-variant">System Status: <span class="text-green-600 font-bold">Operational</span> • Last sync: 2 minutes ago</p>
+</div>
+<!-- Dashboard Content: Bento Grid Style -->
+<div class="grid grid-cols-12 gap-gutter">
+<!-- Summary Cards -->
+<div class="col-span-12 md:col-span-4 bg-surface-container-lowest border border-outline-variant p-stack-md shadow-sm">
+<div class="flex justify-between items-start mb-4">
+<span class="material-symbols-outlined text-primary" data-icon="medical_services">medical_services</span>
+<span class="text-[10px] bg-secondary-container text-on-secondary-container px-1.5 py-0.5 rounded font-bold">+12%</span>
+</div>
+<div class="font-label text-label text-on-surface-variant">Active Inventory</div>
+<div class="text-[24px] font-bold text-primary">4,281</div>
+<p class="text-[11px] text-on-surface-variant mt-2">SKUs tracked across 3 warehouses</p>
+</div>
+<div class="col-span-12 md:col-span-4 bg-surface-container-lowest border border-outline-variant p-stack-md shadow-sm">
+<div class="flex justify-between items-start mb-4">
+<span class="material-symbols-outlined text-primary" data-icon="pending_actions">pending_actions</span>
+<span class="text-[10px] bg-error-container text-on-error-container px-1.5 py-0.5 rounded font-bold">Priority</span>
+</div>
+<div class="font-label text-label text-on-surface-variant">Pending Orders</div>
+<div class="text-[24px] font-bold text-primary">127</div>
+<p class="text-[11px] text-on-surface-variant mt-2">18 orders requiring immediate verification</p>
+</div>
+<div class="col-span-12 md:col-span-4 bg-surface-container-lowest border border-outline-variant p-stack-md shadow-sm">
+<div class="flex justify-between items-start mb-4">
+<span class="material-symbols-outlined text-primary" data-icon="payments">payments</span>
+<span class="text-[10px] bg-secondary-container text-on-secondary-container px-1.5 py-0.5 rounded font-bold">Daily</span>
+</div>
+<div class="font-label text-label text-on-surface-variant">Total Revenue</div>
+<div class="text-[24px] font-bold text-primary">$12,402.50</div>
+<p class="text-[11px] text-on-surface-variant mt-2">Average order value: $97.65</p>
+</div>
+<!-- Recent Activity DataGrid -->
+<div class="col-span-12 md:col-span-8 bg-surface-container-lowest border border-outline-variant overflow-hidden shadow-sm">
+<div class="p-stack-md bg-surface-container border-b border-outline-variant flex justify-between items-center">
+<h3 class="font-section-header text-section-header text-primary">Recent Fulfillment Activity</h3>
+<button class="text-primary text-[12px] font-bold hover:underline">View All</button>
+</div>
+<table class="w-full text-left font-data-grid text-data-grid">
+<thead class="bg-surface-variant text-on-surface-variant border-b border-outline-variant">
+<tr>
+<th class="px-4 py-2 font-bold">Order ID</th>
+<th class="px-4 py-2 font-bold">Patient</th>
+<th class="px-4 py-2 font-bold">Medication</th>
+<th class="px-4 py-2 font-bold">Status</th>
+<th class="px-4 py-2 font-bold">Time</th>
+</tr>
+</thead>
+<tbody>
+<tr class="border-b border-outline-variant hover:bg-secondary-container/10 transition-colors">
+<td class="px-4 py-2 text-primary font-bold">#SM-9821</td>
+<td class="px-4 py-2">Robert Fox</td>
+<td class="px-4 py-2">Amoxicillin 500mg</td>
+<td class="px-4 py-2"><span class="bg-green-100 text-green-800 text-[10px] px-2 py-0.5 rounded font-bold uppercase">Shipped</span></td>
+<td class="px-4 py-2 text-on-surface-variant">09:12 AM</td>
+</tr>
+<tr class="border-b border-outline-variant hover:bg-secondary-container/10 transition-colors bg-secondary-container/20">
+<td class="px-4 py-2 text-primary font-bold">#SM-9820</td>
+<td class="px-4 py-2">Jane Cooper</td>
+<td class="px-4 py-2">Lisinopril 10mg</td>
+<td class="px-4 py-2"><span class="bg-blue-100 text-blue-800 text-[10px] px-2 py-0.5 rounded font-bold uppercase">Processing</span></td>
+<td class="px-4 py-2 text-on-surface-variant">08:45 AM</td>
+</tr>
+<tr class="border-b border-outline-variant hover:bg-secondary-container/10 transition-colors">
+<td class="px-4 py-2 text-primary font-bold">#SM-9819</td>
+<td class="px-4 py-2">Wade Warren</td>
+<td class="px-4 py-2">Metformin 850mg</td>
+<td class="px-4 py-2"><span class="bg-amber-100 text-amber-800 text-[10px] px-2 py-0.5 rounded font-bold uppercase">On Hold</span></td>
+<td class="px-4 py-2 text-on-surface-variant">08:30 AM</td>
+</tr>
+<tr class="border-b border-outline-variant hover:bg-secondary-container/10 transition-colors">
+<td class="px-4 py-2 text-primary font-bold">#SM-9818</td>
+<td class="px-4 py-2">Esther Howard</td>
+<td class="px-4 py-2">Atorvastatin 20mg</td>
+<td class="px-4 py-2"><span class="bg-green-100 text-green-800 text-[10px] px-2 py-0.5 rounded font-bold uppercase">Shipped</span></td>
+<td class="px-4 py-2 text-on-surface-variant">07:55 AM</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Action Panel -->
+<div class="col-span-12 md:col-span-4 flex flex-col gap-gutter">
+<div class="bg-primary text-on-primary p-stack-md shadow-lg rounded-lg overflow-hidden relative min-h-[160px]">
+
+<div class="relative z-10">
+<h4 class="font-section-header text-section-header mb-2">Quick Fulfillment</h4>
+<p class="text-[12px] opacity-80 mb-4">Scan RX barcode or enter ID manually to start immediate processing.</p>
+<div class="flex gap-2">
+<input class="flex-1 bg-white/10 border border-white/20 text-white placeholder-white/50 text-[12px] px-3 py-2 rounded focus:ring-1 focus:ring-secondary-fixed" placeholder="Scan Barcode..." type="text"/>
+<button class="bg-secondary-fixed text-on-secondary-fixed px-4 py-2 font-bold text-[12px] hover:brightness-110 transition-all">START</button>
+</div>
+</div>
+</div>
+<div class="bg-surface-container-lowest border border-outline-variant p-stack-md shadow-sm">
+<h4 class="font-section-header text-section-header text-primary mb-4">Stock Alerts</h4>
+<div class="space-y-3">
+<div class="flex items-center gap-3 p-2 bg-error-container/10 border-l-4 border-error">
+<span class="material-symbols-outlined text-error" data-icon="warning">warning</span>
+<div>
+<div class="font-label text-label text-on-surface">Insulin Glargine</div>
+<div class="text-[10px] text-error font-bold">CRITICAL: 2 units left</div>
+</div>
+</div>
+<div class="flex items-center gap-3 p-2 bg-secondary-container/10 border-l-4 border-secondary">
+<span class="material-symbols-outlined text-secondary" data-icon="info">info</span>
+<div>
+<div class="font-label text-label text-on-surface">Gabapentin 300mg</div>
+<div class="text-[10px] text-secondary font-bold">LOW: 15 units left</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Analytics Placeholder -->
+<div class="col-span-12 bg-surface-container-lowest border border-outline-variant p-gutter shadow-sm">
+<div class="flex justify-between items-center mb-6">
+<h3 class="font-section-header text-section-header text-primary">Sales &amp; Demand Trends</h3>
+<div class="flex gap-2">
+<button class="px-3 py-1 bg-surface-variant text-[12px] font-bold">Week</button>
+<button class="px-3 py-1 bg-primary text-on-primary text-[12px] font-bold">Month</button>
+<button class="px-3 py-1 bg-surface-variant text-[12px] font-bold">Year</button>
+</div>
+</div>
+<div class="h-48 w-full relative bg-surface-container-low border border-dashed border-outline-variant/50 flex items-center justify-center overflow-hidden">
+<div class="absolute inset-0 flex items-end justify-between px-12 pt-8 pb-4">
+<div class="w-12 bg-primary/20 h-[30%]"></div>
+<div class="w-12 bg-primary/20 h-[45%]"></div>
+<div class="w-12 bg-primary/40 h-[60%]"></div>
+<div class="w-12 bg-primary/20 h-[55%]"></div>
+<div class="w-12 bg-primary/60 h-[80%]"></div>
+<div class="w-12 bg-primary/90 h-[95%]"></div>
+<div class="w-12 bg-primary/20 h-[40%]"></div>
+</div>
+<span class="relative z-10 font-label text-label text-on-surface-variant opacity-50">Trend Visualization Data Loaded</span>
+</div>
+</div>
+</div>
+</main>
+</div>
+<!-- Micro-interaction Script -->
+<script>
+        document.querySelectorAll('nav a, nav button').forEach(el => {
+            el.addEventListener('mousedown', () => el.classList.add('scale-[0.98]'));
+            el.addEventListener('mouseup', () => el.classList.remove('scale-[0.98]'));
+            el.addEventListener('mouseleave', () => el.classList.remove('scale-[0.98]'));
+        });
+    </script>
+</body></html>

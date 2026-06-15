@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>SmartMed Pharmacy - Track Orders</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-surface": "#1b1b1b",
+                        "inverse-surface": "#303030",
+                        "on-primary-container": "#87a2ff",
+                        "surface-container-low": "#f3f3f3",
+                        "on-background": "#1b1b1b",
+                        "error": "#ba1a1a",
+                        "on-tertiary-fixed-variant": "#444749",
+                        "tertiary": "#242728",
+                        "tertiary-fixed-dim": "#c5c6c8",
+                        "inverse-primary": "#b5c4ff",
+                        "secondary-fixed": "#d6e3ff",
+                        "tertiary-fixed": "#e1e2e4",
+                        "on-tertiary": "#ffffff",
+                        "on-surface-variant": "#444652",
+                        "on-error-container": "#93000a",
+                        "surface-container-highest": "#e2e2e2",
+                        "outline": "#747684",
+                        "on-tertiary-fixed": "#191c1e",
+                        "secondary-fixed-dim": "#b0c7f5",
+                        "error-container": "#ffdad6",
+                        "primary": "#001f66",
+                        "inverse-on-surface": "#f1f1f1",
+                        "surface-dim": "#dadada",
+                        "secondary-container": "#b8cffe",
+                        "surface-bright": "#f9f9f9",
+                        "on-secondary-fixed-variant": "#30476e",
+                        "secondary": "#485f87",
+                        "surface-container-high": "#e8e8e8",
+                        "surface-tint": "#3658ba",
+                        "on-tertiary-container": "#a5a6a8",
+                        "on-primary-fixed": "#00164e",
+                        "primary-container": "#003296",
+                        "surface": "#f9f9f9",
+                        "on-primary": "#ffffff",
+                        "primary-fixed-dim": "#b5c4ff",
+                        "background": "#f9f9f9",
+                        "surface-variant": "#e2e2e2",
+                        "on-secondary-fixed": "#001b3e",
+                        "outline-variant": "#c4c5d4",
+                        "surface-container": "#eeeeee",
+                        "on-primary-fixed-variant": "#173ea1",
+                        "primary-fixed": "#dce1ff",
+                        "on-secondary-container": "#425880",
+                        "on-secondary": "#ffffff",
+                        "tertiary-container": "#3a3c3e",
+                        "on-error": "#ffffff",
+                        "surface-container-lowest": "#ffffff"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "nav-width": "420px",
+                        "nav-item-height": "40px",
+                        "stack-sm": "8px",
+                        "gutter": "16px",
+                        "container-padding": "24px",
+                        "stack-md": "16px"
+                    },
+                    "fontFamily": {
+                        "label": ["Inter"],
+                        "body-regular": ["Inter"],
+                        "data-grid": ["Inter"],
+                        "app-title": ["Inter"],
+                        "section-header": ["Inter"]
+                    },
+                    "fontSize": {
+                        "label": ["12px", {"lineHeight": "16px", "fontWeight": "600"}],
+                        "body-regular": ["14.6px", {"lineHeight": "20px", "fontWeight": "400"}],
+                        "data-grid": ["13px", {"lineHeight": "18px", "fontWeight": "400"}],
+                        "app-title": ["18.6px", {"lineHeight": "24px", "letterSpacing": "-0.01em", "fontWeight": "700"}],
+                        "section-header": ["16px", {"lineHeight": "20px", "fontWeight": "700"}]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        body {
+            font-family: 'Inter', sans-serif;
+            -webkit-font-smoothing: antialiased;
+            overflow: hidden;
+            width: 800px;
+            height: 480px;
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #c4c5d4;
+            border-radius: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: #747684;
+        }
+        .grid-header-sticky {
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            vertical-align: middle;
+            font-size: 18px;
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background flex flex-col">
+<!-- TopAppBar -->
+<header class="flex justify-between items-center h-12 px-4 w-full bg-primary dark:bg-primary-container text-on-primary dark:text-on-primary-container z-50">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined" data-icon="medication">medication</span>
+<h1 class="font-app-title text-app-title font-bold tracking-tight">SmartMed Pharmacy</h1>
+</div>
+<div class="flex items-center gap-4">
+<div class="relative h-8 flex items-center bg-primary-container/20 px-3 rounded-sm border border-on-primary/20">
+<span class="material-symbols-outlined mr-2" data-icon="search">search</span>
+<input class="bg-transparent border-none focus:ring-0 text-label font-label placeholder-on-primary/50 w-48 p-0" placeholder="Search orders..." type="text"/>
+</div>
+<div class="flex gap-2">
+<button class="hover:bg-primary-fixed-dim/20 transition-colors p-1 rounded"><span class="material-symbols-outlined" data-icon="minimize">minimize</span></button>
+<button class="hover:bg-primary-fixed-dim/20 transition-colors p-1 rounded"><span class="material-symbols-outlined" data-icon="fullscreen">fullscreen</span></button>
+<button class="hover:bg-primary-fixed-dim/20 transition-colors p-1 rounded"><span class="material-symbols-outlined" data-icon="close">close</span></button>
+</div>
+</div>
+</header>
+<div class="flex flex-1 overflow-hidden">
+<!-- Main Content Area -->
+<main class="flex-1 flex flex-col overflow-hidden bg-surface-container-lowest">
+<!-- Top Section: Orders DataGrid -->
+<section class="flex-1 flex flex-col border-b border-outline-variant overflow-hidden">
+<div class="flex items-center justify-between px-gutter py-2 bg-surface-container">
+<h2 class="font-section-header text-section-header text-primary flex items-center gap-2">
+<span class="material-symbols-outlined" data-icon="receipt_long">receipt_long</span>
+                        Orders
+                    </h2>
+<div class="flex items-center gap-2">
+<span class="text-label font-label text-on-surface-variant">View: Last 30 Days</span>
+<span class="material-symbols-outlined cursor-pointer" data-icon="filter_list">filter_list</span>
+</div>
+</div>
+<div class="flex-1 overflow-auto custom-scrollbar">
+<table class="w-full text-left font-data-grid text-data-grid border-collapse">
+<thead class="grid-header-sticky bg-surface-container-high text-on-surface-variant">
+<tr>
+<th class="px-gutter py-2 border-b border-outline-variant font-bold">OrderID</th>
+<th class="px-gutter py-2 border-b border-outline-variant font-bold">Date</th>
+<th class="px-gutter py-2 border-b border-outline-variant font-bold">Status</th>
+<th class="px-gutter py-2 border-b border-outline-variant font-bold text-right">Total (LKR)</th>
+</tr>
+</thead>
+<tbody>
+<!-- Selected Row -->
+<tr class="bg-secondary-container/50 border-b border-outline-variant hover:bg-secondary-container transition-colors cursor-pointer" onclick="updateDetails('ORD-9021', '2023-11-20')">
+<td class="px-gutter py-2 font-bold">ORD-9021</td>
+<td class="px-gutter py-2">Nov 20, 2023</td>
+<td class="px-gutter py-2">
+<span class="px-2 py-0.5 rounded-sm text-[10px] uppercase font-bold bg-green-100 text-green-700 border border-green-200">Dispatched</span>
+</td>
+<td class="px-gutter py-2 text-right">4,250.00</td>
+</tr>
+<tr class="border-b border-outline-variant hover:bg-surface-container-low transition-colors cursor-pointer" onclick="updateDetails('ORD-8842', '2023-11-15')">
+<td class="px-gutter py-2 font-bold">ORD-8842</td>
+<td class="px-gutter py-2">Nov 15, 2023</td>
+<td class="px-gutter py-2">
+<span class="px-2 py-0.5 rounded-sm text-[10px] uppercase font-bold bg-blue-100 text-blue-700 border border-blue-200">Delivered</span>
+</td>
+<td class="px-gutter py-2 text-right">1,890.00</td>
+</tr>
+<tr class="border-b border-outline-variant hover:bg-surface-container-low transition-colors cursor-pointer" onclick="updateDetails('ORD-8711', '2023-11-12')">
+<td class="px-gutter py-2 font-bold">ORD-8711</td>
+<td class="px-gutter py-2">Nov 12, 2023</td>
+<td class="px-gutter py-2">
+<span class="px-2 py-0.5 rounded-sm text-[10px] uppercase font-bold bg-amber-100 text-amber-700 border border-amber-200">Processing</span>
+</td>
+<td class="px-gutter py-2 text-right">12,400.00</td>
+</tr>
+<tr class="border-b border-outline-variant hover:bg-surface-container-low transition-colors cursor-pointer">
+<td class="px-gutter py-2 font-bold">ORD-8605</td>
+<td class="px-gutter py-2">Nov 08, 2023</td>
+<td class="px-gutter py-2">
+<span class="px-2 py-0.5 rounded-sm text-[10px] uppercase font-bold bg-blue-100 text-blue-700 border border-blue-200">Delivered</span>
+</td>
+<td class="px-gutter py-2 text-right">3,120.00</td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<!-- Bottom Section: Line Items DataGrid -->
+<section class="h-[180px] flex flex-col overflow-hidden bg-surface">
+<div class="flex items-center justify-between px-gutter py-2 bg-surface-container-high border-t border-outline-variant">
+<div class="flex items-center gap-4">
+<h2 class="font-section-header text-section-header text-primary">Order Details</h2>
+<span class="text-label font-label text-on-surface-variant bg-surface px-2 py-0.5 rounded border border-outline-variant" id="detail-id">ORD-9021</span>
+</div>
+<div class="text-label font-label text-on-surface-variant italic" id="detail-date">Date: Nov 20, 2023</div>
+</div>
+<div class="flex-1 overflow-auto custom-scrollbar">
+<table class="w-full text-left font-data-grid text-data-grid border-collapse">
+<thead class="grid-header-sticky bg-surface-container-low text-on-surface-variant">
+<tr>
+<th class="px-gutter py-1.5 border-b border-outline-variant font-bold">Medicine</th>
+<th class="px-gutter py-1.5 border-b border-outline-variant font-bold text-center">Qty</th>
+<th class="px-gutter py-1.5 border-b border-outline-variant font-bold text-right">Price (LKR)</th>
+<th class="px-gutter py-1.5 border-b border-outline-variant font-bold text-right">Subtotal (LKR)</th>
+</tr>
+</thead>
+<tbody id="line-items-body">
+<!-- Default content for ORD-9021 -->
+<tr class="border-b border-outline-variant/30">
+<td class="px-gutter py-1.5">Amoxicillin 500mg (Cap)</td>
+<td class="px-gutter py-1.5 text-center">20</td>
+<td class="px-gutter py-1.5 text-right">45.00</td>
+<td class="px-gutter py-1.5 text-right">900.00</td>
+</tr>
+<tr class="border-b border-outline-variant/30">
+<td class="px-gutter py-1.5">Panadol Advance (Tab)</td>
+<td class="px-gutter py-1.5 text-center">50</td>
+<td class="px-gutter py-1.5 text-right">12.00</td>
+<td class="px-gutter py-1.5 text-right">600.00</td>
+</tr>
+<tr class="border-b border-outline-variant/30">
+<td class="px-gutter py-1.5 font-bold">Delivery Charges</td>
+<td class="px-gutter py-1.5 text-center">1</td>
+<td class="px-gutter py-1.5 text-right">250.00</td>
+<td class="px-gutter py-1.5 text-right">250.00</td>
+</tr>
+<tr class="border-b border-outline-variant/30">
+<td class="px-gutter py-1.5">Metformin 500mg</td>
+<td class="px-gutter py-1.5 text-center">60</td>
+<td class="px-gutter py-1.5 text-right">25.00</td>
+<td class="px-gutter py-1.5 text-right">2,500.00</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Summary Footer -->
+<div class="px-gutter py-1.5 bg-primary/5 border-t border-outline-variant flex justify-end gap-12">
+<div class="flex flex-col items-end">
+<span class="text-[10px] font-label text-on-surface-variant uppercase tracking-wider">Total Items</span>
+<span class="font-bold text-on-surface" id="total-items">131</span>
+</div>
+<div class="flex flex-col items-end">
+<span class="text-[10px] font-label text-on-surface-variant uppercase tracking-wider">Grand Total</span>
+<span class="font-bold text-primary text-base" id="grand-total">LKR 4,250.00</span>
+</div>
+</div>
+</section>
+</main>
+</div>
+<!-- Micro-interaction Script -->
+<script>
+        const ordersData = {
+            'ORD-9021': {
+                date: 'Nov 20, 2023',
+                total: '4,250.00',
+                items: [
+                    { name: 'Amoxicillin 500mg (Cap)', qty: 20, price: 45.00, sub: 900.00 },
+                    { name: 'Panadol Advance (Tab)', qty: 50, price: 12.00, sub: 600.00 },
+                    { name: 'Metformin 500mg', qty: 60, price: 25.00, sub: 2500.00 },
+                    { name: 'Delivery Charges', qty: 1, price: 250.00, sub: 2500.00 } // Adjusting sub for demo
+                ],
+                count: 131
+            },
+            'ORD-8842': {
+                date: 'Nov 15, 2023',
+                total: '1,890.00',
+                items: [
+                    { name: 'Cough Syrup 100ml', qty: 2, price: 420.00, sub: 840.00 },
+                    { name: 'Vitamin C 500mg', qty: 30, price: 35.00, sub: 1050.00 }
+                ],
+                count: 32
+            },
+            'ORD-8711': {
+                date: 'Nov 12, 2023',
+                total: '12,400.00',
+                items: [
+                    { name: 'Insulin Pen (Glargine)', qty: 2, price: 5800.00, sub: 11600.00 },
+                    { name: 'Syringes Pack', qty: 1, price: 800.00, sub: 800.00 }
+                ],
+                count: 3
+            }
+        };
+
+        function updateDetails(id, date) {
+            const order = ordersData[id];
+            if (!order) return;
+
+            document.getElementById('detail-id').innerText = id;
+            document.getElementById('detail-date').innerText = `Date: ${order.date}`;
+            document.getElementById('grand-total').innerText = `LKR ${order.total}`;
+            document.getElementById('total-items').innerText = order.count;
+
+            const tbody = document.getElementById('line-items-body');
+            tbody.innerHTML = '';
+
+            order.items.forEach(item => {
+                const row = document.createElement('tr');
+                row.className = 'border-b border-outline-variant/30';
+                row.innerHTML = `
+                    <td class="px-gutter py-1.5">${item.name}</td>
+                    <td class="px-gutter py-1.5 text-center">${item.qty}</td>
+                    <td class="px-gutter py-1.5 text-right">${item.price.toFixed(2)}</td>
+                    <td class="px-gutter py-1.5 text-right">${item.sub.toFixed(2)}</td>
+                `;
+                tbody.appendChild(row);
+            });
+
+            // Visual feedback for selection
+            const rows = document.querySelectorAll('tbody tr');
+            rows.forEach(r => {
+                if (r.innerText.includes(id)) {
+                    r.classList.add('bg-secondary-container/50');
+                } else {
+                    r.classList.remove('bg-secondary-container/50');
+                }
+            });
+        }
+    </script>
+</body></html>
