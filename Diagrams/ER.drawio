@@ -1,0 +1,298 @@
+<mxfile host="Electron" agent="SmartMed">
+  <diagram name="SmartMed ER Diagram" id="smartmed-er">
+    <mxGraphModel dx="1375" dy="1031" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1200" pageHeight="1100" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="e-customer" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#B4CBF9;strokeColor=#003296;fontColor=#003296;strokeWidth=1.5;fontStyle=1;fontFamily=Helvetica;" value="Customer" vertex="1">
+          <mxGeometry height="45" width="110" x="490" y="110" as="geometry" />
+        </mxCell>
+        <mxCell id="e-order" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#B4CBF9;strokeColor=#003296;fontColor=#003296;strokeWidth=1.5;fontStyle=1;fontFamily=Helvetica;" value="Order" vertex="1">
+          <mxGeometry height="45" width="80" x="505" y="390" as="geometry" />
+        </mxCell>
+        <mxCell id="e-orderitem" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#B4CBF9;strokeColor=#003296;fontColor=#003296;strokeWidth=1.5;fontStyle=1;fontFamily=Helvetica;" value="OrderItem" vertex="1">
+          <mxGeometry height="45" width="120" x="485" y="630" as="geometry" />
+        </mxCell>
+        <mxCell id="e-medicine" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#B4CBF9;strokeColor=#003296;fontColor=#003296;strokeWidth=1.5;fontStyle=1;fontFamily=Helvetica;" value="Medicine" vertex="1">
+          <mxGeometry height="45" width="100" x="495" y="890" as="geometry" />
+        </mxCell>
+        <mxCell id="e-admin" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#B4CBF9;strokeColor=#003296;fontColor=#003296;strokeWidth=1.5;fontStyle=1;fontFamily=Helvetica;" value="Admin" vertex="1">
+          <mxGeometry height="45" width="80" x="70" y="420" as="geometry" />
+        </mxCell>
+        <mxCell id="e-prescription" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#B4CBF9;strokeColor=#003296;fontColor=#003296;strokeWidth=1.5;fontStyle=1;fontFamily=Helvetica;" value="Prescription" vertex="1">
+          <mxGeometry height="45" width="110" x="860" y="120" as="geometry" />
+        </mxCell>
+        <mxCell id="a-cust-id" parent="1" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#003296;fontColor=#003296;fontSize=10;strokeWidth=1.5;fontStyle=1;fontFamily=Helvetica;" value="PK &lt;u&gt;CustomerID&lt;/u&gt;" vertex="1">
+          <mxGeometry height="32" width="100" x="495" y="35" as="geometry" />
+        </mxCell>
+        <mxCell id="a-cust-name" parent="1" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#003296;fontColor=#003296;fontSize=10;strokeWidth=1.5;fontStyle=1;fontFamily=Helvetica;" value="FullName" vertex="1">
+          <mxGeometry height="32" width="75" x="360" y="55" as="geometry" />
+        </mxCell>
+        <mxCell id="a-cust-email" parent="1" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#003296;fontColor=#003296;fontSize=10;strokeWidth=1.5;fontStyle=1;fontFamily=Helvetica;" value="Email" vertex="1">
+          <mxGeometry height="32" width="60" x="660" y="55" as="geometry" />
+        </mxCell>
+        <mxCell id="a-cust-phone" parent="1" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#003296;fontColor=#003296;fontSize=10;strokeWidth=1.5;fontStyle=1;fontFamily=Helvetica;" value="Phone" vertex="1">
+          <mxGeometry height="32" width="55" x="330" y="115" as="geometry" />
+        </mxCell>
+        <mxCell id="a-cust-addr" parent="1" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#003296;fontColor=#003296;fontSize=10;strokeWidth=1.5;fontStyle=1;fontFamily=Helvetica;" value="Address" vertex="1">
+          <mxGeometry height="32" width="65" x="720" y="115" as="geometry" />
+        </mxCell>
+        <mxCell id="a-cust-pass" parent="1" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#003296;fontColor=#003296;fontSize=10;strokeWidth=1.5;fontStyle=1;fontFamily=Helvetica;" value="Password" vertex="1">
+          <mxGeometry height="32" width="70" x="410" y="175" as="geometry" />
+        </mxCell>
+        <mxCell id="a-ord-id" parent="1" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#003296;fontColor=#003296;fontSize=10;strokeWidth=1.5;fontStyle=1;fontFamily=Helvetica;" value="PK &lt;u&gt;OrderID&lt;/u&gt;" vertex="1">
+          <mxGeometry height="32" width="85" x="503" y="315" as="geometry" />
+        </mxCell>
+        <mxCell id="a-ord-custid" parent="1" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#003296;fontColor=#003296;fontSize=10;strokeWidth=1.5;fontStyle=1;fontFamily=Helvetica;dashed=1;" value="FK CustomerID" vertex="1">
+          <mxGeometry height="32" width="100" x="340" y="355" as="geometry" />
+        </mxCell>
+        <mxCell id="a-ord-date" parent="1" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#003296;fontColor=#003296;fontSize=10;strokeWidth=1.5;fontStyle=1;fontFamily=Helvetica;" value="OrderDate" vertex="1">
+          <mxGeometry height="32" width="75" x="650" y="355" as="geometry" />
+        </mxCell>
+        <mxCell id="a-ord-status" parent="1" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#003296;fontColor=#003296;fontSize=10;strokeWidth=1.5;fontStyle=1;fontFamily=Helvetica;" value="Status" vertex="1">
+          <mxGeometry height="32" width="60" x="360" y="430" as="geometry" />
+        </mxCell>
+        <mxCell id="a-ord-total" parent="1" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#003296;fontColor=#003296;fontSize=10;strokeWidth=1.5;fontStyle=1;fontFamily=Helvetica;" value="TotalAmount" vertex="1">
+          <mxGeometry height="32" width="85" x="660" y="430" as="geometry" />
+        </mxCell>
+        <mxCell id="a-oi-id" parent="1" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#003296;fontColor=#003296;fontSize=10;strokeWidth=1.5;fontStyle=1;fontFamily=Helvetica;" value="PK &lt;u&gt;OrderItemID&lt;/u&gt;" vertex="1">
+          <mxGeometry height="32" width="110" x="490" y="565" as="geometry" />
+        </mxCell>
+        <mxCell id="a-oi-ordid" parent="1" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#003296;fontColor=#003296;fontSize=10;strokeWidth=1.5;fontStyle=1;fontFamily=Helvetica;dashed=1;" value="FK OrderID" vertex="1">
+          <mxGeometry height="32" width="85" x="320" y="600" as="geometry" />
+        </mxCell>
+        <mxCell id="a-oi-medid" parent="1" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#003296;fontColor=#003296;fontSize=10;strokeWidth=1.5;fontStyle=1;fontFamily=Helvetica;dashed=1;" value="FK MedicineID" vertex="1">
+          <mxGeometry height="32" width="100" x="680" y="600" as="geometry" />
+        </mxCell>
+        <mxCell id="a-oi-qty" parent="1" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#003296;fontColor=#003296;fontSize=10;strokeWidth=1.5;fontStyle=1;fontFamily=Helvetica;" value="Quantity" vertex="1">
+          <mxGeometry height="32" width="70" x="320" y="655" as="geometry" />
+        </mxCell>
+        <mxCell id="a-oi-unit" parent="1" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#003296;fontColor=#003296;fontSize=10;strokeWidth=1.5;fontStyle=1;fontFamily=Helvetica;" value="UnitPrice" vertex="1">
+          <mxGeometry height="32" width="70" x="710" y="655" as="geometry" />
+        </mxCell>
+        <mxCell id="a-oi-sub" parent="1" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#003296;fontColor=#003296;fontSize=10;strokeWidth=1.5;fontStyle=1;fontFamily=Helvetica;" value="Subtotal" vertex="1">
+          <mxGeometry height="32" width="70" x="510" y="705" as="geometry" />
+        </mxCell>
+        <mxCell id="a-med-id" parent="1" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#003296;fontColor=#003296;fontSize=10;strokeWidth=1.5;fontStyle=1;fontFamily=Helvetica;" value="PK &lt;u&gt;MedicineID&lt;/u&gt;" vertex="1">
+          <mxGeometry height="32" width="100" x="495" y="830" as="geometry" />
+        </mxCell>
+        <mxCell id="a-med-name" parent="1" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#003296;fontColor=#003296;fontSize=10;strokeWidth=1.5;fontStyle=1;fontFamily=Helvetica;" value="MedicineName" vertex="1">
+          <mxGeometry height="32" width="95" x="290" y="860" as="geometry" />
+        </mxCell>
+        <mxCell id="a-med-cat" parent="1" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#003296;fontColor=#003296;fontSize=10;strokeWidth=1.5;fontStyle=1;fontFamily=Helvetica;" value="Category" vertex="1">
+          <mxGeometry height="32" width="70" x="710" y="860" as="geometry" />
+        </mxCell>
+        <mxCell id="a-med-dose" parent="1" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#003296;fontColor=#003296;fontSize=10;strokeWidth=1.5;fontStyle=1;fontFamily=Helvetica;" value="Dosage" vertex="1">
+          <mxGeometry height="32" width="60" x="270" y="910" as="geometry" />
+        </mxCell>
+        <mxCell id="a-med-price" parent="1" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#003296;fontColor=#003296;fontSize=10;strokeWidth=1.5;fontStyle=1;fontFamily=Helvetica;" value="Price" vertex="1">
+          <mxGeometry height="32" width="55" x="760" y="910" as="geometry" />
+        </mxCell>
+        <mxCell id="a-med-stock" parent="1" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#003296;fontColor=#003296;fontSize=10;strokeWidth=1.5;fontStyle=1;fontFamily=Helvetica;" value="StockQuantity" vertex="1">
+          <mxGeometry height="32" width="95" x="285" y="970" as="geometry" />
+        </mxCell>
+        <mxCell id="a-med-sup" parent="1" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#003296;fontColor=#003296;fontSize=10;strokeWidth=1.5;fontStyle=1;fontFamily=Helvetica;" value="Supplier" vertex="1">
+          <mxGeometry height="32" width="65" x="690" y="970" as="geometry" />
+        </mxCell>
+        <mxCell id="a-med-exp" parent="1" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#003296;fontColor=#003296;fontSize=10;strokeWidth=1.5;fontStyle=1;fontFamily=Helvetica;" value="ExpiryDate" vertex="1">
+          <mxGeometry height="32" width="80" x="410" y="1020" as="geometry" />
+        </mxCell>
+        <mxCell id="a-med-rx" parent="1" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#003296;fontColor=#003296;fontSize=10;strokeWidth=1.5;fontStyle=1;fontFamily=Helvetica;" value="RequiresPrescription" vertex="1">
+          <mxGeometry height="32" width="130" x="560" y="1020" as="geometry" />
+        </mxCell>
+        <mxCell id="a-adm-id" parent="1" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#003296;fontColor=#003296;fontSize=10;strokeWidth=1.5;fontStyle=1;fontFamily=Helvetica;" value="PK &lt;u&gt;AdminID&lt;/u&gt;" vertex="1">
+          <mxGeometry height="32" width="85" x="68" y="345" as="geometry" />
+        </mxCell>
+        <mxCell id="a-adm-user" parent="1" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#003296;fontColor=#003296;fontSize=10;strokeWidth=1.5;fontStyle=1;fontFamily=Helvetica;" value="Username" vertex="1">
+          <mxGeometry height="32" width="70" x="20" y="395" as="geometry" />
+        </mxCell>
+        <mxCell id="a-adm-pass" parent="1" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#003296;fontColor=#003296;fontSize=10;strokeWidth=1.5;fontStyle=1;fontFamily=Helvetica;" value="Password" vertex="1">
+          <mxGeometry height="32" width="70" x="20" y="475" as="geometry" />
+        </mxCell>
+        <mxCell id="a-adm-email" parent="1" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#003296;fontColor=#003296;fontSize=10;strokeWidth=1.5;fontStyle=1;fontFamily=Helvetica;" value="Email" vertex="1">
+          <mxGeometry height="32" width="55" x="175" y="425" as="geometry" />
+        </mxCell>
+        <mxCell id="a-rx-id" parent="1" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#003296;fontColor=#003296;fontSize=10;strokeWidth=1.5;fontStyle=1;fontFamily=Helvetica;" value="PK &lt;u&gt;PrescriptionID&lt;/u&gt;" vertex="1">
+          <mxGeometry height="32" width="120" x="855" y="45" as="geometry" />
+        </mxCell>
+        <mxCell id="a-rx-custid" parent="1" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#003296;fontColor=#003296;fontSize=10;strokeWidth=1.5;fontStyle=1;fontFamily=Helvetica;dashed=1;" value="FK CustomerID" vertex="1">
+          <mxGeometry height="32" width="100" x="1000" y="85" as="geometry" />
+        </mxCell>
+        <mxCell id="a-rx-file" parent="1" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#003296;fontColor=#003296;fontSize=10;strokeWidth=1.5;fontStyle=1;fontFamily=Helvetica;" value="PrescriptionFile" vertex="1">
+          <mxGeometry height="32" width="105" x="1010" y="135" as="geometry" />
+        </mxCell>
+        <mxCell id="a-rx-date" parent="1" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#003296;fontColor=#003296;fontSize=10;strokeWidth=1.5;fontStyle=1;fontFamily=Helvetica;" value="UploadDate" vertex="1">
+          <mxGeometry height="32" width="80" x="855" y="195" as="geometry" />
+        </mxCell>
+        <mxCell id="a-rx-status" parent="1" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#003296;fontColor=#003296;fontSize=10;strokeWidth=1.5;fontStyle=1;fontFamily=Helvetica;" value="Status" vertex="1">
+          <mxGeometry height="32" width="55" x="990" y="200" as="geometry" />
+        </mxCell>
+        <mxCell id="r-places" parent="1" style="rhombus;whiteSpace=wrap;html=1;fillColor=#B4CBF9;strokeColor=#003296;fontColor=#003296;fontSize=10;strokeWidth=1.5;fontStyle=1;fontFamily=Helvetica;" value="Places" vertex="1">
+          <mxGeometry height="50" width="70" x="580" y="265" as="geometry" />
+        </mxCell>
+        <mxCell id="r-contains" parent="1" style="rhombus;whiteSpace=wrap;html=1;fillColor=#B4CBF9;strokeColor=#003296;fontColor=#003296;fontSize=10;strokeWidth=1.5;fontStyle=1;fontFamily=Helvetica;" value="Contains" vertex="1">
+          <mxGeometry height="50" width="70" x="620" y="507" as="geometry" />
+        </mxCell>
+        <mxCell id="r-includes" parent="1" style="rhombus;whiteSpace=wrap;html=1;fillColor=#B4CBF9;strokeColor=#003296;fontColor=#003296;fontSize=10;strokeWidth=1.5;fontStyle=1;fontFamily=Helvetica;" value="References" vertex="1">
+          <mxGeometry height="50" width="80" x="675" y="760" as="geometry" />
+        </mxCell>
+        <mxCell id="r-uploads" parent="1" style="rhombus;whiteSpace=wrap;html=1;fillColor=#B4CBF9;strokeColor=#003296;fontColor=#003296;fontSize=10;strokeWidth=1.5;fontStyle=1;fontFamily=Helvetica;" value="Uploads" vertex="1">
+          <mxGeometry height="50" width="70" x="705" y="182" as="geometry" />
+        </mxCell>
+        <mxCell id="c1" parent="1" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;fontColor=#003296;fontStyle=1;fontSize=11;fontFamily=Helvetica;" value="1" vertex="1">
+          <mxGeometry height="20" width="20" x="530" y="195" as="geometry" />
+        </mxCell>
+        <mxCell id="c2" parent="1" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;fontColor=#003296;fontStyle=1;fontSize=11;fontFamily=Helvetica;" value="M" vertex="1">
+          <mxGeometry height="20" width="20" x="530" y="345" as="geometry" />
+        </mxCell>
+        <mxCell id="c3" parent="1" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;fontColor=#003296;fontStyle=1;fontSize=11;fontFamily=Helvetica;" value="1" vertex="1">
+          <mxGeometry height="20" width="20" x="530" y="465" as="geometry" />
+        </mxCell>
+        <mxCell id="c4" parent="1" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;fontColor=#003296;fontStyle=1;fontSize=11;fontFamily=Helvetica;" value="M" vertex="1">
+          <mxGeometry height="20" width="20" x="530" y="585" as="geometry" />
+        </mxCell>
+        <mxCell id="c5" parent="1" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;fontColor=#003296;fontStyle=1;fontSize=11;fontFamily=Helvetica;" value="1" vertex="1">
+          <mxGeometry height="20" width="20" x="545" y="855" as="geometry" />
+        </mxCell>
+        <mxCell id="c6" parent="1" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;fontColor=#003296;fontStyle=1;fontSize=11;fontFamily=Helvetica;" value="M" vertex="1">
+          <mxGeometry height="20" width="20" x="620" y="720" as="geometry" />
+        </mxCell>
+        <mxCell id="c7" parent="1" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;fontColor=#003296;fontStyle=1;fontSize=11;fontFamily=Helvetica;" value="1" vertex="1">
+          <mxGeometry height="20" width="20" x="680" y="125" as="geometry" />
+        </mxCell>
+        <mxCell id="c8" parent="1" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;fontColor=#003296;fontStyle=1;fontSize=11;fontFamily=Helvetica;" value="M" vertex="1">
+          <mxGeometry height="20" width="20" x="810" y="125" as="geometry" />
+        </mxCell>
+        <mxCell id="rel1" edge="1" parent="1" source="e-customer" style="endArrow=none;html=1;strokeColor=#003296;strokeWidth=1.5;fontStyle=1;fontFamily=Helvetica;" target="r-places">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="rel2" edge="1" parent="1" source="r-places" style="endArrow=none;html=1;strokeColor=#003296;strokeWidth=1.5;fontStyle=1;fontFamily=Helvetica;" target="e-order">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="rel3" edge="1" parent="1" source="e-order" style="endArrow=none;html=1;strokeColor=#003296;strokeWidth=1.5;fontStyle=1;fontFamily=Helvetica;" target="r-contains">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="rel4" edge="1" parent="1" source="r-contains" style="endArrow=none;html=1;strokeColor=#003296;strokeWidth=1.5;fontStyle=1;fontFamily=Helvetica;" target="e-orderitem">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="rel5" edge="1" parent="1" source="e-medicine" style="endArrow=none;html=1;strokeColor=#003296;strokeWidth=1.5;fontStyle=1;fontFamily=Helvetica;" target="r-includes">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="rel6" edge="1" parent="1" source="r-includes" style="endArrow=none;html=1;strokeColor=#003296;strokeWidth=1.5;fontStyle=1;fontFamily=Helvetica;" target="e-orderitem">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="rel7" edge="1" parent="1" source="e-customer" style="endArrow=none;html=1;strokeColor=#003296;strokeWidth=1.5;fontStyle=1;fontFamily=Helvetica;" target="r-uploads">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="rel8" edge="1" parent="1" source="r-uploads" style="endArrow=none;html=1;strokeColor=#003296;strokeWidth=1.5;fontStyle=1;fontFamily=Helvetica;" target="e-prescription">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="al-c1" edge="1" parent="1" source="a-cust-id" style="endArrow=none;html=1;strokeColor=#003296;strokeWidth=1.5;fontStyle=1;fontFamily=Helvetica;" target="e-customer">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="al-c2" edge="1" parent="1" source="a-cust-name" style="endArrow=none;html=1;strokeColor=#003296;strokeWidth=1.5;fontStyle=1;fontFamily=Helvetica;" target="e-customer">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="al-c3" edge="1" parent="1" source="a-cust-email" style="endArrow=none;html=1;strokeColor=#003296;strokeWidth=1.5;fontStyle=1;fontFamily=Helvetica;" target="e-customer">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="al-c4" edge="1" parent="1" source="a-cust-phone" style="endArrow=none;html=1;strokeColor=#003296;strokeWidth=1.5;fontStyle=1;fontFamily=Helvetica;" target="e-customer">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="al-c5" edge="1" parent="1" source="a-cust-addr" style="endArrow=none;html=1;strokeColor=#003296;strokeWidth=1.5;fontStyle=1;fontFamily=Helvetica;" target="e-customer">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="al-c6" edge="1" parent="1" source="a-cust-pass" style="endArrow=none;html=1;strokeColor=#003296;strokeWidth=1.5;fontStyle=1;fontFamily=Helvetica;" target="e-customer">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="al-o1" edge="1" parent="1" source="a-ord-id" style="endArrow=none;html=1;strokeColor=#003296;strokeWidth=1.5;fontStyle=1;fontFamily=Helvetica;" target="e-order">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="al-o2" edge="1" parent="1" source="a-ord-custid" style="endArrow=none;html=1;strokeColor=#003296;strokeWidth=1.5;fontStyle=1;fontFamily=Helvetica;" target="e-order">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="al-o3" edge="1" parent="1" source="a-ord-date" style="endArrow=none;html=1;strokeColor=#003296;strokeWidth=1.5;fontStyle=1;fontFamily=Helvetica;" target="e-order">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="al-o4" edge="1" parent="1" source="a-ord-status" style="endArrow=none;html=1;strokeColor=#003296;strokeWidth=1.5;fontStyle=1;fontFamily=Helvetica;" target="e-order">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="al-o5" edge="1" parent="1" source="a-ord-total" style="endArrow=none;html=1;strokeColor=#003296;strokeWidth=1.5;fontStyle=1;fontFamily=Helvetica;" target="e-order">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="al-oi1" edge="1" parent="1" source="a-oi-id" style="endArrow=none;html=1;strokeColor=#003296;strokeWidth=1.5;fontStyle=1;fontFamily=Helvetica;" target="e-orderitem">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="al-oi2" edge="1" parent="1" source="a-oi-ordid" style="endArrow=none;html=1;strokeColor=#003296;strokeWidth=1.5;fontStyle=1;fontFamily=Helvetica;" target="e-orderitem">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="al-oi3" edge="1" parent="1" source="a-oi-medid" style="endArrow=none;html=1;strokeColor=#003296;strokeWidth=1.5;fontStyle=1;fontFamily=Helvetica;" target="e-orderitem">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="al-oi4" edge="1" parent="1" source="a-oi-qty" style="endArrow=none;html=1;strokeColor=#003296;strokeWidth=1.5;fontStyle=1;fontFamily=Helvetica;" target="e-orderitem">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="al-oi5" edge="1" parent="1" source="a-oi-unit" style="endArrow=none;html=1;strokeColor=#003296;strokeWidth=1.5;fontStyle=1;fontFamily=Helvetica;" target="e-orderitem">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="al-oi6" edge="1" parent="1" source="a-oi-sub" style="endArrow=none;html=1;strokeColor=#003296;strokeWidth=1.5;fontStyle=1;fontFamily=Helvetica;" target="e-orderitem">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="al-m1" edge="1" parent="1" source="a-med-id" style="endArrow=none;html=1;strokeColor=#003296;strokeWidth=1.5;fontStyle=1;fontFamily=Helvetica;" target="e-medicine">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="al-m2" edge="1" parent="1" source="a-med-name" style="endArrow=none;html=1;strokeColor=#003296;strokeWidth=1.5;fontStyle=1;fontFamily=Helvetica;" target="e-medicine">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="al-m3" edge="1" parent="1" source="a-med-cat" style="endArrow=none;html=1;strokeColor=#003296;strokeWidth=1.5;fontStyle=1;fontFamily=Helvetica;" target="e-medicine">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="al-m4" edge="1" parent="1" source="a-med-dose" style="endArrow=none;html=1;strokeColor=#003296;strokeWidth=1.5;fontStyle=1;fontFamily=Helvetica;" target="e-medicine">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="al-m5" edge="1" parent="1" source="a-med-price" style="endArrow=none;html=1;strokeColor=#003296;strokeWidth=1.5;fontStyle=1;fontFamily=Helvetica;" target="e-medicine">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="al-m6" edge="1" parent="1" source="a-med-stock" style="endArrow=none;html=1;strokeColor=#003296;strokeWidth=1.5;fontStyle=1;fontFamily=Helvetica;" target="e-medicine">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="al-m7" edge="1" parent="1" source="a-med-sup" style="endArrow=none;html=1;strokeColor=#003296;strokeWidth=1.5;fontStyle=1;fontFamily=Helvetica;" target="e-medicine">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="al-m8" edge="1" parent="1" source="a-med-exp" style="endArrow=none;html=1;strokeColor=#003296;strokeWidth=1.5;fontStyle=1;fontFamily=Helvetica;" target="e-medicine">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="al-m9" edge="1" parent="1" source="a-med-rx" style="endArrow=none;html=1;strokeColor=#003296;strokeWidth=1.5;fontStyle=1;fontFamily=Helvetica;" target="e-medicine">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="al-a1" edge="1" parent="1" source="a-adm-id" style="endArrow=none;html=1;strokeColor=#003296;strokeWidth=1.5;fontStyle=1;fontFamily=Helvetica;" target="e-admin">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="al-a2" edge="1" parent="1" source="a-adm-user" style="endArrow=none;html=1;strokeColor=#003296;strokeWidth=1.5;fontStyle=1;fontFamily=Helvetica;" target="e-admin">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="al-a3" edge="1" parent="1" source="a-adm-pass" style="endArrow=none;html=1;strokeColor=#003296;strokeWidth=1.5;fontStyle=1;fontFamily=Helvetica;" target="e-admin">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="al-a4" edge="1" parent="1" source="a-adm-email" style="endArrow=none;html=1;strokeColor=#003296;strokeWidth=1.5;fontStyle=1;fontFamily=Helvetica;" target="e-admin">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="al-p1" edge="1" parent="1" source="a-rx-id" style="endArrow=none;html=1;strokeColor=#003296;strokeWidth=1.5;fontStyle=1;fontFamily=Helvetica;" target="e-prescription">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="al-p2" edge="1" parent="1" source="a-rx-custid" style="endArrow=none;html=1;strokeColor=#003296;strokeWidth=1.5;fontStyle=1;fontFamily=Helvetica;" target="e-prescription">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="al-p3" edge="1" parent="1" source="a-rx-file" style="endArrow=none;html=1;strokeColor=#003296;strokeWidth=1.5;fontStyle=1;fontFamily=Helvetica;" target="e-prescription">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="al-p4" edge="1" parent="1" source="a-rx-date" style="endArrow=none;html=1;strokeColor=#003296;strokeWidth=1.5;fontStyle=1;fontFamily=Helvetica;" target="e-prescription">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="al-p5" edge="1" parent="1" source="a-rx-status" style="endArrow=none;html=1;strokeColor=#003296;strokeWidth=1.5;fontStyle=1;fontFamily=Helvetica;" target="e-prescription">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
