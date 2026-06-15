@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Windows.Forms;
 using SmartMed.Business;
 using SmartMed.UI.Theming;
@@ -11,22 +11,22 @@ namespace SmartMed.UI
         public AdminDashboardForm()
         {
             InitializeComponent();
-            ApplyStitchShell();
+            ApplyDashboardShell();
             UiFactory.ApplyFormDefaults(this);
             if (!UiFactory.IsDesignMode(this))
                 UiFactory.ApplyFullScreen(this);
         }
 
-        private void ApplyStitchShell()
+        private void ApplyDashboardShell()
         {
-            StitchUiHelper.ApplyAdminShell(this, headerPanel, lblHeaderTitle, txtGlobalSearch,
+            ClinicalPrecisionUiHelper.ApplyAdminShell(this, headerPanel, lblHeaderTitle, txtGlobalSearch,
                 sidebarPanel, lblBrandTitle, lblBrandSubtitle, btnLogout);
 
-            StitchUiHelper.StyleNavButton(btnOverview, StitchUiHelper.NavIcon.Dashboard, "Dashboard Overview", true);
-            StitchUiHelper.StyleNavButton(btnMedicines, StitchUiHelper.NavIcon.Medicines, "Manage Medicines", false);
-            StitchUiHelper.StyleNavButton(btnCustomers, StitchUiHelper.NavIcon.Customers, "Manage Customers", false);
-            StitchUiHelper.StyleNavButton(btnOrders, StitchUiHelper.NavIcon.Orders, "Manage Orders", false);
-            StitchUiHelper.StyleNavButton(btnReports, StitchUiHelper.NavIcon.Reports, "Generate Reports", false);
+            ClinicalPrecisionUiHelper.StyleNavButton(btnOverview, ClinicalPrecisionUiHelper.NavIcon.Dashboard, "Dashboard Overview", true);
+            ClinicalPrecisionUiHelper.StyleNavButton(btnMedicines, ClinicalPrecisionUiHelper.NavIcon.Medicines, "Manage Medicines", false);
+            ClinicalPrecisionUiHelper.StyleNavButton(btnCustomers, ClinicalPrecisionUiHelper.NavIcon.Customers, "Manage Customers", false);
+            ClinicalPrecisionUiHelper.StyleNavButton(btnOrders, ClinicalPrecisionUiHelper.NavIcon.Orders, "Manage Orders", false);
+            ClinicalPrecisionUiHelper.StyleNavButton(btnReports, ClinicalPrecisionUiHelper.NavIcon.Reports, "Generate Reports", false);
 
             btnOverview.Location = new System.Drawing.Point(24, 88);
             btnMedicines.Location = new System.Drawing.Point(24, 132);
@@ -60,3 +60,4 @@ namespace SmartMed.UI
         }
     }
 }
+

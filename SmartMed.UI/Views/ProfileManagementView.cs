@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Windows.Forms;
 using SmartMed.Business;
 using SmartMed.Business.Services;
@@ -18,14 +18,14 @@ namespace SmartMed.UI.Views
 
         private void ProfileManagementView_Load(object sender, EventArgs e)
         {
-            StitchUiHelper.SetupPageHeader(pageHeader, "Manage Profile",
+            ClinicalPrecisionUiHelper.SetupPageHeader(pageHeader, "Manage Profile",
                 "Update your personal and contact information.");
-            StitchUiHelper.StyleFormCard(formPanel);
-            StitchUiHelper.ApplyPrimaryAccentButton(btnSave);
-            StitchUiHelper.ApplyFieldLabel(lblName);
-            StitchUiHelper.ApplyFieldLabel(lblEmail);
-            StitchUiHelper.ApplyFieldLabel(lblPhone);
-            StitchUiHelper.ApplyFieldLabel(lblAddress);
+            ClinicalPrecisionUiHelper.StyleFormCard(formPanel);
+            ClinicalPrecisionUiHelper.ApplyPrimaryAccentButton(btnSave);
+            ClinicalPrecisionUiHelper.ApplyFieldLabel(lblName);
+            ClinicalPrecisionUiHelper.ApplyFieldLabel(lblEmail);
+            ClinicalPrecisionUiHelper.ApplyFieldLabel(lblPhone);
+            ClinicalPrecisionUiHelper.ApplyFieldLabel(lblAddress);
 
             UiFactory.ApplyTextBoxStyle(txtName, 300);
             UiFactory.ApplyTextBoxStyle(txtEmail, 300);
@@ -58,3 +58,4 @@ namespace SmartMed.UI.Views
         }
     }
 }
+

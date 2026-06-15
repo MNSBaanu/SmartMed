@@ -4,7 +4,7 @@ using System.Windows.Forms;
 
 namespace SmartMed.UI.Theming
 {
-    internal static class StitchUiHelper
+    internal static class ClinicalPrecisionUiHelper
     {
         public static class NavIcon
         {

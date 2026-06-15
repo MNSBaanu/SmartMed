@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Windows.Forms;
 using SmartMed.Business;
 using SmartMed.UI.Theming;
@@ -11,21 +11,21 @@ namespace SmartMed.UI
         public CustomerDashboardForm()
         {
             InitializeComponent();
-            ApplyStitchShell();
+            ApplyDashboardShell();
             UiFactory.ApplyFormDefaults(this);
             if (!UiFactory.IsDesignMode(this))
                 UiFactory.ApplyFullScreen(this);
         }
 
-        private void ApplyStitchShell()
+        private void ApplyDashboardShell()
         {
-            StitchUiHelper.ApplyCustomerShell(this, headerPanel, lblHeaderTitle, txtGlobalSearch,
+            ClinicalPrecisionUiHelper.ApplyCustomerShell(this, headerPanel, lblHeaderTitle, txtGlobalSearch,
                 sidebarPanel, lblBrandTitle, lblBrandSubtitle, btnLogout);
 
-            StitchUiHelper.StyleNavButton(btnSearch, StitchUiHelper.NavIcon.Search, "Search Medicines", true, true);
-            StitchUiHelper.StyleNavButton(btnPlace, StitchUiHelper.NavIcon.Cart, "Place Order", false, true);
-            StitchUiHelper.StyleNavButton(btnTrack, StitchUiHelper.NavIcon.Track, "Track Orders", false, true);
-            StitchUiHelper.StyleNavButton(btnProfile, StitchUiHelper.NavIcon.Profile, "Manage Profile", false, true);
+            ClinicalPrecisionUiHelper.StyleNavButton(btnSearch, ClinicalPrecisionUiHelper.NavIcon.Search, "Search Medicines", true, true);
+            ClinicalPrecisionUiHelper.StyleNavButton(btnPlace, ClinicalPrecisionUiHelper.NavIcon.Cart, "Place Order", false, true);
+            ClinicalPrecisionUiHelper.StyleNavButton(btnTrack, ClinicalPrecisionUiHelper.NavIcon.Track, "Track Orders", false, true);
+            ClinicalPrecisionUiHelper.StyleNavButton(btnProfile, ClinicalPrecisionUiHelper.NavIcon.Profile, "Manage Profile", false, true);
 
             btnSearch.Location = new System.Drawing.Point(24, 88);
             btnPlace.Location = new System.Drawing.Point(24, 132);
@@ -57,3 +57,4 @@ namespace SmartMed.UI
         }
     }
 }
+

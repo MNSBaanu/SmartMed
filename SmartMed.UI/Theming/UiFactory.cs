@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.ComponentModel;
 using System.Drawing;
 using System.Windows.Forms;
@@ -299,7 +299,8 @@ namespace SmartMed.UI.Theming
             contentHost.Controls.Add(view);
             FontManager.ApplyInterFont(view);
             if (activeNav != null)
-                StitchUiHelper.SetActiveNav(activeNav, customerPortal, allNavButtons);
+                ClinicalPrecisionUiHelper.SetActiveNav(activeNav, customerPortal, allNavButtons);
         }
     }
 }
+

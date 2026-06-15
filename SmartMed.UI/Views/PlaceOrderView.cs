@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
@@ -23,14 +23,14 @@ namespace SmartMed.UI.Views
 
         private void PlaceOrderView_Load(object sender, EventArgs e)
         {
-            StitchUiHelper.SetupPageHeader(pageHeader, "Place Order");
-            StitchUiHelper.StyleGridCard(medicinesCard);
-            StitchUiHelper.StyleGridCard(cartCard);
-            StitchUiHelper.ApplySectionHeader(lblCart);
-            StitchUiHelper.ApplyFieldLabel(lblQty);
-            StitchUiHelper.ApplyPrimaryAccentButton(btnAdd);
-            StitchUiHelper.ApplyPrimaryAccentButton(btnPlace);
-            StitchUiHelper.ApplySecondaryButton(btnClear);
+            ClinicalPrecisionUiHelper.SetupPageHeader(pageHeader, "Place Order");
+            ClinicalPrecisionUiHelper.StyleGridCard(medicinesCard);
+            ClinicalPrecisionUiHelper.StyleGridCard(cartCard);
+            ClinicalPrecisionUiHelper.ApplySectionHeader(lblCart);
+            ClinicalPrecisionUiHelper.ApplyFieldLabel(lblQty);
+            ClinicalPrecisionUiHelper.ApplyPrimaryAccentButton(btnAdd);
+            ClinicalPrecisionUiHelper.ApplyPrimaryAccentButton(btnPlace);
+            ClinicalPrecisionUiHelper.ApplySecondaryButton(btnClear);
 
             UiFactory.ApplyDataGridStyle(gridMedicines);
             UiFactory.ApplyDataGridStyle(gridCart);
@@ -108,3 +108,4 @@ namespace SmartMed.UI.Views
         }
     }
 }
+

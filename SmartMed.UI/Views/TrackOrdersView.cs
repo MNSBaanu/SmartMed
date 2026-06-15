@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Windows.Forms;
 using SmartMed.Business;
 using SmartMed.Business.Services;
@@ -18,10 +18,10 @@ namespace SmartMed.UI.Views
 
         private void TrackOrdersView_Load(object sender, EventArgs e)
         {
-            StitchUiHelper.SetupPageHeader(pageHeader, "Track Orders");
-            StitchUiHelper.ApplySectionHeader(lblItems);
-            StitchUiHelper.StyleGridCard(gridOrdersCard);
-            StitchUiHelper.StyleGridCard(gridItemsCard);
+            ClinicalPrecisionUiHelper.SetupPageHeader(pageHeader, "Track Orders");
+            ClinicalPrecisionUiHelper.ApplySectionHeader(lblItems);
+            ClinicalPrecisionUiHelper.StyleGridCard(gridOrdersCard);
+            ClinicalPrecisionUiHelper.StyleGridCard(gridItemsCard);
 
             UiFactory.ApplyDataGridStyle(gridOrders);
             UiFactory.ApplyDataGridStyle(gridItems);
@@ -41,3 +41,4 @@ namespace SmartMed.UI.Views
         }
     }
 }
+

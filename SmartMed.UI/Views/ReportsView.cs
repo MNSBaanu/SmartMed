@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Windows.Forms;
 using SmartMed.Business.Services;
 using SmartMed.UI.Theming;
@@ -17,11 +17,11 @@ namespace SmartMed.UI.Views
 
         private void ReportsView_Load(object sender, EventArgs e)
         {
-            StitchUiHelper.SetupPageHeader(pageHeader, "Generate Reports");
-            StitchUiHelper.StyleGridCard(gridCard);
-            StitchUiHelper.ApplyPrimaryAccentButton(btnSales);
-            StitchUiHelper.ApplyPrimaryAccentButton(btnStock);
-            StitchUiHelper.ApplyPrimaryAccentButton(btnHistory);
+            ClinicalPrecisionUiHelper.SetupPageHeader(pageHeader, "Generate Reports");
+            ClinicalPrecisionUiHelper.StyleGridCard(gridCard);
+            ClinicalPrecisionUiHelper.ApplyPrimaryAccentButton(btnSales);
+            ClinicalPrecisionUiHelper.ApplyPrimaryAccentButton(btnStock);
+            ClinicalPrecisionUiHelper.ApplyPrimaryAccentButton(btnHistory);
 
             UiFactory.ApplyDataGridStyle(grid);
             grid.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
@@ -50,3 +50,4 @@ namespace SmartMed.UI.Views
         }
     }
 }
+

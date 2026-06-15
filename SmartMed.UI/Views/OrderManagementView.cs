@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Windows.Forms;
 using SmartMed.Business.Services;
 using SmartMed.UI.Theming;
@@ -18,13 +18,13 @@ namespace SmartMed.UI.Views
 
         private void OrderManagementView_Load(object sender, EventArgs e)
         {
-            StitchUiHelper.SetupPageHeader(pageHeader, "Manage Orders");
-            StitchUiHelper.ApplySectionHeader(lblOrders);
-            StitchUiHelper.ApplySectionHeader(lblItems);
-            StitchUiHelper.StyleGridCard(gridOrdersCard);
-            StitchUiHelper.StyleGridCard(gridItemsCard);
-            StitchUiHelper.ApplyPrimaryAccentButton(btnUpdate);
-            StitchUiHelper.ApplyFieldLabel(lblStatus);
+            ClinicalPrecisionUiHelper.SetupPageHeader(pageHeader, "Manage Orders");
+            ClinicalPrecisionUiHelper.ApplySectionHeader(lblOrders);
+            ClinicalPrecisionUiHelper.ApplySectionHeader(lblItems);
+            ClinicalPrecisionUiHelper.StyleGridCard(gridOrdersCard);
+            ClinicalPrecisionUiHelper.StyleGridCard(gridItemsCard);
+            ClinicalPrecisionUiHelper.ApplyPrimaryAccentButton(btnUpdate);
+            ClinicalPrecisionUiHelper.ApplyFieldLabel(lblStatus);
 
             UiFactory.ApplyDataGridStyle(gridOrders);
             UiFactory.ApplyDataGridStyle(gridItems);
@@ -66,3 +66,4 @@ namespace SmartMed.UI.Views
         }
     }
 }
+

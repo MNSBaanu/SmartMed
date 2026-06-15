@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Windows.Forms;
 using SmartMed.Business.Services;
 using SmartMed.UI.Theming;
@@ -17,16 +17,16 @@ namespace SmartMed.UI.Views
 
         private void SearchMedicinesView_Load(object sender, EventArgs e)
         {
-            StitchUiHelper.SetupPageHeaderWithRightLabel(
+            ClinicalPrecisionUiHelper.SetupPageHeaderWithRightLabel(
                 pageHeader, "Search Medicines", $"Last updated: {DateTime.Now:h:mm tt}");
-            StitchUiHelper.StyleFilterCard(filterPanel);
-            StitchUiHelper.StyleGridCard(gridCard);
-            StitchUiHelper.ApplyPrimaryAccentButton(btnSearch);
-            StitchUiHelper.ApplySecondaryAccentButton(btnShowAll);
-            StitchUiHelper.ApplyFieldLabel(lblName);
-            StitchUiHelper.ApplyFieldLabel(lblCategory);
-            StitchUiHelper.ApplyFieldLabel(lblMin);
-            StitchUiHelper.ApplyFieldLabel(lblMax);
+            ClinicalPrecisionUiHelper.StyleFilterCard(filterPanel);
+            ClinicalPrecisionUiHelper.StyleGridCard(gridCard);
+            ClinicalPrecisionUiHelper.ApplyPrimaryAccentButton(btnSearch);
+            ClinicalPrecisionUiHelper.ApplySecondaryAccentButton(btnShowAll);
+            ClinicalPrecisionUiHelper.ApplyFieldLabel(lblName);
+            ClinicalPrecisionUiHelper.ApplyFieldLabel(lblCategory);
+            ClinicalPrecisionUiHelper.ApplyFieldLabel(lblMin);
+            ClinicalPrecisionUiHelper.ApplyFieldLabel(lblMax);
 
             UiFactory.ApplyTextBoxStyle(txtName, 140);
             UiFactory.ApplyTextBoxStyle(txtCategory, 140);
@@ -52,3 +52,4 @@ namespace SmartMed.UI.Views
         }
     }
 }
+

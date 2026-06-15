@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Windows.Forms;
 using SmartMed.Business.Services;
 using SmartMed.Data.Models;
@@ -19,21 +19,21 @@ namespace SmartMed.UI.Views
 
         private void MedicineManagementView_Load(object sender, EventArgs e)
         {
-            StitchUiHelper.SetupPageHeader(pageHeader, "Manage Medicines",
+            ClinicalPrecisionUiHelper.SetupPageHeader(pageHeader, "Manage Medicines",
                 "Update and monitor pharmaceutical inventory levels.");
-            StitchUiHelper.StyleGridCard(gridCard);
-            StitchUiHelper.StyleFormCard(formPanel);
-            StitchUiHelper.ApplyPrimaryAccentButton(btnAdd);
-            StitchUiHelper.ApplySecondaryAccentButton(btnUpdate);
-            StitchUiHelper.ApplySecondaryButton(btnDelete);
-            StitchUiHelper.ApplySecondaryButton(btnClear);
-            StitchUiHelper.ApplyFieldLabel(lblName);
-            StitchUiHelper.ApplyFieldLabel(lblCategory);
-            StitchUiHelper.ApplyFieldLabel(lblDosage);
-            StitchUiHelper.ApplyFieldLabel(lblPrice);
-            StitchUiHelper.ApplyFieldLabel(lblStock);
-            StitchUiHelper.ApplyFieldLabel(lblSupplier);
-            StitchUiHelper.ApplyFieldLabel(lblExpiry);
+            ClinicalPrecisionUiHelper.StyleGridCard(gridCard);
+            ClinicalPrecisionUiHelper.StyleFormCard(formPanel);
+            ClinicalPrecisionUiHelper.ApplyPrimaryAccentButton(btnAdd);
+            ClinicalPrecisionUiHelper.ApplySecondaryAccentButton(btnUpdate);
+            ClinicalPrecisionUiHelper.ApplySecondaryButton(btnDelete);
+            ClinicalPrecisionUiHelper.ApplySecondaryButton(btnClear);
+            ClinicalPrecisionUiHelper.ApplyFieldLabel(lblName);
+            ClinicalPrecisionUiHelper.ApplyFieldLabel(lblCategory);
+            ClinicalPrecisionUiHelper.ApplyFieldLabel(lblDosage);
+            ClinicalPrecisionUiHelper.ApplyFieldLabel(lblPrice);
+            ClinicalPrecisionUiHelper.ApplyFieldLabel(lblStock);
+            ClinicalPrecisionUiHelper.ApplyFieldLabel(lblSupplier);
+            ClinicalPrecisionUiHelper.ApplyFieldLabel(lblExpiry);
 
             UiFactory.ApplyDataGridStyle(grid);
             grid.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
@@ -124,3 +124,4 @@ namespace SmartMed.UI.Views
         }
     }
 }
+

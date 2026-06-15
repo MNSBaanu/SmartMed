@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Windows.Forms;
 using SmartMed.Business.Services;
 using SmartMed.UI.Theming;
@@ -23,10 +23,10 @@ namespace SmartMed.UI.Views
             panelHeader.BackColor = ClinicalPrecisionTheme.Primary;
             lblHeader.Font = ClinicalPrecisionTheme.LabelFont;
             lblHeader.ForeColor = ClinicalPrecisionTheme.OnPrimary;
-            StitchUiHelper.StyleFilterCard(panelBody);
-            StitchUiHelper.ApplyFieldLabel(lblCustomer);
-            StitchUiHelper.ApplyPrimaryAccentButton(btnOk);
-            StitchUiHelper.ApplySecondaryAccentButton(btnCancel);
+            ClinicalPrecisionUiHelper.StyleFilterCard(panelBody);
+            ClinicalPrecisionUiHelper.ApplyFieldLabel(lblCustomer);
+            ClinicalPrecisionUiHelper.ApplyPrimaryAccentButton(btnOk);
+            ClinicalPrecisionUiHelper.ApplySecondaryAccentButton(btnCancel);
             UiFactory.ApplyComboBoxStyle(cmbCustomer, 360);
 
             if (UiFactory.IsDesignMode(this)) return;
@@ -59,3 +59,4 @@ namespace SmartMed.UI.Views
         }
     }
 }
+

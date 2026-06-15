@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Windows.Forms;
 using SmartMed.Business.Services;
 using SmartMed.UI.Theming;
@@ -18,15 +18,15 @@ namespace SmartMed.UI.Views
 
         private void CustomerManagementView_Load(object sender, EventArgs e)
         {
-            StitchUiHelper.SetupPageHeader(pageHeader, "Manage Customers",
+            ClinicalPrecisionUiHelper.SetupPageHeader(pageHeader, "Manage Customers",
                 "View and update registered customer records.");
-            StitchUiHelper.StyleGridCard(gridCard);
-            StitchUiHelper.StyleFormCard(formPanel);
-            StitchUiHelper.ApplySecondaryAccentButton(btnUpdate);
-            StitchUiHelper.ApplyFieldLabel(lblName);
-            StitchUiHelper.ApplyFieldLabel(lblEmail);
-            StitchUiHelper.ApplyFieldLabel(lblPhone);
-            StitchUiHelper.ApplyFieldLabel(lblAddress);
+            ClinicalPrecisionUiHelper.StyleGridCard(gridCard);
+            ClinicalPrecisionUiHelper.StyleFormCard(formPanel);
+            ClinicalPrecisionUiHelper.ApplySecondaryAccentButton(btnUpdate);
+            ClinicalPrecisionUiHelper.ApplyFieldLabel(lblName);
+            ClinicalPrecisionUiHelper.ApplyFieldLabel(lblEmail);
+            ClinicalPrecisionUiHelper.ApplyFieldLabel(lblPhone);
+            ClinicalPrecisionUiHelper.ApplyFieldLabel(lblAddress);
 
             UiFactory.ApplyDataGridStyle(grid);
             grid.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
@@ -73,3 +73,4 @@ namespace SmartMed.UI.Views
         }
     }
 }
+

@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Windows.Forms;
 using SmartMed.Business;
 using SmartMed.Business.Services;
@@ -18,10 +18,10 @@ namespace SmartMed.UI.Views
 
         private void AdminOverviewView_Load(object sender, EventArgs e)
         {
-            StitchUiHelper.StyleStatCard(panelInventory);
-            StitchUiHelper.StyleStatCard(panelOrders);
-            StitchUiHelper.StyleStatCard(panelRevenue);
-            StitchUiHelper.StyleGridCard(panelActivity);
+            ClinicalPrecisionUiHelper.StyleStatCard(panelInventory);
+            ClinicalPrecisionUiHelper.StyleStatCard(panelOrders);
+            ClinicalPrecisionUiHelper.StyleStatCard(panelRevenue);
+            ClinicalPrecisionUiHelper.StyleGridCard(panelActivity);
             UiFactory.ApplyDataGridStyle(gridActivity);
 
             if (UiFactory.IsDesignMode(this))
@@ -65,3 +65,4 @@ namespace SmartMed.UI.Views
         }
     }
 }
+
