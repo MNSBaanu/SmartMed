@@ -39,7 +39,7 @@ namespace SmartMed.UI
             bool isCustomer = cmbRole.SelectedItem?.ToString() == "Customer";
             lblUsername.Text = isCustomer ? "Email Address" : "Username";
             SetUsernamePlaceholder(isCustomer ? "email@example.com" : "Enter your credentials");
-            btnRegister.Visible = isCustomer;
+            btnRegister.Visible = true;
         }
 
         private void SetUsernamePlaceholder(string placeholder)

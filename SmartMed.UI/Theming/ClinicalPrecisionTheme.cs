@@ -9,6 +9,7 @@ namespace SmartMed.UI.Theming
         public static readonly Color PrimaryContainer = Color.FromArgb(0, 50, 150);
         public static readonly Color SecondaryContainer = Color.FromArgb(180, 203, 249);
         public static readonly Color Surface = Color.FromArgb(249, 249, 249);
+        public static readonly Color ModalOverlay = Color.FromArgb(149, 162, 190);
         public static readonly Color SurfaceContainerLowest = Color.White;
         public static readonly Color SurfaceContainerHigh = Color.FromArgb(232, 232, 232);
         public static readonly Color OnSurface = Color.FromArgb(27, 27, 27);

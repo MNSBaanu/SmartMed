@@ -207,7 +207,7 @@ namespace SmartMed.UI
             this.btnRegister.TabIndex = 8;
             this.btnRegister.Text = "Register New Account";
             this.btnRegister.UseVisualStyleBackColor = false;
-            this.btnRegister.Visible = false;
+            this.btnRegister.Visible = true;
             this.btnRegister.Click += new System.EventHandler(this.BtnRegister_Click);
             // 
             // lnkForgot
