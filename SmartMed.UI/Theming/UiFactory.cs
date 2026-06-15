@@ -1,4 +1,5 @@
 using System;
+using System.ComponentModel;
 using System.Drawing;
 using System.Windows.Forms;
 
@@ -6,6 +7,13 @@ namespace SmartMed.UI.Theming
 {
     internal static class UiFactory
     {
+        public static bool IsDesignMode(Control control)
+        {
+            if (LicenseManager.UsageMode == LicenseUsageMode.Designtime)
+                return true;
+            return control?.Site?.DesignMode ?? false;
+        }
+
         public static void ApplyFormDefaults(Form form)
         {
             form.Font = ClinicalPrecisionTheme.BodyFont;
@@ -19,20 +27,44 @@ namespace SmartMed.UI.Theming
             form.FormBorderStyle = FormBorderStyle.Sizable;
             form.MaximizeBox = true;
             form.MinimizeBox = true;
+            if (!IsDesignMode(form))
+                form.WindowState = FormWindowState.Maximized;
+        }
+
+        public static void ConfigureAuthForm(Form form, Panel card)
+        {
+            ApplyFormDefaults(form);
+            form.StartPosition = FormStartPosition.CenterScreen;
+            form.FormBorderStyle = FormBorderStyle.Sizable;
+            form.MaximizeBox = true;
+            form.MinimizeBox = true;
+            if (IsDesignMode(form))
+            {
+                form.ClientSize = new Size(1280, 720);
+                CenterControl(form, card);
+                return;
+            }
             form.WindowState = FormWindowState.Maximized;
+            form.Load += (s, e) => CenterControl(form, card);
+            form.Resize += (s, e) => CenterControl(form, card);
+        }
+
+        private static void CenterControl(Form form, Control control)
+        {
+            control.Left = Math.Max(0, (form.ClientSize.Width - control.Width) / 2);
+            control.Top = Math.Max(0, (form.ClientSize.Height - control.Height) / 2);
         }
 
         public static void CenterControlOnForm(Form form, Control control)
         {
-            void Center()
+            if (IsDesignMode(form))
             {
-                control.Left = Math.Max(0, (form.ClientSize.Width - control.Width) / 2);
-                control.Top = Math.Max(0, (form.ClientSize.Height - control.Height) / 2);
+                CenterControl(form, control);
+                return;
             }
-
-            form.Load += (s, e) => Center();
-            form.Resize += (s, e) => Center();
-            Center();
+            form.Load += (s, e) => CenterControl(form, control);
+            form.Resize += (s, e) => CenterControl(form, control);
+            CenterControl(form, control);
         }
 
         public static Panel CreateAppHeader(string title, string subtitle, Action onLogout)
@@ -241,7 +273,9 @@ namespace SmartMed.UI.Theming
 
         public static void StyleAuthForm(Form form)
         {
-            ApplyFullScreen(form);
+            ApplyFormDefaults(form);
+            if (!IsDesignMode(form))
+                form.WindowState = FormWindowState.Maximized;
         }
 
         public static void NavigateTo(Panel contentHost, UserControl view, Button activeNav, params Button[] allNavButtons)
