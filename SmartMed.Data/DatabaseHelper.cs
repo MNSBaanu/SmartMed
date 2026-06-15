@@ -12,7 +12,7 @@ namespace SmartMed.Data
     {
         public static string ConnectionString =>
             ConfigurationManager.ConnectionStrings["SmartMedDB"]?.ConnectionString
-            ?? "Data Source=.;Initial Catalog=SmartMedDB;Integrated Security=True";
+            ?? "Data Source=LAPTOP-KK271TP3\\LOCALHOST;Initial Catalog=SmartMedDB;Integrated Security=True;TrustServerCertificate=True";
 
         public static SqlConnection GetConnection()
         {
