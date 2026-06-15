@@ -129,7 +129,9 @@ namespace SmartMed.UI.Theming
 
             e.Graphics.Clear(btn.BackColor);
             using (var iconFont = new Font("Segoe MDL2 Assets", 11f))
-            using (var textFont = tag.Active ? FontManager.Get(9f, FontStyle.Bold) : ClinicalPrecisionTheme.LabelFont)
+            using (var textFont = tag.Active
+                ? ClinicalPrecisionTheme.LabelFont
+                : FontManager.Get(ClinicalPrecisionTheme.LabelFont.Size, FontStyle.Regular))
             using (var brush = new SolidBrush(btn.ForeColor))
             {
                 e.Graphics.DrawString(tag.Icon, iconFont, brush, 8, 10);
