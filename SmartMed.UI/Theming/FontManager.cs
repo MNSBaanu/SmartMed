@@ -71,13 +71,19 @@ namespace SmartMed.UI.Theming
 
             if (control is DataGridView grid)
             {
-                grid.ColumnHeadersDefaultCellStyle.Font = Get(grid.ColumnHeadersDefaultCellStyle.Font.Size, grid.ColumnHeadersDefaultCellStyle.Font.Style);
-                grid.DefaultCellStyle.Font = Get(grid.DefaultCellStyle.Font.Size, grid.DefaultCellStyle.Font.Style);
-                grid.AlternatingRowsDefaultCellStyle.Font = Get(grid.AlternatingRowsDefaultCellStyle.Font.Size, grid.AlternatingRowsDefaultCellStyle.Font.Style);
+                grid.ColumnHeadersDefaultCellStyle.Font = GetFrom(grid.ColumnHeadersDefaultCellStyle.Font, grid);
+                grid.DefaultCellStyle.Font = GetFrom(grid.DefaultCellStyle.Font, grid);
+                grid.AlternatingRowsDefaultCellStyle.Font = GetFrom(grid.AlternatingRowsDefaultCellStyle.Font, grid);
             }
 
             foreach (Control child in control.Controls)
                 ApplyInterFontRecursive(child);
+        }
+
+        private static Font GetFrom(Font cellFont, DataGridView grid)
+        {
+            var current = cellFont ?? grid.Font ?? ClinicalPrecisionTheme.BodyFont;
+            return Get(current.Size, current.Style);
         }
 
         private static bool ShouldSkipFont(Control control)
