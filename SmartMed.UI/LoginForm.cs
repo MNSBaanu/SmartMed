@@ -3,6 +3,7 @@ using System.Drawing;
 using System.Windows.Forms;
 using SmartMed.Business;
 using SmartMed.Business.Services;
+using SmartMed.UI.Theming;
 
 namespace SmartMed.UI
 {
@@ -16,37 +17,89 @@ namespace SmartMed.UI
 
         public LoginForm()
         {
+            UiFactory.StyleAuthForm(this, 460, 420);
             Text = "SmartMed Pharmacy - Login";
-            Size = new Size(420, 320);
-            StartPosition = FormStartPosition.CenterScreen;
-            FormBorderStyle = FormBorderStyle.FixedDialog;
-            MaximizeBox = false;
-            BackColor = Color.White;
 
-            var lblTitle = new Label { Text = "SmartMed Pharmacy", Font = new Font("Segoe UI", 14, FontStyle.Bold), ForeColor = Color.FromArgb(0, 50, 150), AutoSize = true, Location = new Point(100, 20) };
-            var lblRole = new Label { Text = "Role:", Location = new Point(40, 70), AutoSize = true };
-            cmbRole = new ComboBox { Location = new Point(140, 67), Width = 220, DropDownStyle = ComboBoxStyle.DropDownList };
+            var card = UiFactory.CreateCardPanel(400, 360);
+            card.Location = new Point(30, 24);
+            card.Paint += (s, e) =>
+            {
+                var rect = card.ClientRectangle;
+                rect.Width -= 1;
+                rect.Height -= 1;
+                using (var pen = new Pen(ClinicalPrecisionTheme.OutlineVariant))
+                    e.Graphics.DrawRectangle(pen, rect);
+            };
+            Controls.Add(card);
+
+            int pad = ClinicalPrecisionTheme.ContainerPadding;
+            int y = pad;
+
+            var lblTitle = new Label
+            {
+                Text = "SmartMed Pharmacy",
+                Font = ClinicalPrecisionTheme.AppTitleFont,
+                ForeColor = ClinicalPrecisionTheme.Primary,
+                AutoSize = true,
+                Location = new Point(pad, y)
+            };
+            card.Controls.Add(lblTitle);
+            y += 36;
+
+            var lblSubtitle = new Label
+            {
+                Text = "Sign in to your account",
+                Font = ClinicalPrecisionTheme.BodyFont,
+                ForeColor = ClinicalPrecisionTheme.OnSurfaceVariant,
+                AutoSize = true,
+                Location = new Point(pad, y)
+            };
+            card.Controls.Add(lblSubtitle);
+            y += 32;
+
+            card.Controls.Add(UiFactory.CreateFieldLabel("Role"));
+            card.Controls[card.Controls.Count - 1].Location = new Point(pad, y);
+            y += 20;
+            cmbRole = new ComboBox { Location = new Point(pad, y), DropDownStyle = ComboBoxStyle.DropDownList };
+            UiFactory.ApplyComboBoxStyle(cmbRole, 352);
             cmbRole.Items.AddRange(new object[] { "Admin", "Customer" });
             cmbRole.SelectedIndex = 0;
             cmbRole.SelectedIndexChanged += (s, e) => UpdateLabels();
+            card.Controls.Add(cmbRole);
+            y += 40;
 
-            lblUsername = new Label { Text = "Username:", Location = new Point(40, 110), AutoSize = true };
-            txtUsername = new TextBox { Location = new Point(140, 107), Width = 220 };
-            var lblPassword = new Label { Text = "Password:", Location = new Point(40, 150), AutoSize = true };
-            txtPassword = new TextBox { Location = new Point(140, 147), Width = 220, PasswordChar = '*' };
+            lblUsername = UiFactory.CreateFieldLabel("Username");
+            lblUsername.Location = new Point(pad, y);
+            card.Controls.Add(lblUsername);
+            y += 20;
+            txtUsername = new TextBox { Location = new Point(pad, y) };
+            UiFactory.ApplyTextBoxStyle(txtUsername, 352);
+            card.Controls.Add(txtUsername);
+            y += 40;
 
-            var btnLogin = new Button { Text = "Login", Location = new Point(140, 195), Width = 100, BackColor = Color.FromArgb(180, 203, 249) };
-            var btnRegister = new Button { Text = "Register", Location = new Point(260, 195), Width = 100 };
+            card.Controls.Add(UiFactory.CreateFieldLabel("Password"));
+            card.Controls[card.Controls.Count - 1].Location = new Point(pad, y);
+            y += 20;
+            txtPassword = new TextBox { Location = new Point(pad, y), PasswordChar = '*' };
+            UiFactory.ApplyTextBoxStyle(txtPassword, 352);
+            card.Controls.Add(txtPassword);
+            y += 44;
+
+            var btnLogin = UiFactory.CreatePrimaryButton("Login", 120);
+            var btnRegister = UiFactory.CreateSecondaryButton("Register", 120);
+            btnLogin.Location = new Point(pad, y);
+            btnRegister.Location = new Point(pad + 130, y);
             btnLogin.Click += BtnLogin_Click;
             btnRegister.Click += (s, e) => { Hide(); new RegistrationForm().ShowDialog(); Show(); };
+            card.Controls.Add(btnLogin);
+            card.Controls.Add(btnRegister);
 
-            Controls.AddRange(new Control[] { lblTitle, lblRole, cmbRole, lblUsername, txtUsername, lblPassword, txtPassword, btnLogin, btnRegister });
             UpdateLabels();
         }
 
         private void UpdateLabels()
         {
-            lblUsername.Text = cmbRole.SelectedItem?.ToString() == "Admin" ? "Username:" : "Email:";
+            lblUsername.Text = cmbRole.SelectedItem?.ToString() == "Admin" ? "Username" : "Email";
         }
 
         private void BtnLogin_Click(object sender, EventArgs e)

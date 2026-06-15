@@ -3,6 +3,7 @@ using System.Drawing;
 using System.Windows.Forms;
 using SmartMed.Business.Models;
 using SmartMed.Business.Services;
+using SmartMed.UI.Theming;
 
 namespace SmartMed.UI
 {
@@ -13,30 +14,65 @@ namespace SmartMed.UI
 
         public RegistrationForm()
         {
+            UiFactory.StyleAuthForm(this, 480, 500);
             Text = "Customer Registration";
-            Size = new Size(450, 400);
-            StartPosition = FormStartPosition.CenterScreen;
-            FormBorderStyle = FormBorderStyle.FixedDialog;
-            MaximizeBox = false;
 
-            int y = 20;
-            Controls.Add(MakeLabel("Full Name:", 30, y)); txtName = MakeText(150, y); y += 40;
-            Controls.Add(MakeLabel("Email:", 30, y)); txtEmail = MakeText(150, y); y += 40;
-            Controls.Add(MakeLabel("Phone:", 30, y)); txtPhone = MakeText(150, y); y += 40;
-            Controls.Add(MakeLabel("Address:", 30, y)); txtAddress = MakeText(150, y); y += 40;
-            Controls.Add(MakeLabel("Password:", 30, y)); txtPassword = MakeText(150, y); txtPassword.PasswordChar = '*'; y += 40;
-            Controls.Add(MakeLabel("Confirm:", 30, y)); txtConfirm = MakeText(150, y); txtConfirm.PasswordChar = '*'; y += 50;
+            var card = UiFactory.CreateCardPanel(420, 440);
+            card.Location = new Point(30, 24);
+            card.Paint += (s, e) =>
+            {
+                var rect = card.ClientRectangle;
+                rect.Width -= 1;
+                rect.Height -= 1;
+                using (var pen = new Pen(ClinicalPrecisionTheme.OutlineVariant))
+                    e.Graphics.DrawRectangle(pen, rect);
+            };
+            Controls.Add(card);
 
-            var btnRegister = new Button { Text = "Register", Location = new Point(150, y), Width = 100 };
-            var btnCancel = new Button { Text = "Cancel", Location = new Point(270, y), Width = 100 };
+            int pad = ClinicalPrecisionTheme.ContainerPadding;
+            int y = pad;
+
+            var lblTitle = new Label
+            {
+                Text = "Create Account",
+                Font = ClinicalPrecisionTheme.AppTitleFont,
+                ForeColor = ClinicalPrecisionTheme.Primary,
+                AutoSize = true,
+                Location = new Point(pad, y)
+            };
+            card.Controls.Add(lblTitle);
+            y += 40;
+
+            y = AddField(card, "Full Name", pad, y, out txtName);
+            y = AddField(card, "Email", pad, y, out txtEmail);
+            y = AddField(card, "Phone", pad, y, out txtPhone);
+            y = AddField(card, "Address", pad, y, out txtAddress);
+            y = AddField(card, "Password", pad, y, out txtPassword);
+            txtPassword.PasswordChar = '*';
+            y = AddField(card, "Confirm Password", pad, y, out txtConfirm);
+            txtConfirm.PasswordChar = '*';
+            y += 8;
+
+            var btnRegister = UiFactory.CreatePrimaryButton("Register", 120);
+            var btnCancel = UiFactory.CreateSecondaryButton("Cancel", 120);
+            btnRegister.Location = new Point(pad, y);
+            btnCancel.Location = new Point(pad + 130, y);
             btnRegister.Click += BtnRegister_Click;
             btnCancel.Click += (s, e) => Close();
-            Controls.Add(btnRegister);
-            Controls.Add(btnCancel);
+            card.Controls.Add(btnRegister);
+            card.Controls.Add(btnCancel);
         }
 
-        private Label MakeLabel(string text, int x, int y) => new Label { Text = text, Location = new Point(x, y + 3), AutoSize = true };
-        private TextBox MakeText(int x, int y) { var t = new TextBox { Location = new Point(x, y), Width = 250 }; Controls.Add(t); return t; }
+        private int AddField(Panel card, string label, int pad, int y, out TextBox textBox)
+        {
+            card.Controls.Add(UiFactory.CreateFieldLabel(label));
+            card.Controls[card.Controls.Count - 1].Location = new Point(pad, y);
+            y += 20;
+            textBox = new TextBox { Location = new Point(pad, y) };
+            UiFactory.ApplyTextBoxStyle(textBox, 372);
+            card.Controls.Add(textBox);
+            return y + 36;
+        }
 
         private void BtnRegister_Click(object sender, EventArgs e)
         {

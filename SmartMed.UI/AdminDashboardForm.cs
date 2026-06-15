@@ -1,53 +1,87 @@
 using System;
 using System.Drawing;
 using System.Windows.Forms;
+using SmartMed.Business;
+using SmartMed.UI.Theming;
+using SmartMed.UI.Views;
 
 namespace SmartMed.UI
 {
     public class AdminDashboardForm : Form
     {
+        private Panel contentHost;
+        private Button btnOverview, btnMedicines, btnCustomers, btnOrders, btnReports;
+
         public AdminDashboardForm()
         {
+            UiFactory.ApplyFormDefaults(this);
             Text = "SmartMed - Admin Dashboard";
-            Size = new Size(500, 450);
+            Size = new Size(1100, 700);
             StartPosition = FormStartPosition.CenterScreen;
-            BackColor = Color.White;
+            MinimumSize = new Size(900, 600);
 
-            var lbl = new Label
+            var welcome = Session.CurrentAdmin?.Username ?? "Admin";
+            var header = UiFactory.CreateAppHeader("SmartMed Pharmacy", "Admin Dashboard  |  " + welcome, Logout);
+            Controls.Add(header);
+
+            var main = new Panel { Dock = DockStyle.Fill };
+            Controls.Add(main);
+
+            var sidebar = UiFactory.CreateSidebar();
+            main.Controls.Add(sidebar);
+
+            var lblWelcome = new Label
             {
-                Text = $"Welcome, {Business.Session.CurrentAdmin?.Username}",
-                Font = new Font("Segoe UI", 12, FontStyle.Bold),
-                ForeColor = Color.FromArgb(0, 50, 150),
-                Location = new Point(30, 20),
-                AutoSize = true
+                Text = $"Welcome, {welcome}",
+                Font = ClinicalPrecisionTheme.SectionHeaderFont,
+                ForeColor = ClinicalPrecisionTheme.Primary,
+                AutoSize = true,
+                Location = new Point(ClinicalPrecisionTheme.ContainerPadding, ClinicalPrecisionTheme.StackMd),
+                Width = ClinicalPrecisionTheme.NavWidth - ClinicalPrecisionTheme.ContainerPadding * 2
             };
+            sidebar.Controls.Add(lblWelcome);
 
-            int y = 70;
-            Controls.Add(lbl);
-            Controls.Add(MakeNavButton("Dashboard Overview", 30, y, () => new AdminOverviewForm().ShowDialog())); y += 50;
-            Controls.Add(MakeNavButton("Manage Medicines", 30, y, () => new MedicineManagementForm().ShowDialog())); y += 50;
-            Controls.Add(MakeNavButton("Manage Customers", 30, y, () => new CustomerManagementForm().ShowDialog())); y += 50;
-            Controls.Add(MakeNavButton("Manage Orders", 30, y, () => new OrderManagementForm().ShowDialog())); y += 50;
-            Controls.Add(MakeNavButton("Generate Reports", 30, y, () => new ReportsForm().ShowDialog())); y += 50;
+            int navY = 50;
+            btnOverview = UiFactory.CreateNavButton("Dashboard Overview", null);
+            btnMedicines = UiFactory.CreateNavButton("Manage Medicines", null);
+            btnCustomers = UiFactory.CreateNavButton("Manage Customers", null);
+            btnOrders = UiFactory.CreateNavButton("Manage Orders", null);
+            btnReports = UiFactory.CreateNavButton("Generate Reports", null);
 
-            var btnLogout = new Button { Text = "Logout", Location = new Point(30, y), Width = 420, Height = 35 };
-            btnLogout.Click += (s, e) => { Business.Session.Clear(); Close(); new LoginForm().Show(); };
-            Controls.Add(btnLogout);
+            btnOverview.Location = new Point(ClinicalPrecisionTheme.ContainerPadding, navY);
+            navY += ClinicalPrecisionTheme.NavItemHeight + ClinicalPrecisionTheme.StackSm;
+            btnMedicines.Location = new Point(ClinicalPrecisionTheme.ContainerPadding, navY);
+            navY += ClinicalPrecisionTheme.NavItemHeight + ClinicalPrecisionTheme.StackSm;
+            btnCustomers.Location = new Point(ClinicalPrecisionTheme.ContainerPadding, navY);
+            navY += ClinicalPrecisionTheme.NavItemHeight + ClinicalPrecisionTheme.StackSm;
+            btnOrders.Location = new Point(ClinicalPrecisionTheme.ContainerPadding, navY);
+            navY += ClinicalPrecisionTheme.NavItemHeight + ClinicalPrecisionTheme.StackSm;
+            btnReports.Location = new Point(ClinicalPrecisionTheme.ContainerPadding, navY);
+
+            btnOverview.Click += (s, e) => Navigate(new AdminOverviewView(), btnOverview);
+            btnMedicines.Click += (s, e) => Navigate(new MedicineManagementView(), btnMedicines);
+            btnCustomers.Click += (s, e) => Navigate(new CustomerManagementView(), btnCustomers);
+            btnOrders.Click += (s, e) => Navigate(new OrderManagementView(), btnOrders);
+            btnReports.Click += (s, e) => Navigate(new ReportsView(), btnReports);
+
+            sidebar.Controls.AddRange(new Control[] { btnOverview, btnMedicines, btnCustomers, btnOrders, btnReports });
+
+            contentHost = UiFactory.CreateContentHost();
+            main.Controls.Add(contentHost);
+
+            Navigate(new AdminOverviewView(), btnOverview);
         }
 
-        private Button MakeNavButton(string text, int x, int y, Action action)
+        private void Navigate(UserControl view, Button active)
         {
-            var btn = new Button
-            {
-                Text = text,
-                Location = new Point(x, y),
-                Width = 420,
-                Height = 40,
-                TextAlign = ContentAlignment.MiddleLeft,
-                BackColor = Color.FromArgb(180, 203, 249)
-            };
-            btn.Click += (s, e) => action();
-            return btn;
+            UiFactory.NavigateTo(contentHost, view, active, btnOverview, btnMedicines, btnCustomers, btnOrders, btnReports);
+        }
+
+        private void Logout()
+        {
+            Session.Clear();
+            Close();
+            new LoginForm().Show();
         }
     }
 }
