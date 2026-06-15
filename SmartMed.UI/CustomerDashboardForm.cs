@@ -14,11 +14,8 @@ namespace SmartMed.UI
 
         public CustomerDashboardForm()
         {
-            UiFactory.ApplyFormDefaults(this);
+            UiFactory.ApplyFullScreen(this);
             Text = "SmartMed - Customer Portal";
-            Size = new Size(1100, 700);
-            StartPosition = FormStartPosition.CenterScreen;
-            MinimumSize = new Size(900, 600);
 
             var welcome = Session.CurrentCustomer?.Name ?? "Customer";
             var header = UiFactory.CreateAppHeader("SmartMed Pharmacy", "Customer Portal  |  " + welcome, Logout);

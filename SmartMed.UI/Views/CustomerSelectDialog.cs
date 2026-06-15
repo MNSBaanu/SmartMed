@@ -14,12 +14,12 @@ namespace SmartMed.UI.Views
 
         public CustomerSelectDialog()
         {
-            UiFactory.StyleAuthForm(this, 380, 180);
+            UiFactory.StyleAuthForm(this);
             Text = "Select Customer";
 
             var card = UiFactory.CreateCardPanel(340, 130);
-            card.Location = new Point(20, 16);
             Controls.Add(card);
+            UiFactory.CenterControlOnForm(this, card);
 
             var lbl = UiFactory.CreateFieldLabel("Customer");
             lbl.Location = new Point(ClinicalPrecisionTheme.ContainerPadding, ClinicalPrecisionTheme.StackMd);

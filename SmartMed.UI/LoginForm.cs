@@ -17,11 +17,10 @@ namespace SmartMed.UI
 
         public LoginForm()
         {
-            UiFactory.StyleAuthForm(this, 460, 420);
+            UiFactory.StyleAuthForm(this);
             Text = "SmartMed Pharmacy - Login";
 
             var card = UiFactory.CreateCardPanel(400, 360);
-            card.Location = new Point(30, 24);
             card.Paint += (s, e) =>
             {
                 var rect = card.ClientRectangle;
@@ -31,6 +30,7 @@ namespace SmartMed.UI
                     e.Graphics.DrawRectangle(pen, rect);
             };
             Controls.Add(card);
+            UiFactory.CenterControlOnForm(this, card);
 
             int pad = ClinicalPrecisionTheme.ContainerPadding;
             int y = pad;

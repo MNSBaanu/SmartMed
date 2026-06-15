@@ -14,11 +14,10 @@ namespace SmartMed.UI
 
         public RegistrationForm()
         {
-            UiFactory.StyleAuthForm(this, 480, 500);
+            UiFactory.StyleAuthForm(this);
             Text = "Customer Registration";
 
             var card = UiFactory.CreateCardPanel(420, 440);
-            card.Location = new Point(30, 24);
             card.Paint += (s, e) =>
             {
                 var rect = card.ClientRectangle;
@@ -28,6 +27,7 @@ namespace SmartMed.UI
                     e.Graphics.DrawRectangle(pen, rect);
             };
             Controls.Add(card);
+            UiFactory.CenterControlOnForm(this, card);
 
             int pad = ClinicalPrecisionTheme.ContainerPadding;
             int y = pad;

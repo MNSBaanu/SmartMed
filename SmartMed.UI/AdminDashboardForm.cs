@@ -14,11 +14,8 @@ namespace SmartMed.UI
 
         public AdminDashboardForm()
         {
-            UiFactory.ApplyFormDefaults(this);
+            UiFactory.ApplyFullScreen(this);
             Text = "SmartMed - Admin Dashboard";
-            Size = new Size(1100, 700);
-            StartPosition = FormStartPosition.CenterScreen;
-            MinimumSize = new Size(900, 600);
 
             var welcome = Session.CurrentAdmin?.Username ?? "Admin";
             var header = UiFactory.CreateAppHeader("SmartMed Pharmacy", "Admin Dashboard  |  " + welcome, Logout);

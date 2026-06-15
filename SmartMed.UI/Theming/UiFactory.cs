@@ -12,6 +12,29 @@ namespace SmartMed.UI.Theming
             form.BackColor = ClinicalPrecisionTheme.Surface;
         }
 
+        public static void ApplyFullScreen(Form form)
+        {
+            ApplyFormDefaults(form);
+            form.StartPosition = FormStartPosition.CenterScreen;
+            form.FormBorderStyle = FormBorderStyle.Sizable;
+            form.MaximizeBox = true;
+            form.MinimizeBox = true;
+            form.WindowState = FormWindowState.Maximized;
+        }
+
+        public static void CenterControlOnForm(Form form, Control control)
+        {
+            void Center()
+            {
+                control.Left = Math.Max(0, (form.ClientSize.Width - control.Width) / 2);
+                control.Top = Math.Max(0, (form.ClientSize.Height - control.Height) / 2);
+            }
+
+            form.Load += (s, e) => Center();
+            form.Resize += (s, e) => Center();
+            Center();
+        }
+
         public static Panel CreateAppHeader(string title, string subtitle, Action onLogout)
         {
             var header = new Panel
@@ -216,15 +239,9 @@ namespace SmartMed.UI.Theming
             };
         }
 
-        public static void StyleAuthForm(Form form, int width, int height)
+        public static void StyleAuthForm(Form form)
         {
-            ApplyFormDefaults(form);
-            form.Size = new Size(width, height);
-            form.StartPosition = FormStartPosition.CenterScreen;
-            form.FormBorderStyle = FormBorderStyle.FixedDialog;
-            form.MaximizeBox = false;
-            form.MinimizeBox = false;
-            form.BackColor = ClinicalPrecisionTheme.Surface;
+            ApplyFullScreen(form);
         }
 
         public static void NavigateTo(Panel contentHost, UserControl view, Button activeNav, params Button[] allNavButtons)
