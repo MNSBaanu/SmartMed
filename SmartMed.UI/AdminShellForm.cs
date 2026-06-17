@@ -1,4 +1,5 @@
 using System;
+using System.ComponentModel;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
@@ -9,15 +10,24 @@ namespace SmartMed.UI
 {
     public partial class AdminShellForm : Form
     {
-        protected AdminShellForm(AdminNavItem activeNav, string subtitle, string windowTitle)
+        protected AdminShellForm()
         {
+            FontManager.Initialize();
             InitializeComponent();
+        }
+
+        protected AdminShellForm(AdminNavItem activeNav, string subtitle, string windowTitle)
+            : this()
+        {
             DoubleBuffered = true;
             Text = windowTitle;
             lblTopSubtitle.Text = subtitle;
             ApplyShellTheme();
             SetActiveNav(activeNav);
         }
+
+        protected static bool IsDesignTime =>
+            LicenseManager.UsageMode == LicenseUsageMode.Designtime;
 
         protected void ApplyShellTheme()
         {
