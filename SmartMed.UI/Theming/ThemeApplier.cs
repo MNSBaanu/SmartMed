@@ -211,5 +211,54 @@ namespace SmartMed.UI.Theming
             returnLoginButton.Font = AppTheme.LabelFont;
             returnLoginButton.Cursor = Cursors.Hand;
         }
+
+        public static void ApplyAdminShell(
+            Form form,
+            Panel topBar,
+            Label topTitle,
+            Label topSubtitle,
+            Button closeButton,
+            Panel sidebar,
+            Panel content)
+        {
+            ApplyForm(form);
+            topBar.BackColor = AppTheme.Primary;
+            topTitle.Font = AppTheme.AppTitleFont;
+            topTitle.ForeColor = AppTheme.OnPrimary;
+            topSubtitle.Font = AppTheme.LabelFont;
+            topSubtitle.ForeColor = AppTheme.OnPrimary;
+            ApplyHeaderCloseButton(closeButton);
+            sidebar.BackColor = AppTheme.Surface;
+            content.BackColor = AppTheme.Surface;
+        }
+
+        public static void ApplyNavButton(Button button, bool active = false, bool isLogout = false)
+        {
+            button.FlatStyle = FlatStyle.Flat;
+            button.FlatAppearance.BorderSize = 0;
+            button.Font = AppTheme.LabelFont;
+            button.Cursor = Cursors.Hand;
+            button.Height = 40;
+
+            if (isLogout)
+            {
+                button.BackColor = AppTheme.Surface;
+                button.ForeColor = AppTheme.Error;
+                button.FlatAppearance.MouseOverBackColor = Color.FromArgb(255, 245, 245);
+                return;
+            }
+
+            if (active)
+            {
+                button.BackColor = AppTheme.SecondaryContainer;
+                button.ForeColor = AppTheme.OnSecondaryContainer;
+            }
+            else
+            {
+                button.BackColor = AppTheme.Surface;
+                button.ForeColor = AppTheme.OnSurfaceVariant;
+                button.FlatAppearance.MouseOverBackColor = Color.FromArgb(248, 250, 255);
+            }
+        }
     }
 }

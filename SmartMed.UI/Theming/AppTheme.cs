@@ -10,6 +10,8 @@ namespace SmartMed.UI.Theming
         public const int InputHeight = 40;
         public const int CardWidth = 420;
         public const int RegistrationCardWidth = 450;
+        public const int NavWidth = 280;
+        public const int TopBarHeight = 48;
 
         public static readonly Color Primary = Color.FromArgb(0, 31, 102);
         public static readonly Color OnPrimary = Color.White;
@@ -28,6 +30,8 @@ namespace SmartMed.UI.Theming
 
         public static readonly Color SecondaryContainer = Color.FromArgb(184, 207, 254);
         public static readonly Color OnSecondaryContainer = Color.FromArgb(66, 88, 128);
+        public static readonly Color Error = Color.FromArgb(186, 26, 26);
+        public static readonly Color Success = Color.FromArgb(22, 163, 74);
 
         public static readonly Color Placeholder = Color.Gray;
         public static readonly Color HeaderHover = Color.FromArgb(40, 255, 255, 255);
@@ -35,6 +39,8 @@ namespace SmartMed.UI.Theming
         public static Font LabelFont => FontManager.Get(9f, FontStyle.Bold);
         public static Font BodyFont => FontManager.Get(9.25f);
         public static Font AppTitleFont => FontManager.Get(11.25f, FontStyle.Bold);
+        public static Font SectionHeaderFont => FontManager.Get(12f, FontStyle.Bold);
+        public static Font StatValueFont => FontManager.Get(18f, FontStyle.Bold);
         public static Font LinkFont => FontManager.Get(8.25f, FontStyle.Bold);
         public static Font VersionFont => FontManager.Get(8f, FontStyle.Italic);
         public static Font IconFont => new Font("Segoe MDL2 Assets", 11f);

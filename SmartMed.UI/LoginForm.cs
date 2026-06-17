@@ -168,8 +168,12 @@ namespace SmartMed.UI
                     }
 
                     Session.CurrentAdmin = admin;
-                    MessageBox.Show($"Welcome, {admin.Username}. Admin dashboard coming next.", "Login Successful",
-                        MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    Hide();
+                    using (var dashboard = new AdminDashboardForm())
+                    {
+                        dashboard.ShowDialog();
+                    }
+                    Close();
                 }
                 else
                 {
