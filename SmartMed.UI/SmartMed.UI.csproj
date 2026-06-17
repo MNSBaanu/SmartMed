@@ -21,4 +21,30 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
+  <ItemGroup>
+    <Compile Update="ManageCustomersForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="ManageCustomersForm.Designer.cs">
+      <DependentUpon>ManageCustomersForm.cs</DependentUpon>
+    </Compile>
+    <EmbeddedResource Update="ManageCustomersForm.resx">
+      <DependentUpon>ManageCustomersForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <Compile Update="ManageMedicinesForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="ManageMedicinesForm.Designer.cs">
+      <DependentUpon>ManageMedicinesForm.cs</DependentUpon>
+    </Compile>
+    <EmbeddedResource Update="ManageMedicinesForm.resx">
+      <DependentUpon>ManageMedicinesForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <Compile Update="AdminDashboardForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="AdminDashboardForm.Designer.cs">
+      <DependentUpon>AdminDashboardForm.cs</DependentUpon>
+    </Compile>
+  </ItemGroup>
 </Project>
