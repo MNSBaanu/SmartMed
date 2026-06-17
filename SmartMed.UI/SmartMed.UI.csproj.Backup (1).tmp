@@ -45,23 +45,12 @@
     <EmbeddedResource Update="ManageMedicinesForm.resx">
       <DependentUpon>ManageMedicinesForm.cs</DependentUpon>
     </EmbeddedResource>
-    <Compile Update="ManageOrdersForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
+    <Compile Update="ManageOrdersForm.cs" />
     <Compile Update="ManageOrdersForm.Designer.cs">
       <DependentUpon>ManageOrdersForm.cs</DependentUpon>
     </Compile>
     <EmbeddedResource Update="ManageOrdersForm.resx">
       <DependentUpon>ManageOrdersForm.cs</DependentUpon>
-    </EmbeddedResource>
-    <Compile Update="ReportsForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Update="ReportsForm.Designer.cs">
-      <DependentUpon>ReportsForm.cs</DependentUpon>
-    </Compile>
-    <EmbeddedResource Update="ReportsForm.resx">
-      <DependentUpon>ReportsForm.cs</DependentUpon>
     </EmbeddedResource>
     <Compile Update="AdminDashboardForm.cs" />
     <Compile Update="AdminDashboardForm.Designer.cs">

@@ -1,6 +1,6 @@
 namespace SmartMed.UI
 {
-    partial class ManageOrdersForm
+    partial class ReportsForm
     {
         private System.ComponentModel.IContainer components = null;
 
@@ -13,7 +13,7 @@ namespace SmartMed.UI
 
         private void InitializeComponent()
         {
-            this.ordersPanel = new SmartMed.UI.Controls.ManageOrdersPanel();
+            this.reportsPanel = new SmartMed.UI.Controls.ReportsPanel();
             this.panelTop.SuspendLayout();
             this.panelSidebar.SuspendLayout();
             this.panelContent.SuspendLayout();
@@ -25,7 +25,7 @@ namespace SmartMed.UI
             // 
             // btnClose
             // 
-            this.btnClose.Location = new System.Drawing.Point(1816, 8);
+            this.btnClose.Location = new System.Drawing.Point(1309, 8);
             // 
             // panelSidebar
             // 
@@ -33,43 +33,42 @@ namespace SmartMed.UI
             // 
             // btnNavLogout
             // 
-            this.btnNavLogout.Location = new System.Drawing.Point(0, 1668);
+            this.btnNavLogout.Location = new System.Drawing.Point(0, 909);
             // 
             // panelContent
             // 
-            this.panelContent.Controls.Add(this.ordersPanel);
+            this.panelContent.Controls.Add(this.reportsPanel);
             this.panelContent.Size = new System.Drawing.Size(1073, 965);
             // 
-            // ordersPanel
+            // reportsPanel
             // 
-            this.ordersPanel.AutoScroll = true;
-            this.ordersPanel.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(249)))), ((int)(((byte)(249)))), ((int)(((byte)(249)))));
-            this.ordersPanel.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.ordersPanel.Location = new System.Drawing.Point(24, 24);
-            this.ordersPanel.Margin = new System.Windows.Forms.Padding(3, 10, 3, 10);
-            this.ordersPanel.MinimumSize = new System.Drawing.Size(914, 1758);
-            this.ordersPanel.Name = "ordersPanel";
-            this.ordersPanel.Size = new System.Drawing.Size(1025, 1758);
-            this.ordersPanel.TabIndex = 0;
+            this.reportsPanel.AutoScroll = true;
+            this.reportsPanel.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(249)))), ((int)(((byte)(249)))), ((int)(((byte)(249)))));
+            this.reportsPanel.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.reportsPanel.Location = new System.Drawing.Point(24, 24);
+            this.reportsPanel.Margin = new System.Windows.Forms.Padding(3, 5, 3, 5);
+            this.reportsPanel.MinimumSize = new System.Drawing.Size(914, 900);
+            this.reportsPanel.Name = "reportsPanel";
+            this.reportsPanel.Size = new System.Drawing.Size(1025, 900);
+            this.reportsPanel.TabIndex = 0;
             // 
-            // ManageOrdersForm
+            // ReportsForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1353, 1013);
             this.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MinimumSize = new System.Drawing.Size(1140, 838);
-            this.Name = "ManageOrdersForm";
-            this.Text = "SmartMed - Manage Orders";
+            this.Name = "ReportsForm";
+            this.Text = "SmartMed - Generate Reports";
             this.panelTop.ResumeLayout(false);
             this.panelTop.PerformLayout();
             this.panelSidebar.ResumeLayout(false);
             this.panelSidebar.PerformLayout();
             this.panelContent.ResumeLayout(false);
             this.ResumeLayout(false);
-
         }
 
-        private Controls.ManageOrdersPanel ordersPanel;
+        private Controls.ReportsPanel reportsPanel;
     }
 }
