@@ -25,6 +25,7 @@ namespace SmartMed.UI
             this.btnCancel = new System.Windows.Forms.Button();
             this.btnRegister = new System.Windows.Forms.Button();
             this.panelBody = new System.Windows.Forms.Panel();
+            this.btnToggleConfirm = new System.Windows.Forms.Button();
             this.txtConfirm = new System.Windows.Forms.TextBox();
             this.lblConfirm = new System.Windows.Forms.Label();
             this.btnTogglePassword = new System.Windows.Forms.Button();
@@ -67,10 +68,8 @@ namespace SmartMed.UI
             this.panelHeader.Controls.Add(this.lblHeaderTitle);
             this.panelHeader.Controls.Add(this.lblLockIcon);
             this.panelHeader.Controls.Add(this.btnClose);
-            this.panelHeader.Dock = System.Windows.Forms.DockStyle.Top;
             this.panelHeader.Location = new System.Drawing.Point(0, 0);
             this.panelHeader.Name = "panelHeader";
-            this.panelHeader.Padding = new System.Windows.Forms.Padding(24, 16, 24, 16);
             this.panelHeader.Size = new System.Drawing.Size(450, 56);
             this.panelHeader.TabIndex = 0;
             // 
@@ -128,6 +127,7 @@ namespace SmartMed.UI
             // 
             // panelBody
             // 
+            this.panelBody.Controls.Add(this.btnToggleConfirm);
             this.panelBody.Controls.Add(this.txtConfirm);
             this.panelBody.Controls.Add(this.lblConfirm);
             this.panelBody.Controls.Add(this.btnTogglePassword);
@@ -141,11 +141,9 @@ namespace SmartMed.UI
             this.panelBody.Controls.Add(this.lblEmail);
             this.panelBody.Controls.Add(this.txtFullName);
             this.panelBody.Controls.Add(this.lblFullName);
-            this.panelBody.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panelBody.Location = new System.Drawing.Point(0, 56);
             this.panelBody.Name = "panelBody";
-            this.panelBody.Padding = new System.Windows.Forms.Padding(24);
-            this.panelBody.Size = new System.Drawing.Size(450, 464);
+            this.panelBody.Size = new System.Drawing.Size(450, 440);
             this.panelBody.TabIndex = 1;
             // 
             // lblFullName
@@ -264,15 +262,29 @@ namespace SmartMed.UI
             this.txtConfirm.TabIndex = 12;
             this.txtConfirm.UseSystemPasswordChar = true;
             // 
+            // btnToggleConfirm
+            // 
+            this.btnToggleConfirm.BackColor = System.Drawing.Color.White;
+            this.btnToggleConfirm.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.btnToggleConfirm.FlatAppearance.BorderSize = 0;
+            this.btnToggleConfirm.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnToggleConfirm.Font = new System.Drawing.Font("Segoe MDL2 Assets", 10F);
+            this.btnToggleConfirm.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(68)))), ((int)(((byte)(70)))), ((int)(((byte)(82)))));
+            this.btnToggleConfirm.Location = new System.Drawing.Point(390, 297);
+            this.btnToggleConfirm.Name = "btnToggleConfirm";
+            this.btnToggleConfirm.Size = new System.Drawing.Size(36, 22);
+            this.btnToggleConfirm.TabIndex = 13;
+            this.btnToggleConfirm.Text = "\uE890";
+            this.btnToggleConfirm.UseVisualStyleBackColor = false;
+            this.btnToggleConfirm.Click += new System.EventHandler(this.BtnToggleConfirm_Click);
+            // 
             // panelFooter
             // 
             this.panelFooter.Controls.Add(this.btnCancel);
             this.panelFooter.Controls.Add(this.btnRegister);
-            this.panelFooter.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.panelFooter.Location = new System.Drawing.Point(0, 520);
+            this.panelFooter.Location = new System.Drawing.Point(0, 496);
             this.panelFooter.Name = "panelFooter";
-            this.panelFooter.Padding = new System.Windows.Forms.Padding(24, 16, 24, 24);
-            this.panelFooter.Size = new System.Drawing.Size(450, 100);
+            this.panelFooter.Size = new System.Drawing.Size(450, 124);
             this.panelFooter.TabIndex = 2;
             // 
             // btnRegister
@@ -282,17 +294,17 @@ namespace SmartMed.UI
             this.btnRegister.Size = new System.Drawing.Size(402, 40);
             this.btnRegister.TabIndex = 0;
             this.btnRegister.Text = "Register";
-            this.btnRegister.UseVisualStyleBackColor = true;
+            this.btnRegister.UseVisualStyleBackColor = false;
             this.btnRegister.Click += new System.EventHandler(this.BtnRegister_Click);
             // 
             // btnCancel
             // 
-            this.btnCancel.Location = new System.Drawing.Point(24, 60);
+            this.btnCancel.Location = new System.Drawing.Point(24, 64);
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.Size = new System.Drawing.Size(402, 40);
             this.btnCancel.TabIndex = 1;
             this.btnCancel.Text = "Cancel";
-            this.btnCancel.UseVisualStyleBackColor = true;
+            this.btnCancel.UseVisualStyleBackColor = false;
             this.btnCancel.Click += new System.EventHandler(this.BtnCancel_Click);
             // 
             // panelSuccess
@@ -301,55 +313,49 @@ namespace SmartMed.UI
             this.panelSuccess.Controls.Add(this.lblSuccessMessage);
             this.panelSuccess.Controls.Add(this.lblSuccessTitle);
             this.panelSuccess.Controls.Add(this.lblSuccessIcon);
-            this.panelSuccess.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panelSuccess.Location = new System.Drawing.Point(0, 56);
             this.panelSuccess.Name = "panelSuccess";
-            this.panelSuccess.Padding = new System.Windows.Forms.Padding(32);
-            this.panelSuccess.Size = new System.Drawing.Size(450, 564);
+            this.panelSuccess.Size = new System.Drawing.Size(450, 440);
             this.panelSuccess.TabIndex = 3;
             this.panelSuccess.Visible = false;
             // 
             // lblSuccessIcon
             // 
-            this.lblSuccessIcon.Anchor = System.Windows.Forms.AnchorStyles.Top;
             this.lblSuccessIcon.Font = new System.Drawing.Font("Segoe MDL2 Assets", 20F);
-            this.lblSuccessIcon.Location = new System.Drawing.Point(32, 120);
+            this.lblSuccessIcon.Location = new System.Drawing.Point(24, 80);
             this.lblSuccessIcon.Name = "lblSuccessIcon";
-            this.lblSuccessIcon.Size = new System.Drawing.Size(386, 48);
+            this.lblSuccessIcon.Size = new System.Drawing.Size(402, 48);
             this.lblSuccessIcon.TabIndex = 0;
             this.lblSuccessIcon.Text = "\uE73E";
             this.lblSuccessIcon.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // lblSuccessTitle
             // 
-            this.lblSuccessTitle.Anchor = System.Windows.Forms.AnchorStyles.Top;
             this.lblSuccessTitle.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold);
-            this.lblSuccessTitle.Location = new System.Drawing.Point(32, 180);
+            this.lblSuccessTitle.Location = new System.Drawing.Point(24, 140);
             this.lblSuccessTitle.Name = "lblSuccessTitle";
-            this.lblSuccessTitle.Size = new System.Drawing.Size(386, 28);
+            this.lblSuccessTitle.Size = new System.Drawing.Size(402, 28);
             this.lblSuccessTitle.TabIndex = 1;
             this.lblSuccessTitle.Text = "Registration successful";
             this.lblSuccessTitle.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // lblSuccessMessage
             // 
-            this.lblSuccessMessage.Anchor = System.Windows.Forms.AnchorStyles.Top;
-            this.lblSuccessMessage.Location = new System.Drawing.Point(32, 216);
+            this.lblSuccessMessage.Location = new System.Drawing.Point(24, 176);
             this.lblSuccessMessage.Name = "lblSuccessMessage";
-            this.lblSuccessMessage.Size = new System.Drawing.Size(386, 72);
+            this.lblSuccessMessage.Size = new System.Drawing.Size(402, 72);
             this.lblSuccessMessage.TabIndex = 2;
             this.lblSuccessMessage.Text = "You can now login to your SmartMed Pharmacy portal to manage prescriptions and orders.";
             this.lblSuccessMessage.TextAlign = System.Drawing.ContentAlignment.TopCenter;
             // 
             // btnReturnLogin
             // 
-            this.btnReturnLogin.Anchor = System.Windows.Forms.AnchorStyles.Top;
-            this.btnReturnLogin.Location = new System.Drawing.Point(32, 312);
+            this.btnReturnLogin.Location = new System.Drawing.Point(24, 268);
             this.btnReturnLogin.Name = "btnReturnLogin";
-            this.btnReturnLogin.Size = new System.Drawing.Size(386, 40);
+            this.btnReturnLogin.Size = new System.Drawing.Size(402, 40);
             this.btnReturnLogin.TabIndex = 3;
             this.btnReturnLogin.Text = "Return to Login";
-            this.btnReturnLogin.UseVisualStyleBackColor = true;
+            this.btnReturnLogin.UseVisualStyleBackColor = false;
             this.btnReturnLogin.Click += new System.EventHandler(this.BtnReturnLogin_Click);
             // 
             // RegistrationForm
@@ -358,7 +364,7 @@ namespace SmartMed.UI
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(249)))), ((int)(((byte)(249)))), ((int)(((byte)(249)))));
-            this.ClientSize = new System.Drawing.Size(480, 650);
+            this.ClientSize = new System.Drawing.Size(500, 660);
             this.Controls.Add(this.panelCard);
             this.Font = new System.Drawing.Font("Segoe UI", 9F);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
@@ -400,6 +406,7 @@ namespace SmartMed.UI
         private System.Windows.Forms.Button btnTogglePassword;
         private System.Windows.Forms.Label lblConfirm;
         private System.Windows.Forms.TextBox txtConfirm;
+        private System.Windows.Forms.Button btnToggleConfirm;
         private System.Windows.Forms.Panel panelFooter;
         private System.Windows.Forms.Button btnRegister;
         private System.Windows.Forms.Button btnCancel;
