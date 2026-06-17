@@ -8,9 +8,10 @@ using SmartMed.UI.Theming;
 
 namespace SmartMed.UI
 {
+    [DesignerCategory("Form")]
     public partial class AdminShellForm : Form
     {
-        protected AdminShellForm()
+        public AdminShellForm()
         {
             FontManager.Initialize();
             InitializeComponent();
@@ -22,6 +23,13 @@ namespace SmartMed.UI
             DoubleBuffered = true;
             Text = windowTitle;
             lblTopSubtitle.Text = subtitle;
+
+            if (IsDesignTime)
+            {
+                InitializePageContent();
+                return;
+            }
+
             ApplyShellTheme();
             SetActiveNav(activeNav);
             InitializePageContent();

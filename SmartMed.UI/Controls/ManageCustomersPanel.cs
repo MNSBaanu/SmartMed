@@ -13,8 +13,8 @@ namespace SmartMed.UI.Controls
 {
     public partial class ManageCustomersPanel : UserControl
     {
-        private readonly CustomerService _customers = new CustomerService();
-        private readonly OrderRepository _orders = new OrderRepository();
+        private CustomerService _customers;
+        private OrderRepository _orders;
         private int? _selectedId;
         private bool _dataLoaded;
 
@@ -42,6 +42,24 @@ namespace SmartMed.UI.Controls
             if (IsDesignHost())
                 LoadDesignTimePreview();
             Load += ManageCustomersPanel_Load;
+        }
+
+        private CustomerService Customers
+        {
+            get
+            {
+                if (IsDesignHost()) return null;
+                return _customers ?? (_customers = new CustomerService());
+            }
+        }
+
+        private OrderRepository Orders
+        {
+            get
+            {
+                if (IsDesignHost()) return null;
+                return _orders ?? (_orders = new OrderRepository());
+            }
         }
 
         private void ManageCustomersPanel_Load(object sender, EventArgs e)
@@ -426,7 +444,9 @@ namespace SmartMed.UI.Controls
 
         public void LoadCustomers()
         {
-            var all = _customers.GetAll();
+            if (IsDesignHost() || Customers == null) return;
+
+            var all = Customers.GetAll();
             gridCustomers.DataSource = all.Select(c => new
             {
                 c.CustomerID,
@@ -448,7 +468,7 @@ namespace SmartMed.UI.Controls
 
         private void UpdateStats(List<Customer> all)
         {
-            var orderCustomerIds = new HashSet<int>(_orders.GetAll().Select(o => o.CustomerID));
+            var orderCustomerIds = new HashSet<int>(Orders.GetAll().Select(o => o.CustomerID));
             var withOrders = all.Count(c => orderCustomerIds.Contains(c.CustomerID));
 
             lblTotalCustomers.Text = all.Count.ToString("N0");
@@ -463,7 +483,7 @@ namespace SmartMed.UI.Controls
             if (idCell?.Value == null) return;
 
             _selectedId = Convert.ToInt32(idCell.Value);
-            var customer = _customers.GetById(_selectedId.Value);
+            var customer = Customers.GetById(_selectedId.Value);
             if (customer == null) return;
 
             txtName.Text = customer.Name;
@@ -498,7 +518,7 @@ namespace SmartMed.UI.Controls
         {
             try
             {
-                _customers.Add(ReadForm());
+                Customers.Add(ReadForm());
                 ClearForm();
                 LoadCustomers();
                 MessageBox.Show("Customer added successfully.", "SmartMed", MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -522,7 +542,7 @@ namespace SmartMed.UI.Controls
             {
                 var customer = ReadForm();
                 customer.CustomerID = _selectedId.Value;
-                _customers.Update(customer);
+                Customers.Update(customer);
                 LoadCustomers();
                 MessageBox.Show("Customer updated successfully.", "SmartMed", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
@@ -547,7 +567,7 @@ namespace SmartMed.UI.Controls
 
             try
             {
-                _customers.Delete(_selectedId.Value);
+                Customers.Delete(_selectedId.Value);
                 ClearForm();
                 LoadCustomers();
                 MessageBox.Show("Customer deleted.", "SmartMed", MessageBoxButtons.OK, MessageBoxIcon.Information);

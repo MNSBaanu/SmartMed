@@ -13,6 +13,7 @@ alwaysApply: false
 - Semi-transparent colors (`AppTheme.HeaderHover`, `OnPrimaryMuted`) are for `ForeColor` or runtime-only `MouseOverBackColor`, not `BackColor`.
 
 ## Inherited admin forms (AdminShellForm)
+- `AdminShellForm` must be a registered Form (`SubType>Form</SubType>`, `.resx`, public parameterless constructor).
 - Each admin page form must declare its panel in `FormName.Designer.cs` with `InitializeComponent()` that adds the panel to `panelContent`.
 - Use the full type name: `SmartMed.UI.Controls.MyPanel` (not `Controls.MyPanel`).
 - Declare panel fields at the top of the Designer partial class before `InitializeComponent`.
