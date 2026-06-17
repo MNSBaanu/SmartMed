@@ -1,5 +1,6 @@
 using System;
 using System.Drawing;
+using System.Linq;
 using System.Windows.Forms;
 using SmartMed.Business;
 using SmartMed.Business.Services;
@@ -150,7 +151,22 @@ namespace SmartMed.UI
             }
         }
 
-        private void BtnLogin_Click(object sender, EventArgs e)
+        private void BtnLogin_Click(object sender, EventArgs e) => PerformLogin();
+
+        internal void AttachAdminReturn(AdminShellForm adminForm)
+        {
+            adminForm.FormClosed += OnAdminFormClosed;
+        }
+
+        private void OnAdminFormClosed(object sender, FormClosedEventArgs e)
+        {
+            if (sender is Form form)
+                form.FormClosed -= OnAdminFormClosed;
+            if (!Session.IsAdminLoggedIn && !IsDisposed)
+                Show();
+        }
+
+        private void PerformLogin()
         {
             try
             {
@@ -170,11 +186,7 @@ namespace SmartMed.UI
                     Session.CurrentAdmin = admin;
                     Hide();
                     var dashboard = new AdminDashboardForm();
-                    dashboard.FormClosed += (s, args) =>
-                    {
-                        if (!IsDisposed)
-                            Show();
-                    };
+                    AttachAdminReturn(dashboard);
                     dashboard.Show();
                     return;
                 }

@@ -34,6 +34,7 @@ namespace SmartMed.UI
         private Label lblTotalItems;
         private Label lblLowStock;
         private Label lblCompliance;
+        private TableLayoutPanel _scrollRoot;
 
         public ManageMedicinesForm()
             : base(AdminNavItem.Medicines, "Manage Medicines", "SmartMed - Manage Medicines")
@@ -45,24 +46,46 @@ namespace SmartMed.UI
         private void BuildContent()
         {
             panelContent.Controls.Clear();
+            panelContent.AutoScroll = true;
 
-            var root = new TableLayoutPanel
+            _scrollRoot = new TableLayoutPanel
             {
-                Dock = DockStyle.Fill,
+                AutoSize = true,
+                AutoSizeMode = AutoSizeMode.GrowAndShrink,
+                Dock = DockStyle.Top,
                 ColumnCount = 1,
-                RowCount = 4
+                RowCount = 4,
+                Width = GetScrollContentWidth()
             };
-            root.RowStyles.Add(new RowStyle(SizeType.AutoSize));
-            root.RowStyles.Add(new RowStyle(SizeType.Absolute, 220f));
-            root.RowStyles.Add(new RowStyle(SizeType.Percent, 100f));
-            root.RowStyles.Add(new RowStyle(SizeType.AutoSize));
+            _scrollRoot.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100f));
+            _scrollRoot.RowStyles.Add(new RowStyle(SizeType.AutoSize));
+            _scrollRoot.RowStyles.Add(new RowStyle(SizeType.AutoSize));
+            _scrollRoot.RowStyles.Add(new RowStyle(SizeType.Absolute, 220f));
+            _scrollRoot.RowStyles.Add(new RowStyle(SizeType.AutoSize));
 
-            root.Controls.Add(CreatePageHeader(), 0, 0);
-            root.Controls.Add(CreateGridPanel(), 0, 1);
-            root.Controls.Add(CreateFormPanel(), 0, 2);
-            root.Controls.Add(CreateFooterStats(), 0, 3);
+            var header = CreatePageHeader();
+            var stats = CreateStatsRow();
+            var grid = CreateGridPanel();
+            var form = CreateFormPanel();
 
-            panelContent.Controls.Add(root);
+            _scrollRoot.Controls.Add(header, 0, 0);
+            _scrollRoot.Controls.Add(stats, 0, 1);
+            _scrollRoot.Controls.Add(grid, 0, 2);
+            _scrollRoot.Controls.Add(form, 0, 3);
+
+            panelContent.Controls.Add(_scrollRoot);
+            panelContent.Resize += PanelContent_Resize;
+        }
+
+        private void PanelContent_Resize(object sender, EventArgs e)
+        {
+            if (_scrollRoot != null)
+                _scrollRoot.Width = GetScrollContentWidth();
+        }
+
+        private int GetScrollContentWidth()
+        {
+            return Math.Max(200, panelContent.ClientSize.Width - panelContent.Padding.Horizontal);
         }
 
         private Panel CreatePageHeader()
@@ -163,7 +186,8 @@ namespace SmartMed.UI
                 BackgroundColor = AppTheme.SurfaceContainerLowest,
                 BorderStyle = BorderStyle.None,
                 EnableHeadersVisualStyles = false,
-                MultiSelect = false
+                MultiSelect = false,
+                ScrollBars = ScrollBars.Vertical
             };
             ThemeApplier.ApplyDataGrid(gridMedicines);
             gridMedicines.SelectionChanged += GridMedicines_SelectionChanged;
@@ -177,6 +201,8 @@ namespace SmartMed.UI
             var outer = new Panel
             {
                 Dock = DockStyle.Fill,
+                AutoSize = true,
+                AutoSizeMode = AutoSizeMode.GrowAndShrink,
                 BackColor = AppTheme.SurfaceContainer,
                 Padding = new Padding(24),
                 Margin = new Padding(0, 0, 0, 16)
@@ -303,12 +329,18 @@ namespace SmartMed.UI
             return wrap;
         }
 
-        private Panel CreateFooterStats()
+        private Panel CreateStatsRow()
         {
+            var wrap = new Panel
+            {
+                Dock = DockStyle.Fill,
+                Height = 88,
+                Margin = new Padding(0, 0, 0, 16)
+            };
+
             var row = new TableLayoutPanel
             {
-                Dock = DockStyle.Top,
-                Height = 88,
+                Dock = DockStyle.Fill,
                 ColumnCount = 3,
                 RowCount = 1
             };
@@ -324,7 +356,8 @@ namespace SmartMed.UI
             row.Controls.Add(CreateStatTile("\uE7BA", "Low Stock Alert", lblLowStock, AppTheme.Error), 1, 0);
             row.Controls.Add(CreateStatTile("\uE73E", "Rx Required", lblCompliance, AppTheme.OnSecondaryContainer), 2, 0);
 
-            return row;
+            wrap.Controls.Add(row);
+            return wrap;
         }
 
         private Panel CreateStatTile(string icon, string title, Label valueLabel, Color accent)

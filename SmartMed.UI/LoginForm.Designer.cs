@@ -291,6 +291,7 @@ namespace SmartMed.UI
             this.MaximizeBox = false;
             this.MinimumSize = new System.Drawing.Size(480, 520);
             this.Name = "LoginForm";
+            this.AcceptButton = this.btnLogin;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "SmartMed Pharmacy - Login";
             this.panelCard.ResumeLayout(false);

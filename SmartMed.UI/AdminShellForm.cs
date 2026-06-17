@@ -1,5 +1,6 @@
 using System;
 using System.Drawing;
+using System.Linq;
 using System.Windows.Forms;
 using SmartMed.Business;
 using SmartMed.UI.Theming;
@@ -43,6 +44,10 @@ namespace SmartMed.UI
             next.Location = Location;
             next.Size = Size;
             next.WindowState = WindowState;
+
+            var login = Application.OpenForms.OfType<LoginForm>().FirstOrDefault();
+            login?.AttachAdminReturn(next);
+
             next.Show();
             Hide();
             Close();
@@ -56,6 +61,9 @@ namespace SmartMed.UI
         {
             Session.Clear();
             Close();
+            var login = Application.OpenForms.OfType<LoginForm>().FirstOrDefault();
+            if (login != null && !login.IsDisposed)
+                login.Show();
         }
 
         protected void ShowComingSoon(string feature)
