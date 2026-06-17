@@ -144,11 +144,10 @@ namespace SmartMed.UI
 
         private void BtnRegister_Click(object sender, EventArgs e)
         {
-            MessageBox.Show(
-                "Registration screen will be added in the next redesign step.",
-                "SmartMed",
-                MessageBoxButtons.OK,
-                MessageBoxIcon.Information);
+            using (var registration = new RegistrationForm())
+            {
+                registration.ShowDialog(this);
+            }
         }
 
         private void BtnLogin_Click(object sender, EventArgs e)

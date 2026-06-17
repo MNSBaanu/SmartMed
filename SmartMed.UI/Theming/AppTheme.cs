@@ -9,6 +9,7 @@ namespace SmartMed.UI.Theming
         public const int StackGap = 16;
         public const int InputHeight = 40;
         public const int CardWidth = 420;
+        public const int RegistrationCardWidth = 450;
 
         public static readonly Color Primary = Color.FromArgb(0, 31, 102);
         public static readonly Color OnPrimary = Color.White;

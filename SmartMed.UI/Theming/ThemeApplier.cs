@@ -143,5 +143,73 @@ namespace SmartMed.UI.Theming
             ApplyLink(forgotLink);
             ApplyVersionLabel(versionLabel);
         }
+
+        public static void ApplyRegistrationForm(
+            Form form,
+            Panel card,
+            Panel header,
+            Panel body,
+            Panel footer,
+            Label medicalIcon,
+            Label title,
+            Label lockIcon,
+            Button closeButton,
+            Label fullNameLabel,
+            TextBox fullNameBox,
+            Label emailLabel,
+            TextBox emailBox,
+            Label phoneLabel,
+            TextBox phoneBox,
+            Label addressLabel,
+            TextBox addressBox,
+            Label passwordLabel,
+            TextBox passwordBox,
+            Button togglePassword,
+            Label confirmLabel,
+            TextBox confirmBox,
+            Button registerButton,
+            Button cancelButton,
+            Panel successPanel,
+            Label successIcon,
+            Label successTitle,
+            Label successMessage,
+            Button returnLoginButton)
+        {
+            ApplyForm(form);
+            card.BackColor = AppTheme.SurfaceContainerLowest;
+            header.BackColor = AppTheme.Primary;
+            body.BackColor = AppTheme.SurfaceContainerLowest;
+            footer.BackColor = AppTheme.SurfaceContainerLowest;
+            ApplyLoginHeader(medicalIcon, title, lockIcon);
+            ApplyHeaderCloseButton(closeButton);
+            ApplyFieldLabel(fullNameLabel);
+            ApplyFieldLabel(emailLabel);
+            ApplyFieldLabel(phoneLabel);
+            ApplyFieldLabel(addressLabel);
+            ApplyFieldLabel(passwordLabel);
+            ApplyFieldLabel(confirmLabel);
+            ApplyTextBox(fullNameBox);
+            ApplyTextBox(emailBox);
+            ApplyTextBox(phoneBox);
+            ApplyTextBox(addressBox);
+            ApplyTextBox(passwordBox);
+            ApplyTextBox(confirmBox);
+            ApplyIconButton(togglePassword, AppTheme.OnSurfaceVariant);
+            ApplyPrimaryButton(registerButton);
+            ApplySecondaryButton(cancelButton);
+            successPanel.BackColor = AppTheme.SurfaceContainerLowest;
+            successIcon.Font = new Font("Segoe MDL2 Assets", 20f);
+            successIcon.ForeColor = AppTheme.Primary;
+            successTitle.Font = FontManager.Get(12f, FontStyle.Bold);
+            successTitle.ForeColor = AppTheme.Primary;
+            successMessage.Font = AppTheme.BodyFont;
+            successMessage.ForeColor = AppTheme.OnSurfaceVariant;
+            returnLoginButton.FlatStyle = FlatStyle.Flat;
+            returnLoginButton.FlatAppearance.BorderSize = 0;
+            returnLoginButton.BackColor = AppTheme.Primary;
+            returnLoginButton.ForeColor = AppTheme.OnPrimary;
+            returnLoginButton.Font = AppTheme.LabelFont;
+            returnLoginButton.Cursor = Cursors.Hand;
+        }
     }
 }
