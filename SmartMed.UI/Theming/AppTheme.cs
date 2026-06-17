@@ -39,7 +39,23 @@ namespace SmartMed.UI.Theming
         public static readonly Color Success = Color.FromArgb(22, 163, 74);
 
         public static readonly Color Placeholder = Color.Gray;
+
+        /// <summary>Runtime-only hover tint. Never assign to Control.BackColor (alpha &lt; 255).</summary>
         public static readonly Color HeaderHover = Color.FromArgb(40, 255, 255, 255);
+
+        /// <summary>Solid input background on primary-coloured panels (designer-safe).</summary>
+        public static readonly Color OnPrimaryField = Color.FromArgb(245, 250, 255);
+
+        /// <summary>
+        /// WinForms TextBox and Panel reject BackColor when alpha &lt; 255 or Color.Transparent.
+        /// Use this for every control BackColor assignment.
+        /// </summary>
+        public static Color EnsureOpaque(Color color)
+        {
+            if (color == Color.Transparent || color.A < 255)
+                return Color.FromArgb(255, color.R, color.G, color.B);
+            return color;
+        }
 
         public static Font LabelFont => FontManager.Get(9f, FontStyle.Bold);
         public static Font BodyFont => FontManager.Get(9.25f);

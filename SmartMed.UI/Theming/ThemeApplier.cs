@@ -8,6 +8,13 @@ namespace SmartMed.UI.Theming
     {
         private static bool IsDesignTime =>
             LicenseManager.UsageMode == LicenseUsageMode.Designtime;
+
+        /// <summary>Sets BackColor using a designer-safe opaque color.</summary>
+        public static void SetBackColor(Control control, Color color)
+        {
+            control.BackColor = AppTheme.EnsureOpaque(color);
+        }
+
         public static void ApplyForm(Form form)
         {
             form.BackColor = AppTheme.Surface;
@@ -25,7 +32,13 @@ namespace SmartMed.UI.Theming
             textBox.Font = AppTheme.BodyFont;
             textBox.ForeColor = AppTheme.OnSurface;
             textBox.BorderStyle = BorderStyle.FixedSingle;
-            textBox.BackColor = AppTheme.SurfaceContainerLowest;
+            SetBackColor(textBox, AppTheme.SurfaceContainerLowest);
+        }
+
+        public static void ApplyTextBoxOnPrimary(TextBox textBox)
+        {
+            ApplyTextBox(textBox);
+            SetBackColor(textBox, AppTheme.OnPrimaryField);
         }
 
         public static void ApplyComboBox(ComboBox comboBox)
@@ -75,7 +88,7 @@ namespace SmartMed.UI.Theming
         {
             button.FlatStyle = FlatStyle.Flat;
             button.FlatAppearance.BorderSize = 0;
-            button.BackColor = AppTheme.SurfaceContainerLowest;
+            SetBackColor(button, AppTheme.SurfaceContainerLowest);
             button.ForeColor = foreColor;
             button.Font = AppTheme.IconFontSmall;
             button.Cursor = Cursors.Hand;
@@ -85,7 +98,7 @@ namespace SmartMed.UI.Theming
         {
             button.FlatStyle = FlatStyle.Flat;
             button.FlatAppearance.BorderSize = 0;
-            button.BackColor = AppTheme.Primary;
+            SetBackColor(button, AppTheme.Primary);
             button.ForeColor = AppTheme.OnPrimaryMuted;
             button.Font = AppTheme.IconFont;
             button.Cursor = Cursors.Hand;

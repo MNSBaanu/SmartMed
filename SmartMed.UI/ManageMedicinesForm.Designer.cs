@@ -25,7 +25,7 @@ namespace SmartMed.UI
             // 
             // btnClose
             // 
-            this.btnClose.Location = new System.Drawing.Point(1309, 8);
+            this.btnClose.Location = new System.Drawing.Point(1478, 8);
             // 
             // panelSidebar
             // 
@@ -33,7 +33,7 @@ namespace SmartMed.UI
             // 
             // btnNavLogout
             // 
-            this.btnNavLogout.Location = new System.Drawing.Point(0, 909);
+            this.btnNavLogout.Location = new System.Drawing.Point(0, 1162);
             // 
             // panelContent
             // 
@@ -46,10 +46,10 @@ namespace SmartMed.UI
             this.medicinesPanel.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(249)))), ((int)(((byte)(249)))), ((int)(((byte)(249)))));
             this.medicinesPanel.Dock = System.Windows.Forms.DockStyle.Fill;
             this.medicinesPanel.Location = new System.Drawing.Point(24, 24);
-            this.medicinesPanel.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.medicinesPanel.MinimumSize = new System.Drawing.Size(914, 934);
+            this.medicinesPanel.Margin = new System.Windows.Forms.Padding(3, 5, 3, 5);
+            this.medicinesPanel.MinimumSize = new System.Drawing.Size(914, 1168);
             this.medicinesPanel.Name = "medicinesPanel";
-            this.medicinesPanel.Size = new System.Drawing.Size(1025, 934);
+            this.medicinesPanel.Size = new System.Drawing.Size(1025, 1168);
             this.medicinesPanel.TabIndex = 0;
             // 
             // ManageMedicinesForm

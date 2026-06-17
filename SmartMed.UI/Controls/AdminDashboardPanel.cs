@@ -457,8 +457,7 @@ namespace SmartMed.UI.Controls
                 Width = 140,
                 Location = new Point(0, 4)
             };
-            ThemeApplier.ApplyTextBox(txtScan);
-            txtScan.BackColor = Color.FromArgb(230, 245, 250, 255);
+            ThemeApplier.ApplyTextBoxOnPrimary(txtScan);
             var btnStart = new Button
             {
                 Text = "START",

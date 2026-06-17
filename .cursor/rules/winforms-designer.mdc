@@ -1,0 +1,23 @@
+---
+description: WinForms designer-safe UI rules for SmartMed
+globs: SmartMed.UI/**/*.cs
+alwaysApply: false
+---
+
+# WinForms designer safety (SmartMed.UI)
+
+## Control BackColor
+- Never set `Color.Transparent` or alpha &lt; 255 on `TextBox`, `Panel`, `Button`, or other `Control.BackColor`.
+- Use `ThemeApplier.SetBackColor(control, color)` or `AppTheme.EnsureOpaque(color)` instead of raw `Color.FromArgb(a,r,g,b)` when `a < 255`.
+- For inputs on primary panels use `ThemeApplier.ApplyTextBoxOnPrimary(textBox)`.
+- Semi-transparent colors (`AppTheme.HeaderHover`, `OnPrimaryMuted`) are for `ForeColor` or runtime-only `MouseOverBackColor`, not `BackColor`.
+
+## Inherited admin forms (AdminShellForm)
+- Each admin page form must declare its panel in `FormName.Designer.cs` with `InitializeComponent()` that adds the panel to `panelContent`.
+- Use the full type name: `SmartMed.UI.Controls.MyPanel` (not `Controls.MyPanel`).
+- Declare panel fields at the top of the Designer partial class before `InitializeComponent`.
+- Runtime wiring: `InitializePageContent()` calls `InitializeComponent()` only if the panel is null.
+
+## UserControl panels
+- Keep `BuildContent()` free of transparent BackColor assignments.
+- Use `LoadDesignTimePreview()` for designer mock data; avoid DB/service calls in the constructor at design time.

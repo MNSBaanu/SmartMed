@@ -29,6 +29,8 @@ namespace SmartMed.UI
 
         protected virtual void InitializePageContent()
         {
+            // Derived admin forms override this and call their Designer InitializeComponent()
+            // so panelContent is populated for both runtime and the Visual Studio designer.
         }
 
         protected static bool IsDesignTime =>
