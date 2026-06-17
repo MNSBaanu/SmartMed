@@ -5,7 +5,13 @@ namespace SmartMed.UI
         public ManageMedicinesForm()
             : base(AdminNavItem.Medicines, "Manage Medicines", "SmartMed - Manage Medicines")
         {
-            InitializeContentPanel();
+        }
+
+        protected override void InitializePageContent()
+        {
+            if (medicinesPanel != null)
+                return;
+            InitializeComponent();
         }
     }
 }

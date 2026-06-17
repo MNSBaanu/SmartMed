@@ -24,6 +24,11 @@ namespace SmartMed.UI
             lblTopSubtitle.Text = subtitle;
             ApplyShellTheme();
             SetActiveNav(activeNav);
+            InitializePageContent();
+        }
+
+        protected virtual void InitializePageContent()
+        {
         }
 
         protected static bool IsDesignTime =>

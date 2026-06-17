@@ -26,16 +26,19 @@ namespace SmartMed.UI.Controls
 
         public AdminDashboardPanel()
         {
+            InitializeComponent();
             FontManager.Initialize();
             DoubleBuffered = true;
-            BackColor = AppTheme.Surface;
             Dock = DockStyle.Fill;
             BuildDashboardContent();
             ApplyDashboardTheme();
-            if (LicenseManager.UsageMode == LicenseUsageMode.Designtime)
+            if (IsDesignHost())
                 LoadDesignTimePreview();
             Load += AdminDashboardPanel_Load;
         }
+
+        private static bool IsDesignHost() =>
+            LicenseManager.UsageMode == LicenseUsageMode.Designtime;
 
         private void AdminDashboardPanel_Load(object sender, EventArgs e)
         {

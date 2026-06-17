@@ -5,7 +5,13 @@ namespace SmartMed.UI
         public AdminDashboardForm()
             : base(AdminNavItem.Overview, "Admin Dashboard", "SmartMed - Admin Dashboard")
         {
-            InitializeContentPanel();
+        }
+
+        protected override void InitializePageContent()
+        {
+            if (dashboardPanel != null)
+                return;
+            InitializeComponent();
         }
 
         public void RefreshData() => dashboardPanel?.RefreshData();

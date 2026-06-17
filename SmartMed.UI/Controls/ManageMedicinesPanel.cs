@@ -41,9 +41,9 @@ namespace SmartMed.UI.Controls
 
         public ManageMedicinesPanel()
         {
+            InitializeComponent();
             FontManager.Initialize();
             DoubleBuffered = true;
-            BackColor = AppTheme.Surface;
             Dock = DockStyle.Fill;
             BuildContent();
             if (IsDesignHost())
@@ -61,6 +61,16 @@ namespace SmartMed.UI.Controls
 
         private static bool IsDesignHost() =>
             LicenseManager.UsageMode == LicenseUsageMode.Designtime;
+
+        private int GetScrollContentWidth()
+        {
+            var w = ClientSize.Width;
+            if (w < 200 && Parent != null)
+                w = Parent.ClientSize.Width - 48;
+            if (w < 200)
+                w = 850;
+            return w;
+        }
 
         private void BuildContent()
         {
@@ -95,9 +105,6 @@ namespace SmartMed.UI.Controls
                     _scrollRoot.Width = GetScrollContentWidth();
             };
         }
-
-        private int GetScrollContentWidth() =>
-            Math.Max(200, ClientSize.Width);
 
         private Panel CreatePageHeader()
         {
