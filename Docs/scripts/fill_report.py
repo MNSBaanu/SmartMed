@@ -65,7 +65,7 @@ Database Layer: SQL Server database SmartMedDB with tables Admin, Customer, Medi
 
 Manage Medicines: MedicineManagementForm provides add, update, delete, and list operations. Fields include name, category, dosage, price, stock quantity, supplier, expiry date, and prescription requirement. Numeric validation ensures price and stock are valid.
 
-Manage Customers: CustomerManagementForm lists registered customers and allows administrators to update contact details.
+Manage Customers: ManageCustomersForm lists registered customers and allows administrators to update contact details.
 
 Manage Orders: OrderManagementForm displays all orders with customer name, date, status, and total. Administrators can change status to Pending, Ready for Pickup, or Delivered.
 

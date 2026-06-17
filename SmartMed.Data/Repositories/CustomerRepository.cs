@@ -71,6 +71,13 @@ namespace SmartMed.Data.Repositories
                 new SqlParameter("@id", customer.CustomerID));
         }
 
+        public void Delete(int id)
+        {
+            DatabaseHelper.ExecuteNonQuery(
+                "DELETE FROM Customer WHERE CustomerID=@id",
+                new System.Data.SqlClient.SqlParameter("@id", id));
+        }
+
         private static CustomerUser Map(System.Data.DataRow row)
         {
             return new CustomerUser
