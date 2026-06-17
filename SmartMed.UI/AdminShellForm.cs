@@ -118,7 +118,11 @@ namespace SmartMed.UI
             if (this is ManageCustomersForm) return;
             NavigateTo(new ManageCustomersForm());
         }
-        private void BtnNavOrders_Click(object sender, EventArgs e) => ShowComingSoon("Manage Orders");
+        private void BtnNavOrders_Click(object sender, EventArgs e)
+        {
+            if (this is ManageOrdersForm) return;
+            NavigateTo(new ManageOrdersForm());
+        }
         private void BtnNavReports_Click(object sender, EventArgs e) => ShowComingSoon("Generate Reports");
     }
 }
