@@ -30,6 +30,11 @@ namespace SmartMed.UI.Theming
 
         public static readonly Color SecondaryContainer = Color.FromArgb(184, 207, 254);
         public static readonly Color OnSecondaryContainer = Color.FromArgb(66, 88, 128);
+        public static readonly Color Secondary = Color.FromArgb(72, 95, 135);
+        public static readonly Color OnSecondary = Color.White;
+        public static readonly Color OnPrimaryContainer = Color.FromArgb(135, 162, 255);
+        public static readonly Color PrimaryContainer = Color.FromArgb(0, 50, 150);
+        public static readonly Color SurfaceContainerHigh = Color.FromArgb(232, 232, 232);
         public static readonly Color Error = Color.FromArgb(186, 26, 26);
         public static readonly Color Success = Color.FromArgb(22, 163, 74);
 

@@ -1,6 +1,6 @@
 namespace SmartMed.UI
 {
-    partial class AdminDashboardForm
+    partial class ManageMedicinesForm
     {
     }
 }

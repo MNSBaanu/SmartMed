@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>SmartMed Pharmacy - Manage Medicines</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                "on-surface": "#1b1b1b",
+                "inverse-surface": "#303030",
+                "on-primary-container": "#87a2ff",
+                "surface-container-low": "#f3f3f3",
+                "on-background": "#1b1b1b",
+                "error": "#ba1a1a",
+                "on-tertiary-fixed-variant": "#444749",
+                "tertiary": "#242728",
+                "tertiary-fixed-dim": "#c5c6c8",
+                "inverse-primary": "#b5c4ff",
+                "secondary-fixed": "#d6e3ff",
+                "tertiary-fixed": "#e1e2e4",
+                "on-tertiary": "#ffffff",
+                "on-surface-variant": "#444652",
+                "on-error-container": "#93000a",
+                "surface-container-highest": "#e2e2e2",
+                "outline": "#747684",
+                "on-tertiary-fixed": "#191c1e",
+                "secondary-fixed-dim": "#b0c7f5",
+                "error-container": "#ffdad6",
+                "primary": "#001f66",
+                "inverse-on-surface": "#f1f1f1",
+                "surface-dim": "#dadada",
+                "secondary-container": "#b8cffe",
+                "surface-bright": "#f9f9f9",
+                "on-secondary-fixed-variant": "#30476e",
+                "secondary": "#485f87",
+                "surface-container-high": "#e8e8e8",
+                "surface-tint": "#3658ba",
+                "on-tertiary-container": "#a5a6a8",
+                "on-primary-fixed": "#00164e",
+                "primary-container": "#003296",
+                "surface": "#f9f9f9",
+                "on-primary": "#ffffff",
+                "primary-fixed-dim": "#b5c4ff",
+                "background": "#f9f9f9",
+                "surface-variant": "#e2e2e2",
+                "on-secondary-fixed": "#001b3e",
+                "outline-variant": "#c4c5d4",
+                "surface-container": "#eeeeee",
+                "on-primary-fixed-variant": "#173ea1",
+                "primary-fixed": "#dce1ff",
+                "on-secondary-container": "#425880",
+                "on-secondary": "#ffffff",
+                "tertiary-container": "#3a3c3e",
+                "on-error": "#ffffff",
+                "surface-container-lowest": "#ffffff"
+            },
+            "borderRadius": {
+                "DEFAULT": "0.125rem",
+                "lg": "0.25rem",
+                "xl": "0.5rem",
+                "full": "0.75rem"
+            },
+            "spacing": {
+                "nav-width": "420px",
+                "nav-item-height": "40px",
+                "stack-sm": "8px",
+                "gutter": "16px",
+                "container-padding": "24px",
+                "stack-md": "16px"
+            },
+            "fontFamily": {
+                "label": ["Inter"],
+                "body-regular": ["Inter"],
+                "data-grid": ["Inter"],
+                "app-title": ["Inter"],
+                "section-header": ["Inter"]
+            },
+            "fontSize": {
+                "label": ["12px", {"lineHeight": "16px", "fontWeight": "600"}],
+                "body-regular": ["14.6px", {"lineHeight": "20px", "fontWeight": "400"}],
+                "data-grid": ["13px", {"lineHeight": "18px", "fontWeight": "400"}],
+                "app-title": ["18.6px", {"lineHeight": "24px", "letterSpacing": "-0.01em", "fontWeight": "700"}],
+                "section-header": ["16px", {"lineHeight": "20px", "fontWeight": "700"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #c1c1c1;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #a8a8a8;
+        }
+        .data-grid-row:hover {
+            background-color: rgba(180, 203, 249, 0.2);
+        }
+        .data-grid-row.active {
+            background-color: rgba(180, 203, 249, 0.5);
+        }
+    </style>
+</head>
+<body class="bg-background text-on-surface font-body-regular antialiased overflow-hidden">
+<!-- Top App Bar -->
+<header class="flex justify-between items-center h-12 px-4 w-full bg-primary text-on-primary fixed top-0 z-50">
+<div class="font-app-title text-app-title">SmartMed Pharmacy</div>
+<div class="flex items-center gap-4 flex-1 justify-end">
+<div class="relative w-64 mr-4">
+<input class="w-full bg-primary-container border-none text-white placeholder-on-primary-container/70 text-sm h-8 rounded px-3 focus:ring-1 focus:ring-secondary-fixed-dim" placeholder="Search medicines..." type="text"/>
+</div>
+<div class="flex gap-2">
+<span class="material-symbols-outlined cursor-default select-none hover:bg-primary-fixed-dim/20 transition-colors p-1">minimize</span>
+<span class="material-symbols-outlined cursor-default select-none hover:bg-primary-fixed-dim/20 transition-colors p-1">fullscreen</span>
+<span class="material-symbols-outlined cursor-default select-none hover:bg-primary-fixed-dim/20 transition-colors p-1">close</span>
+</div>
+</div>
+</header>
+<!-- Side Navigation -->
+<aside class="fixed left-0 top-12 h-[calc(100vh-48px)] w-[420px] flex flex-col py-stack-md bg-surface border-r border-outline-variant z-40">
+<div class="px-gutter mb-6">
+<div class="font-app-title text-app-title text-primary">SmartMed</div>
+<div class="font-label text-label text-on-surface-variant">Pharmacy Management</div>
+</div>
+<nav class="flex-1 space-y-1">
+<a class="flex items-center w-full h-[40px] bg-on-primary-container text-on-primary font-bold px-gutter scale-[0.99] transition-transform duration-100" href="#">
+<span class="material-symbols-outlined mr-3">prescriptions</span>
+<span class="font-label text-label">Inventory</span>
+</a>
+<a class="flex items-center w-full h-[40px] text-on-surface-variant hover:bg-secondary-container transition-all px-gutter" href="#">
+<span class="material-symbols-outlined mr-3">inventory_2</span>
+<span class="font-label text-label">Prescriptions</span>
+</a>
+<a class="flex items-center w-full h-[40px] text-on-surface-variant hover:bg-secondary-container transition-all px-gutter" href="#">
+<span class="material-symbols-outlined mr-3">group</span>
+<span class="font-label text-label">Customers</span>
+</a>
+<a class="flex items-center w-full h-[40px] text-on-surface-variant hover:bg-secondary-container transition-all px-gutter" href="#">
+<span class="material-symbols-outlined mr-3">receipt_long</span>
+<span class="font-label text-label">Orders</span>
+</a>
+<a class="flex items-center w-full h-[40px] text-on-surface-variant hover:bg-secondary-container transition-all px-gutter" href="#">
+<span class="material-symbols-outlined mr-3">assessment</span>
+<span class="font-label text-label">Reports</span>
+</a>
+</nav>
+<div class="mt-auto border-t border-outline-variant pt-4">
+<a class="flex items-center w-full h-[40px] text-on-surface-variant hover:bg-secondary-container transition-all px-gutter" href="#">
+<span class="material-symbols-outlined mr-3">settings</span>
+<span class="font-label text-label">Settings</span>
+</a>
+<a class="flex items-center w-full h-[40px] text-on-surface-variant hover:bg-secondary-container transition-all px-gutter" href="#">
+<span class="material-symbols-outlined mr-3">help</span>
+<span class="font-label text-label">Support</span>
+</a>
+</div>
+</aside>
+<!-- Main Content Canvas -->
+<main class="ml-[420px] mt-12 p-container-padding h-[calc(100vh-48px)] overflow-y-auto">
+<div class="max-w-[900px] mx-auto space-y-6">
+<!-- Header Section -->
+<div class="flex justify-between items-end border-b border-outline-variant pb-2">
+<div>
+<h1 class="font-section-header text-section-header text-primary">Manage Medicines</h1>
+<p class="font-body-regular text-sm text-on-surface-variant">Update and monitor pharmaceutical inventory levels.</p>
+</div>
+<div class="flex gap-2">
+<button class="bg-secondary-fixed text-on-secondary-fixed px-3 py-1.5 rounded flex items-center gap-1 hover:brightness-95 transition-all text-sm font-semibold">
+<span class="material-symbols-outlined text-[18px]">download</span> Export
+                    </button>
+<button class="bg-secondary-fixed text-on-secondary-fixed px-3 py-1.5 rounded flex items-center gap-1 hover:brightness-95 transition-all text-sm font-semibold">
+<span class="material-symbols-outlined text-[18px]">print</span> Print
+                    </button>
+</div>
+</div>
+<!-- DataGrid Container (840x200 Approx) -->
+<div class="bg-white border border-outline-variant rounded-lg overflow-hidden flex flex-col h-[200px] shadow-sm">
+<div class="overflow-x-auto">
+<table class="w-full border-collapse text-left">
+<thead class="sticky top-0 bg-surface-container-high border-b border-outline-variant z-10">
+<tr>
+<th class="p-2 font-label text-label text-primary whitespace-nowrap">Medicine Name</th>
+<th class="p-2 font-label text-label text-primary whitespace-nowrap">Category</th>
+<th class="p-2 font-label text-label text-primary whitespace-nowrap">Dosage</th>
+<th class="p-2 font-label text-label text-primary whitespace-nowrap">Price</th>
+<th class="p-2 font-label text-label text-primary whitespace-nowrap">Stock</th>
+<th class="p-2 font-label text-label text-primary whitespace-nowrap">Supplier</th>
+<th class="p-2 font-label text-label text-primary whitespace-nowrap">Expiry</th>
+<th class="p-2 font-label text-label text-primary whitespace-nowrap">Rx</th>
+</tr>
+</thead>
+<tbody class="font-data-grid text-data-grid divide-y divide-outline-variant/30">
+<tr class="data-grid-row cursor-pointer transition-colors active">
+<td class="p-2 font-bold">Amoxicillin 500mg</td>
+<td class="p-2">Antibiotic</td>
+<td class="p-2">500mg Caps</td>
+<td class="p-2">$14.50</td>
+<td class="p-2">
+<span class="bg-green-100 text-green-800 px-2 py-0.5 rounded text-[10px] font-bold">120 Units</span>
+</td>
+<td class="p-2">MediDist Ltd</td>
+<td class="p-2">2025-12-01</td>
+<td class="p-2 text-center text-primary"><span class="material-symbols-outlined text-[18px]" style="font-variation-settings: 'FILL' 1;">check_circle</span></td>
+</tr>
+<tr class="data-grid-row cursor-pointer transition-colors">
+<td class="p-2 font-bold">Lisinopril 10mg</td>
+<td class="p-2">Hypertension</td>
+<td class="p-2">10mg Tablets</td>
+<td class="p-2">$8.20</td>
+<td class="p-2">
+<span class="bg-amber-100 text-amber-800 px-2 py-0.5 rounded text-[10px] font-bold">45 Units</span>
+</td>
+<td class="p-2">Global Pharma</td>
+<td class="p-2">2024-08-15</td>
+<td class="p-2 text-center text-primary"><span class="material-symbols-outlined text-[18px]" style="font-variation-settings: 'FILL' 1;">check_circle</span></td>
+</tr>
+<tr class="data-grid-row cursor-pointer transition-colors">
+<td class="p-2 font-bold">Ibuprofen 200mg</td>
+<td class="p-2">Analgesic</td>
+<td class="p-2">200mg Softgels</td>
+<td class="p-2">$5.99</td>
+<td class="p-2">
+<span class="bg-red-100 text-red-800 px-2 py-0.5 rounded text-[10px] font-bold">12 Units</span>
+</td>
+<td class="p-2">OTC Supply Co</td>
+<td class="p-2">2026-01-30</td>
+<td class="p-2 text-center text-outline-variant"><span class="material-symbols-outlined text-[18px]">cancel</span></td>
+</tr>
+<tr class="data-grid-row cursor-pointer transition-colors">
+<td class="p-2 font-bold">Metformin 500mg</td>
+<td class="p-2">Antidiabetic</td>
+<td class="p-2">500mg Tablets</td>
+<td class="p-2">$11.30</td>
+<td class="p-2">
+<span class="bg-green-100 text-green-800 px-2 py-0.5 rounded text-[10px] font-bold">200 Units</span>
+</td>
+<td class="p-2">Endo-Med</td>
+<td class="p-2">2025-05-12</td>
+<td class="p-2 text-center text-primary"><span class="material-symbols-outlined text-[18px]" style="font-variation-settings: 'FILL' 1;">check_circle</span></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<!-- CRUD Form Section (2-Column) -->
+<div class="bg-surface-container rounded-lg p-6 border border-outline-variant shadow-sm">
+<div class="grid grid-cols-2 gap-x-8 gap-y-4">
+<!-- Left Column -->
+<div class="space-y-4">
+<div class="flex flex-col gap-1">
+<label class="font-label text-label text-on-surface-variant">Medicine Name</label>
+<input class="bg-white border border-outline-variant h-10 px-3 rounded focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all text-body-regular" type="text" value="Amoxicillin 500mg"/>
+</div>
+<div class="flex flex-col gap-1">
+<label class="font-label text-label text-on-surface-variant">Dosage / Form</label>
+<input class="bg-white border border-outline-variant h-10 px-3 rounded focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all text-body-regular" type="text" value="500mg Caps"/>
+</div>
+<div class="flex flex-col gap-1">
+<label class="font-label text-label text-on-surface-variant">Current Stock</label>
+<input class="bg-white border border-outline-variant h-10 px-3 rounded focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all text-body-regular" type="number" value="120"/>
+</div>
+<div class="flex flex-col gap-1">
+<label class="font-label text-label text-on-surface-variant">Expiry Date</label>
+<input class="bg-white border border-outline-variant h-10 px-3 rounded focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all text-body-regular" type="date" value="2025-12-01"/>
+</div>
+</div>
+<!-- Right Column -->
+<div class="space-y-4">
+<div class="flex flex-col gap-1">
+<label class="font-label text-label text-on-surface-variant">Category</label>
+<select class="bg-white border border-outline-variant h-10 px-3 rounded focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all text-body-regular">
+<option selected="">Antibiotic</option>
+<option>Analgesic</option>
+<option>Antidiabetic</option>
+<option>Hypertension</option>
+<option>Antiviral</option>
+</select>
+</div>
+<div class="flex flex-col gap-1">
+<label class="font-label text-label text-on-surface-variant">Unit Price ($)</label>
+<input class="bg-white border border-outline-variant h-10 px-3 rounded focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all text-body-regular" type="text" value="14.50"/>
+</div>
+<div class="flex flex-col gap-1">
+<label class="font-label text-label text-on-surface-variant">Supplier</label>
+<input class="bg-white border border-outline-variant h-10 px-3 rounded focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all text-body-regular" type="text" value="MediDist Ltd"/>
+</div>
+<div class="flex items-center gap-3 pt-6">
+<input checked="" class="w-5 h-5 rounded border-outline-variant text-primary focus:ring-primary" id="rx_required" type="checkbox"/>
+<label class="font-label text-label text-primary select-none cursor-pointer" for="rx_required">Requires Prescription (Rx)</label>
+</div>
+</div>
+</div>
+<!-- Action Buttons -->
+<div class="flex justify-end items-center gap-3 mt-8 pt-6 border-t border-outline-variant/50">
+<button class="h-10 px-6 font-label text-label bg-surface-container-highest text-on-surface rounded hover:bg-surface-variant transition-colors">Clear Form</button>
+<button class="h-10 px-6 font-label text-label border border-error text-error rounded hover:bg-error/5 transition-colors">Delete Entry</button>
+<div class="flex-1"></div>
+<button class="h-10 px-6 font-label text-label bg-secondary text-on-secondary rounded hover:brightness-110 transition-all">Update Record</button>
+<button class="h-10 px-8 font-label text-label bg-on-primary-container text-primary font-bold rounded shadow-sm hover:brightness-105 active:scale-[0.98] transition-all">Add New Medicine</button>
+</div>
+</div>
+<!-- Footer Stats -->
+<div class="grid grid-cols-3 gap-4">
+<div class="p-4 bg-white border border-outline-variant rounded flex items-center gap-4">
+<div class="bg-primary-container/20 p-3 rounded">
+<span class="material-symbols-outlined text-primary">inventory</span>
+</div>
+<div>
+<div class="font-label text-label text-on-surface-variant uppercase tracking-wider">Total Items</div>
+<div class="font-app-title text-xl text-primary">1,248</div>
+</div>
+</div>
+<div class="p-4 bg-white border border-outline-variant rounded flex items-center gap-4">
+<div class="bg-error-container/30 p-3 rounded">
+<span class="material-symbols-outlined text-error">warning</span>
+</div>
+<div>
+<div class="font-label text-label text-on-surface-variant uppercase tracking-wider">Low Stock Alert</div>
+<div class="font-app-title text-xl text-error">12</div>
+</div>
+</div>
+<div class="p-4 bg-white border border-outline-variant rounded flex items-center gap-4">
+<div class="bg-secondary-container/30 p-3 rounded">
+<span class="material-symbols-outlined text-secondary">verified</span>
+</div>
+<div>
+<div class="font-label text-label text-on-surface-variant uppercase tracking-wider">Compliance</div>
+<div class="font-app-title text-xl text-secondary">99.8%</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+<script>
+        // Simple Micro-interactions
+        document.querySelectorAll('.data-grid-row').forEach(row => {
+            row.addEventListener('click', () => {
+                document.querySelectorAll('.data-grid-row').forEach(r => r.classList.remove('active'));
+                row.classList.add('active');
+                
+                // Visual feedback for record selection
+                const name = row.cells[0].innerText;
+                console.log(`Record selected: ${name}`);
+            });
+        });
+
+        // Hover effects on buttons
+        const buttons = document.querySelectorAll('button');
+        buttons.forEach(btn => {
+            btn.addEventListener('mouseenter', () => {
+                btn.style.transition = 'transform 0.1s ease-out';
+            });
+        });
+    </script>
+</body></html>

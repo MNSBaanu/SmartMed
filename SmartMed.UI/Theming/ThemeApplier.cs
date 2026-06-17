@@ -232,6 +232,48 @@ namespace SmartMed.UI.Theming
             content.BackColor = AppTheme.Surface;
         }
 
+        public static void ApplyDataGrid(DataGridView grid)
+        {
+            grid.ColumnHeadersDefaultCellStyle.BackColor = AppTheme.SurfaceContainerHigh;
+            grid.ColumnHeadersDefaultCellStyle.ForeColor = AppTheme.Primary;
+            grid.ColumnHeadersDefaultCellStyle.Font = AppTheme.LabelFont;
+            grid.DefaultCellStyle.Font = AppTheme.BodyFont;
+            grid.DefaultCellStyle.ForeColor = AppTheme.OnSurface;
+            grid.AlternatingRowsDefaultCellStyle.BackColor = Color.FromArgb(248, 250, 255);
+            grid.GridColor = AppTheme.OutlineVariant;
+        }
+
+        public static void ApplyDangerButton(Button button)
+        {
+            button.FlatStyle = FlatStyle.Flat;
+            button.FlatAppearance.BorderColor = AppTheme.Error;
+            button.FlatAppearance.BorderSize = 1;
+            button.BackColor = AppTheme.SurfaceContainerLowest;
+            button.ForeColor = AppTheme.Error;
+            button.Font = AppTheme.LabelFont;
+            button.Cursor = Cursors.Hand;
+        }
+
+        public static void ApplySecondaryActionButton(Button button)
+        {
+            button.FlatStyle = FlatStyle.Flat;
+            button.FlatAppearance.BorderSize = 0;
+            button.BackColor = AppTheme.Secondary;
+            button.ForeColor = AppTheme.OnSecondary;
+            button.Font = AppTheme.LabelFont;
+            button.Cursor = Cursors.Hand;
+        }
+
+        public static void ApplyAccentButton(Button button)
+        {
+            button.FlatStyle = FlatStyle.Flat;
+            button.FlatAppearance.BorderSize = 0;
+            button.BackColor = AppTheme.OnPrimaryContainer;
+            button.ForeColor = AppTheme.Primary;
+            button.Font = FontManager.Get(9f, FontStyle.Bold);
+            button.Cursor = Cursors.Hand;
+        }
+
         public static void ApplyNavButton(Button button, bool active = false, bool isLogout = false)
         {
             button.FlatStyle = FlatStyle.Flat;

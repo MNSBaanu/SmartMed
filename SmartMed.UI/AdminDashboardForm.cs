@@ -8,7 +8,7 @@ using SmartMed.UI.Theming;
 
 namespace SmartMed.UI
 {
-    public partial class AdminDashboardForm : Form
+    public partial class AdminDashboardForm : AdminShellForm
     {
         private readonly DashboardService _dashboard = new DashboardService();
         private readonly OrderService _orders = new OrderService();
@@ -23,11 +23,10 @@ namespace SmartMed.UI
         private FlowLayoutPanel panelAlerts;
 
         public AdminDashboardForm()
+            : base(AdminNavItem.Overview, "Admin Dashboard", "SmartMed - Admin Dashboard")
         {
-            InitializeComponent();
-            DoubleBuffered = true;
             BuildDashboardContent();
-            ApplyTheme();
+            ApplyDashboardTheme();
             LoadDashboardData();
         }
 
@@ -122,7 +121,7 @@ namespace SmartMed.UI
 
         private static DataGridView CreateGrid()
         {
-            return new DataGridView
+            var grid = new DataGridView
             {
                 ReadOnly = true,
                 AllowUserToAddRows = false,
@@ -134,6 +133,8 @@ namespace SmartMed.UI
                 BorderStyle = BorderStyle.None,
                 EnableHeadersVisualStyles = false
             };
+            ThemeApplier.ApplyDataGrid(grid);
+            return grid;
         }
 
         private Panel CreateStatCard(string iconGlyph, string title, Label valueLabel, string subtitle)
@@ -261,32 +262,15 @@ namespace SmartMed.UI
             return panel;
         }
 
-        private void ApplyTheme()
+        private void ApplyDashboardTheme()
         {
-            ThemeApplier.ApplyAdminShell(this, panelTop, lblTopTitle, lblTopSubtitle, btnClose, panelSidebar, panelContent);
-            lblNavBrand.Font = AppTheme.AppTitleFont;
-            lblNavBrand.ForeColor = AppTheme.Primary;
-            lblNavTagline.Font = AppTheme.LabelFont;
-            lblNavTagline.ForeColor = AppTheme.OnSurfaceVariant;
-            ThemeApplier.ApplyNavButton(btnNavOverview, active: true);
-            ThemeApplier.ApplyNavButton(btnNavMedicines);
-            ThemeApplier.ApplyNavButton(btnNavCustomers);
-            ThemeApplier.ApplyNavButton(btnNavOrders);
-            ThemeApplier.ApplyNavButton(btnNavReports);
-            ThemeApplier.ApplyNavButton(btnNavLogout, isLogout: true);
-
             lblWelcome.Font = AppTheme.SectionHeaderFont;
             lblWelcome.ForeColor = AppTheme.Primary;
             lblStatus.Font = AppTheme.BodyFont;
             lblStatus.ForeColor = AppTheme.OnSurfaceVariant;
-
-            gridRecent.ColumnHeadersDefaultCellStyle.BackColor = AppTheme.SurfaceContainer;
-            gridRecent.ColumnHeadersDefaultCellStyle.ForeColor = AppTheme.OnSurfaceVariant;
-            gridRecent.ColumnHeadersDefaultCellStyle.Font = AppTheme.LabelFont;
-            gridRecent.DefaultCellStyle.Font = AppTheme.BodyFont;
-            gridRecent.DefaultCellStyle.ForeColor = AppTheme.OnSurface;
-            gridRecent.AlternatingRowsDefaultCellStyle.BackColor = Color.FromArgb(248, 250, 255);
         }
+
+        public void RefreshData() => LoadDashboardData();
 
         private void LoadDashboardData()
         {
@@ -372,29 +356,5 @@ namespace SmartMed.UI
             });
             return row;
         }
-
-        private void BtnClose_Click(object sender, EventArgs e) => Logout();
-
-        private void BtnNavLogout_Click(object sender, EventArgs e) => Logout();
-
-        private void Logout()
-        {
-            Session.Clear();
-            Close();
-            new LoginForm().Show();
-        }
-
-        private void ShowComingSoon(string feature)
-        {
-            MessageBox.Show($"{feature} will be available in the next update.", "SmartMed",
-                MessageBoxButtons.OK, MessageBoxIcon.Information);
-        }
-
-        private void BtnNavOverview_Click(object sender, EventArgs e) => LoadDashboardData();
-
-        private void BtnNavMedicines_Click(object sender, EventArgs e) => ShowComingSoon("Manage Medicines");
-        private void BtnNavCustomers_Click(object sender, EventArgs e) => ShowComingSoon("Manage Customers");
-        private void BtnNavOrders_Click(object sender, EventArgs e) => ShowComingSoon("Manage Orders");
-        private void BtnNavReports_Click(object sender, EventArgs e) => ShowComingSoon("Generate Reports");
     }
 }

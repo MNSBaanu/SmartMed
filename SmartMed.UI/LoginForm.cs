@@ -169,11 +169,14 @@ namespace SmartMed.UI
 
                     Session.CurrentAdmin = admin;
                     Hide();
-                    using (var dashboard = new AdminDashboardForm())
+                    var dashboard = new AdminDashboardForm();
+                    dashboard.FormClosed += (s, args) =>
                     {
-                        dashboard.ShowDialog();
-                    }
-                    Close();
+                        if (!IsDisposed)
+                            Show();
+                    };
+                    dashboard.Show();
+                    return;
                 }
                 else
                 {
