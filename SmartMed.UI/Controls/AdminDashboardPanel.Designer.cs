@@ -20,9 +20,9 @@ namespace SmartMed.UI.Controls
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(249)))), ((int)(((byte)(249)))), ((int)(((byte)(249)))));
-            this.MinimumSize = new System.Drawing.Size(800, 650);
+            this.MinimumSize = new System.Drawing.Size(800, 850);
             this.Name = "AdminDashboardPanel";
-            this.Size = new System.Drawing.Size(856, 700);
+            this.Size = new System.Drawing.Size(856, 900);
             this.ResumeLayout(false);
         }
     }

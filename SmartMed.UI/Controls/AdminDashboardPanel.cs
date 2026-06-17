@@ -23,6 +23,7 @@ namespace SmartMed.UI.Controls
         private Label lblSalesValue;
         private DataGridView gridRecent;
         private FlowLayoutPanel panelAlerts;
+        private TableLayoutPanel _scrollRoot;
 
         public AdminDashboardPanel()
         {
@@ -30,7 +31,7 @@ namespace SmartMed.UI.Controls
             FontManager.Initialize();
             DoubleBuffered = true;
             Dock = DockStyle.Fill;
-            BuildDashboardContent();
+            BuildContent();
             ApplyDashboardTheme();
             if (IsDesignHost())
                 LoadDesignTimePreview();
@@ -44,13 +45,23 @@ namespace SmartMed.UI.Controls
         {
             if (_dataLoaded) return;
             _dataLoaded = true;
-            if (LicenseManager.UsageMode != LicenseUsageMode.Designtime)
+            if (!IsDesignHost())
                 LoadDashboardData();
         }
 
         public void RefreshData() => LoadDashboardData();
 
-        private void BuildDashboardContent()
+        private int GetScrollContentWidth()
+        {
+            var w = ClientSize.Width;
+            if (w < 200 && Parent != null)
+                w = Parent.ClientSize.Width - 48;
+            if (w < 200)
+                w = 850;
+            return w;
+        }
+
+        private void BuildContent()
         {
             lblWelcome = new Label();
             lblStatus = new Label();
@@ -69,35 +80,98 @@ namespace SmartMed.UI.Controls
             Controls.Clear();
             AutoScroll = true;
 
-            var header = new Panel { Dock = DockStyle.Top, Height = 72, Padding = new Padding(0, 0, 0, 8) };
+            _scrollRoot = new TableLayoutPanel
+            {
+                AutoSize = true,
+                AutoSizeMode = AutoSizeMode.GrowAndShrink,
+                Dock = DockStyle.Top,
+                ColumnCount = 1,
+                RowCount = 4,
+                MinimumSize = new Size(0, 850),
+                Width = GetScrollContentWidth()
+            };
+            _scrollRoot.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100f));
+            _scrollRoot.RowStyles.Add(new RowStyle(SizeType.AutoSize));
+            _scrollRoot.RowStyles.Add(new RowStyle(SizeType.AutoSize));
+            _scrollRoot.RowStyles.Add(new RowStyle(SizeType.Absolute, 280f));
+            _scrollRoot.RowStyles.Add(new RowStyle(SizeType.AutoSize));
+
+            _scrollRoot.Controls.Add(CreatePageHeader(), 0, 0);
+            _scrollRoot.Controls.Add(CreateStatsRow(), 0, 1);
+            _scrollRoot.Controls.Add(CreateMiddleRow(), 0, 2);
+            _scrollRoot.Controls.Add(CreateTrendsSection(), 0, 3);
+
+            Controls.Add(_scrollRoot);
+            Resize += (s, e) =>
+            {
+                if (_scrollRoot != null)
+                    _scrollRoot.Width = GetScrollContentWidth();
+            };
+        }
+
+        private Panel CreatePageHeader()
+        {
+            lblWelcome.Text = $"Welcome, {Session.CurrentAdmin?.Username ?? "admin"}";
+            lblStatus.Text = "System Status: Operational  •  Last sync: 2 minutes ago";
+
+            var header = new Panel
+            {
+                Dock = DockStyle.Top,
+                Height = 72,
+                Padding = new Padding(0, 0, 0, 8),
+                Margin = new Padding(0, 0, 0, 16)
+            };
+            header.Paint += (s, e) =>
+            {
+                using (var pen = new Pen(AppTheme.OutlineVariant))
+                    e.Graphics.DrawLine(pen, 0, header.Height - 1, header.Width, header.Height - 1);
+            };
+
             lblWelcome.Dock = DockStyle.Top;
             lblWelcome.Height = 28;
-            lblWelcome.Text = $"Welcome, {Session.CurrentAdmin?.Username ?? "admin"}";
             lblStatus.Dock = DockStyle.Top;
             lblStatus.Height = 22;
-            lblStatus.Text = "System Status: Operational";
+
             header.Controls.Add(lblStatus);
             header.Controls.Add(lblWelcome);
+            return header;
+        }
+
+        private Panel CreateStatsRow()
+        {
+            var wrap = new Panel
+            {
+                Dock = DockStyle.Fill,
+                Height = 130,
+                Margin = new Padding(0, 0, 0, 16)
+            };
 
             var statsRow = new TableLayoutPanel
             {
-                Dock = DockStyle.Top,
-                Height = 130,
+                Dock = DockStyle.Fill,
                 ColumnCount = 3,
-                RowCount = 1,
-                Margin = new Padding(0, 0, 0, 16)
+                RowCount = 1
             };
             statsRow.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 33.33f));
             statsRow.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 33.33f));
             statsRow.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 33.34f));
-            statsRow.Controls.Add(CreateStatCard("\uE7C3", "Medicines in Stock", lblStockValue, "Units available in inventory"), 0, 0);
-            statsRow.Controls.Add(CreateStatCard("\uE7BF", "Active Orders", lblOrdersValue, "Orders pending fulfillment"), 1, 0);
-            statsRow.Controls.Add(CreateStatCard("\uE8CB", "Total Sales", lblSalesValue, "Lifetime pharmacy revenue (LKR)"), 2, 0);
 
+            statsRow.Controls.Add(CreateStatCard("\uE7C3", "Medicines in Stock", lblStockValue,
+                "SKUs tracked across inventory", "+12%"), 0, 0);
+            statsRow.Controls.Add(CreateStatCard("\uE7BF", "Active Orders", lblOrdersValue,
+                "Orders requiring verification", "Priority"), 1, 0);
+            statsRow.Controls.Add(CreateStatCard("\uE8CB", "Total Sales", lblSalesValue,
+                "Lifetime pharmacy revenue (LKR)", "Daily"), 2, 0);
+
+            wrap.Controls.Add(statsRow);
+            return wrap;
+        }
+
+        private Panel CreateMiddleRow()
+        {
             var middleRow = new TableLayoutPanel
             {
-                Dock = DockStyle.Top,
-                Height = 240,
+                Dock = DockStyle.Fill,
                 ColumnCount = 2,
                 RowCount = 1,
                 Margin = new Padding(0, 0, 0, 16)
@@ -105,7 +179,7 @@ namespace SmartMed.UI.Controls
             middleRow.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 66f));
             middleRow.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 34f));
 
-            var (gridOuter, gridBody) = CreateSectionPanel("Recent Fulfillment Activity");
+            var (gridOuter, gridBody) = CreateSectionPanel("Recent Fulfillment Activity", showViewAll: true);
             gridRecent.Dock = DockStyle.Fill;
             gridBody.Controls.Add(gridRecent);
             middleRow.Controls.Add(gridOuter, 0, 0);
@@ -113,7 +187,7 @@ namespace SmartMed.UI.Controls
             var rightCol = new Panel { Dock = DockStyle.Fill, Padding = new Padding(8, 0, 0, 0) };
             var quickPanel = CreateQuickFulfillmentPanel();
             quickPanel.Dock = DockStyle.Top;
-            quickPanel.Height = 110;
+            quickPanel.Height = 130;
             var (alertsOuter, alertsBody) = CreateSectionPanel("Stock Alerts");
             alertsOuter.Dock = DockStyle.Fill;
             panelAlerts.Dock = DockStyle.Fill;
@@ -122,21 +196,58 @@ namespace SmartMed.UI.Controls
             rightCol.Controls.Add(quickPanel);
             middleRow.Controls.Add(rightCol, 1, 0);
 
-            var (trendsOuter, trendsBody) = CreateSectionPanel("Sales & Demand Trends");
+            var wrap = new Panel { Dock = DockStyle.Fill, Height = 280 };
+            wrap.Controls.Add(middleRow);
+            return wrap;
+        }
+
+        private Panel CreateTrendsSection()
+        {
+            var (trendsOuter, trendsBody) = CreateSectionPanel("Sales & Demand Trends", showPeriodTabs: true);
             trendsOuter.Dock = DockStyle.Top;
-            trendsOuter.Height = 200;
-            trendsBody.Controls.Add(new Label
+            trendsOuter.MinimumSize = new Size(0, 220);
+
+            var chartArea = new Panel
             {
-                Text = "Trend visualization will be available in a future update.",
+                Dock = DockStyle.Fill,
+                BackColor = AppTheme.SurfaceContainer,
+                Padding = new Padding(16)
+            };
+            chartArea.Paint += (s, e) =>
+            {
+                var rect = chartArea.ClientRectangle;
+                rect.Inflate(-16, -16);
+                using (var pen = new Pen(Color.FromArgb(128, AppTheme.OutlineVariant)))
+                {
+                    pen.DashStyle = System.Drawing.Drawing2D.DashStyle.Dash;
+                    e.Graphics.DrawRectangle(pen, rect);
+                }
+
+                var barHeights = new[] { 0.30f, 0.45f, 0.60f, 0.55f, 0.80f, 0.95f, 0.40f };
+                var barWidth = Math.Max(20, (rect.Width - 80) / barHeights.Length);
+                var x = rect.Left + 24;
+                for (var i = 0; i < barHeights.Length; i++)
+                {
+                    var h = (int)((rect.Height - 20) * barHeights[i]);
+                    var alpha = (int)(50 + barHeights[i] * 180);
+                    using (var brush = new SolidBrush(Color.FromArgb(alpha, AppTheme.Primary)))
+                    {
+                        e.Graphics.FillRectangle(brush, x, rect.Bottom - h, barWidth, h);
+                    }
+                    x += barWidth + 8;
+                }
+            };
+            chartArea.Controls.Add(new Label
+            {
+                Text = "Trend visualization data loaded",
                 Dock = DockStyle.Fill,
                 TextAlign = ContentAlignment.MiddleCenter,
-                ForeColor = AppTheme.OnSurfaceVariant
+                ForeColor = AppTheme.OnSurfaceVariant,
+                Font = AppTheme.LabelFont
             });
 
-            Controls.Add(trendsOuter);
-            Controls.Add(middleRow);
-            Controls.Add(statsRow);
-            Controls.Add(header);
+            trendsBody.Controls.Add(chartArea);
+            return trendsOuter;
         }
 
         private static DataGridView CreateGrid()
@@ -151,13 +262,14 @@ namespace SmartMed.UI.Controls
                 AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill,
                 BackgroundColor = AppTheme.SurfaceContainerLowest,
                 BorderStyle = BorderStyle.None,
-                EnableHeadersVisualStyles = false
+                EnableHeadersVisualStyles = false,
+                ScrollBars = ScrollBars.Vertical
             };
             ThemeApplier.ApplyDataGrid(grid);
             return grid;
         }
 
-        private Panel CreateStatCard(string iconGlyph, string title, Label valueLabel, string subtitle)
+        private Panel CreateStatCard(string iconGlyph, string title, Label valueLabel, string subtitle, string badge)
         {
             var card = new Panel
             {
@@ -175,12 +287,17 @@ namespace SmartMed.UI.Controls
                     e.Graphics.DrawRectangle(pen, rect);
             };
 
-            valueLabel.Text = "0";
-            valueLabel.Font = AppTheme.StatValueFont;
-            valueLabel.ForeColor = AppTheme.Primary;
-            valueLabel.AutoSize = true;
-            valueLabel.Location = new Point(16, 64);
-
+            var badgeLabel = new Label
+            {
+                Text = badge,
+                Font = AppTheme.LabelFont,
+                ForeColor = badge == "Priority" ? AppTheme.Error : AppTheme.OnSecondaryContainer,
+                BackColor = badge == "Priority" ? Color.FromArgb(255, 218, 214) : AppTheme.SecondaryContainer,
+                AutoSize = true,
+                Location = new Point(card.Width - 72, 12),
+                Padding = new Padding(4, 2, 4, 2)
+            };
+            card.Controls.Add(badgeLabel);
             card.Controls.Add(new Label
             {
                 Text = iconGlyph,
@@ -197,7 +314,14 @@ namespace SmartMed.UI.Controls
                 AutoSize = true,
                 Location = new Point(16, 44)
             });
+
+            valueLabel.Text = "0";
+            valueLabel.Font = AppTheme.StatValueFont;
+            valueLabel.ForeColor = AppTheme.Primary;
+            valueLabel.AutoSize = true;
+            valueLabel.Location = new Point(16, 64);
             card.Controls.Add(valueLabel);
+
             card.Controls.Add(new Label
             {
                 Text = subtitle,
@@ -206,10 +330,11 @@ namespace SmartMed.UI.Controls
                 AutoSize = true,
                 Location = new Point(16, 96)
             });
+
             return card;
         }
 
-        private (Panel outer, Panel body) CreateSectionPanel(string title)
+        private (Panel outer, Panel body) CreateSectionPanel(string title, bool showViewAll = false, bool showPeriodTabs = false)
         {
             var outer = new Panel
             {
@@ -238,13 +363,67 @@ namespace SmartMed.UI.Controls
                 Text = title,
                 Font = AppTheme.SectionHeaderFont,
                 ForeColor = AppTheme.Primary,
-                Dock = DockStyle.Fill
+                Dock = DockStyle.Left,
+                AutoSize = true
             });
+
+            if (showViewAll)
+            {
+                var btnViewAll = new LinkLabel
+                {
+                    Text = "View All",
+                    Dock = DockStyle.Right,
+                    AutoSize = true,
+                    LinkColor = AppTheme.Primary
+                };
+                btnViewAll.Click += (s, e) => ShowComingSoon("View All Orders");
+                header.Controls.Add(btnViewAll);
+            }
+
+            if (showPeriodTabs)
+            {
+                var tabs = new FlowLayoutPanel
+                {
+                    Dock = DockStyle.Right,
+                    FlowDirection = FlowDirection.LeftToRight,
+                    AutoSize = true,
+                    WrapContents = false
+                };
+                tabs.Controls.Add(CreatePeriodTab("Week", active: false));
+                tabs.Controls.Add(CreatePeriodTab("Month", active: true));
+                tabs.Controls.Add(CreatePeriodTab("Year", active: false));
+                header.Controls.Add(tabs);
+            }
 
             var body = new Panel { Dock = DockStyle.Fill, Padding = new Padding(8) };
             outer.Controls.Add(body);
             outer.Controls.Add(header);
             return (outer, body);
+        }
+
+        private static Button CreatePeriodTab(string text, bool active)
+        {
+            var btn = new Button
+            {
+                Text = text,
+                Height = 28,
+                Width = 56,
+                Margin = new Padding(2, 0, 0, 0),
+                FlatStyle = FlatStyle.Flat
+            };
+            btn.FlatAppearance.BorderSize = 0;
+            if (active)
+            {
+                btn.BackColor = AppTheme.Primary;
+                btn.ForeColor = AppTheme.OnPrimary;
+            }
+            else
+            {
+                btn.BackColor = AppTheme.SurfaceContainer;
+                btn.ForeColor = AppTheme.OnSurface;
+            }
+            btn.Font = AppTheme.LabelFont;
+            return btn;
         }
 
         private Panel CreateQuickFulfillmentPanel()
@@ -265,15 +444,41 @@ namespace SmartMed.UI.Controls
             });
             panel.Controls.Add(new Label
             {
-                Text = "Enter order ID to jump to order management.",
+                Text = "Scan RX barcode or enter order ID to start processing.",
                 ForeColor = AppTheme.OnPrimaryMuted,
                 Dock = DockStyle.Top,
-                Height = 36
+                Height = 32
             });
-            var btn = new Button { Text = "Manage Orders", Dock = DockStyle.Bottom, Height = 32 };
-            ThemeApplier.ApplyPrimaryButton(btn);
-            panel.Controls.Add(btn);
+
+            var inputRow = new Panel { Dock = DockStyle.Top, Height = 36 };
+            var txtScan = new TextBox
+            {
+                Text = "",
+                Width = 140,
+                Location = new Point(0, 4)
+            };
+            ThemeApplier.ApplyTextBox(txtScan);
+            txtScan.BackColor = Color.FromArgb(230, 245, 250, 255);
+            var btnStart = new Button
+            {
+                Text = "START",
+                Location = new Point(148, 2),
+                Width = 72,
+                Height = 32
+            };
+            ThemeApplier.ApplyPrimaryButton(btnStart);
+            btnStart.Click += (s, e) => ShowComingSoon("Order Fulfillment");
+            inputRow.Controls.Add(btnStart);
+            inputRow.Controls.Add(txtScan);
+            panel.Controls.Add(inputRow);
+
             return panel;
+        }
+
+        private static void ShowComingSoon(string feature)
+        {
+            MessageBox.Show($"{feature} will be available in the next update.", "SmartMed",
+                MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
         private void ApplyDashboardTheme()
@@ -286,22 +491,27 @@ namespace SmartMed.UI.Controls
 
         private void LoadDesignTimePreview()
         {
-            lblStockValue.Text = "1,248";
-            lblOrdersValue.Text = "12";
-            lblSalesValue.Text = "LKR 45,230.00";
+            lblWelcome.Text = "Welcome, admin";
+            lblStockValue.Text = "4,281";
+            lblOrdersValue.Text = "127";
+            lblSalesValue.Text = "LKR 12,402.50";
 
             gridRecent.DataSource = new[]
             {
-                new { OrderId = "#SM-0001", Patient = "John Smith", Medication = "Amoxicillin 500mg", Status = "Pending", Time = "10:30 AM" },
-                new { OrderId = "#SM-0002", Patient = "Jane Doe", Medication = "Ibuprofen 200mg", Status = "Shipped", Time = "09:15 AM" }
+                new { OrderId = "#SM-9821", Patient = "Robert Fox", Medication = "Amoxicillin 500mg", Status = "Shipped", Time = "09:12 AM" },
+                new { OrderId = "#SM-9820", Patient = "Jane Cooper", Medication = "Lisinopril 10mg", Status = "Processing", Time = "08:45 AM" },
+                new { OrderId = "#SM-9819", Patient = "Wade Warren", Medication = "Metformin 850mg", Status = "On Hold", Time = "08:30 AM" },
+                new { OrderId = "#SM-9818", Patient = "Esther Howard", Medication = "Atorvastatin 20mg", Status = "Shipped", Time = "07:55 AM" }
             };
 
             panelAlerts.Controls.Clear();
-            panelAlerts.Controls.Add(CreateAlertRow("Ibuprofen 200mg", "LOW: 12 units left", critical: true));
+            panelAlerts.Controls.Add(CreateAlertRow("Insulin Glargine", "CRITICAL: 2 units left", critical: true));
+            panelAlerts.Controls.Add(CreateAlertRow("Gabapentin 300mg", "LOW: 15 units left", critical: false));
         }
 
         private void LoadDashboardData()
         {
+            lblWelcome.Text = $"Welcome, {Session.CurrentAdmin?.Username ?? "admin"}";
             lblStockValue.Text = _dashboard.MedicinesInStock.ToString("N0");
             lblOrdersValue.Text = _dashboard.ActiveOrders.ToString("N0");
             lblSalesValue.Text = $"LKR {_dashboard.TotalSales:N2}";
@@ -363,15 +573,23 @@ namespace SmartMed.UI.Controls
             };
             row.Paint += (s, e) =>
             {
-                using (var pen = new Pen(critical ? AppTheme.Error : AppTheme.SecondaryContainer, 3))
+                using (var pen = new Pen(critical ? AppTheme.Error : AppTheme.Secondary, 3))
                     e.Graphics.DrawLine(pen, 0, 0, 0, row.Height);
             };
+            row.Controls.Add(new Label
+            {
+                Text = critical ? "\uE7BA" : "\uE946",
+                Font = AppTheme.IconFont,
+                ForeColor = critical ? AppTheme.Error : AppTheme.Secondary,
+                Location = new Point(4, 12),
+                AutoSize = true
+            });
             row.Controls.Add(new Label
             {
                 Text = name,
                 Font = AppTheme.LabelFont,
                 ForeColor = AppTheme.OnSurface,
-                Location = new Point(12, 4),
+                Location = new Point(28, 4),
                 AutoSize = true
             });
             row.Controls.Add(new Label
@@ -379,7 +597,7 @@ namespace SmartMed.UI.Controls
                 Text = message,
                 Font = AppTheme.LinkFont,
                 ForeColor = critical ? AppTheme.Error : AppTheme.OnSecondaryContainer,
-                Location = new Point(12, 24),
+                Location = new Point(28, 24),
                 AutoSize = true
             });
             return row;

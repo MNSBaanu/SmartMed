@@ -1,3 +1,4 @@
+using System.ComponentModel;
 using System.Drawing;
 using System.Windows.Forms;
 
@@ -5,6 +6,8 @@ namespace SmartMed.UI.Theming
 {
     internal static class ThemeApplier
     {
+        private static bool IsDesignTime =>
+            LicenseManager.UsageMode == LicenseUsageMode.Designtime;
         public static void ApplyForm(Form form)
         {
             form.BackColor = AppTheme.Surface;
@@ -72,7 +75,7 @@ namespace SmartMed.UI.Theming
         {
             button.FlatStyle = FlatStyle.Flat;
             button.FlatAppearance.BorderSize = 0;
-            button.BackColor = Color.Transparent;
+            button.BackColor = AppTheme.SurfaceContainerLowest;
             button.ForeColor = foreColor;
             button.Font = AppTheme.IconFontSmall;
             button.Cursor = Cursors.Hand;
@@ -82,11 +85,12 @@ namespace SmartMed.UI.Theming
         {
             button.FlatStyle = FlatStyle.Flat;
             button.FlatAppearance.BorderSize = 0;
-            button.FlatAppearance.MouseOverBackColor = AppTheme.HeaderHover;
-            button.BackColor = Color.Transparent;
+            button.BackColor = AppTheme.Primary;
             button.ForeColor = AppTheme.OnPrimaryMuted;
             button.Font = AppTheme.IconFont;
             button.Cursor = Cursors.Hand;
+            if (!IsDesignTime)
+                button.FlatAppearance.MouseOverBackColor = AppTheme.HeaderHover;
         }
 
         public static void ApplyLoginCard(Panel card, Panel header, Panel body)
