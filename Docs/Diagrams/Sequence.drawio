@@ -1,29 +1,29 @@
 <mxfile host="Electron" agent="SmartMed" pages="3">
   <diagram name="SD1 - Customer Registration" id="seq-registration">
-    <mxGraphModel dx="1100" dy="800" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1100" pageHeight="850" math="0" shadow="0">
+    <mxGraphModel grid="1" page="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" pageScale="1" pageWidth="1100" pageHeight="850" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
         <mxCell id="sd1-title" parent="1" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;fontFamily=Helvetica;fontColor=#003296;fontSize=16;fontStyle=1;" value="Sequence Diagram 1 — Customer Registration" vertex="1">
-          <mxGeometry x="300" y="20" width="500" height="30" as="geometry" />
+          <mxGeometry height="30" width="500" x="300" y="20" as="geometry" />
         </mxCell>
         <mxCell id="sd1-cust" parent="1" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;collapsible=0;recursiveResize=0;outlineConnect=0;portConstraint=eastwest;strokeColor=#003296;fillColor=#B4CBF9;fontColor=#003296;fontStyle=1;fontFamily=Helvetica;size=50;" value="Customer" vertex="1">
-          <mxGeometry x="40" y="70" width="100" height="560" as="geometry" />
+          <mxGeometry height="560" width="100" x="40" y="70" as="geometry" />
         </mxCell>
         <mxCell id="sd1-login" parent="1" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;collapsible=0;recursiveResize=0;outlineConnect=0;portConstraint=eastwest;strokeColor=#003296;fillColor=#B4CBF9;fontColor=#003296;fontStyle=1;fontFamily=Helvetica;size=50;" value="LoginForm" vertex="1">
-          <mxGeometry x="180" y="70" width="110" height="560" as="geometry" />
+          <mxGeometry height="560" width="110" x="180" y="70" as="geometry" />
         </mxCell>
         <mxCell id="sd1-reg" parent="1" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;collapsible=0;recursiveResize=0;outlineConnect=0;portConstraint=eastwest;strokeColor=#003296;fillColor=#B4CBF9;fontColor=#003296;fontStyle=1;fontFamily=Helvetica;size=50;" value="RegistrationForm" vertex="1">
-          <mxGeometry x="330" y="70" width="130" height="560" as="geometry" />
+          <mxGeometry height="560" width="130" x="330" y="70" as="geometry" />
         </mxCell>
         <mxCell id="sd1-auth" parent="1" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;collapsible=0;recursiveResize=0;outlineConnect=0;portConstraint=eastwest;strokeColor=#003296;fillColor=#B4CBF9;fontColor=#003296;fontStyle=1;fontFamily=Helvetica;size=50;" value="AuthService" vertex="1">
-          <mxGeometry x="500" y="70" width="110" height="560" as="geometry" />
+          <mxGeometry height="560" width="110" x="500" y="70" as="geometry" />
         </mxCell>
         <mxCell id="sd1-repo" parent="1" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;collapsible=0;recursiveResize=0;outlineConnect=0;portConstraint=eastwest;strokeColor=#003296;fillColor=#B4CBF9;fontColor=#003296;fontStyle=1;fontFamily=Helvetica;size=50;" value="CustomerRepository" vertex="1">
-          <mxGeometry x="650" y="70" width="130" height="560" as="geometry" />
+          <mxGeometry height="560" width="130" x="650" y="70" as="geometry" />
         </mxCell>
         <mxCell id="sd1-db" parent="1" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;collapsible=0;recursiveResize=0;outlineConnect=0;portConstraint=eastwest;strokeColor=#003296;fillColor=#B4CBF9;fontColor=#003296;fontStyle=1;fontFamily=Helvetica;size=50;" value="SmartMedDB" vertex="1">
-          <mxGeometry x="820" y="70" width="110" height="560" as="geometry" />
+          <mxGeometry height="560" width="110" x="820" y="70" as="geometry" />
         </mxCell>
         <mxCell id="sd1-m1" edge="1" parent="1" style="endArrow=block;html=1;strokeColor=#003296;fontFamily=Helvetica;fontColor=#003296;fontSize=10;labelBackgroundColor=#ffffff;" value="1: select Customer role, click Register">
           <mxGeometry relative="1" as="geometry">
@@ -84,39 +84,39 @@
           </mxGeometry>
         </mxCell>
         <mxCell id="sd1-note" parent="1" style="shape=note;whiteSpace=wrap;html=1;backgroundOutline=1;strokeColor=#003296;fillColor=#ffffcc;fontColor=#003296;fontFamily=Helvetica;fontSize=10;align=left;spacingLeft=6;" value="Scenario: New customer registers then logs in with email/password." vertex="1">
-          <mxGeometry x="40" y="660" width="280" height="45" as="geometry" />
+          <mxGeometry height="45" width="280" x="40" y="660" as="geometry" />
         </mxCell>
       </root>
     </mxGraphModel>
   </diagram>
   <diagram name="SD2 - Place Order" id="seq-place-order">
-    <mxGraphModel dx="1200" dy="900" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1200" pageHeight="900" math="0" shadow="0">
+    <mxGraphModel grid="1" page="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" pageScale="1" pageWidth="1200" pageHeight="900" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
         <mxCell id="sd2-title" parent="1" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;fontFamily=Helvetica;fontColor=#003296;fontSize=16;fontStyle=1;" value="Sequence Diagram 2 — Customer Place Order" vertex="1">
-          <mxGeometry x="350" y="20" width="500" height="30" as="geometry" />
+          <mxGeometry height="30" width="500" x="350" y="20" as="geometry" />
         </mxCell>
         <mxCell id="sd2-cust" parent="1" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;collapsible=0;recursiveResize=0;outlineConnect=0;portConstraint=eastwest;strokeColor=#003296;fillColor=#B4CBF9;fontColor=#003296;fontStyle=1;fontFamily=Helvetica;size=50;" value="Customer" vertex="1">
-          <mxGeometry x="30" y="70" width="90" height="640" as="geometry" />
+          <mxGeometry height="640" width="90" x="30" y="70" as="geometry" />
         </mxCell>
         <mxCell id="sd2-ui" parent="1" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;collapsible=0;recursiveResize=0;outlineConnect=0;portConstraint=eastwest;strokeColor=#003296;fillColor=#B4CBF9;fontColor=#003296;fontStyle=1;fontFamily=Helvetica;size=50;" value="PlaceOrderForm" vertex="1">
-          <mxGeometry x="150" y="70" width="120" height="640" as="geometry" />
+          <mxGeometry height="640" width="120" x="150" y="70" as="geometry" />
         </mxCell>
         <mxCell id="sd2-medsvc" parent="1" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;collapsible=0;recursiveResize=0;outlineConnect=0;portConstraint=eastwest;strokeColor=#003296;fillColor=#B4CBF9;fontColor=#003296;fontStyle=1;fontFamily=Helvetica;size=50;" value="MedicineService" vertex="1">
-          <mxGeometry x="300" y="70" width="120" height="640" as="geometry" />
+          <mxGeometry height="640" width="120" x="300" y="70" as="geometry" />
         </mxCell>
         <mxCell id="sd2-ordsvc" parent="1" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;collapsible=0;recursiveResize=0;outlineConnect=0;portConstraint=eastwest;strokeColor=#003296;fillColor=#B4CBF9;fontColor=#003296;fontStyle=1;fontFamily=Helvetica;size=50;" value="OrderService" vertex="1">
-          <mxGeometry x="450" y="70" width="110" height="640" as="geometry" />
+          <mxGeometry height="640" width="110" x="450" y="70" as="geometry" />
         </mxCell>
         <mxCell id="sd2-medrepo" parent="1" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;collapsible=0;recursiveResize=0;outlineConnect=0;portConstraint=eastwest;strokeColor=#003296;fillColor=#B4CBF9;fontColor=#003296;fontStyle=1;fontFamily=Helvetica;size=50;" value="MedicineRepository" vertex="1">
-          <mxGeometry x="590" y="70" width="130" height="640" as="geometry" />
+          <mxGeometry height="640" width="130" x="590" y="70" as="geometry" />
         </mxCell>
         <mxCell id="sd2-ordrepo" parent="1" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;collapsible=0;recursiveResize=0;outlineConnect=0;portConstraint=eastwest;strokeColor=#003296;fillColor=#B4CBF9;fontColor=#003296;fontStyle=1;fontFamily=Helvetica;size=50;" value="OrderRepository" vertex="1">
-          <mxGeometry x="750" y="70" width="120" height="640" as="geometry" />
+          <mxGeometry height="640" width="120" x="750" y="70" as="geometry" />
         </mxCell>
         <mxCell id="sd2-db" parent="1" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;collapsible=0;recursiveResize=0;outlineConnect=0;portConstraint=eastwest;strokeColor=#003296;fillColor=#B4CBF9;fontColor=#003296;fontStyle=1;fontFamily=Helvetica;size=50;" value="SmartMedDB" vertex="1">
-          <mxGeometry x="900" y="70" width="100" height="640" as="geometry" />
+          <mxGeometry height="640" width="100" x="900" y="70" as="geometry" />
         </mxCell>
         <mxCell id="sd2-m1" edge="1" parent="1" style="endArrow=block;html=1;strokeColor=#003296;fontFamily=Helvetica;fontColor=#003296;fontSize=10;labelBackgroundColor=#ffffff;" value="1: open Place Order">
           <mxGeometry relative="1" as="geometry">
@@ -183,39 +183,39 @@
           </mxGeometry>
         </mxCell>
         <mxCell id="sd2-note" parent="1" style="shape=note;whiteSpace=wrap;html=1;backgroundOutline=1;strokeColor=#003296;fillColor=#ffffcc;fontColor=#003296;fontFamily=Helvetica;fontSize=10;align=left;spacingLeft=6;" value="Scenario: Logged-in customer adds medicines to cart and places order." vertex="1">
-          <mxGeometry x="30" y="740" width="260" height="45" as="geometry" />
+          <mxGeometry height="45" width="260" x="30" y="740" as="geometry" />
         </mxCell>
       </root>
     </mxGraphModel>
   </diagram>
   <diagram name="SD3 - Admin Login and Dashboard" id="seq-admin-dashboard">
-    <mxGraphModel dx="1100" dy="850" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1100" pageHeight="850" math="0" shadow="0">
+    <mxGraphModel dx="1052" dy="788" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1100" pageHeight="850" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
         <mxCell id="sd3-title" parent="1" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;fontFamily=Helvetica;fontColor=#003296;fontSize=16;fontStyle=1;" value="Sequence Diagram 3 — Admin Login and Dashboard" vertex="1">
-          <mxGeometry x="280" y="20" width="540" height="30" as="geometry" />
+          <mxGeometry height="30" width="540" x="280" y="20" as="geometry" />
         </mxCell>
         <mxCell id="sd3-admin" parent="1" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;collapsible=0;recursiveResize=0;outlineConnect=0;portConstraint=eastwest;strokeColor=#003296;fillColor=#B4CBF9;fontColor=#003296;fontStyle=1;fontFamily=Helvetica;size=50;" value="Admin" vertex="1">
-          <mxGeometry x="40" y="70" width="90" height="600" as="geometry" />
+          <mxGeometry height="600" width="90" x="40" y="70" as="geometry" />
         </mxCell>
         <mxCell id="sd3-login" parent="1" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;collapsible=0;recursiveResize=0;outlineConnect=0;portConstraint=eastwest;strokeColor=#003296;fillColor=#B4CBF9;fontColor=#003296;fontStyle=1;fontFamily=Helvetica;size=50;" value="LoginForm" vertex="1">
-          <mxGeometry x="170" y="70" width="110" height="600" as="geometry" />
+          <mxGeometry height="600" width="110" x="170" y="70" as="geometry" />
         </mxCell>
         <mxCell id="sd3-auth" parent="1" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;collapsible=0;recursiveResize=0;outlineConnect=0;portConstraint=eastwest;strokeColor=#003296;fillColor=#B4CBF9;fontColor=#003296;fontStyle=1;fontFamily=Helvetica;size=50;" value="AuthService" vertex="1">
-          <mxGeometry x="310" y="70" width="110" height="600" as="geometry" />
+          <mxGeometry height="600" width="110" x="310" y="70" as="geometry" />
         </mxCell>
         <mxCell id="sd3-adrepo" parent="1" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;collapsible=0;recursiveResize=0;outlineConnect=0;portConstraint=eastwest;strokeColor=#003296;fillColor=#B4CBF9;fontColor=#003296;fontStyle=1;fontFamily=Helvetica;size=50;" value="AdminRepository" vertex="1">
-          <mxGeometry x="450" y="70" width="120" height="600" as="geometry" />
+          <mxGeometry height="600" width="120" x="450" y="70" as="geometry" />
         </mxCell>
         <mxCell id="sd3-dash" parent="1" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;collapsible=0;recursiveResize=0;outlineConnect=0;portConstraint=eastwest;strokeColor=#003296;fillColor=#B4CBF9;fontColor=#003296;fontStyle=1;fontFamily=Helvetica;size=50;" value="AdminDashboardForm" vertex="1">
-          <mxGeometry x="600" y="70" width="140" height="600" as="geometry" />
+          <mxGeometry height="600" width="140" x="600" y="70" as="geometry" />
         </mxCell>
         <mxCell id="sd3-dsvc" parent="1" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;collapsible=0;recursiveResize=0;outlineConnect=0;portConstraint=eastwest;strokeColor=#003296;fillColor=#B4CBF9;fontColor=#003296;fontStyle=1;fontFamily=Helvetica;size=50;" value="DashboardService" vertex="1">
-          <mxGeometry x="770" y="70" width="130" height="600" as="geometry" />
+          <mxGeometry height="600" width="130" x="770" y="70" as="geometry" />
         </mxCell>
         <mxCell id="sd3-db" parent="1" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;collapsible=0;recursiveResize=0;outlineConnect=0;portConstraint=eastwest;strokeColor=#003296;fillColor=#B4CBF9;fontColor=#003296;fontStyle=1;fontFamily=Helvetica;size=50;" value="SmartMedDB" vertex="1">
-          <mxGeometry x="930" y="70" width="100" height="600" as="geometry" />
+          <mxGeometry height="600" width="100" x="930" y="70" as="geometry" />
         </mxCell>
         <mxCell id="sd3-m1" edge="1" parent="1" style="endArrow=block;html=1;strokeColor=#003296;fontFamily=Helvetica;fontColor=#003296;fontSize=10;labelBackgroundColor=#ffffff;" value="1: enter username/password, Login">
           <mxGeometry relative="1" as="geometry">
@@ -278,7 +278,7 @@
           </mxGeometry>
         </mxCell>
         <mxCell id="sd3-note" parent="1" style="shape=note;whiteSpace=wrap;html=1;backgroundOutline=1;strokeColor=#003296;fillColor=#ffffcc;fontColor=#003296;fontFamily=Helvetica;fontSize=10;align=left;spacingLeft=6;" value="Scenario: Admin authenticates and views pharmacy overview dashboard." vertex="1">
-          <mxGeometry x="40" y="700" width="270" height="45" as="geometry" />
+          <mxGeometry height="45" width="270" x="40" y="700" as="geometry" />
         </mxCell>
       </root>
     </mxGraphModel>
