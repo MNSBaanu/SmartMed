@@ -25,7 +25,7 @@ namespace SmartMed.UI
             // 
             // btnClose
             // 
-            this.btnClose.Location = new System.Drawing.Point(1478, 8);
+            this.btnClose.Location = new System.Drawing.Point(1309, 8);
             // 
             // panelSidebar
             // 
@@ -33,7 +33,7 @@ namespace SmartMed.UI
             // 
             // btnNavLogout
             // 
-            this.btnNavLogout.Location = new System.Drawing.Point(0, 1162);
+            this.btnNavLogout.Location = new System.Drawing.Point(0, 909);
             // 
             // panelContent
             // 
@@ -46,15 +46,14 @@ namespace SmartMed.UI
             this.customersPanel.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(249)))), ((int)(((byte)(249)))), ((int)(((byte)(249)))));
             this.customersPanel.Dock = System.Windows.Forms.DockStyle.Fill;
             this.customersPanel.Location = new System.Drawing.Point(24, 24);
-            this.customersPanel.Margin = new System.Windows.Forms.Padding(3, 6, 3, 6);
-            this.customersPanel.MinimumSize = new System.Drawing.Size(914, 1125);
+            this.customersPanel.MinimumSize = new System.Drawing.Size(800, 900);
             this.customersPanel.Name = "customersPanel";
-            this.customersPanel.Size = new System.Drawing.Size(1025, 1125);
+            this.customersPanel.Size = new System.Drawing.Size(1025, 917);
             this.customersPanel.TabIndex = 0;
             // 
             // ManageCustomersForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1353, 1013);
             this.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);

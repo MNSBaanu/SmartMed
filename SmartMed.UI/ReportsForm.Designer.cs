@@ -46,15 +46,14 @@ namespace SmartMed.UI
             this.reportsPanel.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(249)))), ((int)(((byte)(249)))), ((int)(((byte)(249)))));
             this.reportsPanel.Dock = System.Windows.Forms.DockStyle.Fill;
             this.reportsPanel.Location = new System.Drawing.Point(24, 24);
-            this.reportsPanel.Margin = new System.Windows.Forms.Padding(3, 5, 3, 5);
-            this.reportsPanel.MinimumSize = new System.Drawing.Size(914, 900);
+            this.reportsPanel.MinimumSize = new System.Drawing.Size(800, 900);
             this.reportsPanel.Name = "reportsPanel";
-            this.reportsPanel.Size = new System.Drawing.Size(1025, 900);
+            this.reportsPanel.Size = new System.Drawing.Size(1025, 917);
             this.reportsPanel.TabIndex = 0;
             // 
             // ReportsForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1353, 1013);
             this.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);

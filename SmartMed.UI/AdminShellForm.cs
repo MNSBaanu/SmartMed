@@ -15,6 +15,12 @@ namespace SmartMed.UI
         {
             FontManager.Initialize();
             InitializeComponent();
+            if (IsDesignTime)
+            {
+                ApplyShellTheme();
+                SetActiveNav(AdminNavItem.Overview);
+                SyncShellChrome();
+            }
         }
 
         protected AdminShellForm(AdminNavItem activeNav, string subtitle, string windowTitle)
@@ -23,16 +29,10 @@ namespace SmartMed.UI
             DoubleBuffered = true;
             Text = windowTitle;
             lblTopSubtitle.Text = subtitle;
-
-            if (IsDesignTime)
-            {
-                InitializePageContent();
-                return;
-            }
-
             ApplyShellTheme();
             SetActiveNav(activeNav);
             InitializePageContent();
+            SyncShellChrome();
         }
 
         protected virtual void InitializePageContent()
@@ -61,6 +61,25 @@ namespace SmartMed.UI
             ThemeApplier.ApplyNavButton(btnNavOrders, active == AdminNavItem.Orders);
             ThemeApplier.ApplyNavButton(btnNavReports, active == AdminNavItem.Reports);
             ThemeApplier.ApplyNavButton(btnNavLogout, isLogout: true);
+        }
+
+        /// <summary>Keep anchored chrome aligned with shell panels in designer and at runtime.</summary>
+        protected void SyncShellChrome()
+        {
+            var closeLeft = Math.Max(8, panelTop.ClientSize.Width - btnClose.Width - 8);
+            if (btnClose.Left != closeLeft)
+                btnClose.Left = closeLeft;
+
+            var logoutTop = Math.Max(0, panelSidebar.ClientSize.Height - btnNavLogout.Height - panelSidebar.Padding.Bottom);
+            if (btnNavLogout.Top != logoutTop)
+                btnNavLogout.Top = logoutTop;
+        }
+
+        protected override void OnLayout(LayoutEventArgs levent)
+        {
+            base.OnLayout(levent);
+            if (panelTop != null && panelSidebar != null && btnClose != null && btnNavLogout != null)
+                SyncShellChrome();
         }
 
         protected void NavigateTo(AdminShellForm next)

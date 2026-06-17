@@ -43,10 +43,24 @@ namespace SmartMed.UI.Theming
             return new Font("Segoe UI", size, style, GraphicsUnit.Point);
         }
 
-        public static bool IsDesignMode(Control control)
+        /// <summary>True when running inside the Visual Studio WinForms designer.</summary>
+        public static bool IsDesignHost(Control control = null)
         {
-            return LicenseManager.UsageMode == LicenseUsageMode.Designtime
-                || control?.Site?.DesignMode == true;
+            if (LicenseManager.UsageMode == LicenseUsageMode.Designtime)
+                return true;
+
+            if (control == null)
+                return false;
+
+            for (var current = control; current != null; current = current.Parent)
+            {
+                if (current.Site?.DesignMode == true)
+                    return true;
+            }
+
+            return false;
         }
+
+        public static bool IsDesignMode(Control control) => IsDesignHost(control);
     }
 }

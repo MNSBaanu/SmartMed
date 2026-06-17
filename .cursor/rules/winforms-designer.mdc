@@ -19,6 +19,9 @@ alwaysApply: false
 - Declare panel fields at the top of the Designer partial class before `InitializeComponent`.
 - Runtime wiring: `InitializePageContent()` calls `InitializeComponent()` only if the panel is null.
 
-## UserControl panels
-- Keep `BuildContent()` free of transparent BackColor assignments.
-- Use `LoadDesignTimePreview()` for designer mock data; avoid DB/service calls in the constructor at design time.
+## Designer / runtime parity
+- Never skip `ApplyShellTheme()`, `SetActiveNav()`, or `SyncShellChrome()` at design time in `AdminShellForm` derived forms.
+- Keep `AutoScaleDimensions` at `7F, 15F` on all admin forms (match `AdminShellForm`).
+- Use `LoadDesignTimePreview()` mock data in panels so the designer shows the same layout as runtime.
+- Call any visual state helpers (e.g. `UpdateTabStyles()`) after `BuildContent()` for both design and runtime.
+- Do not save stale `btnClose` / `btnNavLogout` positions in Designer files; anchors + `SyncShellChrome()` own placement.

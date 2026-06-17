@@ -42,6 +42,7 @@ namespace SmartMed.UI.Controls
             DoubleBuffered = true;
             Dock = DockStyle.Fill;
             BuildContent();
+            UpdateTabStyles();
             if (IsDesignHost())
                 LoadDesignTimePreview();
             Load += ReportsPanel_Load;

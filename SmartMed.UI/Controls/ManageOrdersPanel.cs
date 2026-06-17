@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
@@ -38,7 +37,7 @@ namespace SmartMed.UI.Controls
             DoubleBuffered = true;
             Dock = DockStyle.Fill;
             BuildContent();
-            if (IsDesignHost())
+            if (FontManager.IsDesignHost(this))
                 LoadDesignTimePreview();
             Load += ManageOrdersPanel_Load;
         }
@@ -47,19 +46,16 @@ namespace SmartMed.UI.Controls
         {
             get
             {
-                if (IsDesignHost()) return null;
+                if (FontManager.IsDesignHost(this)) return null;
                 return _orders ?? (_orders = new OrderService());
             }
         }
-
-        private static bool IsDesignHost() =>
-            LicenseManager.UsageMode == LicenseUsageMode.Designtime;
 
         private void ManageOrdersPanel_Load(object sender, EventArgs e)
         {
             if (_dataLoaded) return;
             _dataLoaded = true;
-            if (!IsDesignHost())
+            if (!FontManager.IsDesignHost(this))
                 LoadOrders();
         }
 
@@ -410,6 +406,7 @@ namespace SmartMed.UI.Controls
 
         private void LoadDesignTimePreview()
         {
+            gridOrders.SelectionChanged -= GridOrders_SelectionChanged;
             gridOrders.DataSource = new[]
             {
                 new { OrderID = 9421, OrderRef = "#ORD-9421", CustomerName = "Margaret Sullivan", OrderDate = "Oct 24, 2023", Status = "Pending", Total = "LKR 124.50" },
@@ -417,6 +414,8 @@ namespace SmartMed.UI.Controls
                 new { OrderID = 9419, OrderRef = "#ORD-9419", CustomerName = "Sarah Connor", OrderDate = "Oct 23, 2023", Status = "Delivered", Total = "LKR 312.20" }
             };
             HideOrderIdColumn();
+            gridOrders.ClearSelection();
+            gridOrders.SelectionChanged += GridOrders_SelectionChanged;
 
             gridItems.DataSource = new[]
             {
@@ -434,7 +433,7 @@ namespace SmartMed.UI.Controls
 
         public void LoadOrders()
         {
-            if (IsDesignHost() || Orders == null) return;
+            if (FontManager.IsDesignHost(this) || Orders == null) return;
 
             var all = Orders.GetAllOrders();
             gridOrders.DataSource = all.Select(o => new
@@ -467,6 +466,9 @@ namespace SmartMed.UI.Controls
 
         private void GridOrders_SelectionChanged(object sender, EventArgs e)
         {
+            if (FontManager.IsDesignHost(this))
+                return;
+
             if (gridOrders.CurrentRow == null) return;
             var idCell = gridOrders.CurrentRow.Cells["OrderID"];
             if (idCell?.Value == null) return;
@@ -482,7 +484,7 @@ namespace SmartMed.UI.Controls
 
             lblLastUpdated.Text = $"Last Updated: {DateTime.Now:MMM dd, yyyy hh:mm tt}";
 
-            if (IsDesignHost() || Orders == null)
+            if (Orders == null)
                 return;
 
             var items = Orders.GetOrderItems(_selectedOrderId.Value);
@@ -524,6 +526,7 @@ namespace SmartMed.UI.Controls
             try
             {
                 var status = cmbStatus.SelectedItem.ToString();
+                if (Orders == null) return;
                 Orders.UpdateOrderStatus(_selectedOrderId.Value, status);
                 LoadOrders();
                 MessageBox.Show("Order status updated successfully.", "SmartMed",

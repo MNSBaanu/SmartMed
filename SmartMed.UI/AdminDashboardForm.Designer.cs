@@ -47,15 +47,14 @@ namespace SmartMed.UI
             this.dashboardPanel.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(249)))), ((int)(((byte)(249)))), ((int)(((byte)(249)))));
             this.dashboardPanel.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dashboardPanel.Location = new System.Drawing.Point(24, 24);
-            this.dashboardPanel.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.dashboardPanel.MinimumSize = new System.Drawing.Size(800, 1062);
+            this.dashboardPanel.MinimumSize = new System.Drawing.Size(800, 900);
             this.dashboardPanel.Name = "dashboardPanel";
-            this.dashboardPanel.Size = new System.Drawing.Size(1025, 1062);
+            this.dashboardPanel.Size = new System.Drawing.Size(1025, 917);
             this.dashboardPanel.TabIndex = 0;
             // 
             // AdminDashboardForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1353, 1013);
             this.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
