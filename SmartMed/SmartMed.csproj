@@ -8,10 +8,10 @@
     <StartupObject>SmartMed.UI.Program</StartupObject>
   </PropertyGroup>
   <ItemGroup>
-    <ProjectReference Include="..\SmartMed.Business\SmartMed.Business.csproj" />
+    <Reference Include="System.Configuration" />
   </ItemGroup>
   <ItemGroup>
-    <Reference Include="System.Configuration" />
+    <PackageReference Include="System.Data.SqlClient" Version="4.8.6" />
   </ItemGroup>
   <ItemGroup>
     <None Update="App.config">

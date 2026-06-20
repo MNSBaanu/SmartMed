@@ -1,6 +1,6 @@
 ---
 description: WinForms designer-safe UI rules for SmartMed
-globs: SmartMed.UI/**/*.cs
+globs: SmartMed/**/*.cs
 alwaysApply: false
 ---
 

@@ -16,7 +16,7 @@ SmartMed Pharmacy is a **Windows Forms** desktop application for pharmacy operat
 | **Admin** | Inventory, customers, order fulfilment, reporting, dashboard |
 | **Customer** | Medicine search, ordering, order tracking, profile management |
 
-Built in **C# / .NET Framework 4.8** with a **3-tier architecture** (UI → Business → Data → SQL Server).
+Built in **C# / .NET Framework 4.8** as a single WinForms project (forms, services, and data access in one folder, like a standard lecture app).
 
 ---
 
@@ -32,7 +32,7 @@ Built in **C# / .NET Framework 4.8** with a **3-tier architecture** (UI → Busi
 
 ### 2. Connection string
 
-Edit `SmartMed.UI/App.config` if needed:
+Edit `SmartMed/App.config` if needed:
 
 ```xml
 <add name="SmartMedDB"
@@ -49,9 +49,9 @@ cd SmartMed
 dotnet build SmartMed.sln
 ```
 
-Or open `SmartMed.sln` in Visual Studio, set **SmartMed.UI** as startup project, press **F5**.
+Or open `SmartMed.sln` in Visual Studio, set **SmartMed** as startup project, press **F5**.
 
-Executable: `SmartMed.UI/bin/Debug/net48/SmartMed.exe`
+Executable: `SmartMed/bin/Debug/net48/SmartMed.exe`
 
 ---
 
@@ -60,14 +60,15 @@ Executable: `SmartMed.UI/bin/Debug/net48/SmartMed.exe`
 ```
 SmartMed/
 ├── SmartMed.sln
+├── SmartMed/                   # Single WinForms project (all C# code)
+│   ├── LoginForm.cs, ...       # Forms and UI controls
+│   ├── Models/                 # Entity classes
+│   ├── Services/               # Business logic
+│   ├── Data/                   # DatabaseHelper + repositories
+│   └── App.config
 ├── Database/
 │   └── SmartMedDB.sql          # Schema + seed data
-├── SmartMed.UI/                # WinForms presentation
-├── SmartMed.Business/          # Entities, services, validation, search
-├── SmartMed.Data/              # DatabaseHelper + repositories
-├── Diagrams/                   # Use case, ER, class, architecture
-├── Report/
-│   └── SmartMed Report.docx    # Coursework documentation (edit in Word)
+├── Docs/                       # Diagrams, report, scripts
 └── Document.md                 # Assignment specification
 ```
 
