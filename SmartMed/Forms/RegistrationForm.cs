@@ -3,7 +3,7 @@ using System.Drawing;
 using System.Windows.Forms;
 using SmartMed.Models;
 using SmartMed.Services;
-using SmartMed.UI.Theming;
+using SmartMed.Resources;
 
 namespace SmartMed.UI
 {

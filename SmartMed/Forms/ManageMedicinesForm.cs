@@ -2,6 +2,8 @@ namespace SmartMed.UI
 {
     public partial class ManageMedicinesForm : AdminShellForm
     {
+        private bool _pageBuilt;
+
         public ManageMedicinesForm()
             : base(AdminNavItem.Medicines, "Manage Medicines", "SmartMed - Manage Medicines")
         {
@@ -9,9 +11,11 @@ namespace SmartMed.UI
 
         protected override void InitializePageContent()
         {
-            if (medicinesPanel != null)
-                return;
-            InitializeComponent();
+            if (_pageBuilt) return;
+            _pageBuilt = true;
+            BuildPageContent();
+            if (!IsDesignTime)
+                LoadMedicines();
         }
     }
 }

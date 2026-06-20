@@ -2,6 +2,8 @@ namespace SmartMed.UI
 {
     public partial class ReportsForm : AdminShellForm
     {
+        private bool _pageBuilt;
+
         public ReportsForm()
             : base(AdminNavItem.Reports, "Generate Reports", "SmartMed - Generate Reports")
         {
@@ -9,11 +11,13 @@ namespace SmartMed.UI
 
         protected override void InitializePageContent()
         {
-            if (reportsPanel != null)
-                return;
-            InitializeComponent();
+            if (_pageBuilt) return;
+            _pageBuilt = true;
+            BuildPageContent();
+            if (!IsDesignTime)
+                LoadActiveReport();
         }
 
-        public void RefreshReports() => reportsPanel?.RefreshReports();
+        public void RefreshReports() => LoadActiveReport();
     }
 }

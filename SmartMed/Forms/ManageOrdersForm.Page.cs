@@ -5,11 +5,11 @@ using System.Linq;
 using System.Windows.Forms;
 using SmartMed.Data;
 using SmartMed.Models;
-using SmartMed.UI.Theming;
+using SmartMed.Resources;
 
-namespace SmartMed.UI.Controls
+namespace SmartMed.UI
 {
-    public partial class ManageOrdersPanel : UserControl
+    public partial class ManageOrdersForm
     {
         private static readonly string[] OrderStatuses =
         {
@@ -31,16 +31,11 @@ namespace SmartMed.UI.Controls
         private Button btnUpdateStatus;
         private TableLayoutPanel _scrollRoot;
 
-        public ManageOrdersPanel()
+        private void BuildPageContent()
         {
-            InitializeComponent();
-            FontManager.Initialize();
-            DoubleBuffered = true;
-            Dock = DockStyle.Fill;
             BuildContent();
             if (FontManager.IsDesignHost(this))
                 LoadDesignTimePreview();
-            Load += ManageOrdersPanel_Load;
         }
 
         private OrderRepository Orders
@@ -52,7 +47,7 @@ namespace SmartMed.UI.Controls
             }
         }
 
-        private void ManageOrdersPanel_Load(object sender, EventArgs e)
+        private void LoadPageData(object sender, EventArgs e)
         {
             if (_dataLoaded) return;
             _dataLoaded = true;
@@ -62,7 +57,7 @@ namespace SmartMed.UI.Controls
 
         private int GetScrollContentWidth()
         {
-            var w = ClientSize.Width;
+            var w = panelContent.ClientSize.Width;
             if (w < 200 && Parent != null)
                 w = Parent.ClientSize.Width - 48;
             if (w < 200)
@@ -72,8 +67,7 @@ namespace SmartMed.UI.Controls
 
         private void BuildContent()
         {
-            Controls.Clear();
-            AutoScroll = true;
+            panelContent.Controls.Clear();
 
             _scrollRoot = new TableLayoutPanel
             {
@@ -98,8 +92,8 @@ namespace SmartMed.UI.Controls
             _scrollRoot.Controls.Add(CreateItemsGridPanel(), 0, 3);
             _scrollRoot.Controls.Add(CreateStatusPanel(), 0, 4);
 
-            Controls.Add(_scrollRoot);
-            Resize += (s, e) =>
+            panelContent.Controls.Add(_scrollRoot);
+            panelContent.Resize += (s, e) =>
             {
                 if (_scrollRoot != null)
                     _scrollRoot.Width = GetScrollContentWidth();

@@ -1,6 +1,6 @@
 using System;
 using System.Windows.Forms;
-using SmartMed.UI.Theming;
+using SmartMed.Resources;
 
 namespace SmartMed.UI
 {

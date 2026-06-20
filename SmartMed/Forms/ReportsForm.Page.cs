@@ -5,11 +5,11 @@ using System.Drawing;
 using System.Windows.Forms;
 using SmartMed.Data;
 using SmartMed.Services;
-using SmartMed.UI.Theming;
+using SmartMed.Resources;
 
-namespace SmartMed.UI.Controls
+namespace SmartMed.UI
 {
-    public partial class ReportsPanel : UserControl
+    public partial class ReportsForm
     {
         private enum ReportTab
         {
@@ -36,17 +36,12 @@ namespace SmartMed.UI.Controls
         private Label lblFooterStatus;
         private TableLayoutPanel _scrollRoot;
 
-        public ReportsPanel()
-        {
-            InitializeComponent();
-            FontManager.Initialize();
-            DoubleBuffered = true;
-            Dock = DockStyle.Fill;
+        private void BuildPageContent() {
             BuildContent();
             UpdateTabStyles();
             if (IsDesignHost())
                 LoadDesignTimePreview();
-            Load += ReportsPanel_Load;
+            
         }
 
         private ReportService Reports
@@ -70,7 +65,7 @@ namespace SmartMed.UI.Controls
         private static bool IsDesignHost() =>
             LicenseManager.UsageMode == LicenseUsageMode.Designtime;
 
-        private void ReportsPanel_Load(object sender, EventArgs e)
+        private void LoadPageData(object sender, EventArgs e)
         {
             if (_dataLoaded) return;
             _dataLoaded = true;
@@ -78,11 +73,9 @@ namespace SmartMed.UI.Controls
                 LoadActiveReport();
         }
 
-        public void RefreshReports() => LoadActiveReport();
-
         private int GetScrollContentWidth()
         {
-            var w = ClientSize.Width;
+            var w = panelContent.ClientSize.Width;
             if (w < 200 && Parent != null)
                 w = Parent.ClientSize.Width - 48;
             if (w < 200)
@@ -92,8 +85,7 @@ namespace SmartMed.UI.Controls
 
         private void BuildContent()
         {
-            Controls.Clear();
-            AutoScroll = true;
+            panelContent.Controls.Clear();
 
             _scrollRoot = new TableLayoutPanel
             {
@@ -120,8 +112,8 @@ namespace SmartMed.UI.Controls
             _scrollRoot.Controls.Add(CreateReportGridPanel(), 0, 4);
             _scrollRoot.Controls.Add(CreateFooterBar(), 0, 5);
 
-            Controls.Add(_scrollRoot);
-            Resize += (s, e) =>
+            panelContent.Controls.Add(_scrollRoot);
+            panelContent.Resize += (s, e) =>
             {
                 if (_scrollRoot != null)
                     _scrollRoot.Width = GetScrollContentWidth();

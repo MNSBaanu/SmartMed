@@ -2,7 +2,7 @@ using System.ComponentModel;
 using System.Drawing;
 using System.Windows.Forms;
 
-namespace SmartMed.UI.Theming
+namespace SmartMed.Resources
 {
     internal static class ThemeApplier
     {

@@ -6,11 +6,11 @@ using System.Linq;
 using System.Windows.Forms;
 using SmartMed.Data;
 using SmartMed.Models;
-using SmartMed.UI.Theming;
+using SmartMed.Resources;
 
-namespace SmartMed.UI.Controls
+namespace SmartMed.UI
 {
-    public partial class ManageMedicinesPanel : UserControl
+    public partial class ManageMedicinesForm
     {
         private static readonly string[] DefaultCategories =
         {
@@ -39,19 +39,14 @@ namespace SmartMed.UI.Controls
         private Label lblCompliance;
         private TableLayoutPanel _scrollRoot;
 
-        public ManageMedicinesPanel()
-        {
-            InitializeComponent();
-            FontManager.Initialize();
-            DoubleBuffered = true;
-            Dock = DockStyle.Fill;
+        private void BuildPageContent() {
             BuildContent();
             if (IsDesignHost())
                 LoadDesignTimePreview();
-            Load += ManageMedicinesPanel_Load;
+            
         }
 
-        private void ManageMedicinesPanel_Load(object sender, EventArgs e)
+        private void LoadPageData(object sender, EventArgs e)
         {
             if (_dataLoaded) return;
             _dataLoaded = true;
@@ -64,7 +59,7 @@ namespace SmartMed.UI.Controls
 
         private int GetScrollContentWidth()
         {
-            var w = ClientSize.Width;
+            var w = panelContent.ClientSize.Width;
             if (w < 200 && Parent != null)
                 w = Parent.ClientSize.Width - 48;
             if (w < 200)
@@ -74,8 +69,7 @@ namespace SmartMed.UI.Controls
 
         private void BuildContent()
         {
-            Controls.Clear();
-            AutoScroll = true;
+            panelContent.Controls.Clear();
 
             _scrollRoot = new TableLayoutPanel
             {
@@ -98,8 +92,8 @@ namespace SmartMed.UI.Controls
             _scrollRoot.Controls.Add(CreateGridPanel(), 0, 2);
             _scrollRoot.Controls.Add(CreateFormPanel(), 0, 3);
 
-            Controls.Add(_scrollRoot);
-            Resize += (s, e) =>
+            panelContent.Controls.Add(_scrollRoot);
+            panelContent.Resize += (s, e) =>
             {
                 if (_scrollRoot != null)
                     _scrollRoot.Width = GetScrollContentWidth();

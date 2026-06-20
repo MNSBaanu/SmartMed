@@ -3,14 +3,13 @@ using System.ComponentModel;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
-using SmartMed.Business;
 using SmartMed.Data;
 using SmartMed.Services;
-using SmartMed.UI.Theming;
+using SmartMed.Resources;
 
-namespace SmartMed.UI.Controls
+namespace SmartMed.UI
 {
-    public partial class AdminDashboardPanel : UserControl
+    public partial class AdminDashboardForm
     {
         private readonly ReportService _reports = new ReportService();
         private readonly OrderRepository _orders = new OrderRepository();
@@ -26,23 +25,18 @@ namespace SmartMed.UI.Controls
         private FlowLayoutPanel panelAlerts;
         private TableLayoutPanel _scrollRoot;
 
-        public AdminDashboardPanel()
+        private void BuildPageContent()
         {
-            InitializeComponent();
-            FontManager.Initialize();
-            DoubleBuffered = true;
-            Dock = DockStyle.Fill;
             BuildContent();
             ApplyDashboardTheme();
             if (IsDesignHost())
                 LoadDesignTimePreview();
-            Load += AdminDashboardPanel_Load;
         }
 
         private static bool IsDesignHost() =>
             LicenseManager.UsageMode == LicenseUsageMode.Designtime;
 
-        private void AdminDashboardPanel_Load(object sender, EventArgs e)
+        private void LoadPageData(object sender, EventArgs e)
         {
             if (_dataLoaded) return;
             _dataLoaded = true;
@@ -50,11 +44,9 @@ namespace SmartMed.UI.Controls
                 LoadDashboardData();
         }
 
-        public void RefreshData() => LoadDashboardData();
-
         private int GetScrollContentWidth()
         {
-            var w = ClientSize.Width;
+            var w = panelContent.ClientSize.Width;
             if (w < 200 && Parent != null)
                 w = Parent.ClientSize.Width - 48;
             if (w < 200)
@@ -78,8 +70,7 @@ namespace SmartMed.UI.Controls
                 Dock = DockStyle.Fill
             };
 
-            Controls.Clear();
-            AutoScroll = true;
+            panelContent.Controls.Clear();
 
             _scrollRoot = new TableLayoutPanel
             {
@@ -102,8 +93,8 @@ namespace SmartMed.UI.Controls
             _scrollRoot.Controls.Add(CreateMiddleRow(), 0, 2);
             _scrollRoot.Controls.Add(CreateTrendsSection(), 0, 3);
 
-            Controls.Add(_scrollRoot);
-            Resize += (s, e) =>
+            panelContent.Controls.Add(_scrollRoot);
+            panelContent.Resize += (s, e) =>
             {
                 if (_scrollRoot != null)
                     _scrollRoot.Width = GetScrollContentWidth();

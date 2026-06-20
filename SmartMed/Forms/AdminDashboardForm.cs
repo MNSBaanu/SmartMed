@@ -2,6 +2,8 @@ namespace SmartMed.UI
 {
     public partial class AdminDashboardForm : AdminShellForm
     {
+        private bool _pageBuilt;
+
         public AdminDashboardForm()
             : base(AdminNavItem.Overview, "Admin Dashboard", "SmartMed - Admin Dashboard")
         {
@@ -9,11 +11,13 @@ namespace SmartMed.UI
 
         protected override void InitializePageContent()
         {
-            if (dashboardPanel != null)
-                return;
-            InitializeComponent();
+            if (_pageBuilt) return;
+            _pageBuilt = true;
+            BuildPageContent();
+            if (!IsDesignTime)
+                LoadDashboardData();
         }
 
-        public void RefreshData() => dashboardPanel?.RefreshData();
+        public void RefreshData() => LoadDashboardData();
     }
 }

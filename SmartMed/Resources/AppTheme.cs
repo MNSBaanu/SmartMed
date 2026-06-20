@@ -1,6 +1,6 @@
 using System.Drawing;
 
-namespace SmartMed.UI.Theming
+namespace SmartMed.Resources
 {
     /// <summary>Design tokens from the Stitch SmartMed Pharmacy UI spec.</summary>
     internal static class AppTheme

@@ -3,8 +3,8 @@ using System.ComponentModel;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
-using SmartMed.Business;
-using SmartMed.UI.Theming;
+using SmartMed.Services;
+using SmartMed.Resources;
 
 namespace SmartMed.UI
 {

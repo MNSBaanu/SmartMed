@@ -6,7 +6,7 @@ using System.IO;
 using System.Reflection;
 using System.Windows.Forms;
 
-namespace SmartMed.UI.Theming
+namespace SmartMed.Resources
 {
     internal static class FontManager
     {
@@ -21,7 +21,7 @@ namespace SmartMed.UI.Theming
 
             try
             {
-                var fontPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Fonts", "Inter.ttf");
+                var fontPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Resources", "Fonts", "Inter.ttf");
                 if (!File.Exists(fontPath)) return;
 
                 _fonts = new PrivateFontCollection();

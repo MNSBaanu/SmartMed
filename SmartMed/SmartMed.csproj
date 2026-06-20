@@ -6,6 +6,7 @@
     <RootNamespace>SmartMed.UI</RootNamespace>
     <AssemblyName>SmartMed</AssemblyName>
     <StartupObject>SmartMed.UI.Program</StartupObject>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System.Configuration" />

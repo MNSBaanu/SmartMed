@@ -2,6 +2,8 @@ namespace SmartMed.UI
 {
     public partial class ManageOrdersForm : AdminShellForm
     {
+        private bool _pageBuilt;
+
         public ManageOrdersForm()
             : base(AdminNavItem.Orders, "Manage Orders", "SmartMed - Manage Orders")
         {
@@ -9,9 +11,11 @@ namespace SmartMed.UI
 
         protected override void InitializePageContent()
         {
-            if (ordersPanel != null)
-                return;
-            InitializeComponent();
+            if (_pageBuilt) return;
+            _pageBuilt = true;
+            BuildPageContent();
+            if (!IsDesignTime)
+                LoadOrders();
         }
     }
 }

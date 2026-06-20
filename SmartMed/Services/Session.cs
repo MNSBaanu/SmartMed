@@ -1,6 +1,6 @@
 using SmartMed.Models;
 
-namespace SmartMed.Business
+namespace SmartMed.Services
 {
     public static class Session
     {
