@@ -1,9 +1,9 @@
 using System;
 using System.Text.RegularExpressions;
 
-namespace SmartMed.Business
+namespace SmartMed.Services
 {
-    public static class ValidationHelper
+    public static class ValidationService
     {
         public static bool IsNullOrWhiteSpace(string value) =>
             string.IsNullOrWhiteSpace(value);

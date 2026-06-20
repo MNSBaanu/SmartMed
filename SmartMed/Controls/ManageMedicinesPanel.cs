@@ -4,7 +4,7 @@ using System.ComponentModel;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
-using SmartMed.Business.Services;
+using SmartMed.Data;
 using SmartMed.Models;
 using SmartMed.UI.Theming;
 
@@ -17,7 +17,7 @@ namespace SmartMed.UI.Controls
             "Antibiotic", "Analgesic", "Antidiabetic", "Hypertension", "Antiviral", "Vitamin", "Other"
         };
 
-        private readonly MedicineService _medicines = new MedicineService();
+        private readonly MedicineRepository _medicines = new MedicineRepository();
         private int? _selectedId;
         private bool _dataLoaded;
 
@@ -544,7 +544,12 @@ namespace SmartMed.UI.Controls
         {
             try
             {
-                _medicines.Add(ReadForm());
+                var item = ReadForm();
+                if (string.IsNullOrWhiteSpace(item.MedicineName))
+                    throw new ArgumentException("Medicine name is required.");
+                if (item.Price < 0 || item.StockQuantity < 0)
+                    throw new ArgumentException("Price and stock must be non-negative.");
+                _medicines.Insert(item);
                 ClearForm();
                 LoadMedicines();
                 MessageBox.Show("Medicine added successfully.", "SmartMed", MessageBoxButtons.OK, MessageBoxIcon.Information);

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
-using SmartMed.Business.Services;
+using SmartMed.Data;
 using SmartMed.Models;
 using SmartMed.UI.Theming;
 
@@ -16,7 +16,7 @@ namespace SmartMed.UI.Controls
             "Pending", "Ready for Pickup", "Delivered"
         };
 
-        private OrderService _orders;
+        private OrderRepository _orders;
         private int? _selectedOrderId;
         private bool _dataLoaded;
 
@@ -43,12 +43,12 @@ namespace SmartMed.UI.Controls
             Load += ManageOrdersPanel_Load;
         }
 
-        private OrderService Orders
+        private OrderRepository Orders
         {
             get
             {
                 if (FontManager.IsDesignHost(this)) return null;
-                return _orders ?? (_orders = new OrderService());
+                return _orders ?? (_orders = new OrderRepository());
             }
         }
 
@@ -436,7 +436,7 @@ namespace SmartMed.UI.Controls
         {
             if (FontManager.IsDesignHost(this) || Orders == null) return;
 
-            var all = Orders.GetAllOrders();
+            var all = Orders.GetAll();
             gridOrders.DataSource = all.Select(o => new
             {
                 o.OrderID,
@@ -488,7 +488,7 @@ namespace SmartMed.UI.Controls
             if (Orders == null)
                 return;
 
-            var items = Orders.GetOrderItems(_selectedOrderId.Value);
+            var items = Orders.GetItems(_selectedOrderId.Value);
             gridItems.DataSource = items.Select(i => new
             {
                 i.MedicineName,
@@ -528,7 +528,13 @@ namespace SmartMed.UI.Controls
             {
                 var status = cmbStatus.SelectedItem.ToString();
                 if (Orders == null) return;
-                Orders.UpdateOrderStatus(_selectedOrderId.Value, status);
+                if (_selectedOrderId.Value <= 0)
+                    throw new ArgumentException("Select an order to update.");
+                if (string.IsNullOrWhiteSpace(status))
+                    throw new ArgumentException("Status is required.");
+                if (status != "Pending" && status != "Ready for Pickup" && status != "Delivered")
+                    throw new ArgumentException("Invalid order status.");
+                Orders.UpdateStatus(_selectedOrderId.Value, status);
                 LoadOrders();
                 MessageBox.Show("Order status updated successfully.", "SmartMed",
                     MessageBoxButtons.OK, MessageBoxIcon.Information);

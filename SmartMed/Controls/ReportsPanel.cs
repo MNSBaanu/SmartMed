@@ -3,7 +3,8 @@ using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Windows.Forms;
-using SmartMed.Business.Services;
+using SmartMed.Data;
+using SmartMed.Services;
 using SmartMed.UI.Theming;
 
 namespace SmartMed.UI.Controls
@@ -17,8 +18,8 @@ namespace SmartMed.UI.Controls
             History
         }
 
-        private OrderService _orders;
-        private CustomerService _customers;
+        private ReportService _reports;
+        private CustomerRepository _customers;
         private ReportTab _activeTab = ReportTab.Sales;
         private bool _dataLoaded;
 
@@ -48,21 +49,21 @@ namespace SmartMed.UI.Controls
             Load += ReportsPanel_Load;
         }
 
-        private OrderService Orders
+        private ReportService Reports
         {
             get
             {
                 if (IsDesignHost()) return null;
-                return _orders ?? (_orders = new OrderService());
+                return _reports ?? (_reports = new ReportService());
             }
         }
 
-        private CustomerService Customers
+        private CustomerRepository Customers
         {
             get
             {
                 if (IsDesignHost()) return null;
-                return _customers ?? (_customers = new CustomerService());
+                return _customers ?? (_customers = new CustomerRepository());
             }
         }
 
@@ -456,7 +457,7 @@ namespace SmartMed.UI.Controls
 
         private void LoadActiveReport()
         {
-            if (IsDesignHost() || Orders == null) return;
+            if (IsDesignHost() || Reports == null) return;
 
             try
             {
@@ -477,14 +478,14 @@ namespace SmartMed.UI.Controls
 
         private void LoadSalesReport()
         {
-            var table = Orders.GetSalesReport();
+            var table = Reports.GetSalesReport();
             gridReport.DataSource = table;
             lblFooterStatus.Text = $"Items: {table.Rows.Count} | Server Connected | {DateTime.Now:hh:mm tt | MMM dd, yyyy}";
         }
 
         private void LoadStockReport()
         {
-            var table = Orders.GetStockReport();
+            var table = Reports.GetStockReport();
             gridReport.DataSource = table;
             lblFooterStatus.Text = $"Items: {table.Rows.Count} | Server Connected | {DateTime.Now:hh:mm tt | MMM dd, yyyy}";
         }
@@ -512,14 +513,14 @@ namespace SmartMed.UI.Controls
             }
 
             var customerId = Convert.ToInt32(cmbCustomer.SelectedValue);
-            var table = Orders.GetCustomerOrderHistory(customerId);
+            var table = Reports.GetCustomerOrderHistory(customerId);
             gridReport.DataSource = table;
             lblFooterStatus.Text = $"Items: {table.Rows.Count} | Customer: {cmbCustomer.Text} | {DateTime.Now:hh:mm tt}";
         }
 
         private void UpdateSummaryStats()
         {
-            var sales = Orders.GetSalesReport();
+            var sales = Reports.GetSalesReport();
             decimal totalRevenue = 0;
             decimal outstanding = 0;
             foreach (DataRow row in sales.Rows)
@@ -534,7 +535,7 @@ namespace SmartMed.UI.Controls
             lblTotalRevenue.Text = $"LKR {totalRevenue:N2}";
             lblTotalOrders.Text = sales.Rows.Count.ToString("N0");
 
-            var stock = Orders.GetStockReport();
+            var stock = Reports.GetStockReport();
             var lowStock = 0;
             foreach (DataRow row in stock.Rows)
             {

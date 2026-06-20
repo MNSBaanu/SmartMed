@@ -1,12 +1,9 @@
 using System.Collections.Generic;
 using SmartMed.Models;
 
-namespace SmartMed.Business
+namespace SmartMed.Services
 {
-    /// <summary>
-    /// Linear search and filter algorithms for medicine catalogue.
-    /// </summary>
-    public static class SearchHelper
+    public static class SearchService
     {
         public static List<Medicine> SearchByName(List<Medicine> medicines, string keyword)
         {

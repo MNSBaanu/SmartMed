@@ -4,16 +4,17 @@ using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
 using SmartMed.Business;
-using SmartMed.Business.Services;
+using SmartMed.Data;
+using SmartMed.Services;
 using SmartMed.UI.Theming;
 
 namespace SmartMed.UI.Controls
 {
     public partial class AdminDashboardPanel : UserControl
     {
-        private readonly DashboardService _dashboard = new DashboardService();
-        private readonly OrderService _orders = new OrderService();
-        private readonly MedicineService _medicines = new MedicineService();
+        private readonly ReportService _reports = new ReportService();
+        private readonly OrderRepository _orders = new OrderRepository();
+        private readonly MedicineRepository _medicines = new MedicineRepository();
         private bool _dataLoaded;
 
         private Label lblWelcome;
@@ -511,13 +512,13 @@ namespace SmartMed.UI.Controls
         private void LoadDashboardData()
         {
             lblWelcome.Text = $"Welcome, {Session.CurrentAdmin?.Username ?? "admin"}";
-            lblStockValue.Text = _dashboard.MedicinesInStock.ToString("N0");
-            lblOrdersValue.Text = _dashboard.ActiveOrders.ToString("N0");
-            lblSalesValue.Text = $"LKR {_dashboard.TotalSales:N2}";
+            lblStockValue.Text = _reports.MedicinesInStock.ToString("N0");
+            lblOrdersValue.Text = _reports.ActiveOrders.ToString("N0");
+            lblSalesValue.Text = $"LKR {_reports.TotalSales:N2}";
 
-            var rows = _orders.GetAllOrders().Take(8).Select(o =>
+            var rows = _orders.GetAll().Take(8).Select(o =>
             {
-                var items = _orders.GetOrderItems(o.OrderID);
+                var items = _orders.GetItems(o.OrderID);
                 var med = items.Count > 0 ? items[0].MedicineName : "-";
                 if (items.Count > 1) med += $" (+{items.Count - 1})";
                 return new

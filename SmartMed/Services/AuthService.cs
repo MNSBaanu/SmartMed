@@ -1,7 +1,7 @@
-using SmartMed.Data.Repositories;
+using SmartMed.Data;
 using SmartMed.Models;
 
-namespace SmartMed.Business.Services
+namespace SmartMed.Services
 {
     public class AuthService
     {
@@ -10,7 +10,7 @@ namespace SmartMed.Business.Services
 
         public Admin AdminLogin(string username, string password)
         {
-            if (ValidationHelper.IsNullOrWhiteSpace(username) || ValidationHelper.IsNullOrWhiteSpace(password))
+            if (ValidationService.IsNullOrWhiteSpace(username) || ValidationService.IsNullOrWhiteSpace(password))
                 throw new System.ArgumentException("Username and password are required.");
 
             return _adminRepo.GetByCredentials(username.Trim(), password);
@@ -18,9 +18,9 @@ namespace SmartMed.Business.Services
 
         public Customer CustomerLogin(string email, string password)
         {
-            if (!ValidationHelper.IsValidEmail(email))
+            if (!ValidationService.IsValidEmail(email))
                 throw new System.ArgumentException("Valid email is required.");
-            if (ValidationHelper.IsNullOrWhiteSpace(password))
+            if (ValidationService.IsNullOrWhiteSpace(password))
                 throw new System.ArgumentException("Password is required.");
 
             return _customerRepo.GetByCredentials(email.Trim(), password);
@@ -28,15 +28,15 @@ namespace SmartMed.Business.Services
 
         public void RegisterCustomer(Customer customer)
         {
-            if (ValidationHelper.IsNullOrWhiteSpace(customer.Name))
+            if (ValidationService.IsNullOrWhiteSpace(customer.Name))
                 throw new System.ArgumentException("Full name is required.");
-            if (!ValidationHelper.IsValidEmail(customer.Email))
+            if (!ValidationService.IsValidEmail(customer.Email))
                 throw new System.ArgumentException("Valid email is required.");
-            if (ValidationHelper.IsNullOrWhiteSpace(customer.Phone))
+            if (ValidationService.IsNullOrWhiteSpace(customer.Phone))
                 throw new System.ArgumentException("Phone is required.");
-            if (ValidationHelper.IsNullOrWhiteSpace(customer.Address))
+            if (ValidationService.IsNullOrWhiteSpace(customer.Address))
                 throw new System.ArgumentException("Address is required.");
-            if (ValidationHelper.IsNullOrWhiteSpace(customer.Password))
+            if (ValidationService.IsNullOrWhiteSpace(customer.Password))
                 throw new System.ArgumentException("Password is required.");
 
             if (_customerRepo.EmailExists(customer.Email))

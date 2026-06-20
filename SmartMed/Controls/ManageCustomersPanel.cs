@@ -4,16 +4,16 @@ using System.ComponentModel;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
+using SmartMed.Data;
 using SmartMed.Models;
-using SmartMed.Business.Services;
-using SmartMed.Data.Repositories;
+using SmartMed.Services;
 using SmartMed.UI.Theming;
 
 namespace SmartMed.UI.Controls
 {
     public partial class ManageCustomersPanel : UserControl
     {
-        private CustomerService _customers;
+        private CustomerRepository _customers;
         private OrderRepository _orders;
         private int? _selectedId;
         private bool _dataLoaded;
@@ -44,12 +44,12 @@ namespace SmartMed.UI.Controls
             Load += ManageCustomersPanel_Load;
         }
 
-        private CustomerService Customers
+        private CustomerRepository Customers
         {
             get
             {
                 if (IsDesignHost()) return null;
-                return _customers ?? (_customers = new CustomerService());
+                return _customers ?? (_customers = new CustomerRepository());
             }
         }
 
@@ -518,7 +518,13 @@ namespace SmartMed.UI.Controls
         {
             try
             {
-                Customers.Add(ReadForm());
+                var customer = ReadForm();
+                ValidateCustomer(customer, isNew: true);
+                if (Customers.EmailExists(customer.Email))
+                    throw new InvalidOperationException("Email already registered.");
+                if (ValidationService.IsNullOrWhiteSpace(customer.Password))
+                    customer.Password = "customer123";
+                Customers.Insert(customer);
                 ClearForm();
                 LoadCustomers();
                 MessageBox.Show("Customer added successfully.", "SmartMed", MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -542,6 +548,14 @@ namespace SmartMed.UI.Controls
             {
                 var customer = ReadForm();
                 customer.CustomerID = _selectedId.Value;
+                ValidateCustomer(customer, isNew: false);
+                var existing = Customers.GetById(customer.CustomerID);
+                if (existing == null)
+                    throw new InvalidOperationException("Customer not found.");
+                if (!string.Equals(existing.Email, customer.Email, StringComparison.OrdinalIgnoreCase)
+                    && Customers.EmailExists(customer.Email))
+                    throw new InvalidOperationException("Email already registered.");
+                customer.Password = existing.Password;
                 Customers.Update(customer);
                 LoadCustomers();
                 MessageBox.Show("Customer updated successfully.", "SmartMed", MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -567,6 +581,10 @@ namespace SmartMed.UI.Controls
 
             try
             {
+                if (_selectedId.Value <= 0)
+                    throw new ArgumentException("Select a customer to delete.");
+                if (Customers.GetById(_selectedId.Value) == null)
+                    throw new InvalidOperationException("Customer not found.");
                 Customers.Delete(_selectedId.Value);
                 ClearForm();
                 LoadCustomers();
@@ -576,6 +594,20 @@ namespace SmartMed.UI.Controls
             {
                 MessageBox.Show(ex.Message, "Delete Failed", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
+        }
+
+        private static void ValidateCustomer(Customer customer, bool isNew)
+        {
+            if (!isNew && customer.CustomerID <= 0)
+                throw new ArgumentException("Select a customer to update.");
+            if (ValidationService.IsNullOrWhiteSpace(customer.Name))
+                throw new ArgumentException("Full name is required.");
+            if (!ValidationService.IsValidEmail(customer.Email))
+                throw new ArgumentException("Valid email is required.");
+            if (ValidationService.IsNullOrWhiteSpace(customer.Phone))
+                throw new ArgumentException("Phone is required.");
+            if (ValidationService.IsNullOrWhiteSpace(customer.Address))
+                throw new ArgumentException("Address is required.");
         }
     }
 }

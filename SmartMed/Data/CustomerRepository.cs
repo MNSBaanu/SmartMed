@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Data.SqlClient;
 using SmartMed.Models;
 
-namespace SmartMed.Data.Repositories
+namespace SmartMed.Data
 {
     public class CustomerRepository
     {
