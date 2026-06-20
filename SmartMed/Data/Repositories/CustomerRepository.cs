@@ -1,13 +1,13 @@
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
-using SmartMed.Data.Models;
+using SmartMed.Models;
 
 namespace SmartMed.Data.Repositories
 {
     public class CustomerRepository
     {
-        public CustomerUser GetByCredentials(string email, string password)
+        public Customer GetByCredentials(string email, string password)
         {
             var table = DatabaseHelper.ExecuteQuery(
                 "SELECT CustomerID, FullName, Email, Phone, Address, Password FROM Customer WHERE Email=@e AND Password=@p",
@@ -18,7 +18,7 @@ namespace SmartMed.Data.Repositories
             return Map(table.Rows[0]);
         }
 
-        public CustomerUser GetById(int id)
+        public Customer GetById(int id)
         {
             var table = DatabaseHelper.ExecuteQuery(
                 "SELECT CustomerID, FullName, Email, Phone, Address, Password FROM Customer WHERE CustomerID=@id",
@@ -27,9 +27,9 @@ namespace SmartMed.Data.Repositories
             return Map(table.Rows[0]);
         }
 
-        public List<CustomerUser> GetAll()
+        public List<Customer> GetAll()
         {
-            var list = new List<CustomerUser>();
+            var list = new List<Customer>();
             var table = DatabaseHelper.ExecuteQuery(
                 "SELECT CustomerID, FullName, Email, Phone, Address, Password FROM Customer ORDER BY FullName");
             foreach (System.Data.DataRow row in table.Rows)
@@ -45,12 +45,12 @@ namespace SmartMed.Data.Repositories
             return Convert.ToInt32(result) > 0;
         }
 
-        public int Insert(CustomerUser customer)
+        public int Insert(Customer customer)
         {
             DatabaseHelper.ExecuteNonQuery(
                 @"INSERT INTO Customer (FullName, Email, Phone, Address, Password)
                   VALUES (@n, @e, @ph, @a, @pw)",
-                new SqlParameter("@n", customer.FullName),
+                new SqlParameter("@n", customer.Name),
                 new SqlParameter("@e", customer.Email),
                 new SqlParameter("@ph", customer.Phone),
                 new SqlParameter("@a", customer.Address),
@@ -59,12 +59,12 @@ namespace SmartMed.Data.Repositories
             return Convert.ToInt32(DatabaseHelper.ExecuteScalar("SELECT MAX(CustomerID) FROM Customer"));
         }
 
-        public void Update(CustomerUser customer)
+        public void Update(Customer customer)
         {
             DatabaseHelper.ExecuteNonQuery(
                 @"UPDATE Customer SET FullName=@n, Email=@e, Phone=@ph, Address=@a
                   WHERE CustomerID=@id",
-                new SqlParameter("@n", customer.FullName),
+                new SqlParameter("@n", customer.Name),
                 new SqlParameter("@e", customer.Email),
                 new SqlParameter("@ph", customer.Phone),
                 new SqlParameter("@a", customer.Address),
@@ -75,15 +75,15 @@ namespace SmartMed.Data.Repositories
         {
             DatabaseHelper.ExecuteNonQuery(
                 "DELETE FROM Customer WHERE CustomerID=@id",
-                new System.Data.SqlClient.SqlParameter("@id", id));
+                new SqlParameter("@id", id));
         }
 
-        private static CustomerUser Map(System.Data.DataRow row)
+        private static Customer Map(System.Data.DataRow row)
         {
-            return new CustomerUser
+            return new Customer
             {
                 CustomerID = Convert.ToInt32(row["CustomerID"]),
-                FullName = row["FullName"].ToString(),
+                Name = row["FullName"].ToString(),
                 Email = row["Email"].ToString(),
                 Phone = row["Phone"].ToString(),
                 Address = row["Address"].ToString(),

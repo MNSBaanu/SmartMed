@@ -4,7 +4,7 @@ using System.ComponentModel;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
-using SmartMed.Business.Models;
+using SmartMed.Models;
 using SmartMed.Business.Services;
 using SmartMed.Data.Repositories;
 using SmartMed.UI.Theming;

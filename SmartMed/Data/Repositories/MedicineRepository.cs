@@ -1,15 +1,15 @@
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
-using SmartMed.Data.Models;
+using SmartMed.Models;
 
 namespace SmartMed.Data.Repositories
 {
     public class MedicineRepository
     {
-        public List<MedicineItem> GetAll()
+        public List<Medicine> GetAll()
         {
-            var list = new List<MedicineItem>();
+            var list = new List<Medicine>();
             var table = DatabaseHelper.ExecuteQuery(
                 "SELECT MedicineID, MedicineName, Category, Dosage, Price, StockQuantity, Supplier, ExpiryDate, RequiresPrescription FROM Medicine ORDER BY MedicineName");
             foreach (System.Data.DataRow row in table.Rows)
@@ -17,7 +17,7 @@ namespace SmartMed.Data.Repositories
             return list;
         }
 
-        public MedicineItem GetById(int id)
+        public Medicine GetById(int id)
         {
             var table = DatabaseHelper.ExecuteQuery(
                 "SELECT MedicineID, MedicineName, Category, Dosage, Price, StockQuantity, Supplier, ExpiryDate, RequiresPrescription FROM Medicine WHERE MedicineID=@id",
@@ -26,7 +26,7 @@ namespace SmartMed.Data.Repositories
             return Map(table.Rows[0]);
         }
 
-        public void Insert(MedicineItem item)
+        public void Insert(Medicine item)
         {
             DatabaseHelper.ExecuteNonQuery(
                 @"INSERT INTO Medicine (MedicineName, Category, Dosage, Price, StockQuantity, Supplier, ExpiryDate, RequiresPrescription)
@@ -41,7 +41,7 @@ namespace SmartMed.Data.Repositories
                 new SqlParameter("@r", item.RequiresPrescription));
         }
 
-        public void Update(MedicineItem item)
+        public void Update(Medicine item)
         {
             DatabaseHelper.ExecuteNonQuery(
                 @"UPDATE Medicine SET MedicineName=@n, Category=@c, Dosage=@d, Price=@p, StockQuantity=@s,
@@ -72,9 +72,9 @@ namespace SmartMed.Data.Repositories
                 new SqlParameter("@id", medicineId));
         }
 
-        private static MedicineItem Map(System.Data.DataRow row)
+        private static Medicine Map(System.Data.DataRow row)
         {
-            return new MedicineItem
+            return new Medicine
             {
                 MedicineID = Convert.ToInt32(row["MedicineID"]),
                 MedicineName = row["MedicineName"].ToString(),

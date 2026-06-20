@@ -1,6 +1,5 @@
-using System;
 using System.Collections.Generic;
-using SmartMed.Data.Models;
+using SmartMed.Models;
 
 namespace SmartMed.Business
 {
@@ -9,9 +8,9 @@ namespace SmartMed.Business
     /// </summary>
     public static class SearchHelper
     {
-        public static List<MedicineItem> SearchByName(List<MedicineItem> medicines, string keyword)
+        public static List<Medicine> SearchByName(List<Medicine> medicines, string keyword)
         {
-            var results = new List<MedicineItem>();
+            var results = new List<Medicine>();
             if (string.IsNullOrWhiteSpace(keyword)) return medicines;
 
             string key = keyword.Trim().ToLower();
@@ -23,9 +22,9 @@ namespace SmartMed.Business
             return results;
         }
 
-        public static List<MedicineItem> FilterByCategory(List<MedicineItem> medicines, string category)
+        public static List<Medicine> FilterByCategory(List<Medicine> medicines, string category)
         {
-            var results = new List<MedicineItem>();
+            var results = new List<Medicine>();
             if (string.IsNullOrWhiteSpace(category)) return medicines;
 
             string cat = category.Trim().ToLower();
@@ -37,9 +36,9 @@ namespace SmartMed.Business
             return results;
         }
 
-        public static List<MedicineItem> FilterByPriceRange(List<MedicineItem> medicines, decimal minPrice, decimal maxPrice)
+        public static List<Medicine> FilterByPriceRange(List<Medicine> medicines, decimal minPrice, decimal maxPrice)
         {
-            var results = new List<MedicineItem>();
+            var results = new List<Medicine>();
             foreach (var medicine in medicines)
             {
                 if (medicine.Price >= minPrice && medicine.Price <= maxPrice)
@@ -48,7 +47,7 @@ namespace SmartMed.Business
             return results;
         }
 
-        public static List<MedicineItem> Search(List<MedicineItem> medicines, string name, string category, decimal? minPrice, decimal? maxPrice)
+        public static List<Medicine> Search(List<Medicine> medicines, string name, string category, decimal? minPrice, decimal? maxPrice)
         {
             var results = medicines;
             if (!string.IsNullOrWhiteSpace(name))

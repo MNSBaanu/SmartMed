@@ -1,8 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Data;
-using SmartMed.Data.Models;
 using SmartMed.Data.Repositories;
+using SmartMed.Models;
 
 namespace SmartMed.Business.Services
 {
@@ -11,11 +11,11 @@ namespace SmartMed.Business.Services
         private readonly OrderRepository _repo = new OrderRepository();
         private readonly MedicineRepository _medicineRepo = new MedicineRepository();
 
-        public List<OrderRecord> GetAllOrders() => _repo.GetAll();
+        public List<Order> GetAllOrders() => _repo.GetAll();
 
-        public List<OrderRecord> GetCustomerOrders(int customerId) => _repo.GetByCustomer(customerId);
+        public List<Order> GetCustomerOrders(int customerId) => _repo.GetByCustomer(customerId);
 
-        public List<OrderItemRecord> GetOrderItems(int orderId) => _repo.GetItems(orderId);
+        public List<OrderItem> GetOrderItems(int orderId) => _repo.GetItems(orderId);
 
         public void UpdateOrderStatus(int orderId, string status)
         {
@@ -29,18 +29,18 @@ namespace SmartMed.Business.Services
             _repo.UpdateStatus(orderId, status);
         }
 
-        public int PlaceOrder(int customerId, List<OrderItemRecord> items)
+        public int PlaceOrder(int customerId, List<OrderItem> items)
         {
             if (items == null || items.Count == 0)
-                throw new System.ArgumentException("Cart is empty.");
+                throw new ArgumentException("Cart is empty.");
 
             foreach (var item in items)
             {
                 var med = _medicineRepo.GetById(item.MedicineID);
                 if (med == null)
-                    throw new System.InvalidOperationException("Medicine not found.");
+                    throw new InvalidOperationException("Medicine not found.");
                 if (med.StockQuantity < item.Quantity)
-                    throw new System.InvalidOperationException($"Insufficient stock for {med.MedicineName}.");
+                    throw new InvalidOperationException($"Insufficient stock for {med.MedicineName}.");
             }
 
             int orderId = _repo.CreateOrder(customerId, items);
@@ -52,7 +52,9 @@ namespace SmartMed.Business.Services
         }
 
         public DataTable GetSalesReport() => _repo.GetSalesReport();
+
         public DataTable GetStockReport() => _repo.GetStockReport();
+
         public DataTable GetCustomerOrderHistory(int customerId) => _repo.GetCustomerOrderHistory(customerId);
     }
 }

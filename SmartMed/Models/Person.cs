@@ -1,4 +1,4 @@
-namespace SmartMed.Business.Models
+namespace SmartMed.Models
 {
     public class Person
     {

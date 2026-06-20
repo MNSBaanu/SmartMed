@@ -1,6 +1,5 @@
-using System;
-using SmartMed.Business.Models;
 using SmartMed.Data.Repositories;
+using SmartMed.Models;
 
 namespace SmartMed.Business.Services
 {
@@ -12,40 +11,38 @@ namespace SmartMed.Business.Services
         public Admin AdminLogin(string username, string password)
         {
             if (ValidationHelper.IsNullOrWhiteSpace(username) || ValidationHelper.IsNullOrWhiteSpace(password))
-                throw new ArgumentException("Username and password are required.");
+                throw new System.ArgumentException("Username and password are required.");
 
-            var admin = _adminRepo.GetByCredentials(username.Trim(), password);
-            return Admin.FromDataModel(admin);
+            return _adminRepo.GetByCredentials(username.Trim(), password);
         }
 
         public Customer CustomerLogin(string email, string password)
         {
             if (!ValidationHelper.IsValidEmail(email))
-                throw new ArgumentException("Valid email is required.");
+                throw new System.ArgumentException("Valid email is required.");
             if (ValidationHelper.IsNullOrWhiteSpace(password))
-                throw new ArgumentException("Password is required.");
+                throw new System.ArgumentException("Password is required.");
 
-            var customer = _customerRepo.GetByCredentials(email.Trim(), password);
-            return Customer.FromDataModel(customer);
+            return _customerRepo.GetByCredentials(email.Trim(), password);
         }
 
         public void RegisterCustomer(Customer customer)
         {
             if (ValidationHelper.IsNullOrWhiteSpace(customer.Name))
-                throw new ArgumentException("Full name is required.");
+                throw new System.ArgumentException("Full name is required.");
             if (!ValidationHelper.IsValidEmail(customer.Email))
-                throw new ArgumentException("Valid email is required.");
+                throw new System.ArgumentException("Valid email is required.");
             if (ValidationHelper.IsNullOrWhiteSpace(customer.Phone))
-                throw new ArgumentException("Phone is required.");
+                throw new System.ArgumentException("Phone is required.");
             if (ValidationHelper.IsNullOrWhiteSpace(customer.Address))
-                throw new ArgumentException("Address is required.");
+                throw new System.ArgumentException("Address is required.");
             if (ValidationHelper.IsNullOrWhiteSpace(customer.Password))
-                throw new ArgumentException("Password is required.");
+                throw new System.ArgumentException("Password is required.");
 
             if (_customerRepo.EmailExists(customer.Email))
-                throw new InvalidOperationException("Email already registered.");
+                throw new System.InvalidOperationException("Email already registered.");
 
-            _customerRepo.Insert(customer.ToDataModel());
+            _customerRepo.Insert(customer);
         }
     }
 }

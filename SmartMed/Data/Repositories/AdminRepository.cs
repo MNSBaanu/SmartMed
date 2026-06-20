@@ -1,14 +1,12 @@
 using System;
-using System.Collections.Generic;
-using System.Data;
 using System.Data.SqlClient;
-using SmartMed.Data.Models;
+using SmartMed.Models;
 
 namespace SmartMed.Data.Repositories
 {
     public class AdminRepository
     {
-        public AdminUser GetByCredentials(string username, string password)
+        public Admin GetByCredentials(string username, string password)
         {
             var table = DatabaseHelper.ExecuteQuery(
                 "SELECT AdminID, Username, Password, Email FROM Admin WHERE Username=@u AND Password=@p",
@@ -18,7 +16,7 @@ namespace SmartMed.Data.Repositories
             if (table.Rows.Count == 0) return null;
 
             var row = table.Rows[0];
-            return new AdminUser
+            return new Admin
             {
                 AdminID = Convert.ToInt32(row["AdminID"]),
                 Username = row["Username"].ToString(),

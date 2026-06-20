@@ -1,6 +1,6 @@
 using System;
 
-namespace SmartMed.Business.Models
+namespace SmartMed.Models
 {
     public class Prescription
     {

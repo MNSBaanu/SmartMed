@@ -1,7 +1,7 @@
 using System;
 using System.Drawing;
 using System.Windows.Forms;
-using SmartMed.Business.Models;
+using SmartMed.Models;
 using SmartMed.Business.Services;
 using SmartMed.UI.Theming;
 

@@ -2,15 +2,15 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
-using SmartMed.Data.Models;
+using SmartMed.Models;
 
 namespace SmartMed.Data.Repositories
 {
     public class OrderRepository
     {
-        public List<OrderRecord> GetAll()
+        public List<Order> GetAll()
         {
-            var list = new List<OrderRecord>();
+            var list = new List<Order>();
             var table = DatabaseHelper.ExecuteQuery(
                 @"SELECT o.OrderID, o.CustomerID, c.FullName AS CustomerName, o.OrderDate, o.Status, o.TotalAmount
                   FROM [Order] o INNER JOIN Customer c ON o.CustomerID = c.CustomerID
@@ -20,9 +20,9 @@ namespace SmartMed.Data.Repositories
             return list;
         }
 
-        public List<OrderRecord> GetByCustomer(int customerId)
+        public List<Order> GetByCustomer(int customerId)
         {
-            var list = new List<OrderRecord>();
+            var list = new List<Order>();
             var table = DatabaseHelper.ExecuteQuery(
                 @"SELECT o.OrderID, o.CustomerID, c.FullName AS CustomerName, o.OrderDate, o.Status, o.TotalAmount
                   FROM [Order] o INNER JOIN Customer c ON o.CustomerID = c.CustomerID
@@ -33,9 +33,9 @@ namespace SmartMed.Data.Repositories
             return list;
         }
 
-        public List<OrderItemRecord> GetItems(int orderId)
+        public List<OrderItem> GetItems(int orderId)
         {
-            var list = new List<OrderItemRecord>();
+            var list = new List<OrderItem>();
             var table = DatabaseHelper.ExecuteQuery(
                 @"SELECT oi.OrderItemID, oi.OrderID, oi.MedicineID, m.MedicineName, oi.Quantity, oi.UnitPrice, oi.Subtotal
                   FROM OrderItem oi INNER JOIN Medicine m ON oi.MedicineID = m.MedicineID
@@ -46,7 +46,7 @@ namespace SmartMed.Data.Repositories
             return list;
         }
 
-        public int CreateOrder(int customerId, List<OrderItemRecord> items)
+        public int CreateOrder(int customerId, List<OrderItem> items)
         {
             decimal total = 0;
             foreach (var item in items)
@@ -118,9 +118,9 @@ namespace SmartMed.Data.Repositories
                 "SELECT COUNT(*) FROM [Order] WHERE Status <> 'Delivered'"));
         }
 
-        private static OrderRecord MapOrder(DataRow row)
+        private static Order MapOrder(DataRow row)
         {
-            return new OrderRecord
+            return new Order
             {
                 OrderID = Convert.ToInt32(row["OrderID"]),
                 CustomerID = Convert.ToInt32(row["CustomerID"]),
@@ -131,9 +131,9 @@ namespace SmartMed.Data.Repositories
             };
         }
 
-        private static OrderItemRecord MapItem(DataRow row)
+        private static OrderItem MapItem(DataRow row)
         {
-            return new OrderItemRecord
+            return new OrderItem
             {
                 OrderItemID = Convert.ToInt32(row["OrderItemID"]),
                 OrderID = Convert.ToInt32(row["OrderID"]),

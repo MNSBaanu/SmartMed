@@ -1,6 +1,6 @@
 using System.Collections.Generic;
-using SmartMed.Data.Models;
 using SmartMed.Data.Repositories;
+using SmartMed.Models;
 
 namespace SmartMed.Business.Services
 {
@@ -8,9 +8,9 @@ namespace SmartMed.Business.Services
     {
         private readonly MedicineRepository _repo = new MedicineRepository();
 
-        public List<MedicineItem> GetAll() => _repo.GetAll();
+        public List<Medicine> GetAll() => _repo.GetAll();
 
-        public void Add(MedicineItem item)
+        public void Add(Medicine item)
         {
             if (string.IsNullOrWhiteSpace(item.MedicineName))
                 throw new System.ArgumentException("Medicine name is required.");
@@ -19,11 +19,11 @@ namespace SmartMed.Business.Services
             _repo.Insert(item);
         }
 
-        public void Update(MedicineItem item) => _repo.Update(item);
+        public void Update(Medicine item) => _repo.Update(item);
 
         public void Delete(int id) => _repo.Delete(id);
 
-        public List<MedicineItem> Search(string name, string category, decimal? minPrice, decimal? maxPrice)
+        public List<Medicine> Search(string name, string category, decimal? minPrice, decimal? maxPrice)
         {
             var all = _repo.GetAll();
             return SearchHelper.Search(all, name, category, minPrice, maxPrice);
@@ -37,9 +37,9 @@ namespace SmartMed.Business.Services
             return total;
         }
 
-        public List<MedicineItem> GetExpiringSoon(int days = 90)
+        public List<Medicine> GetExpiringSoon(int days = 90)
         {
-            var list = new List<MedicineItem>();
+            var list = new List<Medicine>();
             var threshold = System.DateTime.Today.AddDays(days);
             foreach (var m in _repo.GetAll())
             {

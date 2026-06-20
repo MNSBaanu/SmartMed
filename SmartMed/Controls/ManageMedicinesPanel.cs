@@ -5,7 +5,7 @@ using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
 using SmartMed.Business.Services;
-using SmartMed.Data.Models;
+using SmartMed.Models;
 using SmartMed.UI.Theming;
 
 namespace SmartMed.UI.Controls
@@ -464,7 +464,7 @@ namespace SmartMed.UI.Controls
                 gridMedicines.Columns["MedicineID"].Visible = false;
         }
 
-        private void RefreshCategories(List<MedicineItem> all)
+        private void RefreshCategories(List<Medicine> all)
         {
             var categories = DefaultCategories
                 .Concat(all.Select(m => m.Category).Where(c => !string.IsNullOrWhiteSpace(c)))
@@ -475,7 +475,7 @@ namespace SmartMed.UI.Controls
             cmbCategory.Items.AddRange(categories);
         }
 
-        private void UpdateStats(List<MedicineItem> all)
+        private void UpdateStats(List<Medicine> all)
         {
             lblTotalItems.Text = all.Count.ToString("N0");
             lblLowStock.Text = all.Count(m => m.StockQuantity <= 20).ToString("N0");
@@ -504,14 +504,14 @@ namespace SmartMed.UI.Controls
             chkPrescription.Checked = item.RequiresPrescription;
         }
 
-        private MedicineItem ReadForm()
+        private Medicine ReadForm()
         {
             if (!int.TryParse(txtStock.Text.Trim(), out var stock))
                 throw new ArgumentException("Stock must be a valid number.");
             if (!decimal.TryParse(txtPrice.Text.Trim(), out var price))
                 throw new ArgumentException("Price must be a valid number.");
 
-            return new MedicineItem
+            return new Medicine
             {
                 MedicineID = _selectedId ?? 0,
                 MedicineName = txtName.Text.Trim(),

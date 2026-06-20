@@ -1,4 +1,4 @@
-using SmartMed.Business.Models;
+using SmartMed.Models;
 
 namespace SmartMed.Business
 {

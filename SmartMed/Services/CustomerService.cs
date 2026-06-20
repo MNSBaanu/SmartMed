@@ -1,8 +1,7 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using SmartMed.Business.Models;
 using SmartMed.Data.Repositories;
+using SmartMed.Models;
 
 namespace SmartMed.Business.Services
 {
@@ -10,15 +9,9 @@ namespace SmartMed.Business.Services
     {
         private readonly CustomerRepository _repo = new CustomerRepository();
 
-        public List<Customer> GetAll()
-        {
-            var list = new List<Customer>();
-            foreach (var c in _repo.GetAll())
-                list.Add(Customer.FromDataModel(c));
-            return list;
-        }
+        public List<Customer> GetAll() => _repo.GetAll();
 
-        public Customer GetById(int id) => Customer.FromDataModel(_repo.GetById(id));
+        public Customer GetById(int id) => _repo.GetById(id);
 
         public void Add(Customer customer)
         {
@@ -29,7 +22,7 @@ namespace SmartMed.Business.Services
             if (ValidationHelper.IsNullOrWhiteSpace(customer.Password))
                 customer.Password = "customer123";
 
-            customer.CustomerID = _repo.Insert(customer.ToDataModel());
+            customer.CustomerID = _repo.Insert(customer);
         }
 
         public void Update(Customer customer)
@@ -44,7 +37,7 @@ namespace SmartMed.Business.Services
                 throw new InvalidOperationException("Email already registered.");
 
             customer.Password = existing.Password;
-            _repo.Update(customer.ToDataModel());
+            _repo.Update(customer);
         }
 
         public void Delete(int id)

@@ -4,6 +4,7 @@ using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
 using SmartMed.Business.Services;
+using SmartMed.Models;
 using SmartMed.UI.Theming;
 
 namespace SmartMed.UI.Controls
@@ -457,7 +458,7 @@ namespace SmartMed.UI.Controls
                 gridOrders.Columns["OrderID"].Visible = false;
         }
 
-        private void UpdateStats(List<SmartMed.Data.Models.OrderRecord> all)
+        private void UpdateStats(List<Order> all)
         {
             lblTotalOrders.Text = all.Count.ToString("N0");
             lblPendingOrders.Text = all.Count(o => o.Status == "Pending").ToString("N0");
