@@ -4,7 +4,6 @@ using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
 using SmartMed.Services;
-using SmartMed.Resources;
 
 namespace SmartMed.UI
 {
@@ -13,14 +12,8 @@ namespace SmartMed.UI
     {
         public AdminShellForm()
         {
-            FontManager.Initialize();
             InitializeComponent();
-            if (IsDesignTime)
-            {
-                ApplyShellTheme();
-                SetActiveNav(AdminNavItem.Overview);
-                SyncShellChrome();
-            }
+            if (IsDesignTime) { SetActiveNav(AdminNavItem.Overview); SyncShellChrome(); }
         }
 
         protected AdminShellForm(AdminNavItem activeNav, string subtitle, string windowTitle)
@@ -29,7 +22,6 @@ namespace SmartMed.UI
             DoubleBuffered = true;
             Text = windowTitle;
             lblTopSubtitle.Text = subtitle;
-            ApplyShellTheme();
             SetActiveNav(activeNav);
             InitializePageContent();
             SyncShellChrome();
@@ -43,24 +35,8 @@ namespace SmartMed.UI
 
         protected static bool IsDesignTime =>
             LicenseManager.UsageMode == LicenseUsageMode.Designtime;
-
-        protected void ApplyShellTheme()
-        {
-            ThemeApplier.ApplyAdminShell(this, panelTop, lblTopTitle, lblTopSubtitle, btnClose, panelSidebar, panelContent);
-            lblNavBrand.Font = AppTheme.AppTitleFont;
-            lblNavBrand.ForeColor = AppTheme.Primary;
-            lblNavTagline.Font = AppTheme.LabelFont;
-            lblNavTagline.ForeColor = AppTheme.OnSurfaceVariant;
-        }
-
         protected void SetActiveNav(AdminNavItem active)
         {
-            ThemeApplier.ApplyNavButton(btnNavOverview, active == AdminNavItem.Overview);
-            ThemeApplier.ApplyNavButton(btnNavMedicines, active == AdminNavItem.Medicines);
-            ThemeApplier.ApplyNavButton(btnNavCustomers, active == AdminNavItem.Customers);
-            ThemeApplier.ApplyNavButton(btnNavOrders, active == AdminNavItem.Orders);
-            ThemeApplier.ApplyNavButton(btnNavReports, active == AdminNavItem.Reports);
-            ThemeApplier.ApplyNavButton(btnNavLogout, isLogout: true);
         }
 
         /// <summary>Keep anchored chrome aligned with shell panels in designer and at runtime.</summary>

@@ -1,11 +1,11 @@
 using System;
+using System.ComponentModel;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
 using SmartMed.Data;
 using SmartMed.Models;
-using SmartMed.Resources;
 
 namespace SmartMed.UI
 {
@@ -50,7 +50,7 @@ namespace SmartMed.UI
         private void BuildPageContent()
         {
             BuildContent();
-            if (FontManager.IsDesignHost(this))
+            if ((LicenseManager.UsageMode == LicenseUsageMode.Designtime))
                 LoadDesignTimePreview();
         }
 
@@ -58,7 +58,7 @@ namespace SmartMed.UI
         {
             get
             {
-                if (FontManager.IsDesignHost(this)) return null;
+                if ((LicenseManager.UsageMode == LicenseUsageMode.Designtime)) return null;
                 return _orders ?? (_orders = new OrderRepository());
             }
         }
@@ -67,7 +67,7 @@ namespace SmartMed.UI
         {
             if (_dataLoaded) return;
             _dataLoaded = true;
-            if (!FontManager.IsDesignHost(this))
+            if (!(LicenseManager.UsageMode == LicenseUsageMode.Designtime))
                 LoadOrders();
         }
 
@@ -127,7 +127,7 @@ namespace SmartMed.UI
             };
             header.Paint += (s, e) =>
             {
-                using (var pen = new Pen(AppTheme.OutlineVariant))
+                using (var pen = new Pen(SystemColors.ControlDark))
                     e.Graphics.DrawLine(pen, 0, header.Height - 1, header.Width, header.Height - 1);
             };
 
@@ -135,16 +135,16 @@ namespace SmartMed.UI
             titleBlock.Controls.Add(new Label
             {
                 Text = "Review fulfillment queue and update order status.",
-                Font = AppTheme.BodyFont,
-                ForeColor = AppTheme.OnSurfaceVariant,
+                Font = SystemFonts.DefaultFont,
+                ForeColor = SystemColors.GrayText,
                 Dock = DockStyle.Top,
                 Height = 20
             });
             titleBlock.Controls.Add(new Label
             {
                 Text = "Manage Orders",
-                Font = AppTheme.SectionHeaderFont,
-                ForeColor = AppTheme.Primary,
+                Font = SystemFonts.DefaultFont,
+                ForeColor = SystemColors.Highlight,
                 Dock = DockStyle.Top,
                 Height = 24
             });
@@ -178,7 +178,6 @@ namespace SmartMed.UI
                 Width = 110,
                 Margin = new Padding(4, 0, 0, 0)
             };
-            ThemeApplier.ApplyPrimaryButton(btn);
             return btn;
         }
 
@@ -206,9 +205,9 @@ namespace SmartMed.UI
             lblPendingOrders = new Label();
             lblDeliveredOrders = new Label();
 
-            row.Controls.Add(CreateStatTile("\uE8A1", "Total Orders", lblTotalOrders, AppTheme.Primary), 0, 0);
-            row.Controls.Add(CreateStatTile("\uE823", "Pending", lblPendingOrders, AppTheme.OnSecondaryContainer), 1, 0);
-            row.Controls.Add(CreateStatTile("\uE73E", "Delivered", lblDeliveredOrders, AppTheme.Success), 2, 0);
+            row.Controls.Add(CreateStatTile("\uE8A1", "Total Orders", lblTotalOrders, SystemColors.Highlight), 0, 0);
+            row.Controls.Add(CreateStatTile("\uE823", "Pending", lblPendingOrders, SystemColors.ControlText), 1, 0);
+            row.Controls.Add(CreateStatTile("\uE73E", "Delivered", lblDeliveredOrders, Color.Green), 2, 0);
 
             wrap.Controls.Add(row);
             return wrap;
@@ -219,7 +218,7 @@ namespace SmartMed.UI
             var card = new Panel
             {
                 Dock = DockStyle.Fill,
-                BackColor = AppTheme.SurfaceContainerLowest,
+                BackColor = SystemColors.Window,
                 Padding = new Padding(16),
                 Margin = new Padding(0, 0, 8, 0)
             };
@@ -228,12 +227,12 @@ namespace SmartMed.UI
                 var rect = card.ClientRectangle;
                 rect.Width -= 1;
                 rect.Height -= 1;
-                using (var pen = new Pen(AppTheme.OutlineVariant))
+                using (var pen = new Pen(SystemColors.ControlDark))
                     e.Graphics.DrawRectangle(pen, rect);
             };
 
             valueLabel.Text = "0";
-            valueLabel.Font = AppTheme.StatValueFont;
+            valueLabel.Font = SystemFonts.DefaultFont;
             valueLabel.ForeColor = accent;
             valueLabel.Location = new Point(52, 36);
             valueLabel.AutoSize = true;
@@ -241,7 +240,7 @@ namespace SmartMed.UI
             card.Controls.Add(new Label
             {
                 Text = icon,
-                Font = AppTheme.IconFont,
+                Font = SystemFonts.DefaultFont,
                 ForeColor = accent,
                 Location = new Point(16, 20),
                 AutoSize = true
@@ -249,8 +248,8 @@ namespace SmartMed.UI
             card.Controls.Add(new Label
             {
                 Text = title.ToUpperInvariant(),
-                Font = AppTheme.LabelFont,
-                ForeColor = AppTheme.OnSurfaceVariant,
+                Font = SystemFonts.DefaultFont,
+                ForeColor = SystemColors.GrayText,
                 Location = new Point(52, 16),
                 AutoSize = true
             });
@@ -263,7 +262,7 @@ namespace SmartMed.UI
             var outer = new Panel
             {
                 Dock = DockStyle.Fill,
-                BackColor = AppTheme.SurfaceContainerLowest,
+                BackColor = SystemColors.Window,
                 Padding = new Padding(1),
                 Margin = new Padding(0, 0, 0, 16)
             };
@@ -272,7 +271,7 @@ namespace SmartMed.UI
                 var rect = outer.ClientRectangle;
                 rect.Width -= 1;
                 rect.Height -= 1;
-                using (var pen = new Pen(AppTheme.OutlineVariant))
+                using (var pen = new Pen(SystemColors.ControlDark))
                     e.Graphics.DrawRectangle(pen, rect);
             };
 
@@ -280,14 +279,14 @@ namespace SmartMed.UI
             {
                 Dock = DockStyle.Top,
                 Height = 40,
-                BackColor = AppTheme.SurfaceContainer,
+                BackColor = SystemColors.Control,
                 Padding = new Padding(12, 10, 12, 8)
             };
             header.Controls.Add(new Label
             {
                 Text = "  \uE8EF  Recent Orders",
-                Font = AppTheme.SectionHeaderFont,
-                ForeColor = AppTheme.Primary,
+                Font = SystemFonts.DefaultFont,
+                ForeColor = SystemColors.Highlight,
                 Dock = DockStyle.Left,
                 AutoSize = true
             });
@@ -305,7 +304,7 @@ namespace SmartMed.UI
             var outer = new Panel
             {
                 Dock = DockStyle.Fill,
-                BackColor = AppTheme.SurfaceContainerLowest,
+                BackColor = SystemColors.Window,
                 Padding = new Padding(1),
                 Margin = new Padding(0, 0, 0, 16)
             };
@@ -314,19 +313,19 @@ namespace SmartMed.UI
                 var rect = outer.ClientRectangle;
                 rect.Width -= 1;
                 rect.Height -= 1;
-                using (var pen = new Pen(AppTheme.OutlineVariant))
+                using (var pen = new Pen(SystemColors.ControlDark))
                     e.Graphics.DrawRectangle(pen, rect);
             };
 
             lblOrderDetails = new Label
             {
                 Text = "  \uE7C3  Order Details",
-                Font = AppTheme.SectionHeaderFont,
-                ForeColor = AppTheme.OnSurfaceVariant,
+                Font = SystemFonts.DefaultFont,
+                ForeColor = SystemColors.GrayText,
                 Dock = DockStyle.Top,
                 Height = 36,
                 Padding = new Padding(12, 8, 0, 0),
-                BackColor = AppTheme.SurfaceContainer
+                BackColor = SystemColors.Control
             };
 
             gridItems = CreateGrid();
@@ -344,7 +343,6 @@ namespace SmartMed.UI
                 Padding = new Padding(16, 12, 16, 12),
                 Margin = new Padding(0, 0, 0, 16)
             };
-            ThemeApplier.SetBackColor(panel, AppTheme.Primary);
 
             cmbStatus = new ComboBox
             {
@@ -352,14 +350,13 @@ namespace SmartMed.UI
                 Width = 200,
                 Location = new Point(88, 16)
             };
-            ThemeApplier.ApplyComboBox(cmbStatus);
             cmbStatus.Items.AddRange(OrderStatuses);
 
             lblLastUpdated = new Label
             {
                 Text = "Last Updated: —",
-                ForeColor = AppTheme.OnPrimaryMuted,
-                Font = AppTheme.BodyFont,
+                ForeColor = SystemColors.ControlLightLight,
+                Font = SystemFonts.DefaultFont,
                 AutoSize = true,
                 Location = new Point(320, 20)
             };
@@ -371,14 +368,13 @@ namespace SmartMed.UI
                 Height = 40,
                 Anchor = AnchorStyles.Top | AnchorStyles.Right
             };
-            ThemeApplier.ApplyAccentButton(btnUpdateStatus);
             btnUpdateStatus.Click += BtnUpdateStatus_Click;
 
             panel.Controls.Add(new Label
             {
                 Text = "STATUS:",
-                ForeColor = AppTheme.OnPrimary,
-                Font = AppTheme.LabelFont,
+                ForeColor = SystemColors.HighlightText,
+                Font = SystemFonts.DefaultFont,
                 AutoSize = true,
                 Location = new Point(16, 20)
             });
@@ -405,13 +401,12 @@ namespace SmartMed.UI
                 RowHeadersVisible = false,
                 SelectionMode = DataGridViewSelectionMode.FullRowSelect,
                 AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill,
-                BackgroundColor = AppTheme.SurfaceContainerLowest,
+                BackgroundColor = SystemColors.Window,
                 BorderStyle = BorderStyle.None,
                 EnableHeadersVisualStyles = false,
                 MultiSelect = false,
                 ScrollBars = ScrollBars.Vertical
             };
-            ThemeApplier.ApplyDataGrid(grid);
             return grid;
         }
 
@@ -444,7 +439,7 @@ namespace SmartMed.UI
 
         public void LoadOrders()
         {
-            if (FontManager.IsDesignHost(this) || Orders == null) return;
+            if ((LicenseManager.UsageMode == LicenseUsageMode.Designtime) || Orders == null) return;
 
             var all = Orders.GetAll();
             gridOrders.DataSource = all.Select(o => new
@@ -477,7 +472,7 @@ namespace SmartMed.UI
 
         private void GridOrders_SelectionChanged(object sender, EventArgs e)
         {
-            if (FontManager.IsDesignHost(this))
+            if ((LicenseManager.UsageMode == LicenseUsageMode.Designtime))
                 return;
 
             if (gridOrders.CurrentRow == null) return;

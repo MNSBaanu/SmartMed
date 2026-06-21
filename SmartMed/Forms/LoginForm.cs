@@ -3,7 +3,6 @@ using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
 using SmartMed.Services;
-using SmartMed.Resources;
 
 namespace SmartMed.UI
 {
@@ -17,19 +16,8 @@ namespace SmartMed.UI
         {
             InitializeComponent();
             DoubleBuffered = true;
-            ApplyTheme();
             CenterLoginCard();
             UpdateRoleUi();
-        }
-
-        private void ApplyTheme()
-        {
-            ThemeApplier.ApplyLoginForm(
-                this, panelCard, panelHeader, panelBody,
-                lblMedicalIcon, lblHeaderTitle, lblLockIcon, btnClose,
-                lblRole, cmbRole, lblUsername, txtUsername,
-                lblPassword, txtPassword, btnTogglePassword,
-                btnLogin, btnRegister, lnkForgot, lblVersion);
         }
 
         protected override void OnResize(EventArgs e)
@@ -98,7 +86,7 @@ namespace SmartMed.UI
         private void SetUsernamePlaceholder(string placeholder)
         {
             _usernamePlaceholder = true;
-            txtUsername.ForeColor = AppTheme.Placeholder;
+            txtUsername.ForeColor = SystemColors.GrayText;
             txtUsername.Text = placeholder;
         }
 
@@ -111,7 +99,7 @@ namespace SmartMed.UI
         {
             if (!_usernamePlaceholder) return;
             txtUsername.Text = string.Empty;
-            txtUsername.ForeColor = AppTheme.OnSurface;
+            txtUsername.ForeColor = SystemColors.ControlText;
             _usernamePlaceholder = false;
         }
 

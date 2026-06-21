@@ -5,7 +5,6 @@ using System.Drawing;
 using System.Windows.Forms;
 using SmartMed.Data;
 using SmartMed.Services;
-using SmartMed.Resources;
 
 namespace SmartMed.UI
 {
@@ -149,7 +148,7 @@ namespace SmartMed.UI
             };
             header.Paint += (s, e) =>
             {
-                using (var pen = new Pen(AppTheme.OutlineVariant))
+                using (var pen = new Pen(SystemColors.ControlDark))
                     e.Graphics.DrawLine(pen, 0, header.Height - 1, header.Width, header.Height - 1);
             };
 
@@ -157,16 +156,16 @@ namespace SmartMed.UI
             titleBlock.Controls.Add(new Label
             {
                 Text = "Generate sales, stock, and customer order history reports.",
-                Font = AppTheme.BodyFont,
-                ForeColor = AppTheme.OnSurfaceVariant,
+                Font = SystemFonts.DefaultFont,
+                ForeColor = SystemColors.GrayText,
                 Dock = DockStyle.Top,
                 Height = 20
             });
             titleBlock.Controls.Add(new Label
             {
                 Text = "Generate Reports",
-                Font = AppTheme.SectionHeaderFont,
-                ForeColor = AppTheme.Primary,
+                Font = SystemFonts.DefaultFont,
+                ForeColor = SystemColors.Highlight,
                 Dock = DockStyle.Top,
                 Height = 24
             });
@@ -200,7 +199,6 @@ namespace SmartMed.UI
                 Width = 120,
                 Margin = new Padding(4, 0, 0, 0)
             };
-            ThemeApplier.ApplyPrimaryButton(btn);
             return btn;
         }
 
@@ -230,10 +228,10 @@ namespace SmartMed.UI
             lblLowStock = new Label();
             lblOutstanding = new Label();
 
-            row.Controls.Add(CreateStatTile("\uE8CB", "Total Revenue", lblTotalRevenue, AppTheme.Primary), 0, 0);
-            row.Controls.Add(CreateStatTile("\uE8A1", "Total Orders", lblTotalOrders, AppTheme.OnSecondaryContainer), 1, 0);
-            row.Controls.Add(CreateStatTile("\uE7BA", "Low Stock Items", lblLowStock, AppTheme.Error), 2, 0);
-            row.Controls.Add(CreateStatTile("\uE823", "Outstanding", lblOutstanding, AppTheme.OnSecondaryContainer), 3, 0);
+            row.Controls.Add(CreateStatTile("\uE8CB", "Total Revenue", lblTotalRevenue, SystemColors.Highlight), 0, 0);
+            row.Controls.Add(CreateStatTile("\uE8A1", "Total Orders", lblTotalOrders, SystemColors.ControlText), 1, 0);
+            row.Controls.Add(CreateStatTile("\uE7BA", "Low Stock Items", lblLowStock, Color.Red), 2, 0);
+            row.Controls.Add(CreateStatTile("\uE823", "Outstanding", lblOutstanding, SystemColors.ControlText), 3, 0);
 
             wrap.Controls.Add(row);
             return wrap;
@@ -244,7 +242,7 @@ namespace SmartMed.UI
             var card = new Panel
             {
                 Dock = DockStyle.Fill,
-                BackColor = AppTheme.SurfaceContainerLowest,
+                BackColor = SystemColors.Window,
                 Padding = new Padding(12),
                 Margin = new Padding(0, 0, 8, 0)
             };
@@ -253,12 +251,12 @@ namespace SmartMed.UI
                 var rect = card.ClientRectangle;
                 rect.Width -= 1;
                 rect.Height -= 1;
-                using (var pen = new Pen(AppTheme.OutlineVariant))
+                using (var pen = new Pen(SystemColors.ControlDark))
                     e.Graphics.DrawRectangle(pen, rect);
             };
 
             valueLabel.Text = "0";
-            valueLabel.Font = AppTheme.StatValueFont;
+            valueLabel.Font = SystemFonts.DefaultFont;
             valueLabel.ForeColor = accent;
             valueLabel.Location = new Point(44, 34);
             valueLabel.AutoSize = true;
@@ -266,7 +264,7 @@ namespace SmartMed.UI
             card.Controls.Add(new Label
             {
                 Text = icon,
-                Font = AppTheme.IconFont,
+                Font = SystemFonts.DefaultFont,
                 ForeColor = accent,
                 Location = new Point(12, 18),
                 AutoSize = true
@@ -274,8 +272,8 @@ namespace SmartMed.UI
             card.Controls.Add(new Label
             {
                 Text = title.ToUpperInvariant(),
-                Font = AppTheme.VersionFont,
-                ForeColor = AppTheme.OnSurfaceVariant,
+                Font = SystemFonts.DefaultFont,
+                ForeColor = SystemColors.GrayText,
                 Location = new Point(44, 14),
                 AutoSize = true
             });
@@ -289,7 +287,7 @@ namespace SmartMed.UI
             {
                 Dock = DockStyle.Top,
                 Height = 48,
-                BackColor = AppTheme.SurfaceContainer,
+                BackColor = SystemColors.Control,
                 Padding = new Padding(8, 8, 8, 0),
                 Margin = new Padding(0, 0, 0, 8)
             };
@@ -340,7 +338,6 @@ namespace SmartMed.UI
                 AutoSize = true,
                 Location = new Point(0, 12)
             };
-            ThemeApplier.ApplyFieldLabel(lbl);
 
             cmbCustomer = new ComboBox
             {
@@ -348,7 +345,6 @@ namespace SmartMed.UI
                 Width = 320,
                 Location = new Point(72, 8)
             };
-            ThemeApplier.ApplyComboBox(cmbCustomer);
             cmbCustomer.SelectedIndexChanged += (s, e) => LoadActiveReport();
 
             panelCustomerFilter.Controls.Add(cmbCustomer);
@@ -361,7 +357,7 @@ namespace SmartMed.UI
             var outer = new Panel
             {
                 Dock = DockStyle.Fill,
-                BackColor = AppTheme.SurfaceContainerLowest,
+                BackColor = SystemColors.Window,
                 Padding = new Padding(1),
                 Margin = new Padding(0, 0, 0, 8)
             };
@@ -370,7 +366,7 @@ namespace SmartMed.UI
                 var rect = outer.ClientRectangle;
                 rect.Width -= 1;
                 rect.Height -= 1;
-                using (var pen = new Pen(AppTheme.OutlineVariant))
+                using (var pen = new Pen(SystemColors.ControlDark))
                     e.Graphics.DrawRectangle(pen, rect);
             };
 
@@ -383,12 +379,11 @@ namespace SmartMed.UI
                 RowHeadersVisible = false,
                 SelectionMode = DataGridViewSelectionMode.FullRowSelect,
                 AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill,
-                BackgroundColor = AppTheme.SurfaceContainerLowest,
+                BackgroundColor = SystemColors.Window,
                 BorderStyle = BorderStyle.None,
                 EnableHeadersVisualStyles = false,
                 ScrollBars = ScrollBars.Both
             };
-            ThemeApplier.ApplyDataGrid(gridReport);
 
             outer.Controls.Add(gridReport);
             return outer;
@@ -402,14 +397,14 @@ namespace SmartMed.UI
                 Height = 28,
                 TextAlign = ContentAlignment.MiddleLeft,
                 Padding = new Padding(12, 0, 0, 0),
-                BackColor = AppTheme.SurfaceContainerHigh,
-                ForeColor = AppTheme.OnSurfaceVariant,
-                Font = AppTheme.VersionFont,
+                BackColor = SystemColors.ControlLight,
+                ForeColor = SystemColors.GrayText,
+                Font = SystemFonts.DefaultFont,
                 Text = "Items: 0 | Server Connected"
             };
             lblFooterStatus.Paint += (s, e) =>
             {
-                using (var pen = new Pen(AppTheme.OutlineVariant))
+                using (var pen = new Pen(SystemColors.ControlDark))
                     e.Graphics.DrawLine(pen, 0, 0, lblFooterStatus.Width, 0);
             };
 
@@ -438,15 +433,13 @@ namespace SmartMed.UI
         {
             if (active)
             {
-                ThemeApplier.SetBackColor(btn, AppTheme.SurfaceContainerLowest);
-                btn.ForeColor = AppTheme.Primary;
-                btn.Font = FontManager.Get(9f, FontStyle.Bold);
+                btn.ForeColor = SystemColors.Highlight;
+                btn.Font = new Font(SystemFonts.DefaultFont, FontStyle.Bold);
             }
             else
             {
-                ThemeApplier.SetBackColor(btn, AppTheme.SurfaceContainer);
-                btn.ForeColor = AppTheme.OnSurfaceVariant;
-                btn.Font = AppTheme.LabelFont;
+                btn.ForeColor = SystemColors.GrayText;
+                btn.Font = SystemFonts.DefaultFont;
             }
         }
 

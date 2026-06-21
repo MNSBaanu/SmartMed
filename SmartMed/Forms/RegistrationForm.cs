@@ -3,7 +3,6 @@ using System.Drawing;
 using System.Windows.Forms;
 using SmartMed.Models;
 using SmartMed.Services;
-using SmartMed.Resources;
 
 namespace SmartMed.UI
 {
@@ -16,30 +15,7 @@ namespace SmartMed.UI
         {
             InitializeComponent();
             DoubleBuffered = true;
-            ApplyTheme();
             LayoutForm();
-        }
-
-        private void ApplyTheme()
-        {
-            ThemeApplier.ApplyRegistrationForm(
-                this, panelCard, panelHeader, panelBody, panelFooter,
-                lblMedicalIcon, lblHeaderTitle, lblLockIcon, btnClose,
-                lblFullName, txtFullName,
-                lblEmail, txtEmail,
-                lblPhone, txtPhone,
-                lblAddress, txtAddress,
-                lblPassword, txtPassword, btnTogglePassword,
-                lblConfirm, txtConfirm,
-                btnRegister, btnCancel,
-                panelSuccess, lblSuccessIcon, lblSuccessTitle, lblSuccessMessage, btnReturnLogin);
-
-            btnToggleConfirm.Font = AppTheme.IconFontSmall;
-            btnToggleConfirm.ForeColor = AppTheme.OnSurfaceVariant;
-            btnToggleConfirm.FlatStyle = FlatStyle.Flat;
-            btnToggleConfirm.FlatAppearance.BorderSize = 0;
-            btnToggleConfirm.BackColor = AppTheme.SurfaceContainerLowest;
-            btnToggleConfirm.Cursor = Cursors.Hand;
         }
 
         protected override void OnResize(EventArgs e)
@@ -56,7 +32,7 @@ namespace SmartMed.UI
             const int inputH = 36;
             const int headerH = 56;
             const int footerH = 124;
-            int cardW = AppTheme.RegistrationCardWidth;
+            int cardW = 450;
             int x = pad;
             int fieldW = cardW - pad * 2;
             int halfW = (fieldW - gap) / 2;

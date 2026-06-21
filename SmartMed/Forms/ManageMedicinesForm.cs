@@ -6,7 +6,6 @@ using System.Linq;
 using System.Windows.Forms;
 using SmartMed.Data;
 using SmartMed.Models;
-using SmartMed.Resources;
 
 namespace SmartMed.UI
 {
@@ -127,7 +126,7 @@ namespace SmartMed.UI
             };
             header.Paint += (s, e) =>
             {
-                using (var pen = new Pen(AppTheme.OutlineVariant))
+                using (var pen = new Pen(SystemColors.ControlDark))
                     e.Graphics.DrawLine(pen, 0, header.Height - 1, header.Width, header.Height - 1);
             };
 
@@ -135,16 +134,16 @@ namespace SmartMed.UI
             titleBlock.Controls.Add(new Label
             {
                 Text = "Update and monitor pharmaceutical inventory levels.",
-                Font = AppTheme.BodyFont,
-                ForeColor = AppTheme.OnSurfaceVariant,
+                Font = SystemFonts.DefaultFont,
+                ForeColor = SystemColors.GrayText,
                 Dock = DockStyle.Top,
                 Height = 20
             });
             titleBlock.Controls.Add(new Label
             {
                 Text = "Manage Medicines",
-                Font = AppTheme.SectionHeaderFont,
-                ForeColor = AppTheme.Primary,
+                Font = SystemFonts.DefaultFont,
+                ForeColor = SystemColors.Highlight,
                 Dock = DockStyle.Top,
                 Height = 24
             });
@@ -178,7 +177,6 @@ namespace SmartMed.UI
                 Width = 100,
                 Margin = new Padding(4, 0, 0, 0)
             };
-            ThemeApplier.ApplyPrimaryButton(btn);
             return btn;
         }
 
@@ -193,7 +191,7 @@ namespace SmartMed.UI
             var outer = new Panel
             {
                 Dock = DockStyle.Fill,
-                BackColor = AppTheme.SurfaceContainerLowest,
+                BackColor = SystemColors.Window,
                 Padding = new Padding(1),
                 Margin = new Padding(0, 0, 0, 16)
             };
@@ -202,7 +200,7 @@ namespace SmartMed.UI
                 var rect = outer.ClientRectangle;
                 rect.Width -= 1;
                 rect.Height -= 1;
-                using (var pen = new Pen(AppTheme.OutlineVariant))
+                using (var pen = new Pen(SystemColors.ControlDark))
                     e.Graphics.DrawRectangle(pen, rect);
             };
 
@@ -215,13 +213,12 @@ namespace SmartMed.UI
                 RowHeadersVisible = false,
                 SelectionMode = DataGridViewSelectionMode.FullRowSelect,
                 AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill,
-                BackgroundColor = AppTheme.SurfaceContainerLowest,
+                BackgroundColor = SystemColors.Window,
                 BorderStyle = BorderStyle.None,
                 EnableHeadersVisualStyles = false,
                 MultiSelect = false,
                 ScrollBars = ScrollBars.Vertical
             };
-            ThemeApplier.ApplyDataGrid(gridMedicines);
             gridMedicines.SelectionChanged += GridMedicines_SelectionChanged;
 
             outer.Controls.Add(gridMedicines);
@@ -235,7 +232,7 @@ namespace SmartMed.UI
                 Dock = DockStyle.Fill,
                 AutoSize = true,
                 AutoSizeMode = AutoSizeMode.GrowAndShrink,
-                BackColor = AppTheme.SurfaceContainer,
+                BackColor = SystemColors.Control,
                 Padding = new Padding(24),
                 Margin = new Padding(0, 0, 0, 16)
             };
@@ -244,7 +241,7 @@ namespace SmartMed.UI
                 var rect = outer.ClientRectangle;
                 rect.Width -= 1;
                 rect.Height -= 1;
-                using (var pen = new Pen(AppTheme.OutlineVariant))
+                using (var pen = new Pen(SystemColors.ControlDark))
                     e.Graphics.DrawRectangle(pen, rect);
             };
 
@@ -261,7 +258,7 @@ namespace SmartMed.UI
             txtName = new TextBox();
             txtDosage = new TextBox();
             txtStock = new TextBox();
-            dtpExpiry = new DateTimePicker { Format = DateTimePickerFormat.Short, Height = AppTheme.InputHeight };
+            dtpExpiry = new DateTimePicker { Format = DateTimePickerFormat.Short, Height = 23 };
             cmbCategory = new ComboBox { DropDownStyle = ComboBoxStyle.DropDown };
             txtPrice = new TextBox();
             txtSupplier = new TextBox();
@@ -273,9 +270,9 @@ namespace SmartMed.UI
                 CreateField("Current Stock", txtStock),
                 CreateField("Expiry Date", dtpExpiry)), 0, 0);
 
-            var rxPanel = new Panel { Height = AppTheme.InputHeight + 24, Dock = DockStyle.Top };
-            chkPrescription.Font = AppTheme.LabelFont;
-            chkPrescription.ForeColor = AppTheme.Primary;
+            var rxPanel = new Panel { Height = 23 + 24, Dock = DockStyle.Top };
+            chkPrescription.Font = SystemFonts.DefaultFont;
+            chkPrescription.ForeColor = SystemColors.Highlight;
             chkPrescription.Location = new Point(0, 28);
             rxPanel.Controls.Add(chkPrescription);
             rxPanel.Controls.Add(new Label { Text = "", Height = 20, Dock = DockStyle.Top });
@@ -291,11 +288,6 @@ namespace SmartMed.UI
             btnUpdate = new Button { Text = "Update Record", Width = 120, Height = 40 };
             btnAdd = new Button { Text = "Add New Medicine", Width = 150, Height = 40 };
 
-            ThemeApplier.ApplySecondaryButton(btnClear);
-            ThemeApplier.ApplyDangerButton(btnDelete);
-            ThemeApplier.ApplySecondaryActionButton(btnUpdate);
-            ThemeApplier.ApplyAccentButton(btnAdd);
-
             btnClear.Click += (s, e) => ClearForm();
             btnDelete.Click += BtnDelete_Click;
             btnUpdate.Click += BtnUpdate_Click;
@@ -304,7 +296,7 @@ namespace SmartMed.UI
             var actions = new Panel { Dock = DockStyle.Top, Height = 56, Padding = new Padding(0, 16, 0, 0) };
             actions.Paint += (s, e) =>
             {
-                using (var pen = new Pen(Color.FromArgb(128, AppTheme.OutlineVariant)))
+                using (var pen = new Pen(Color.FromArgb(128, SystemColors.ControlDark)))
                     e.Graphics.DrawLine(pen, 0, 0, actions.Width, 0);
             };
             var actionFlow = new FlowLayoutPanel
@@ -338,13 +330,12 @@ namespace SmartMed.UI
 
         private Panel CreateField(string labelText, Control input)
         {
-            var wrap = new Panel { Height = AppTheme.InputHeight + 24, Dock = DockStyle.Top, Padding = new Padding(0, 0, 0, 8) };
+            var wrap = new Panel { Height = 23 + 24, Dock = DockStyle.Top, Padding = new Padding(0, 0, 0, 8) };
             var lbl = new Label { Text = labelText, Dock = DockStyle.Top, Height = 20 };
-            ThemeApplier.ApplyFieldLabel(lbl);
             input.Dock = DockStyle.Top;
-            input.Height = AppTheme.InputHeight;
-            if (input is TextBox tb) ThemeApplier.ApplyTextBox(tb);
-            if (input is ComboBox cb) ThemeApplier.ApplyComboBox(cb);
+            input.Height = 23;
+            if (input is TextBox tb) { tb.BorderStyle = BorderStyle.Fixed3D; }
+            if (input is ComboBox cb) { cb.DropDownStyle = ComboBoxStyle.DropDown; }
             wrap.Controls.Add(input);
             wrap.Controls.Add(lbl);
             return wrap;
@@ -368,9 +359,9 @@ namespace SmartMed.UI
             lblLowStock = new Label();
             lblCompliance = new Label();
 
-            row.Controls.Add(CreateStatTile("\uE7F4", "Total Items", lblTotalItems, AppTheme.Primary), 0, 0);
-            row.Controls.Add(CreateStatTile("\uE7BA", "Low Stock Alert", lblLowStock, AppTheme.Error), 1, 0);
-            row.Controls.Add(CreateStatTile("\uE73E", "Rx Required", lblCompliance, AppTheme.OnSecondaryContainer), 2, 0);
+            row.Controls.Add(CreateStatTile("\uE7F4", "Total Items", lblTotalItems, SystemColors.Highlight), 0, 0);
+            row.Controls.Add(CreateStatTile("\uE7BA", "Low Stock Alert", lblLowStock, Color.Red), 1, 0);
+            row.Controls.Add(CreateStatTile("\uE73E", "Rx Required", lblCompliance, SystemColors.ControlText), 2, 0);
 
             wrap.Controls.Add(row);
             return wrap;
@@ -381,7 +372,7 @@ namespace SmartMed.UI
             var card = new Panel
             {
                 Dock = DockStyle.Fill,
-                BackColor = AppTheme.SurfaceContainerLowest,
+                BackColor = SystemColors.Window,
                 Padding = new Padding(16),
                 Margin = new Padding(0, 0, 8, 0)
             };
@@ -390,12 +381,12 @@ namespace SmartMed.UI
                 var rect = card.ClientRectangle;
                 rect.Width -= 1;
                 rect.Height -= 1;
-                using (var pen = new Pen(AppTheme.OutlineVariant))
+                using (var pen = new Pen(SystemColors.ControlDark))
                     e.Graphics.DrawRectangle(pen, rect);
             };
 
             valueLabel.Text = "0";
-            valueLabel.Font = AppTheme.StatValueFont;
+            valueLabel.Font = SystemFonts.DefaultFont;
             valueLabel.ForeColor = accent;
             valueLabel.Location = new Point(52, 36);
             valueLabel.AutoSize = true;
@@ -403,7 +394,7 @@ namespace SmartMed.UI
             card.Controls.Add(new Label
             {
                 Text = icon,
-                Font = AppTheme.IconFont,
+                Font = SystemFonts.DefaultFont,
                 ForeColor = accent,
                 Location = new Point(16, 20),
                 AutoSize = true
@@ -411,8 +402,8 @@ namespace SmartMed.UI
             card.Controls.Add(new Label
             {
                 Text = title.ToUpperInvariant(),
-                Font = AppTheme.LabelFont,
-                ForeColor = AppTheme.OnSurfaceVariant,
+                Font = SystemFonts.DefaultFont,
+                ForeColor = SystemColors.GrayText,
                 Location = new Point(52, 16),
                 AutoSize = true
             });
