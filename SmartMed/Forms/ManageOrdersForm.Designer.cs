@@ -17,7 +17,7 @@ namespace SmartMed.UI
             this.panelSidebar.SuspendLayout();
             this.panelContent.SuspendLayout();
             this.SuspendLayout();
-            this.panelTop.Size = new System.Drawing.Size(1353, 48);
+            this.panelTop.Size = new System.Drawing.Size(1353, 56);
             this.btnClose.Location = new System.Drawing.Point(1309, 8);
             this.panelSidebar.Size = new System.Drawing.Size(280, 965);
             this.btnNavLogout.Location = new System.Drawing.Point(0, 909);
