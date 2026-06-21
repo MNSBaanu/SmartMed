@@ -95,9 +95,9 @@ namespace SmartMed.UI
             _passwordVisible = visible;
             txtPassword.UseSystemPasswordChar = !visible;
             txtConfirm.UseSystemPasswordChar = !visible;
-            var icon = visible ? "\uED1A" : "\uE890";
-            btnTogglePassword.Text = icon;
-            btnToggleConfirm.Text = icon;
+            var label = visible ? "Hide" : "Show";
+            btnTogglePassword.Text = label;
+            btnToggleConfirm.Text = label;
         }
 
         private void BtnClose_Click(object sender, EventArgs e)

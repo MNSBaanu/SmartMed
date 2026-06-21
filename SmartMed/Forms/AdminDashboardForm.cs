@@ -164,11 +164,11 @@ namespace SmartMed.UI
             statsRow.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 33.33f));
             statsRow.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 33.34f));
 
-            statsRow.Controls.Add(CreateStatCard("\uE7C3", "Medicines in Stock", lblStockValue,
+            statsRow.Controls.Add(CreateStatCard("Medicines in Stock", lblStockValue,
                 "SKUs tracked across inventory", "+12%"), 0, 0);
-            statsRow.Controls.Add(CreateStatCard("\uE7BF", "Active Orders", lblOrdersValue,
+            statsRow.Controls.Add(CreateStatCard("Active Orders", lblOrdersValue,
                 "Orders requiring verification", "Priority"), 1, 0);
-            statsRow.Controls.Add(CreateStatCard("\uE8CB", "Total Sales", lblSalesValue,
+            statsRow.Controls.Add(CreateStatCard("Total Sales", lblSalesValue,
                 "Lifetime pharmacy revenue (LKR)", "Daily"), 2, 0);
 
             wrap.Controls.Add(statsRow);
@@ -276,7 +276,7 @@ namespace SmartMed.UI
             return grid;
         }
 
-        private Panel CreateStatCard(string iconGlyph, string title, Label valueLabel, string subtitle, string badge)
+        private Panel CreateStatCard(string title, Label valueLabel, string subtitle, string badge)
         {
             var card = new Panel
             {
@@ -307,26 +307,18 @@ namespace SmartMed.UI
             card.Controls.Add(badgeLabel);
             card.Controls.Add(new Label
             {
-                Text = iconGlyph,
-                Font = SystemFonts.DefaultFont,
-                ForeColor = SystemColors.Highlight,
-                AutoSize = true,
-                Location = new Point(16, 12)
-            });
-            card.Controls.Add(new Label
-            {
                 Text = title,
                 Font = SystemFonts.DefaultFont,
                 ForeColor = SystemColors.GrayText,
                 AutoSize = true,
-                Location = new Point(16, 44)
+                Location = new Point(16, 12)
             });
 
             valueLabel.Text = "0";
             valueLabel.Font = SystemFonts.DefaultFont;
             valueLabel.ForeColor = SystemColors.Highlight;
             valueLabel.AutoSize = true;
-            valueLabel.Location = new Point(16, 64);
+            valueLabel.Location = new Point(16, 32);
             card.Controls.Add(valueLabel);
 
             card.Controls.Add(new Label
@@ -335,7 +327,7 @@ namespace SmartMed.UI
                 Font = SystemFonts.DefaultFont,
                 ForeColor = SystemColors.GrayText,
                 AutoSize = true,
-                Location = new Point(16, 96)
+                Location = new Point(16, 64)
             });
 
             return card;
@@ -574,8 +566,8 @@ namespace SmartMed.UI
             };
             row.Controls.Add(new Label
             {
-                Text = critical ? "\uE7BA" : "\uE946",
-                Font = SystemFonts.DefaultFont,
+                Text = critical ? "!" : "i",
+                Font = new Font(SystemFonts.DefaultFont, FontStyle.Bold),
                 ForeColor = critical ? Color.Red : SystemColors.ControlDark,
                 Location = new Point(4, 12),
                 AutoSize = true
@@ -585,7 +577,7 @@ namespace SmartMed.UI
                 Text = name,
                 Font = SystemFonts.DefaultFont,
                 ForeColor = SystemColors.ControlText,
-                Location = new Point(28, 4),
+                Location = new Point(20, 4),
                 AutoSize = true
             });
             row.Controls.Add(new Label

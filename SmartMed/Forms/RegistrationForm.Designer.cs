@@ -82,7 +82,8 @@ namespace SmartMed.UI
             this.lblMedicalIcon.Name = "lblMedicalIcon";
             this.lblMedicalIcon.Size = new System.Drawing.Size(15, 15);
             this.lblMedicalIcon.TabIndex = 0;
-            this.lblMedicalIcon.Text = "\uE95E";
+            this.lblMedicalIcon.Text = "";
+            this.lblMedicalIcon.Visible = false;
             // 
             // lblHeaderTitle
             // 
@@ -105,7 +106,8 @@ namespace SmartMed.UI
             this.lblLockIcon.Name = "lblLockIcon";
             this.lblLockIcon.Size = new System.Drawing.Size(15, 15);
             this.lblLockIcon.TabIndex = 2;
-            this.lblLockIcon.Text = "\uE72E";
+            this.lblLockIcon.Text = "";
+            this.lblLockIcon.Visible = false;
             // 
             // btnClose
             // 
@@ -121,7 +123,7 @@ namespace SmartMed.UI
             this.btnClose.Name = "btnClose";
             this.btnClose.Size = new System.Drawing.Size(36, 32);
             this.btnClose.TabIndex = 3;
-            this.btnClose.Text = "\uE711";
+            this.btnClose.Text = "X";
             this.btnClose.UseVisualStyleBackColor = false;
             this.btnClose.Click += new System.EventHandler(this.BtnClose_Click);
             // 
@@ -241,7 +243,7 @@ namespace SmartMed.UI
             this.btnTogglePassword.Name = "btnTogglePassword";
             this.btnTogglePassword.Size = new System.Drawing.Size(36, 22);
             this.btnTogglePassword.TabIndex = 10;
-            this.btnTogglePassword.Text = "\uE890";
+            this.btnTogglePassword.Text = "Show";
             this.btnTogglePassword.UseVisualStyleBackColor = false;
             this.btnTogglePassword.Click += new System.EventHandler(this.BtnTogglePassword_Click);
             // 
@@ -274,7 +276,7 @@ namespace SmartMed.UI
             this.btnToggleConfirm.Name = "btnToggleConfirm";
             this.btnToggleConfirm.Size = new System.Drawing.Size(36, 22);
             this.btnToggleConfirm.TabIndex = 13;
-            this.btnToggleConfirm.Text = "\uE890";
+            this.btnToggleConfirm.Text = "Show";
             this.btnToggleConfirm.UseVisualStyleBackColor = false;
             this.btnToggleConfirm.Click += new System.EventHandler(this.BtnToggleConfirm_Click);
             // 
@@ -326,7 +328,7 @@ namespace SmartMed.UI
             this.lblSuccessIcon.Name = "lblSuccessIcon";
             this.lblSuccessIcon.Size = new System.Drawing.Size(402, 48);
             this.lblSuccessIcon.TabIndex = 0;
-            this.lblSuccessIcon.Text = "\uE73E";
+            this.lblSuccessIcon.Text = "OK";
             this.lblSuccessIcon.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // lblSuccessTitle

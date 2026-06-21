@@ -157,9 +157,9 @@ namespace SmartMed.UI
                 WrapContents = false,
                 Padding = new Padding(0, 8, 0, 0)
             };
-            var btnFilter = CreateToolbarButton("\uE71C", "Filter");
+            var btnFilter = CreateToolbarButton("Filter");
             btnFilter.Click += (s, e) => ShowComingSoon("Filter");
-            var btnNew = CreateToolbarButton("\uE710", "New Order");
+            var btnNew = CreateToolbarButton("New Order");
             btnNew.Click += (s, e) => ShowComingSoon("New Order");
             actions.Controls.Add(btnFilter);
             actions.Controls.Add(btnNew);
@@ -169,11 +169,11 @@ namespace SmartMed.UI
             return header;
         }
 
-        private static Button CreateToolbarButton(string icon, string text)
+        private static Button CreateToolbarButton(string text)
         {
             var btn = new Button
             {
-                Text = $"  {icon}  {text}",
+                Text = text,
                 Height = 32,
                 Width = 110,
                 Margin = new Padding(4, 0, 0, 0)
@@ -205,15 +205,15 @@ namespace SmartMed.UI
             lblPendingOrders = new Label();
             lblDeliveredOrders = new Label();
 
-            row.Controls.Add(CreateStatTile("\uE8A1", "Total Orders", lblTotalOrders, SystemColors.Highlight), 0, 0);
-            row.Controls.Add(CreateStatTile("\uE823", "Pending", lblPendingOrders, SystemColors.ControlText), 1, 0);
-            row.Controls.Add(CreateStatTile("\uE73E", "Delivered", lblDeliveredOrders, Color.Green), 2, 0);
+            row.Controls.Add(CreateStatTile("Total Orders", lblTotalOrders, SystemColors.Highlight), 0, 0);
+            row.Controls.Add(CreateStatTile("Pending", lblPendingOrders, SystemColors.ControlText), 1, 0);
+            row.Controls.Add(CreateStatTile("Delivered", lblDeliveredOrders, Color.Green), 2, 0);
 
             wrap.Controls.Add(row);
             return wrap;
         }
 
-        private Panel CreateStatTile(string icon, string title, Label valueLabel, Color accent)
+        private Panel CreateStatTile(string title, Label valueLabel, Color accent)
         {
             var card = new Panel
             {
@@ -234,23 +234,15 @@ namespace SmartMed.UI
             valueLabel.Text = "0";
             valueLabel.Font = SystemFonts.DefaultFont;
             valueLabel.ForeColor = accent;
-            valueLabel.Location = new Point(52, 36);
+            valueLabel.Location = new Point(16, 36);
             valueLabel.AutoSize = true;
 
-            card.Controls.Add(new Label
-            {
-                Text = icon,
-                Font = SystemFonts.DefaultFont,
-                ForeColor = accent,
-                Location = new Point(16, 20),
-                AutoSize = true
-            });
             card.Controls.Add(new Label
             {
                 Text = title.ToUpperInvariant(),
                 Font = SystemFonts.DefaultFont,
                 ForeColor = SystemColors.GrayText,
-                Location = new Point(52, 16),
+                Location = new Point(16, 16),
                 AutoSize = true
             });
             card.Controls.Add(valueLabel);
@@ -284,7 +276,7 @@ namespace SmartMed.UI
             };
             header.Controls.Add(new Label
             {
-                Text = "  \uE8EF  Recent Orders",
+                Text = "Recent Orders",
                 Font = SystemFonts.DefaultFont,
                 ForeColor = SystemColors.Highlight,
                 Dock = DockStyle.Left,
@@ -319,7 +311,7 @@ namespace SmartMed.UI
 
             lblOrderDetails = new Label
             {
-                Text = "  \uE7C3  Order Details",
+                Text = "Order Details",
                 Font = SystemFonts.DefaultFont,
                 ForeColor = SystemColors.GrayText,
                 Dock = DockStyle.Top,
@@ -363,7 +355,7 @@ namespace SmartMed.UI
 
             btnUpdateStatus = new Button
             {
-                Text = "  \uE74E  Update Status",
+                Text = "Update Status",
                 Width = 150,
                 Height = 40,
                 Anchor = AnchorStyles.Top | AnchorStyles.Right
@@ -429,7 +421,7 @@ namespace SmartMed.UI
                 new { MedicineName = "Lisinopril 10mg (90 Tabs)", Quantity = 1, UnitPrice = "LKR 30.00", Subtotal = "LKR 30.00" }
             };
 
-            lblOrderDetails.Text = "  \uE7C3  Order Details: #ORD-9420";
+            lblOrderDetails.Text = "Order Details: #ORD-9420";
             cmbStatus.SelectedItem = "Ready for Pickup";
             lblLastUpdated.Text = "Last Updated: Today, 10:42 AM";
             lblTotalOrders.Text = "4";
@@ -483,7 +475,7 @@ namespace SmartMed.UI
             var status = gridOrders.CurrentRow.Cells["Status"].Value?.ToString() ?? "Pending";
             var orderRef = gridOrders.CurrentRow.Cells["OrderRef"].Value?.ToString() ?? string.Empty;
 
-            lblOrderDetails.Text = $"  \uE7C3  Order Details: {orderRef}";
+            lblOrderDetails.Text = $"Order Details: {orderRef}";
             cmbStatus.SelectedItem = status;
             if (cmbStatus.SelectedIndex < 0)
                 cmbStatus.Text = status;
@@ -508,7 +500,7 @@ namespace SmartMed.UI
             _selectedOrderId = null;
             gridOrders.ClearSelection();
             gridItems.DataSource = null;
-            lblOrderDetails.Text = "  \uE7C3  Order Details";
+            lblOrderDetails.Text = "Order Details";
             cmbStatus.SelectedIndex = -1;
             lblLastUpdated.Text = "Last Updated: —";
         }

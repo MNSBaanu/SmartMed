@@ -67,7 +67,7 @@ namespace SmartMed.UI
             this.btnClose.Name = "btnClose";
             this.btnClose.Size = new System.Drawing.Size(36, 32);
             this.btnClose.TabIndex = 2;
-            this.btnClose.Text = "\uE711";
+            this.btnClose.Text = "X";
             this.btnClose.UseVisualStyleBackColor = false;
             this.btnClose.Click += new System.EventHandler(this.BtnClose_Click);
             // 
@@ -112,7 +112,7 @@ namespace SmartMed.UI
             this.btnNavOverview.Name = "btnNavOverview";
             this.btnNavOverview.Size = new System.Drawing.Size(280, 40);
             this.btnNavOverview.TabIndex = 2;
-            this.btnNavOverview.Text = "  \uE9D2  Dashboard Overview";
+            this.btnNavOverview.Text = "Dashboard Overview";
             this.btnNavOverview.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.btnNavOverview.UseVisualStyleBackColor = false;
             this.btnNavOverview.Click += new System.EventHandler(this.BtnNavOverview_Click);
@@ -123,7 +123,7 @@ namespace SmartMed.UI
             this.btnNavMedicines.Name = "btnNavMedicines";
             this.btnNavMedicines.Size = new System.Drawing.Size(280, 40);
             this.btnNavMedicines.TabIndex = 3;
-            this.btnNavMedicines.Text = "  \uE7C3  Manage Medicines";
+            this.btnNavMedicines.Text = "Manage Medicines";
             this.btnNavMedicines.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.btnNavMedicines.UseVisualStyleBackColor = false;
             this.btnNavMedicines.Click += new System.EventHandler(this.BtnNavMedicines_Click);
@@ -134,7 +134,7 @@ namespace SmartMed.UI
             this.btnNavCustomers.Name = "btnNavCustomers";
             this.btnNavCustomers.Size = new System.Drawing.Size(280, 40);
             this.btnNavCustomers.TabIndex = 4;
-            this.btnNavCustomers.Text = "  \uE716  Manage Customers";
+            this.btnNavCustomers.Text = "Manage Customers";
             this.btnNavCustomers.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.btnNavCustomers.UseVisualStyleBackColor = false;
             this.btnNavCustomers.Click += new System.EventHandler(this.BtnNavCustomers_Click);
@@ -145,7 +145,7 @@ namespace SmartMed.UI
             this.btnNavOrders.Name = "btnNavOrders";
             this.btnNavOrders.Size = new System.Drawing.Size(280, 40);
             this.btnNavOrders.TabIndex = 5;
-            this.btnNavOrders.Text = "  \uE8A1  Manage Orders";
+            this.btnNavOrders.Text = "Manage Orders";
             this.btnNavOrders.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.btnNavOrders.UseVisualStyleBackColor = false;
             this.btnNavOrders.Click += new System.EventHandler(this.BtnNavOrders_Click);
@@ -156,7 +156,7 @@ namespace SmartMed.UI
             this.btnNavReports.Name = "btnNavReports";
             this.btnNavReports.Size = new System.Drawing.Size(280, 40);
             this.btnNavReports.TabIndex = 6;
-            this.btnNavReports.Text = "  \uE9F9  Generate Reports";
+            this.btnNavReports.Text = "Generate Reports";
             this.btnNavReports.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.btnNavReports.UseVisualStyleBackColor = false;
             this.btnNavReports.Click += new System.EventHandler(this.BtnNavReports_Click);
@@ -168,7 +168,7 @@ namespace SmartMed.UI
             this.btnNavLogout.Name = "btnNavLogout";
             this.btnNavLogout.Size = new System.Drawing.Size(280, 40);
             this.btnNavLogout.TabIndex = 7;
-            this.btnNavLogout.Text = "  \uE7E8  Logout";
+            this.btnNavLogout.Text = "Logout";
             this.btnNavLogout.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.btnNavLogout.UseVisualStyleBackColor = false;
             this.btnNavLogout.Click += new System.EventHandler(this.BtnNavLogout_Click);

@@ -156,9 +156,9 @@ namespace SmartMed.UI
                 WrapContents = false,
                 Padding = new Padding(0, 8, 0, 0)
             };
-            var btnExport = CreateToolbarButton("\uE896", "Export");
+            var btnExport = CreateToolbarButton("Export");
             btnExport.Click += (s, e) => ShowComingSoon("Export");
-            var btnPrint = CreateToolbarButton("\uE749", "Print");
+            var btnPrint = CreateToolbarButton("Print");
             btnPrint.Click += (s, e) => ShowComingSoon("Print");
             actions.Controls.Add(btnExport);
             actions.Controls.Add(btnPrint);
@@ -168,11 +168,11 @@ namespace SmartMed.UI
             return header;
         }
 
-        private static Button CreateToolbarButton(string icon, string text)
+        private static Button CreateToolbarButton(string text)
         {
             var btn = new Button
             {
-                Text = $"  {icon}  {text}",
+                Text = text,
                 Height = 32,
                 Width = 100,
                 Margin = new Padding(4, 0, 0, 0)
@@ -359,15 +359,15 @@ namespace SmartMed.UI
             lblLowStock = new Label();
             lblCompliance = new Label();
 
-            row.Controls.Add(CreateStatTile("\uE7F4", "Total Items", lblTotalItems, SystemColors.Highlight), 0, 0);
-            row.Controls.Add(CreateStatTile("\uE7BA", "Low Stock Alert", lblLowStock, Color.Red), 1, 0);
-            row.Controls.Add(CreateStatTile("\uE73E", "Rx Required", lblCompliance, SystemColors.ControlText), 2, 0);
+            row.Controls.Add(CreateStatTile("Total Items", lblTotalItems, SystemColors.Highlight), 0, 0);
+            row.Controls.Add(CreateStatTile("Low Stock Alert", lblLowStock, Color.Red), 1, 0);
+            row.Controls.Add(CreateStatTile("Rx Required", lblCompliance, SystemColors.ControlText), 2, 0);
 
             wrap.Controls.Add(row);
             return wrap;
         }
 
-        private Panel CreateStatTile(string icon, string title, Label valueLabel, Color accent)
+        private Panel CreateStatTile(string title, Label valueLabel, Color accent)
         {
             var card = new Panel
             {
@@ -388,23 +388,15 @@ namespace SmartMed.UI
             valueLabel.Text = "0";
             valueLabel.Font = SystemFonts.DefaultFont;
             valueLabel.ForeColor = accent;
-            valueLabel.Location = new Point(52, 36);
+            valueLabel.Location = new Point(16, 36);
             valueLabel.AutoSize = true;
 
-            card.Controls.Add(new Label
-            {
-                Text = icon,
-                Font = SystemFonts.DefaultFont,
-                ForeColor = accent,
-                Location = new Point(16, 20),
-                AutoSize = true
-            });
             card.Controls.Add(new Label
             {
                 Text = title.ToUpperInvariant(),
                 Font = SystemFonts.DefaultFont,
                 ForeColor = SystemColors.GrayText,
-                Location = new Point(52, 16),
+                Location = new Point(16, 16),
                 AutoSize = true
             });
             card.Controls.Add(valueLabel);
