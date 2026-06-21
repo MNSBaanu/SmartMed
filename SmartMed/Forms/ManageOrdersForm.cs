@@ -16,6 +16,7 @@ namespace SmartMed.UI
         public ManageOrdersForm()
             : base(AdminNavItem.Orders, "Manage Orders")
         {
+            InitializeComponent();
         }
 
         protected override void InitializePageContent()
@@ -23,7 +24,7 @@ namespace SmartMed.UI
             if (_pageBuilt) return;
             _pageBuilt = true;
             BuildPageContent();
-            if (!IsDesignTime)
+            if (!IsDesignHost())
                 LoadOrders();
         }
 
@@ -50,7 +51,7 @@ namespace SmartMed.UI
         private void BuildPageContent()
         {
             BuildContent();
-            if ((LicenseManager.UsageMode == LicenseUsageMode.Designtime))
+            if (IsDesignHost())
                 LoadDesignTimePreview();
         }
 
@@ -58,7 +59,7 @@ namespace SmartMed.UI
         {
             get
             {
-                if ((LicenseManager.UsageMode == LicenseUsageMode.Designtime)) return null;
+                if (IsDesignHost()) return null;
                 return _orders ?? (_orders = new OrderRepository());
             }
         }
@@ -67,7 +68,7 @@ namespace SmartMed.UI
         {
             if (_dataLoaded) return;
             _dataLoaded = true;
-            if (!(LicenseManager.UsageMode == LicenseUsageMode.Designtime))
+            if (!IsDesignHost())
                 LoadOrders();
         }
 

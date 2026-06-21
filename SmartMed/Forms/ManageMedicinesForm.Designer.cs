@@ -22,6 +22,7 @@ namespace SmartMed.UI
             this.panelSidebar.Size = new System.Drawing.Size(280, 965);
             this.btnNavLogout.Location = new System.Drawing.Point(0, 909);
             this.panelContent.Size = new System.Drawing.Size(1073, 965);
+            this.lblTopSubtitle.Text = "Manage Medicines";
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1353, 1013);

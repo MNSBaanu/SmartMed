@@ -17,6 +17,7 @@ namespace SmartMed.UI
         public ManageCustomersForm()
             : base(AdminNavItem.Customers, "Manage Customers")
         {
+            InitializeComponent();
         }
 
         protected override void InitializePageContent()
@@ -24,7 +25,7 @@ namespace SmartMed.UI
             if (_pageBuilt) return;
             _pageBuilt = true;
             BuildPageContent();
-            if (!IsDesignTime)
+            if (!IsDesignHost())
                 LoadCustomers();
         }
 
@@ -79,9 +80,6 @@ namespace SmartMed.UI
             if (!IsDesignHost())
                 LoadCustomers();
         }
-
-        private static bool IsDesignHost() =>
-            LicenseManager.UsageMode == LicenseUsageMode.Designtime;
 
         private int GetScrollContentWidth()
         {

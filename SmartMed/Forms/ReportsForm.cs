@@ -15,6 +15,7 @@ namespace SmartMed.UI
         public ReportsForm()
             : base(AdminNavItem.Reports, "Generate Reports")
         {
+            InitializeComponent();
         }
 
         protected override void InitializePageContent()
@@ -22,7 +23,7 @@ namespace SmartMed.UI
             if (_pageBuilt) return;
             _pageBuilt = true;
             BuildPageContent();
-            if (!IsDesignTime)
+            if (!IsDesignHost())
                 LoadActiveReport();
         }
 
@@ -78,9 +79,6 @@ namespace SmartMed.UI
                 return _customers ?? (_customers = new CustomerRepository());
             }
         }
-
-        private static bool IsDesignHost() =>
-            LicenseManager.UsageMode == LicenseUsageMode.Designtime;
 
         private void LoadPageData(object sender, EventArgs e)
         {

@@ -1,5 +1,6 @@
 using System;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
@@ -10,10 +11,20 @@ namespace SmartMed.UI
     [DesignerCategory("Form")]
     public partial class AdminShellForm : Form
     {
+        private bool _pageContentInitialized;
+
+        private static readonly Lazy<bool> IsDesignToolsProcess = new Lazy<bool>(() =>
+        {
+            var name = Process.GetCurrentProcess().ProcessName;
+            return name.IndexOf("devenv", StringComparison.OrdinalIgnoreCase) >= 0
+                || name.IndexOf("DesignToolsServer", StringComparison.OrdinalIgnoreCase) >= 0
+                || name.IndexOf("XDesProc", StringComparison.OrdinalIgnoreCase) >= 0;
+        });
+
         public AdminShellForm()
         {
             InitializeComponent();
-            if (IsDesignTime) { SetActiveNav(AdminNavItem.Overview); SyncShellChrome(); }
+            if (IsDesignHost()) { SetActiveNav(AdminNavItem.Overview); SyncShellChrome(); }
         }
 
         protected AdminShellForm(AdminNavItem activeNav, string subtitle)
@@ -23,18 +34,43 @@ namespace SmartMed.UI
             Text = "Pharmacy Management System";
             lblTopSubtitle.Text = subtitle;
             SetActiveNav(activeNav);
+            SyncShellChrome();
+            if (IsDesignHost())
+                EnsurePageContent();
+        }
+
+        protected override void OnLoad(EventArgs e)
+        {
+            base.OnLoad(e);
+            EnsurePageContent();
+        }
+
+        protected void EnsurePageContent()
+        {
+            if (_pageContentInitialized) return;
+            _pageContentInitialized = true;
             InitializePageContent();
             SyncShellChrome();
         }
 
         protected virtual void InitializePageContent()
         {
-            // Derived admin forms override this and call their Designer InitializeComponent()
-            // so panelContent is populated for both runtime and the Visual Studio designer.
+            // Derived admin forms override this to build panelContent at Load time
+            // so DesignMode and LicenseUsageMode are reliable in the VS designer.
         }
 
         protected static bool IsDesignTime =>
             LicenseManager.UsageMode == LicenseUsageMode.Designtime;
+
+        /// <summary>True in the VS WinForms designer (not only at ctor time).</summary>
+        protected bool IsDesignHost()
+        {
+            if (LicenseManager.UsageMode == LicenseUsageMode.Designtime)
+                return true;
+            if (Site?.DesignMode == true)
+                return true;
+            return IsDesignToolsProcess.Value;
+        }
         protected void SetActiveNav(AdminNavItem active)
         {
         }

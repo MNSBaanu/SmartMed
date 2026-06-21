@@ -15,6 +15,7 @@ namespace SmartMed.UI
         public AdminDashboardForm()
             : base(AdminNavItem.Overview, "Admin Dashboard")
         {
+            InitializeComponent();
         }
 
         protected override void InitializePageContent()
@@ -22,7 +23,7 @@ namespace SmartMed.UI
             if (_pageBuilt) return;
             _pageBuilt = true;
             BuildPageContent();
-            if (!IsDesignTime)
+            if (!IsDesignHost())
                 LoadDashboardData();
         }
 
@@ -48,9 +49,6 @@ namespace SmartMed.UI
             if (IsDesignHost())
                 LoadDesignTimePreview();
         }
-
-        private static bool IsDesignHost() =>
-            LicenseManager.UsageMode == LicenseUsageMode.Designtime;
 
         private void LoadPageData(object sender, EventArgs e)
         {
