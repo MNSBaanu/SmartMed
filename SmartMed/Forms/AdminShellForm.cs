@@ -16,11 +16,11 @@ namespace SmartMed.UI
             if (IsDesignTime) { SetActiveNav(AdminNavItem.Overview); SyncShellChrome(); }
         }
 
-        protected AdminShellForm(AdminNavItem activeNav, string subtitle, string windowTitle)
+        protected AdminShellForm(AdminNavItem activeNav, string subtitle)
             : this()
         {
             DoubleBuffered = true;
-            Text = windowTitle;
+            Text = "Pharmacy Management System";
             lblTopSubtitle.Text = subtitle;
             SetActiveNav(activeNav);
             InitializePageContent();

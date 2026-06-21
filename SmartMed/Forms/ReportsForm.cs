@@ -13,7 +13,7 @@ namespace SmartMed.UI
         private bool _pageBuilt;
 
         public ReportsForm()
-            : base(AdminNavItem.Reports, "Generate Reports", "SmartMed - Generate Reports")
+            : base(AdminNavItem.Reports, "Generate Reports")
         {
         }
 
@@ -142,7 +142,7 @@ namespace SmartMed.UI
             var header = new Panel
             {
                 Dock = DockStyle.Top,
-                Height = 64,
+                Height = 44,
                 Padding = new Padding(0, 0, 0, 8),
                 Margin = new Padding(0, 0, 0, 16)
             };
@@ -158,16 +158,7 @@ namespace SmartMed.UI
                 Text = "Generate sales, stock, and customer order history reports.",
                 Font = SystemFonts.DefaultFont,
                 ForeColor = SystemColors.GrayText,
-                Dock = DockStyle.Top,
-                Height = 20
-            });
-            titleBlock.Controls.Add(new Label
-            {
-                Text = "Generate Reports",
-                Font = SystemFonts.DefaultFont,
-                ForeColor = SystemColors.Highlight,
-                Dock = DockStyle.Top,
-                Height = 24
+                Dock = DockStyle.Fill
             });
 
             var actions = new FlowLayoutPanel

@@ -13,7 +13,7 @@ namespace SmartMed.UI
         private bool _pageBuilt;
 
         public AdminDashboardForm()
-            : base(AdminNavItem.Overview, "Admin Dashboard", "SmartMed - Admin Dashboard")
+            : base(AdminNavItem.Overview, "Admin Dashboard")
         {
         }
 

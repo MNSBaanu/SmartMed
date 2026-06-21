@@ -28,7 +28,7 @@ namespace SmartMed.UI
             this.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MinimumSize = new System.Drawing.Size(1140, 838);
             this.Name = "ManageCustomersForm";
-            this.Text = "SmartMed - Manage Customers";
+            this.Text = "Pharmacy Management System";
             this.panelTop.ResumeLayout(false);
             this.panelTop.PerformLayout();
             this.panelSidebar.ResumeLayout(false);

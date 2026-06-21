@@ -14,7 +14,7 @@ namespace SmartMed.UI
         private bool _pageBuilt;
 
         public ManageMedicinesForm()
-            : base(AdminNavItem.Medicines, "Manage Medicines", "SmartMed - Manage Medicines")
+            : base(AdminNavItem.Medicines, "Manage Medicines")
         {
         }
 
@@ -120,7 +120,7 @@ namespace SmartMed.UI
             var header = new Panel
             {
                 Dock = DockStyle.Top,
-                Height = 64,
+                Height = 44,
                 Padding = new Padding(0, 0, 0, 8),
                 Margin = new Padding(0, 0, 0, 16)
             };
@@ -136,16 +136,7 @@ namespace SmartMed.UI
                 Text = "Update and monitor pharmaceutical inventory levels.",
                 Font = SystemFonts.DefaultFont,
                 ForeColor = SystemColors.GrayText,
-                Dock = DockStyle.Top,
-                Height = 20
-            });
-            titleBlock.Controls.Add(new Label
-            {
-                Text = "Manage Medicines",
-                Font = SystemFonts.DefaultFont,
-                ForeColor = SystemColors.Highlight,
-                Dock = DockStyle.Top,
-                Height = 24
+                Dock = DockStyle.Fill
             });
 
             var actions = new FlowLayoutPanel

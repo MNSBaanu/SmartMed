@@ -15,7 +15,7 @@ namespace SmartMed.UI
         private bool _pageBuilt;
 
         public ManageCustomersForm()
-            : base(AdminNavItem.Customers, "Manage Customers", "SmartMed - Manage Customers")
+            : base(AdminNavItem.Customers, "Manage Customers")
         {
         }
 
@@ -131,7 +131,7 @@ namespace SmartMed.UI
             var header = new Panel
             {
                 Dock = DockStyle.Top,
-                Height = 64,
+                Height = 44,
                 Padding = new Padding(0, 0, 0, 8),
                 Margin = new Padding(0, 0, 0, 16)
             };
@@ -147,16 +147,7 @@ namespace SmartMed.UI
                 Text = "View and update registered customer contact details.",
                 Font = SystemFonts.DefaultFont,
                 ForeColor = SystemColors.GrayText,
-                Dock = DockStyle.Top,
-                Height = 20
-            });
-            titleBlock.Controls.Add(new Label
-            {
-                Text = "Manage Customers",
-                Font = SystemFonts.DefaultFont,
-                ForeColor = SystemColors.Highlight,
-                Dock = DockStyle.Top,
-                Height = 24
+                Dock = DockStyle.Fill
             });
 
             var actions = new FlowLayoutPanel

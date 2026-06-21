@@ -14,7 +14,7 @@ namespace SmartMed.UI
         private bool _pageBuilt;
 
         public ManageOrdersForm()
-            : base(AdminNavItem.Orders, "Manage Orders", "SmartMed - Manage Orders")
+            : base(AdminNavItem.Orders, "Manage Orders")
         {
         }
 
@@ -121,7 +121,7 @@ namespace SmartMed.UI
             var header = new Panel
             {
                 Dock = DockStyle.Top,
-                Height = 64,
+                Height = 44,
                 Padding = new Padding(0, 0, 0, 8),
                 Margin = new Padding(0, 0, 0, 16)
             };
@@ -137,16 +137,7 @@ namespace SmartMed.UI
                 Text = "Review fulfillment queue and update order status.",
                 Font = SystemFonts.DefaultFont,
                 ForeColor = SystemColors.GrayText,
-                Dock = DockStyle.Top,
-                Height = 20
-            });
-            titleBlock.Controls.Add(new Label
-            {
-                Text = "Manage Orders",
-                Font = SystemFonts.DefaultFont,
-                ForeColor = SystemColors.Highlight,
-                Dock = DockStyle.Top,
-                Height = 24
+                Dock = DockStyle.Fill
             });
 
             var actions = new FlowLayoutPanel
