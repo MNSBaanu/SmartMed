@@ -471,12 +471,6 @@ namespace SmartMed.UI
             return panel;
         }
 
-        private static void ShowComingSoon(string feature)
-        {
-            MessageBox.Show($"{feature} will be available in the next update.", "SmartMed",
-                MessageBoxButtons.OK, MessageBoxIcon.Information);
-        }
-
         private void LoadDesignTimePreview()
         {
             lblWelcome.Text = "Welcome, admin";

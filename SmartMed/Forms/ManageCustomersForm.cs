@@ -182,12 +182,6 @@ namespace SmartMed.UI
             return btn;
         }
 
-        private static void ShowComingSoon(string feature)
-        {
-            MessageBox.Show($"{feature} will be available in the next update.", "SmartMed",
-                MessageBoxButtons.OK, MessageBoxIcon.Information);
-        }
-
         private Panel CreateGridPanel()
         {
             var outer = new Panel
