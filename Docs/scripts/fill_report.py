@@ -16,18 +16,26 @@ The main objectives are to digitise medicine stock control, customer records, an
 
     (1, "System Requirements", None),
 
-    (2, "Functional Requirements", """Admin features implemented:
-• Secure admin login (username and password validated against the Admin table).
-• Manage medicines — add, update, delete, and list medicine details (name, category, dosage, price, stock, supplier, expiry date, prescription flag).
-• Manage customers — view registered customers and update contact details.
-• Manage orders — view all orders and update status (Pending, Ready for Pickup, Delivered).
-• Generate reports — sales, stock, and customer order history summaries.
-• Dashboard — overview of medicines in stock, active orders, and total sales.
+    (2, "Functional Requirements", """Admin Features
+• Login – Secure login for admins.
+• Manage Medicine Details – Add, update, delete medicine details (name, category, dosage, price, stock, supplier).
+• Manage Customer Details – View and update customer information.
+• Manage Orders – View all orders, update order status (Pending, Ready for Pickup, Delivered).
+• Generate Reports – Sales reports, stock reports, and customer order history.
+• Dashboard – Overview of total sales, medicines in stock, and active orders.
 
-Customer features implemented or prepared:
-• Registration and login through RegistrationForm and LoginForm.
-• Search medicines by name, category, and price range using SearchService (linear search and filtering).
-• Place orders, track orders, and profile management are specified in the brief; the customer portal after login is reserved for a future release while admin modules are fully operational."""),
+Customer Features
+• Register/Login – New user registration and login.
+• Search Medicines – Search by name, category, or price range.
+• Place Orders – Add medicines to cart and place orders.
+• Track Orders – View status of orders.
+• Profile Management – Update personal details and contact information.
+
+Additional Features
+• Apply discounts or promotions on medicines.
+• Include medicine expiry tracking notifications.
+• Include prescription upload functionality for certain medicines.
+• Export order history to PDF or Excel."""),
 
     (2, "Non-Functional Requirements", """• Usability — role-based navigation via AdminShellForm sidebar; standard WinForms controls for data entry and grids.
 • Reliability — parameterized SQL queries prevent injection; validation runs before database access.
