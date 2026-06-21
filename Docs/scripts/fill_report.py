@@ -1,7 +1,5 @@
-"""Fill SmartMed Report.docx with implementation documentation."""
+"""Restructure SmartMed Report.docx to match Docs/Report/breakdown.docx."""
 from docx import Document
-from docx.oxml import OxmlElement
-from docx.text.paragraph import Paragraph
 from docx.shared import Pt
 from docx.enum.text import WD_LINE_SPACING
 import os
@@ -10,214 +8,269 @@ REPORT_PATH = os.path.normpath(
     os.path.join(os.path.dirname(__file__), "..", "Report", "SmartMed Report.docx")
 )
 
-SECTIONS = {
-    "Introduction": """SmartMed Pharmacy is a desktop Windows Forms application developed in C# using the .NET Framework 4.8. The system supports two user roles: administrators who manage inventory, customers, and orders, and customers who search for medicines, place orders, and track fulfilment status. The application follows a three-tier architecture separating presentation (SmartMed.UI), business logic (SmartMed.Business), and data access (SmartMed.Data) with persistence in Microsoft SQL Server.
+# (heading_level, title, body) — level 1 = Heading 1, 2 = Heading 2, 0 = body only
+SECTIONS = [
+    (1, "Introduction", """SmartMed Pharmacy Management System is a desktop Windows Forms application developed in C# on .NET Framework 4.8. The system supports pharmacy operations for two roles: administrators who manage inventory, customers, and orders, and customers who register, log in, search medicines, and place orders.
 
-This report documents how to run the software, describes the architecture and class design aligned with the coursework diagrams, explains the search algorithms used for medicine catalogue queries, and includes a reflective essay on the development experience. The implementation satisfies the mandatory functional requirements from the assignment brief, including login, registration, medicine CRUD, customer management, order processing, reports, dashboard, and linear search with filtering.""",
+The main objectives are to digitise medicine stock control, customer records, and order fulfilment; provide searchable medicine catalogues using linear search and filtering; and present sales and stock information through admin dashboards and reports. Data is stored in Microsoft SQL Server using a layered design: Forms (presentation), Services (business logic), Data (repositories), and Models (entity classes)."""),
 
-    "Detailed Instructions to Run the Program": """Prerequisites:
-• Windows 10 or later with .NET Framework 4.8 installed.
-• Visual Studio 2019 or later with the .NET desktop development workload.
-• SQL Server Express, LocalDB, or full SQL Server with Windows Authentication.
+    (1, "System Requirements", None),
+
+    (2, "Functional Requirements", """Admin features implemented:
+• Secure admin login (username and password validated against the Admin table).
+• Manage medicines — add, update, delete, and list medicine details (name, category, dosage, price, stock, supplier, expiry date, prescription flag).
+• Manage customers — view registered customers and update contact details.
+• Manage orders — view all orders and update status (Pending, Ready for Pickup, Delivered).
+• Generate reports — sales, stock, and customer order history summaries.
+• Dashboard — overview of medicines in stock, active orders, and total sales.
+
+Customer features implemented or prepared:
+• Registration and login through RegistrationForm and LoginForm.
+• Search medicines by name, category, and price range using SearchService (linear search and filtering).
+• Place orders, track orders, and profile management are specified in the brief; the customer portal after login is reserved for a future release while admin modules are fully operational."""),
+
+    (2, "Non-Functional Requirements", """• Usability — role-based navigation via AdminShellForm sidebar; standard WinForms controls for data entry and grids.
+• Reliability — parameterized SQL queries prevent injection; validation runs before database access.
+• Maintainability — separation of UI, services, and data access into distinct folders and namespaces.
+• Performance — linear search is acceptable for typical pharmacy catalogue sizes.
+• Security — passwords validated at login; session state held in Session service; admin and customer roles separated."""),
+
+    (2, "Hardware Requirements", """• PC or laptop running Windows 10 or later.
+• Minimum 4 GB RAM recommended for Visual Studio and SQL Server Express/LocalDB.
+• Display resolution 1280×720 or higher for admin dashboard layout."""),
+
+    (2, "Software Requirements", """• Microsoft Windows 10 or later.
+• .NET Framework 4.8.
+• Microsoft SQL Server (Express, LocalDB, or full edition) with Windows Authentication.
+• Visual Studio 2019 or later with .NET desktop development workload (for building from source)."""),
+
+    (2, "Development Tools and Technologies", """• Language: C#
+• UI: Windows Forms (System.Windows.Forms)
+• Data access: ADO.NET (System.Data.SqlClient), parameterized commands via DatabaseHelper
+• Database: Microsoft SQL Server — script Database/SmartMedDB.sql
+• IDE: Visual Studio 2022; builds also supported via dotnet CLI
+• Diagrams: draw.io files in Docs/Diagrams/ (Architecture, Use Case, ER, Class, Sequence)"""),
+
+    (1, "Design Diagrams", None),
+
+    (2, "Architecture Diagram", """The application follows a layered architecture documented in Docs/Diagrams/Architecture.drawio:
+
+Presentation layer (SmartMed.UI — Forms/): LoginForm, RegistrationForm, AdminShellForm, AdminDashboardForm, ManageMedicinesForm, ManageCustomersForm, ManageOrdersForm, ReportsForm.
+
+Service layer (SmartMed.Services): AuthService, ValidationService, SearchService, ReportService, Session.
+
+Data layer (SmartMed.Data): DatabaseHelper, AdminRepository, CustomerRepository, MedicineRepository, OrderRepository.
+
+Database layer: SQL Server database SmartMedDB.
+
+Forms call Services or Data repositories; repositories use DatabaseHelper for all SQL. Session stores the logged-in Admin or Customer after authentication."""),
+
+    (2, "Use Case Diagram", """Docs/Diagrams/Usecase.drawio defines actors Admin and Customer.
+
+Admin use cases: login, dashboard overview, manage medicines, manage customers, manage orders, generate reports.
+
+Customer use cases: register, login, search medicines, place order, track order, manage profile.
+
+Include relationships show that placing an order includes searching medicines. Implemented WinForms map directly to these use cases."""),
+
+    (2, "ER Diagram", """Docs/Diagrams/ER.drawio models six entities: Admin, Customer, Medicine, Order, OrderItem, and Prescription.
+
+Customer places Orders (one-to-many). Order contains OrderItems (one-to-many). Medicine appears in OrderItems. Customer may upload Prescriptions (one-to-many). Primary keys are identity integers. Database/SmartMedDB.sql implements this schema with foreign keys and a CHECK constraint on Order.Status."""),
+
+    (2, "Class Diagram", """Docs/Diagrams/Class.drawio shows Person as the base class with Name, Email, Phone, Password. Customer and Admin inherit Person. Customer adds CustomerID and Address; Admin adds AdminID and Username.
+
+Entity classes Medicine, Order, OrderItem, and Prescription model pharmacy domain objects. Services coordinate validation and repository calls; repositories map rows to Models."""),
+
+    (2, "Sequence Diagram", """Docs/Diagrams/Sequence.drawio illustrates key interactions such as admin login and medicine CRUD: the user interacts with a Form, which calls AuthService or a Repository, which uses DatabaseHelper to execute SQL against SmartMedDB, then results flow back to update the UI (DataGridView or labels)."""),
+
+    (2, "Database Design", """Database SmartMedDB contains tables Admin, Customer, Medicine, Order, OrderItem, and Prescription. Seed data includes a default admin (admin / admin123) and sample customers and medicines. Order.Status is limited to Pending, Ready for Pickup, or Delivered. OrderItem stores quantity, unit price, and subtotal at order time."""),
+
+    (1, "Description of Classes, Properties and Methods", """The Models folder contains entity classes aligned with the class diagram.
+
+Person — base class: Name, Email, Phone, Password.
+
+Customer : Person — CustomerID, Address; methods Register(), Login(), SearchMedicine(), PlaceOrder(), TrackOrder(), UpdateProfile() document intended behaviour; AuthService and forms implement the workflows.
+
+Admin : Person — AdminID, Username; Login() via AuthService.AdminLogin.
+
+Medicine — MedicineID, MedicineName, Category, Dosage, Price, StockQuantity, Supplier, ExpiryDate, RequiresPrescription; CRUD methods AddMedicine(), UpdateMedicine(), DeleteMedicine(), CheckExpiry().
+
+Order — OrderID, CustomerID, OrderDate, Status, TotalAmount.
+
+OrderItem — links Order and Medicine with Quantity, UnitPrice, Subtotal.
+
+Prescription — PrescriptionID, CustomerID, PrescriptionFile, UploadDate, Status (table created; upload UI planned).
+
+Services: AuthService (AdminLogin, CustomerLogin, RegisterCustomer), ValidationService (input rules), SearchService (linear search and filters), ReportService (dashboard and report statistics), Session (CurrentAdmin, CurrentCustomer, Clear).
+
+Data repositories expose GetAll, GetById, Insert, Update, Delete, and query methods using parameterized SQL.
+
+[Insert screenshot: Person, Customer, and Admin classes in Visual Studio Class View or Solution Explorer with properties visible.]
+
+[Insert screenshot: Medicine and Order classes showing properties and methods.]
+
+[Insert screenshot: AuthService and MedicineRepository class structure.]"""),
+
+    (1, "Implementation", None),
+
+    (2, "Brief Description of Functions", """Program.Main — starts the application and opens LoginForm.
+
+AuthService.AdminLogin / CustomerLogin — validate credentials through AdminRepository or CustomerRepository after ValidationService checks.
+
+AuthService.RegisterCustomer — validate customer fields and insert via CustomerRepository.
+
+SearchService.SearchByName — linear O(n) scan comparing MedicineName to keyword (case-insensitive Contains).
+
+SearchService.FilterByCategory / FilterByPriceRange — additional linear passes for filtering.
+
+MedicineRepository.GetAll / Insert / Update / Delete — CRUD for medicine inventory.
+
+OrderRepository — list orders, update status, and transactional order placement with stock updates.
+
+ReportService — aggregate totals for dashboard and ReportsForm.
+
+Admin forms — LoadMedicines, LoadCustomers, grid selection handlers, and Save/Delete button handlers bind UI to repositories."""),
+
+    (2, "Code Snippets", """Application entry point (Program.cs):
+Application.EnableVisualStyles();
+Application.Run(new LoginForm());
+
+Linear search by medicine name (SearchService.cs):
+foreach (var medicine in medicines)
+{
+    if (medicine.MedicineName.ToLower().Contains(key))
+        results.Add(medicine);
+}
+
+Admin login validation (AuthService.cs):
+if (ValidationService.IsNullOrWhiteSpace(username) || ValidationService.IsNullOrWhiteSpace(password))
+    throw new ArgumentException("Username and password are required.");
+return _adminRepo.GetByCredentials(username.Trim(), password);
+
+Parameterized insert (MedicineRepository.cs):
+DatabaseHelper.ExecuteNonQuery(
+    "INSERT INTO Medicine (MedicineName, Category, ...) VALUES (@n, @c, ...)",
+    new SqlParameter("@n", item.MedicineName), ...);"""),
+
+    (2, "Output Screens", """[Insert screenshot: Login form — role selection, username/email, password.]
+
+[Insert screenshot: Admin Dashboard — statistics cards, recent activity, alerts.]
+
+[Insert screenshot: Manage Medicines — grid, add/update/delete form, stat tiles.]
+
+[Insert screenshot: Manage Customers — customer grid and edit panel.]
+
+[Insert screenshot: Manage Orders — order list and status update.]
+
+[Insert screenshot: Generate Reports — sales/stock/history tabs.]
+
+Design mock PNG files are available under Docs/DesignMocks/ for reference when capturing screenshots."""),
+
+    (1, "User Manual", None),
+
+    (2, "Installation Guide", """Prerequisites: Windows 10+, .NET Framework 4.8, SQL Server, Visual Studio 2019+ (optional for running the built executable).
 
 Database setup:
-1. Open SQL Server Management Studio (SSMS).
-2. Open the script Database/SmartMedDB.sql from the project folder.
-3. Execute the script. It creates the SmartMedDB database, all tables, constraints, and seed data.
-4. Default admin credentials: Username admin, Password admin123.
-5. Sample customer: john@email.com / customer123.
+1. Open SQL Server Management Studio.
+2. Execute Database/SmartMedDB.sql from the project folder.
+3. Confirm database SmartMedDB is created with seed data.
 
 Connection string:
-1. Open SmartMed.UI/App.config.
-2. Adjust the SmartMedDB connection string if your SQL Server instance is not the default local instance (.). For LocalDB use: Data Source=(localdb)\\MSSQLLocalDB;Initial Catalog=SmartMedDB;Integrated Security=True
+1. Open SmartMed/App.config.
+2. Set the SmartMedDB connection string to match your SQL Server instance (e.g. local instance or LocalDB).
 
 Build and run:
 1. Open SmartMed.sln in Visual Studio.
-2. Right-click SmartMed.UI and Set as Startup Project.
-3. Build → Build Solution (Ctrl+Shift+B). Alternatively run: dotnet build SmartMed.sln from the solution folder.
-4. Press F5 to start debugging. The Login form appears first.
-5. Log in as admin (admin / admin123) to access the admin dashboard, or register a new customer account.
+2. Set SmartMed as the startup project.
+3. Build the solution (Ctrl+Shift+B) or run: dotnet build SmartMed.sln
+4. Press F5. The Login form appears.
+5. Admin login: username admin, password admin123.
+6. Customer: register via Register button or use sample credentials from the SQL seed script."""),
 
-Admin workflow: Dashboard overview → Manage Medicines → Manage Customers → Manage Orders → Reports.
-Customer workflow: Register or login → Search Medicines → Place Order (cart) → Track Orders → Profile.""",
+    (2, "Using the Application", """Login — select Admin or Customer role, enter credentials, click Login.
 
-    "System Overview": """The SmartMed system is a single-user-session desktop application. On startup, Program.cs launches LoginForm. Successful authentication stores the current user in Session (SmartMed.Business) and opens either AdminDashboardForm or CustomerDashboardForm based on role. Each dashboard provides navigation buttons to feature-specific forms. All database access is routed through repository classes in SmartMed.Data; WinForms code never opens SQL connections directly, preserving separation of concerns.""",
+Admin navigation — use the sidebar: Dashboard Overview, Manage Medicines, Manage Customers, Manage Orders, Generate Reports, Logout.
 
-    "Three-Layer Architecture": """Presentation Layer (SmartMed.UI): Windows Forms for login, registration, admin dashboards, medicine CRUD, customer management, order management, reports, medicine search, cart/checkout, order tracking, and profile editing.
+Manage Medicines — select a row in the grid to edit fields; use Add, Update, Delete buttons; view stock statistics at the top.
 
-Business Layer (SmartMed.Business): Entity classes (Person, Customer, Admin, Medicine, Order, OrderItem, Prescription), ValidationHelper for input rules, SearchHelper for linear search and filtering, Session for authenticated user state, and service classes (AuthService, MedicineService, OrderService, CustomerService, DashboardService) that coordinate validation and repository calls.
+Manage Customers — select a customer to edit name, email, phone, address; save or delete as needed.
 
-Data Access Layer (SmartMed.Data): DatabaseHelper wraps SqlConnection and parameterized commands. Repositories (AdminRepository, CustomerRepository, MedicineRepository, OrderRepository) implement CRUD and queries. Data models map to database rows.
+Manage Orders — select an order, choose a new status from the dropdown, click Update Status.
 
-Database Layer: SQL Server database SmartMedDB with tables Admin, Customer, Medicine, Order, OrderItem, and Prescription. Foreign keys link orders to customers and order items to orders and medicines. Order.Status is constrained to Pending, Ready for Pickup, or Delivered.""",
+Reports — switch tabs for Sales, Stock, and Customer Order History; summary tiles show key figures.
 
-    "Use Case Diagram": """The use case diagram (Diagrams/Usecase.drawio) identifies Admin actors (login, manage medicines, manage customers, manage orders, reports, dashboard) and Customer actors (register, login, search medicines, place orders, track orders, manage profile). Include relationships show that placing an order includes searching medicines and that order management includes status updates. The implemented forms map directly to these use cases.""",
+Registration — customers complete the registration form with password confirmation; return to login after success.
 
-    "Entity-Relationship Diagram": """The ER diagram (Diagrams/ER.drawio) models six entities. Admin is independent. Customer places Orders (one-to-many). Order contains OrderItems (one-to-many). Medicine appears in OrderItems (many-to-many resolved via OrderItem). Customer uploads Prescriptions (one-to-many). Primary keys are identity integers. The SQL script Database/SmartMedDB.sql implements this schema with appropriate foreign keys and a CHECK constraint on order status.""",
+Logout — use Logout in the sidebar or close (X) on the top bar to return to the login screen."""),
 
-    "Class Diagram": """The class diagram (Diagrams/Class.drawio) shows Person as an abstract base with Name, Email, Phone, and Password. Customer and Admin inherit from Person. Customer adds CustomerID, Address, Register(), and Login(). Admin adds AdminID, Username, and Login(). Medicine, Order, OrderItem, and Prescription are separate entity classes. Business layer classes mirror this design; data layer uses flat DTO-style models for efficient ADO.NET mapping.""",
+    (1, "Reflection", """Developing SmartMed improved my understanding of C# object-oriented programming and event-driven Windows Forms applications. Moving from console programs to a multi-form desktop app required thinking about navigation (AdminShellForm), session state (Session service), and keeping SQL out of the UI layer.
 
-    "Class Relationships": """Inheritance: Customer and Admin extend Person, enabling shared validation of email and password fields. Composition: Order aggregates OrderItem records; each OrderItem references a Medicine. Association: Order belongs to Customer; Prescription belongs to Customer. Services depend on repositories (dependency direction: Business → Data). UI forms depend on services only, not repositories, maintaining the vertical architecture shown in Diagrams/Architecture.drawio.""",
+I valued the folder structure (Forms, Models, Data, Services) because changes to MedicineRepository automatically benefited every form that loads medicines. Debugging login across LoginForm, AuthService, and AdminRepository with breakpoints showed how requests flow through layers.
 
-    "Source Code Attribution": """All source code in this submission was written for the SmartMed coursework. Standard Microsoft .NET Framework libraries (System.Windows.Forms, System.Data.SqlClient, System.Configuration) are used as documented. No third-party UI frameworks were used. Diagram source files are original draw.io diagrams created for this module. Any external references (Microsoft documentation for ADO.NET and WinForms) informed API usage but were not copied as code.""",
+Challenges included configuring App.config so DatabaseHelper reads the connection string at runtime, and keeping WinForms layout manageable when building page content in code. Using DataGridView for CRUD screens and ValidationService for shared rules reduced duplication.
 
-    "Admin Features": """Login: AuthService validates admin username and password against the Admin table via AdminRepository. Empty fields are rejected by ValidationHelper before database access.
+SearchService linear search was straightforward to implement and document, matching the coursework requirement. Future work includes completing the customer portal (cart, order tracking, profile), prescription upload, and PDF export for reports.
 
-Manage Medicines: MedicineManagementForm provides add, update, delete, and list operations. Fields include name, category, dosage, price, stock quantity, supplier, expiry date, and prescription requirement. Numeric validation ensures price and stock are valid.
+Working in Visual Studio 2022 and building with dotnet CLI gave flexibility. Overall the project strengthened skills in ADO.NET, layered design, and technical documentation aligned with UML diagrams in Docs/Diagrams/."""),
 
-Manage Customers: ManageCustomersForm lists registered customers and allows administrators to update contact details.
+    (1, "Conclusion", """SmartMed Pharmacy Management System delivers a working admin desktop application for pharmacy inventory, customers, orders, dashboards, and reports. The implementation uses C# WinForms, SQL Server, and a clear layered architecture documented with architecture, use case, ER, class, and sequence diagrams.
 
-Manage Orders: OrderManagementForm displays all orders with customer name, date, status, and total. Administrators can change status to Pending, Ready for Pickup, or Delivered.
+Mandatory admin requirements are met: login, medicine CRUD, customer management, order status updates, reports, and dashboard metrics. Customer registration and login are implemented; extended customer features are planned. Linear search and filtering satisfy the search-algorithm requirement.
 
-Reports: ReportsForm shows sales totals, stock summary, and customer order history using queries from OrderRepository and MedicineRepository.
+The report follows the coursework breakdown: requirements, design diagrams, class descriptions, implementation details, user manual, reflection, and conclusion. The solution is runnable against SmartMedDB seed data and suitable for demonstration and assessment."""),
+]
 
-Dashboard: AdminOverviewForm displays aggregate metrics (total sales, medicines in stock, active orders) via DashboardService.""",
 
-    "Customer Features": """Registration: RegistrationForm collects full name, email, phone, address, password, and confirmation. ValidationHelper checks required fields, email format, and password match before CustomerRepository inserts a new row.
-
-Login: Customers authenticate with email and password; Session stores the logged-in Customer object.
-
-Search Medicines: SearchMedicinesForm loads the catalogue and applies SearchHelper linear search by name, filter by category, and filter by price range. Results bind to a DataGridView.
-
-Place Orders: PlaceOrderForm lists available medicines, supports quantity entry, maintains an in-memory cart, and calls OrderService.PlaceOrder to insert Order and OrderItem rows and decrement stock.
-
-Track Orders: TrackOrdersForm lists the current customer's orders and statuses.
-
-Profile Management: ProfileManagementForm allows customers to update their contact information.""",
-
-    "Additional Features": """Optional features from the brief (discounts, expiry notifications, prescription upload UI, PDF/Excel export) were deferred to prioritise mandatory marking-scheme tasks. The Prescription table and Prescription business class exist in the schema and model layer for future extension. Core order and inventory workflows are fully functional without these extras.""",
-
-    "Programming Language and Platform": """The application is implemented in C# targeting .NET Framework 4.8. The UI project uses Windows Forms (System.Windows.Forms). The solution uses SDK-style projects compatible with Visual Studio 2019+ and the dotnet CLI build. This meets the requirement for Visual Studio 2015 or higher compatibility at the language and framework level.""",
-
-    "Data Storage": """Persistent data is stored in Microsoft SQL Server. The connection string named SmartMedDB in App.config is read by DatabaseHelper using ConfigurationManager. Parameterized SQL prevents injection. Transactions are used when placing orders to ensure order header, line items, and stock updates succeed or roll back together.""",
-
-    "Software Design": """Object-oriented design uses inheritance (Person hierarchy), encapsulation (private repository calls inside services), and separation of layers. Each form handles only UI events; business rules live in services and helpers. Repositories isolate SQL syntax from the rest of the application, simplifying maintenance and testing.""",
-
-    "User Interface": """Forms are built programmatically in code for portability (no designer files required). A consistent colour scheme uses blue tones matching project diagrams. Role-based navigation prevents customers from accessing admin forms. MessageBox displays validation errors and database exceptions in user-friendly language.""",
-
-    "Validation and Exception Handling": """ValidationHelper provides IsNullOrEmpty, IsValidEmail, IsPositiveDecimal, and IsPositiveInteger checks used across login, registration, and medicine forms. Service and repository methods wrap database operations in try/catch blocks; SQLException messages are surfaced via MessageBox on the UI thread. Order placement validates stock availability before committing.""",
-
-    "Person Class": """Person (SmartMed.Business.Models.Person) is the base class with properties: Name, Email, Phone, Password. It represents shared attributes for human users. Derived classes add role-specific identifiers and behaviour.""",
-
-    "Customer Class": """Customer extends Person with CustomerID (int) and Address (string). Methods Register() and Login() are documented in the class diagram; the implemented workflow delegates to AuthService and CustomerRepository while Session holds the authenticated instance after login.""",
-
-    "Admin Class": """Admin extends Person with AdminID (int) and Username (string). Admin login uses username rather than email. AuthService.LoginAdmin queries AdminRepository and populates Session.CurrentAdmin on success.""",
-
-    "Medicine Class": """Medicine encapsulates MedicineID, MedicineName, Category, Dosage, Price, StockQuantity, Supplier, ExpiryDate, and RequiresPrescription. MedicineService wraps MedicineRepository for CRUD used by admin and search features.""",
-
-    "Order Class": """Order represents OrderID, CustomerID, OrderDate, Status, and TotalAmount. OrderService creates orders, lists by customer, and updates status for admin fulfilment.""",
-
-    "OrderItem Class": """OrderItem links an order to a medicine with Quantity, UnitPrice, and Subtotal. Subtotal is calculated as Quantity × UnitPrice at the time of order placement to preserve historical pricing.""",
-
-    "Prescription Class": """Prescription models PrescriptionID, CustomerID, PrescriptionFile path, UploadDate, and Status. The database table is created; upload UI is reserved for future enhancement.""",
-
-    "Search Algorithms Used in the Project": """Medicine search uses linear search and filtering as required by the coursework. SearchHelper.SearchByName iterates the full medicine list once (O(n)), comparing each MedicineName to the keyword using case-insensitive Contains. FilterByCategory applies a second linear pass when a category filter is active. FilterByPriceRange iterates and retains items where Price falls between min and max inclusive.
-
-The composite Search method chains these operations: start with the full list, optionally narrow by name, then category, then price range. Each step produces a new filtered list. This is documented as linear search with filtering rather than binary search, which requires sorted data and was not necessary for the catalogue size.
-
-Pseudocode:
-  results = all medicines
-  if name provided: results = LinearSearchByName(results, name)
-  if category provided: results = LinearFilterByCategory(results, category)
-  if price range provided: results = LinearFilterByPrice(results, min, max)
-  return results
-
-SearchMedicinesForm calls MedicineService.Search, which loads medicines from the database and delegates to SearchHelper.Search before binding results to the grid.""",
-
-    "Experience with C# and Visual Studio": """Developing SmartMed strengthened my understanding of C# as an object-oriented language and of Visual Studio as an integrated environment for building desktop applications. Before this module my experience was limited to console programs; WinForms introduced event-driven programming where button clicks and form load events trigger methods that update the interface asynchronously from user input.
-
-Working with a multi-project solution clarified how references work: SmartMed.UI references Business, which references Data. Building the solution compiles dependencies in order. Debugging with breakpoints across layers showed how a click on Login propagates from LoginForm through AuthService to CustomerRepository and back. The Immediate Window and Watch panel helped inspect Session state during authentication.
-
-I used both Visual Studio and the dotnet CLI to build. SDK-style projects simplified the csproj files compared to older templates. Configuring App.config for the connection string reinforced the importance of externalising environment-specific settings rather than hard-coding server names in source code.""",
-
-    "Features Liked and Rationale": """I particularly valued the three-tier architecture because it mirrors professional practice. When I needed to change how medicines were loaded, I edited MedicineRepository once while MedicineManagementForm and SearchMedicinesForm continued to call MedicineService unchanged. This separation reduced duplication and made the codebase easier to reason about.
-
-Windows Forms was approachable for rapid layout of grids, text boxes, and buttons. DataGridView data binding to lists of MedicineItem provided instant tabular display without manual row painting. The inheritance model for Person, Customer, and Admin made the domain model intuitive and aligned with the class diagram produced in the design phase.
-
-Implementing SearchHelper as a static utility class kept search logic testable and documented independently of the UI. I liked that linear search is easy to explain in documentation and sufficient for pharmacy catalogues that are not millions of rows.""",
-
-    "Challenges Faced and Solutions Applied": """A significant challenge was ensuring the data layer could read the connection string when called from a class library. DatabaseHelper uses ConfigurationManager, which reads from the executing assembly's config file. The UI project's App.config is copied to SmartMed.exe.config on build, so running the executable provides the correct connection string to all layers.
-
-Order placement required transactional integrity: inserting an order, multiple order items, and updating stock had to succeed together. OrderRepository wraps these steps in a SqlTransaction so a failure mid-process rolls back partial changes.
-
-Another challenge was keeping WinForms code-behind thin while still showing helpful errors. I standardised on try/catch in event handlers that display ex.Message in MessageBox, while repositories throw descriptive exceptions for constraint violations.
-
-Building forms entirely in code (without the designer) was initially verbose but avoided merge conflicts and kept the repository self-contained for submission. I reused patterns for grid setup, button placement, and BackColor theming across admin and customer forms.
-
-Mapping between Business models and Data models (e.g. Customer vs CustomerUser) required discipline. Services translate between layers when needed, keeping ADO.NET details out of the business entities.""",
-
-    "Future Improvements": """Future versions could add prescription file upload with validation, email notifications when order status changes, and export of reports to PDF or Excel using libraries such as iTextSharp or ClosedXML. Role-based admin permissions could distinguish pharmacists from managers. A barcode scanner integration would speed stock intake. For larger catalogues, indexing and full-text search in SQL Server could supplement client-side linear search. Unit tests for ValidationHelper and SearchHelper would improve regression safety. Migrating to .NET 6+ WinForms would enable cross-platform considerations, though deployment targets remain Windows for pharmacy workstations.""",
-
-    "Conclusion": """SmartMed delivers a working pharmacy management desktop application that meets the coursework functional and technical requirements. The design diagrams guided implementation of the database schema, class structure, and layered architecture. Mandatory features—authentication, medicine CRUD, customer search with linear filtering, order lifecycle, reports, and dashboard—are implemented and runnable against SQL Server seed data. The project improved my skills in C#, WinForms, ADO.NET, and structured OOP design. Documentation and reflective analysis consolidate learning outcomes for assessment.""",
-
-    "References": """Microsoft (2024). ADO.NET documentation. https://learn.microsoft.com/en-us/dotnet/framework/data/adonet/
-
-Microsoft (2024). Windows Forms documentation. https://learn.microsoft.com/en-us/dotnet/desktop/winforms/
-
-Module coursework brief: Document.md (SmartMed Pharmacy specification).""",
-
-    "Appendix A: Use Case Diagram": """See Diagrams/Usecase.drawio — export as PNG for printed submission if required.""",
-
-    "Appendix B: Entity-Relationship Diagram": """See Diagrams/ER.drawio — Chen notation with Admin, Customer, Medicine, Order, OrderItem, Prescription.""",
-
-    "Appendix C: Class Diagram": """See Diagrams/Class.drawio — Person inheritance, entity classes, and relationships.""",
-
-    "Appendix D: Architecture Diagram": """See Diagrams/Architecture.drawio — vertical flow: Presentation → Business → Data Access → SQL Server.""",
-}
-
-HEADINGS = set(SECTIONS.keys())
-
-
-def insert_paragraph_after(paragraph, text=""):
-    new_p = OxmlElement("w:p")
-    paragraph._p.addnext(new_p)
-    new_para = Paragraph(new_p, paragraph._parent)
-    if text:
-        new_para.add_run(text)
-    return new_para
-
-
-def set_paragraph_format(paragraph):
+def set_body_format(paragraph):
     for run in paragraph.runs:
         run.font.name = "Times New Roman"
         run.font.size = Pt(12)
     paragraph.paragraph_format.line_spacing_rule = WD_LINE_SPACING.ONE_POINT_FIVE
 
 
-def is_section_heading(text):
-    return text.strip() in HEADINGS
+def add_paragraph(doc, text, style="BodyText"):
+    p = doc.add_paragraph(text, style=style)
+    set_body_format(p)
+    return p
 
 
-def fill_report():
+def find_intro_index(doc):
+    for i, p in enumerate(doc.paragraphs):
+        if p.text.strip() == "Introduction" and p.style.name.startswith("Heading"):
+            return i
+    return None
+
+
+def remove_from_index(doc, index):
+    while len(doc.paragraphs) > index:
+        el = doc.paragraphs[index]._element
+        el.getparent().remove(el)
+
+
+def restructure_report():
     doc = Document(REPORT_PATH)
-    idx = 0
-    while idx < len(doc.paragraphs):
-        title = doc.paragraphs[idx].text.strip()
-        if title not in SECTIONS:
-            idx += 1
+    intro_idx = find_intro_index(doc)
+    if intro_idx is None:
+        raise RuntimeError("Could not find Introduction heading in report.")
+
+    remove_from_index(doc, intro_idx)
+
+    for level, title, body in SECTIONS:
+        if level == 0:
+            if body:
+                add_paragraph(doc, body)
             continue
-
-        # Remove existing body paragraphs until the next heading
-        while idx + 1 < len(doc.paragraphs):
-            nxt = doc.paragraphs[idx + 1].text.strip()
-            if nxt in HEADINGS:
-                break
-            rm = doc.paragraphs[idx + 1]
-            rm._element.getparent().remove(rm._element)
-
-        anchor = doc.paragraphs[idx]
-        last = anchor
-        for part in SECTIONS[title].split("\n\n"):
-            new_p = insert_paragraph_after(last, part)
-            set_paragraph_format(new_p)
-            last = new_p
-        idx += 1
+        style = f"Heading {level}"
+        doc.add_paragraph(title, style=style)
+        if body:
+            for part in body.split("\n\n"):
+                add_paragraph(doc, part)
 
     doc.save(REPORT_PATH)
-    word_count = sum(len(v.split()) for v in SECTIONS.values())
+    words = sum(len(body.split()) for _, _, body in SECTIONS if body)
     print(f"Saved {REPORT_PATH}")
-    print(f"Approximate word count: {word_count}")
+    print(f"Approximate word count (body): {words}")
 
 
 if __name__ == "__main__":
-    fill_report()
+    restructure_report()
