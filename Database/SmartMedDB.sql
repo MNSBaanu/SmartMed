@@ -29,14 +29,16 @@ CREATE TABLE Customer (
 
 CREATE TABLE Medicine (
     MedicineID            INT IDENTITY(1,1) PRIMARY KEY,
-    MedicineName          NVARCHAR(100) NOT NULL,
+    MedicineName          NVARCHAR(100) NOT NULL UNIQUE,
     Category              NVARCHAR(50)  NOT NULL,
     Dosage                NVARCHAR(50)  NOT NULL,
     Price                 DECIMAL(10,2) NOT NULL CHECK (Price >= 0),
     StockQuantity         INT NOT NULL CHECK (StockQuantity >= 0),
     Supplier              NVARCHAR(100) NOT NULL,
     ExpiryDate            DATE NOT NULL,
-    RequiresPrescription  BIT NOT NULL DEFAULT 0
+    RequiresPrescription  BIT NOT NULL DEFAULT 0,
+    DiscountPercent       DECIMAL(5,2) NOT NULL DEFAULT 0 CHECK (DiscountPercent >= 0 AND DiscountPercent <= 100),
+    IsOnPromotion         BIT NOT NULL DEFAULT 0
 );
 
 CREATE TABLE [Order] (

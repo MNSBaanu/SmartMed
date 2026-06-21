@@ -7,11 +7,14 @@ namespace SmartMed.Data
 {
     public class MedicineRepository
     {
+        private const string SelectColumns =
+            "MedicineID, MedicineName, Category, Dosage, Price, StockQuantity, Supplier, ExpiryDate, RequiresPrescription, DiscountPercent, IsOnPromotion";
+
         public List<Medicine> GetAll()
         {
             var list = new List<Medicine>();
             var table = DatabaseHelper.ExecuteQuery(
-                "SELECT MedicineID, MedicineName, Category, Dosage, Price, StockQuantity, Supplier, ExpiryDate, RequiresPrescription FROM Medicine ORDER BY MedicineName");
+                $"SELECT {SelectColumns} FROM Medicine ORDER BY MedicineName");
             foreach (System.Data.DataRow row in table.Rows)
                 list.Add(Map(row));
             return list;
@@ -20,32 +23,37 @@ namespace SmartMed.Data
         public Medicine GetById(int id)
         {
             var table = DatabaseHelper.ExecuteQuery(
-                "SELECT MedicineID, MedicineName, Category, Dosage, Price, StockQuantity, Supplier, ExpiryDate, RequiresPrescription FROM Medicine WHERE MedicineID=@id",
+                $"SELECT {SelectColumns} FROM Medicine WHERE MedicineID=@id",
                 new SqlParameter("@id", id));
             if (table.Rows.Count == 0) return null;
             return Map(table.Rows[0]);
         }
 
+        public bool NameExists(string name, int? excludeMedicineId = null)
+        {
+            var sql = excludeMedicineId.HasValue
+                ? "SELECT COUNT(*) FROM Medicine WHERE LOWER(MedicineName) = LOWER(@n) AND MedicineID <> @id"
+                : "SELECT COUNT(*) FROM Medicine WHERE LOWER(MedicineName) = LOWER(@n)";
+            var parameters = excludeMedicineId.HasValue
+                ? new[] { new SqlParameter("@n", name), new SqlParameter("@id", excludeMedicineId.Value) }
+                : new[] { new SqlParameter("@n", name) };
+            var result = DatabaseHelper.ExecuteScalar(sql, parameters);
+            return Convert.ToInt32(result) > 0;
+        }
+
+        public bool IsReferencedInOrders(int medicineId)
+        {
+            var result = DatabaseHelper.ExecuteScalar(
+                "SELECT COUNT(*) FROM OrderItem WHERE MedicineID=@id",
+                new SqlParameter("@id", medicineId));
+            return Convert.ToInt32(result) > 0;
+        }
+
         public void Insert(Medicine item)
         {
             DatabaseHelper.ExecuteNonQuery(
-                @"INSERT INTO Medicine (MedicineName, Category, Dosage, Price, StockQuantity, Supplier, ExpiryDate, RequiresPrescription)
-                  VALUES (@n, @c, @d, @p, @s, @su, @e, @r)",
-                new SqlParameter("@n", item.MedicineName),
-                new SqlParameter("@c", item.Category),
-                new SqlParameter("@d", item.Dosage),
-                new SqlParameter("@p", item.Price),
-                new SqlParameter("@s", item.StockQuantity),
-                new SqlParameter("@su", item.Supplier),
-                new SqlParameter("@e", item.ExpiryDate),
-                new SqlParameter("@r", item.RequiresPrescription));
-        }
-
-        public void Update(Medicine item)
-        {
-            DatabaseHelper.ExecuteNonQuery(
-                @"UPDATE Medicine SET MedicineName=@n, Category=@c, Dosage=@d, Price=@p, StockQuantity=@s,
-                  Supplier=@su, ExpiryDate=@e, RequiresPrescription=@r WHERE MedicineID=@id",
+                @"INSERT INTO Medicine (MedicineName, Category, Dosage, Price, StockQuantity, Supplier, ExpiryDate, RequiresPrescription, DiscountPercent, IsOnPromotion)
+                  VALUES (@n, @c, @d, @p, @s, @su, @e, @r, @disc, @promo)",
                 new SqlParameter("@n", item.MedicineName),
                 new SqlParameter("@c", item.Category),
                 new SqlParameter("@d", item.Dosage),
@@ -54,6 +62,26 @@ namespace SmartMed.Data
                 new SqlParameter("@su", item.Supplier),
                 new SqlParameter("@e", item.ExpiryDate),
                 new SqlParameter("@r", item.RequiresPrescription),
+                new SqlParameter("@disc", item.DiscountPercent),
+                new SqlParameter("@promo", item.IsOnPromotion));
+        }
+
+        public void Update(Medicine item)
+        {
+            DatabaseHelper.ExecuteNonQuery(
+                @"UPDATE Medicine SET MedicineName=@n, Category=@c, Dosage=@d, Price=@p, StockQuantity=@s,
+                  Supplier=@su, ExpiryDate=@e, RequiresPrescription=@r, DiscountPercent=@disc, IsOnPromotion=@promo
+                  WHERE MedicineID=@id",
+                new SqlParameter("@n", item.MedicineName),
+                new SqlParameter("@c", item.Category),
+                new SqlParameter("@d", item.Dosage),
+                new SqlParameter("@p", item.Price),
+                new SqlParameter("@s", item.StockQuantity),
+                new SqlParameter("@su", item.Supplier),
+                new SqlParameter("@e", item.ExpiryDate),
+                new SqlParameter("@r", item.RequiresPrescription),
+                new SqlParameter("@disc", item.DiscountPercent),
+                new SqlParameter("@promo", item.IsOnPromotion),
                 new SqlParameter("@id", item.MedicineID));
         }
 
@@ -84,7 +112,12 @@ namespace SmartMed.Data
                 StockQuantity = Convert.ToInt32(row["StockQuantity"]),
                 Supplier = row["Supplier"].ToString(),
                 ExpiryDate = Convert.ToDateTime(row["ExpiryDate"]),
-                RequiresPrescription = Convert.ToBoolean(row["RequiresPrescription"])
+                RequiresPrescription = Convert.ToBoolean(row["RequiresPrescription"]),
+                DiscountPercent = row.Table.Columns.Contains("DiscountPercent")
+                    ? Convert.ToDecimal(row["DiscountPercent"])
+                    : 0m,
+                IsOnPromotion = row.Table.Columns.Contains("IsOnPromotion")
+                    && Convert.ToBoolean(row["IsOnPromotion"])
             };
         }
     }
