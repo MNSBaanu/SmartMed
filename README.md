@@ -62,7 +62,7 @@ SmartMed/
 ├── SmartMed.sln
 ├── SmartMed/                   # Single WinForms project (all C# code)
 │   ├── LoginForm.cs, ...       # Forms and UI controls
-│   ├── Models/                 # All entity classes (Person, Medicine, Order, …)
+│   ├── Models/                 # All entity classes (User, Medicine, Order, …)
 │   ├── Services/               # Business logic
 │   ├── Data/                   # DatabaseHelper + repositories
 │   └── App.config
