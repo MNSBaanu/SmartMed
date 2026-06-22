@@ -83,7 +83,7 @@ Include relationships show that placing an order includes searching medicines. I
 
 Customer places Orders (one-to-many). Order contains OrderItems (one-to-many). Medicine appears in OrderItems. Customer may upload Prescriptions (one-to-many). Primary keys are identity integers. Database/SmartMedDB.sql implements this schema with foreign keys and a CHECK constraint on Order.Status."""),
 
-    (2, "Class Diagram", """Docs/Diagrams/Class.drawio shows Person as the base class with Name, Email, Phone, Password. Customer and Admin inherit Person. Customer adds CustomerID and Address; Admin adds AdminID and Username.
+    (2, "Class Diagram", """Docs/Diagrams/Class.drawio shows User as the base class with Name, Email, Phone, Password. Customer and Admin inherit User. Customer adds CustomerID and Address; Admin adds AdminID and Username.
 
 Entity classes Medicine, Order, OrderItem, and Prescription model pharmacy domain objects. Services coordinate validation and repository calls; repositories map rows to Models."""),
 
@@ -93,11 +93,11 @@ Entity classes Medicine, Order, OrderItem, and Prescription model pharmacy domai
 
     (1, "Description of Classes, Properties and Methods", """The Models folder contains entity classes aligned with the class diagram.
 
-Person — base class: Name, Email, Phone, Password.
+User — base class: Name, Email, Phone, Password.
 
-Customer : Person — CustomerID, Address; methods Register(), Login(), SearchMedicine(), PlaceOrder(), TrackOrder(), UpdateProfile() document intended behaviour; AuthService and forms implement the workflows.
+Customer : User — CustomerID, Address; methods Register(), Login(), SearchMedicine(), PlaceOrder(), TrackOrder(), UpdateProfile() document intended behaviour; AuthService and forms implement the workflows.
 
-Admin : Person — AdminID, Username; Login() via AuthService.AdminLogin.
+Admin : User — AdminID, Username; Login() via AuthService.AdminLogin.
 
 Medicine — MedicineID, MedicineName, Category, Dosage, Price, StockQuantity, Supplier, ExpiryDate, RequiresPrescription; CRUD methods AddMedicine(), UpdateMedicine(), DeleteMedicine(), CheckExpiry().
 
@@ -111,7 +111,7 @@ Services: AuthService (AdminLogin, CustomerLogin, RegisterCustomer), ValidationS
 
 Data repositories expose GetAll, GetById, Insert, Update, Delete, and query methods using parameterized SQL.
 
-[Insert screenshot: Person, Customer, and Admin classes in Visual Studio Class View or Solution Explorer with properties visible.]
+[Insert screenshot: User, Customer, and Admin classes in Visual Studio Class View or Solution Explorer with properties visible.]
 
 [Insert screenshot: Medicine and Order classes showing properties and methods.]
 
