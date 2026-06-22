@@ -18,26 +18,26 @@ The overall aim was to apply object-oriented programming in a practical desktop 
 
     (1, "System Requirements", None),
 
-    (2, "Functional Requirements", """Admin Features
-• Login – Secure login for admins.
-• Manage Medicine Details – Add, update, delete medicine details (name, category, dosage, price, stock, supplier).
-• Manage Customer Details – View and update customer information.
-• Manage Orders – View all orders, update order status (Pending, Ready for Pickup, Delivered).
-• Generate Reports – Sales reports, stock reports, and customer order history.
-• Dashboard – Overview of total sales, medicines in stock, and active orders.
+    (2, "Functional Requirements", """Functional requirements describe what the SmartMed application must do from the user's point of view. Each requirement below states the behaviour that needs to be implemented in the software, grouped by the actor who will use that part of the system.
 
-Customer Features
-• Register/Login – New user registration and login.
-• Search Medicines – Search by name, category, or price range.
-• Place Orders – Add medicines to cart and place orders.
-• Track Orders – View status of orders.
-• Profile Management – Update personal details and contact information.
+Admin requirements
+The system must allow an administrator to sign in with a username and password before any admin screen is shown. Once authenticated, the admin needs a dashboard that summarises pharmacy activity, including how many medicines are in stock, how many orders are still being processed, and the total value of sales recorded in the database.
 
-Additional Features
-• Apply discounts or promotions on medicines.
-• Include medicine expiry tracking notifications.
-• Include prescription upload functionality for certain medicines.
-• Export order history to PDF or Excel."""),
+Medicine management is a core part of the admin module. The application must support adding new medicines with details such as name, category, dosage, unit price, quantity in stock, supplier, and expiry date. Existing records should be editable, and medicines that are no longer stocked should be removable when they are not tied to past orders. The admin should also be able to review stock levels and receive indication when items are running low or approaching expiry, and apply discount or promotion values where relevant.
+
+Customer records must be viewable and maintainable from the admin side so that pharmacy staff can register walk-in customers or correct contact details when needed. For orders, the admin must see all customer orders in a list, open the line items for a selected order, and change the fulfilment status as work progresses. The system should support at least three stages: when an order is newly placed, when it is ready for collection, and when it has been delivered or collected.
+
+Reporting is required so the admin can analyse business performance without exporting data manually. The application must generate a sales report from completed and pending orders, a stock report showing current inventory, and a per-customer order history report that can be filtered by customer account.
+
+Customer requirements
+New customers must be able to create an account by entering personal details and a password, then return later using their email and password to log in. After login, the customer portal should let them search the medicine catalogue by typing part of a name, choosing a category, or specifying a minimum and maximum price so that suitable products can be found quickly.
+
+Ordering functionality must let a customer add one or more medicines to a cart with a chosen quantity, check that enough stock exists before the order is accepted, and save the order to the database with an initial pending status. The customer should then be able to view their own past orders and see the current status of each one without accessing other customers' data.
+
+Profile management must allow a logged-in customer to update stored details such as name, phone number, and address so that delivery and contact information stays current.
+
+Additional requirements
+Beyond the main admin and customer flows, the system should support optional enhancements that improve day-to-day use: marking medicines that require a prescription, allowing a prescription file to be associated with an order where needed, exporting or printing report output for record-keeping, and showing notifications when stock is critically low or a medicine is close to its expiry date."""),
 
     (2, "Non-Functional Requirements", """• Usability — role-based navigation via AdminShellForm sidebar; standard WinForms controls for data entry and grids.
 • Reliability — parameterized SQL queries prevent injection; validation runs before database access.
