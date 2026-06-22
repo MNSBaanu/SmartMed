@@ -5,14 +5,14 @@
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
 
-        <mxCell id="title" parent="1" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;fontFamily=Helvetica;fontColor=#003296;fontSize=18;fontStyle=1;" value="SmartMed Pharmacy System&#xa;Three-Tier Architecture" vertex="1">
+        <mxCell id="title" parent="1" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;fontFamily=Helvetica;fontColor=#003296;fontSize=18;fontStyle=1;" value="SmartMed Pharmacy System&#xa;Layered Architecture (Single SmartMed Project)" vertex="1">
           <mxGeometry x="80" y="20" width="540" height="50" as="geometry" />
         </mxCell>
 
         <mxCell id="layer-pres" value="Presentation Layer" style="swimlane;fontStyle=1;childLayout=stackLayout;horizontal=1;startSize=34;fillColor=#003296;fontColor=#ffffff;strokeColor=#003296;strokeWidth=1.5;html=1;collapsible=0;whiteSpace=wrap;fontFamily=Helvetica;align=center;" vertex="1" parent="1">
           <mxGeometry x="80" y="90" width="540" height="280" as="geometry" />
         </mxCell>
-        <mxCell id="layer-pres-body" value="Windows Forms UI&#xa;&#xa;• Login Form&#xa;• Registration Form&#xa;• Admin Dashboard&#xa;• Customer Dashboard&#xa;• Medicine Management Form&#xa;• Customer Management Form&#xa;• Order Management Form&#xa;• Reports Form&#xa;• Profile Management Form" style="text;strokeColor=#003296;fillColor=#B4CBF9;align=left;verticalAlign=top;spacingLeft=14;spacingTop=10;fontFamily=Helvetica;fontColor=#003296;fontSize=11;html=1;whiteSpace=wrap;strokeWidth=1.5;" vertex="1" parent="layer-pres">
+        <mxCell id="layer-pres-body" value="Forms/ (WinForms UI)&#xa;&#xa;• LoginForm, RegistrationForm&#xa;• AdminShellForm + AdminDashboardForm&#xa;• ManageMedicinesForm, ManageCustomersForm&#xa;• ManageOrdersForm, ReportsForm" style="text;strokeColor=#003296;fillColor=#B4CBF9;align=left;verticalAlign=top;spacingLeft=14;spacingTop=10;fontFamily=Helvetica;fontColor=#003296;fontSize=11;html=1;whiteSpace=wrap;strokeWidth=1.5;" vertex="1" parent="layer-pres">
           <mxGeometry y="34" width="540" height="246" as="geometry" />
         </mxCell>
 
@@ -23,7 +23,7 @@
         <mxCell id="layer-biz" value="Business Logic Layer" style="swimlane;fontStyle=1;childLayout=stackLayout;horizontal=1;startSize=34;fillColor=#003296;fontColor=#ffffff;strokeColor=#003296;strokeWidth=1.5;html=1;collapsible=0;whiteSpace=wrap;fontFamily=Helvetica;align=center;" vertex="1" parent="1">
           <mxGeometry x="80" y="400" width="540" height="340" as="geometry" />
         </mxCell>
-        <mxCell id="layer-biz-body" value="Core Classes&#xa;&#xa;• Admin&#xa;• Customer&#xa;• Medicine&#xa;• Order&#xa;• OrderItem&#xa;• Prescription&#xa;&#xa;Business Functions&#xa;&#xa;• Validation&#xa;• Exception Handling&#xa;• Search Algorithms&#xa;• Discount Calculations&#xa;• Expiry Checking&#xa;• Report Generation" style="text;strokeColor=#003296;fillColor=#B4CBF9;align=left;verticalAlign=top;spacingLeft=14;spacingTop=10;fontFamily=Helvetica;fontColor=#003296;fontSize=11;html=1;whiteSpace=wrap;strokeWidth=1.5;" vertex="1" parent="layer-biz">
+        <mxCell id="layer-biz-body" value="Services/ + Models/&#xa;&#xa;Models: Admin, Customer, Medicine, Order, OrderItem, Prescription&#xa;&#xa;Services (used selectively):&#xa;• AuthService — login &amp; registration&#xa;• MedicineService — medicine CRUD &amp; validation&#xa;• ReportService — sales/stock/history reports&#xa;• ValidationService, SearchService, Session&#xa;&#xa;Note: Orders and Customers forms call repositories directly." style="text;strokeColor=#003296;fillColor=#B4CBF9;align=left;verticalAlign=top;spacingLeft=14;spacingTop=10;fontFamily=Helvetica;fontColor=#003296;fontSize=11;html=1;whiteSpace=wrap;strokeWidth=1.5;" vertex="1" parent="layer-biz">
           <mxGeometry y="34" width="540" height="306" as="geometry" />
         </mxCell>
 
@@ -34,7 +34,7 @@
         <mxCell id="layer-dal" value="Data Access Layer" style="swimlane;fontStyle=1;childLayout=stackLayout;horizontal=1;startSize=34;fillColor=#003296;fontColor=#ffffff;strokeColor=#003296;strokeWidth=1.5;html=1;collapsible=0;whiteSpace=wrap;fontFamily=Helvetica;align=center;" vertex="1" parent="1">
           <mxGeometry x="80" y="770" width="540" height="280" as="geometry" />
         </mxCell>
-        <mxCell id="layer-dal-body" value="Database Components&#xa;&#xa;• Database Helper&#xa;• Admin Repository&#xa;• Customer Repository&#xa;• Medicine Repository&#xa;• Order Repository&#xa;&#xa;Operations&#xa;&#xa;• Insert&#xa;• Update&#xa;• Delete&#xa;• Retrieve&#xa;• Execute Queries" style="text;strokeColor=#003296;fillColor=#B4CBF9;align=left;verticalAlign=top;spacingLeft=14;spacingTop=10;fontFamily=Helvetica;fontColor=#003296;fontSize=11;html=1;whiteSpace=wrap;strokeWidth=1.5;" vertex="1" parent="layer-dal">
+        <mxCell id="layer-dal-body" value="Data/ (Repositories + DatabaseHelper)&#xa;&#xa;• DatabaseHelper — ExecuteQuery / ExecuteNonQuery&#xa;• AdminRepository&#xa;• CustomerRepository&#xa;• MedicineRepository&#xa;• OrderRepository&#xa;&#xa;All SQL access goes through DatabaseHelper to SmartMedDB." style="text;strokeColor=#003296;fillColor=#B4CBF9;align=left;verticalAlign=top;spacingLeft=14;spacingTop=10;fontFamily=Helvetica;fontColor=#003296;fontSize=11;html=1;whiteSpace=wrap;strokeWidth=1.5;" vertex="1" parent="layer-dal">
           <mxGeometry y="34" width="540" height="246" as="geometry" />
         </mxCell>
 

@@ -89,7 +89,7 @@ Customer places Orders (one-to-many). Order contains OrderItems (one-to-many). M
 
 Entity classes Medicine, Order, OrderItem, and Prescription model pharmacy domain objects. Services coordinate validation and repository calls; repositories map rows to Models."""),
 
-    (2, "Sequence Diagram", """Docs/Diagrams/Sequence.drawio illustrates key interactions such as admin login and medicine CRUD: the user interacts with a Form, which calls AuthService or a Repository, which uses DatabaseHelper to execute SQL against SmartMedDB, then results flow back to update the UI (DataGridView or labels)."""),
+    (2, "Sequence Diagram", """Docs/Diagrams/Sequence.drawio reflects the current single-project SmartMed architecture (Forms/, Services/, Data/, Models/). Repositories in Data/ always call DatabaseHelper before SmartMedDB. Services are used only where implemented: AuthService (login/registration), MedicineService (medicine CRUD), and ReportService (reports/dashboard stats). ManageOrdersForm and ManageCustomersForm call repositories directly with no service class. SD1 shows Form→Service→Repository; SD2 shows Form→Repository; SD3 shows medicine and report flows through services."""),
 
     (2, "Database Design", """Database SmartMedDB contains tables Admin, Customer, Medicine, Order, OrderItem, and Prescription. Seed data includes a default admin (admin / admin123) and sample customers and medicines. Order.Status is limited to Pending, Ready for Pickup, or Delivered. OrderItem stores quantity, unit price, and subtotal at order time."""),
 
