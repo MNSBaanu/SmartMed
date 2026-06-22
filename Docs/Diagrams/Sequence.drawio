@@ -1,6 +1,6 @@
 <mxfile host="Electron" agent="SmartMed" pages="3">
   <diagram name="SD1 - Customer Registration" id="seq-registration">
-    <mxGraphModel grid="1" page="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" pageScale="1" pageWidth="1100" pageHeight="850" math="0" shadow="0">
+    <mxGraphModel dx="1625" dy="1218" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1100" pageHeight="850" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
@@ -83,14 +83,11 @@
             <mxPoint x="90" y="500" as="targetPoint" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="sd1-note" parent="1" style="shape=note;whiteSpace=wrap;html=1;backgroundOutline=1;strokeColor=#003296;fillColor=#ffffcc;fontColor=#003296;fontFamily=Helvetica;fontSize=10;align=left;spacingLeft=6;" value="Scenario: New customer registers then logs in with email/password." vertex="1">
-          <mxGeometry height="45" width="280" x="40" y="660" as="geometry" />
-        </mxCell>
       </root>
     </mxGraphModel>
   </diagram>
   <diagram name="SD2 - Place Order" id="seq-place-order">
-    <mxGraphModel grid="1" page="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" pageScale="1" pageWidth="1200" pageHeight="900" math="0" shadow="0">
+    <mxGraphModel dx="1192" dy="893" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1200" pageHeight="900" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
@@ -182,14 +179,11 @@
             <mxPoint x="75" y="540" as="targetPoint" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="sd2-note" parent="1" style="shape=note;whiteSpace=wrap;html=1;backgroundOutline=1;strokeColor=#003296;fillColor=#ffffcc;fontColor=#003296;fontFamily=Helvetica;fontSize=10;align=left;spacingLeft=6;" value="Scenario: Logged-in customer adds medicines to cart and places order." vertex="1">
-          <mxGeometry height="45" width="260" x="30" y="740" as="geometry" />
-        </mxCell>
       </root>
     </mxGraphModel>
   </diagram>
   <diagram name="SD3 - Admin Login and Dashboard" id="seq-admin-dashboard">
-    <mxGraphModel dx="1052" dy="788" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1100" pageHeight="850" math="0" shadow="0">
+    <mxGraphModel dx="1277" dy="957" grid="0" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1100" pageHeight="850" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
@@ -276,9 +270,6 @@
             <mxPoint x="670" y="560" as="sourcePoint" />
             <mxPoint x="225" y="560" as="targetPoint" />
           </mxGeometry>
-        </mxCell>
-        <mxCell id="sd3-note" parent="1" style="shape=note;whiteSpace=wrap;html=1;backgroundOutline=1;strokeColor=#003296;fillColor=#ffffcc;fontColor=#003296;fontFamily=Helvetica;fontSize=10;align=left;spacingLeft=6;" value="Scenario: Admin authenticates and views pharmacy overview dashboard." vertex="1">
-          <mxGeometry height="45" width="270" x="40" y="700" as="geometry" />
         </mxCell>
       </root>
     </mxGraphModel>
