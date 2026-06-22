@@ -10,9 +10,11 @@ REPORT_PATH = os.path.normpath(
 
 # (heading_level, title, body) — level 1 = Heading 1, 2 = Heading 2, 0 = body only
 SECTIONS = [
-    (1, "Introduction", """SmartMed Pharmacy Management System is a desktop Windows Forms application developed in C# on .NET Framework 4.8. The system supports pharmacy operations for two roles: administrators who manage inventory, customers, and orders, and customers who register, log in, search medicines, and place orders.
+    (1, "Introduction", """This report presents SmartMed, a pharmacy management system developed as part of the coursework assignment. The application is intended to help a small pharmacy handle routine work through one Windows desktop program instead of depending on paper records or scattered files. Two user types are supported: an admin who manages the pharmacy operation, and a customer who signs in to use the customer-facing side of the system. Both roles enter through the same login screen, but each user sees only the features relevant to that role.
 
-The main objectives are to digitise medicine stock control, customer records, and order fulfilment; provide searchable medicine catalogues using linear search and filtering; and present sales and stock information through admin dashboards and reports. Data is stored in Microsoft SQL Server using a layered design: Forms (presentation), Services (business logic), Data (repositories), and Models (entity classes)."""),
+The system was built using C# with Windows Forms on .NET Framework 4.8, which is well suited to a desktop business application of this kind. Persistent data is stored in a SQL Server database named SmartMedDB, with ADO.NET used to connect the forms to the database through helper and repository classes. The project structure separates the user interface, business logic, and data access into different folders, which makes the codebase easier to follow as features are added. Supporting diagrams such as use case, class, and sequence models were prepared to plan and explain how the system behaves.
+
+The overall aim was to apply object-oriented programming in a practical desktop application that a pharmacy could realistically use. Key goals included reliable login for both roles, keeping stock and order information accurate, and giving the admin useful dashboard and report information without manual calculations. Another priority was to keep the code readable and well organised so that further features could be added later without disrupting existing functionality."""),
 
     (1, "System Requirements", None),
 
@@ -270,7 +272,16 @@ def restructure_report():
             for part in body.split("\n\n"):
                 add_paragraph(doc, part)
 
-    doc.save(REPORT_PATH)
+    tmp_path = REPORT_PATH + ".tmp"
+    doc.save(tmp_path)
+    try:
+        os.replace(tmp_path, REPORT_PATH)
+    except OSError:
+        if os.path.exists(tmp_path):
+            os.remove(tmp_path)
+        raise RuntimeError(
+            f"Could not update '{REPORT_PATH}'. Close the file in Word and run this script again."
+        )
     words = sum(len(body.split()) for _, _, body in SECTIONS if body)
     print(f"Saved {REPORT_PATH}")
     print(f"Approximate word count (body): {words}")
