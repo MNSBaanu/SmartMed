@@ -61,17 +61,13 @@ Additional Features
 
     (1, "Design Diagrams", None),
 
-    (2, "Architecture Diagram", """The application follows a layered architecture documented in Docs/Diagrams/Architecture.drawio:
+    (2, "Architecture Diagram", """The application follows a three-layer architecture documented in Docs/Diagrams/Architecture.drawio, covering both Admin and Customer modules:
 
-Presentation layer (SmartMed.UI — Forms/): LoginForm, RegistrationForm, AdminShellForm, AdminDashboardForm, ManageMedicinesForm, ManageCustomersForm, ManageOrdersForm, ReportsForm.
+Presentation Layer (Forms/): shared LoginForm and RegistrationForm; admin forms (AdminShellForm, AdminDashboardForm, ManageMedicinesForm, ManageCustomersForm, ManageOrdersForm, ReportsForm); customer portal forms (CustomerDashboardForm, SearchMedicinesForm, PlaceOrderForm, TrackOrdersForm, ProfileManagementForm).
 
-Service layer (SmartMed.Services): AuthService, ValidationService, SearchService, ReportService, Session.
+Application Layer (Services/ + Models/): models for Admin, Customer, Medicine, Order, OrderItem, Prescription; AuthService and Session for both roles; SearchService and MedicineService for customer search and ordering; MedicineService and ReportService for admin operations.
 
-Data layer (SmartMed.Data): DatabaseHelper, AdminRepository, CustomerRepository, MedicineRepository, OrderRepository.
-
-Database layer: SQL Server database SmartMedDB.
-
-Forms call Services or Data repositories; repositories use DatabaseHelper for all SQL. Session stores the logged-in Admin or Customer after authentication."""),
+Data Layer (Data/): DatabaseHelper plus repositories — CustomerRepository and OrderRepository for registration, profile, place/track orders; MedicineRepository for search and inventory; AdminRepository for admin login; all repositories access SmartMedDB on SQL Server."""),
 
     (2, "Use Case Diagram", """Docs/Diagrams/Usecase.drawio defines actors Admin and Customer.
 
