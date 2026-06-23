@@ -155,7 +155,7 @@ namespace SmartMed.UI
             this.lblFullName.Name = "lblFullName";
             this.lblFullName.Size = new System.Drawing.Size(62, 15);
             this.lblFullName.TabIndex = 0;
-            this.lblFullName.Text = "Full Name";
+            this.lblFullName.Text = "Full Name *";
             // 
             // txtFullName
             // 
@@ -171,7 +171,7 @@ namespace SmartMed.UI
             this.lblEmail.Name = "lblEmail";
             this.lblEmail.Size = new System.Drawing.Size(36, 15);
             this.lblEmail.TabIndex = 2;
-            this.lblEmail.Text = "Email";
+            this.lblEmail.Text = "Email *";
             // 
             // txtEmail
             // 
@@ -187,11 +187,12 @@ namespace SmartMed.UI
             this.lblPhone.Name = "lblPhone";
             this.lblPhone.Size = new System.Drawing.Size(41, 15);
             this.lblPhone.TabIndex = 4;
-            this.lblPhone.Text = "Phone";
+            this.lblPhone.Text = "Phone *";
             // 
             // txtPhone
             // 
             this.txtPhone.Location = new System.Drawing.Point(233, 100);
+            this.txtPhone.MaxLength = 14;
             this.txtPhone.Name = "txtPhone";
             this.txtPhone.Size = new System.Drawing.Size(193, 23);
             this.txtPhone.TabIndex = 5;
@@ -203,7 +204,7 @@ namespace SmartMed.UI
             this.lblAddress.Name = "lblAddress";
             this.lblAddress.Size = new System.Drawing.Size(49, 15);
             this.lblAddress.TabIndex = 6;
-            this.lblAddress.Text = "Address";
+            this.lblAddress.Text = "Address *";
             // 
             // txtAddress
             // 
@@ -221,7 +222,7 @@ namespace SmartMed.UI
             this.lblPassword.Name = "lblPassword";
             this.lblPassword.Size = new System.Drawing.Size(57, 15);
             this.lblPassword.TabIndex = 8;
-            this.lblPassword.Text = "Password";
+            this.lblPassword.Text = "Password *";
             // 
             // txtPassword
             // 
@@ -254,7 +255,7 @@ namespace SmartMed.UI
             this.lblConfirm.Name = "lblConfirm";
             this.lblConfirm.Size = new System.Drawing.Size(104, 15);
             this.lblConfirm.TabIndex = 11;
-            this.lblConfirm.Text = "Confirm Password";
+            this.lblConfirm.Text = "Confirm Password *";
             // 
             // txtConfirm
             // 

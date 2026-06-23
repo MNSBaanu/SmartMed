@@ -39,10 +39,11 @@ namespace SmartMed.UI
             panelContent.Controls.Clear();
             var root = new Panel { Dock = DockStyle.Top, AutoSize = true, Width = GetScrollContentWidth(), Padding = new Padding(0, 0, 0, 16) };
 
-            txtName = CreateField(root, "Full Name", 0);
-            txtEmail = CreateField(root, "Email", 40);
-            txtPhone = CreateField(root, "Phone", 80);
-            txtAddress = CreateField(root, "Address", 120);
+            txtName = CreateField(root, ValidationService.RequiredLabel("Full Name"), 0);
+            txtEmail = CreateField(root, ValidationService.RequiredLabel("Email"), 40);
+            txtPhone = CreateField(root, ValidationService.RequiredLabel("Phone"), 80);
+            txtPhone.MaxLength = 14;
+            txtAddress = CreateField(root, ValidationService.RequiredLabel("Address"), 120);
 
             var actions = new FlowLayoutPanel { Location = new Point(0, 170), AutoSize = true };
             var btnSave = new Button { Text = "Save Profile", Width = 120, Height = 32 };

@@ -337,7 +337,7 @@ namespace SmartMed.UI
             columns.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50f));
             txtName = new TextBox();
             txtDosage = new TextBox();
-            txtStock = new TextBox();
+            txtStock = new TextBox { MaxLength = 6 };
             txtDiscount = new TextBox { Text = "0" };
             dtpExpiry = new DateTimePicker { Format = DateTimePickerFormat.Short, Height = 23 };
             cmbCategory = new ComboBox { DropDownStyle = ComboBoxStyle.DropDown };
@@ -346,10 +346,10 @@ namespace SmartMed.UI
             chkPrescription = new CheckBox { Text = "Requires Prescription (Rx)", AutoSize = true };
             chkPromotion = new CheckBox { Text = "On Promotion", AutoSize = true };
             columns.Controls.Add(CreateFieldColumn(
-                CreateField("Medicine Name", txtName),
-                CreateField("Dosage / Form", txtDosage),
-                CreateField("Current Stock", txtStock),
-                CreateField("Expiry Date", dtpExpiry)), 0, 0);
+                CreateField("Medicine Name", txtName, required: true),
+                CreateField("Dosage / Form", txtDosage, required: true),
+                CreateField("Current Stock", txtStock, required: true),
+                CreateField("Expiry Date", dtpExpiry, required: true)), 0, 0);
             var promoPanel = new Panel { Height = 23 + 24, Dock = DockStyle.Top };
             chkPrescription.Font = SystemFonts.DefaultFont;
             chkPrescription.ForeColor = SystemColors.Highlight;
@@ -363,9 +363,9 @@ namespace SmartMed.UI
             promotionPanel.Controls.Add(chkPromotion);
             promotionPanel.Controls.Add(new Label { Text = "Promotion", Dock = DockStyle.Top, Height = 20 });
             columns.Controls.Add(CreateFieldColumn(
-                CreateField("Category", cmbCategory),
-                CreateField("Unit Price (LKR)", txtPrice),
-                CreateField("Supplier", txtSupplier),
+                CreateField("Category", cmbCategory, required: true),
+                CreateField("Unit Price (LKR)", txtPrice, required: true),
+                CreateField("Supplier", txtSupplier, required: true),
                 discountPanel,
                 promotionPanel,
                 promoPanel), 1, 0);
@@ -410,10 +410,15 @@ namespace SmartMed.UI
             }
             return col;
         }
-        private Panel CreateField(string labelText, Control input)
+        private Panel CreateField(string labelText, Control input, bool required = false)
         {
             var wrap = new Panel { Height = 23 + 24, Dock = DockStyle.Top, Padding = new Padding(0, 0, 0, 8) };
-            var lbl = new Label { Text = labelText, Dock = DockStyle.Top, Height = 20 };
+            var lbl = new Label
+            {
+                Text = required ? ValidationService.RequiredLabel(labelText) : labelText,
+                Dock = DockStyle.Top,
+                Height = 20
+            };
             input.Dock = DockStyle.Top;
             input.Height = 23;
             if (input is TextBox tb) { tb.BorderStyle = BorderStyle.Fixed3D; }

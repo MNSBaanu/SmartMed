@@ -15,6 +15,9 @@ namespace SmartMed.Services
 
         public Customer GetById(int id) => _customers.GetById(id);
 
+        public List<Customer> Search(string keyword) =>
+            SearchService.SearchCustomers(GetAll(), keyword);
+
         public void UpdateProfile(Customer customer)
         {
             Update(customer);
@@ -109,6 +112,8 @@ namespace SmartMed.Services
                 throw new ArgumentException("Valid email is required.");
             if (ValidationService.IsNullOrWhiteSpace(customer.Phone))
                 throw new ArgumentException("Phone is required.");
+            if (!ValidationService.IsValidSriLankaPhone(customer.Phone))
+                throw new ArgumentException(ValidationService.SriLankaPhoneMessage);
             if (ValidationService.IsNullOrWhiteSpace(customer.Address))
                 throw new ArgumentException("Address is required.");
         }

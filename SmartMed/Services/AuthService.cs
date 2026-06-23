@@ -34,6 +34,8 @@ namespace SmartMed.Services
                 throw new System.ArgumentException("Valid email is required.");
             if (ValidationService.IsNullOrWhiteSpace(customer.Phone))
                 throw new System.ArgumentException("Phone is required.");
+            if (!ValidationService.IsValidSriLankaPhone(customer.Phone))
+                throw new System.ArgumentException(ValidationService.SriLankaPhoneMessage);
             if (ValidationService.IsNullOrWhiteSpace(customer.Address))
                 throw new System.ArgumentException("Address is required.");
             if (ValidationService.IsNullOrWhiteSpace(customer.Password))

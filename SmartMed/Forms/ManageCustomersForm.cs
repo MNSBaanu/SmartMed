@@ -32,8 +32,10 @@ namespace SmartMed.UI
 
         private CustomerService _customers;
         private int? _selectedId;
+        private List<Customer> _allCustomers = new List<Customer>();
 
         private DataGridView gridCustomers;
+        private TextBox txtSearch;
         private TextBox txtName;
         private TextBox txtEmail;
         private TextBox txtPhone;
@@ -59,20 +61,22 @@ namespace SmartMed.UI
                 AutoSizeMode = AutoSizeMode.GrowAndShrink,
                 Dock = DockStyle.Top,
                 ColumnCount = 1,
-                RowCount = 4,
+                RowCount = 5,
                 MinimumSize = new Size(0, 900),
                 Width = GetScrollContentWidth()
             };
             _scrollRoot.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100f));
-            _scrollRoot.RowStyles.Add(new RowStyle(SizeType.AutoSize));
-            _scrollRoot.RowStyles.Add(new RowStyle(SizeType.AutoSize));
-            _scrollRoot.RowStyles.Add(new RowStyle(SizeType.Absolute, 220f));
-            _scrollRoot.RowStyles.Add(new RowStyle(SizeType.AutoSize));
+            _scrollRoot.RowStyles.Add(new RowStyle(SizeType.AutoSize));      // header
+            _scrollRoot.RowStyles.Add(new RowStyle(SizeType.AutoSize));      // stats
+            _scrollRoot.RowStyles.Add(new RowStyle(SizeType.AutoSize));      // search
+            _scrollRoot.RowStyles.Add(new RowStyle(SizeType.Absolute, 220f)); // grid
+            _scrollRoot.RowStyles.Add(new RowStyle(SizeType.AutoSize));      // form
 
             _scrollRoot.Controls.Add(CreatePageHeader(), 0, 0);
             _scrollRoot.Controls.Add(CreateStatsRow(), 0, 1);
-            _scrollRoot.Controls.Add(CreateGridPanel(), 0, 2);
-            _scrollRoot.Controls.Add(CreateFormPanel(), 0, 3);
+            _scrollRoot.Controls.Add(CreateSearchPanel(), 0, 2);
+            _scrollRoot.Controls.Add(CreateGridPanel(), 0, 3);
+            _scrollRoot.Controls.Add(CreateFormPanel(), 0, 4);
             WireScrollRoot(_scrollRoot);
         }
 
@@ -130,6 +134,47 @@ namespace SmartMed.UI
                 Margin = new Padding(4, 0, 0, 0)
             };
             return btn;
+        }
+
+        private Panel CreateSearchPanel()
+        {
+            var panel = new Panel
+            {
+                Dock = DockStyle.Top,
+                Height = 40,
+                Margin = new Padding(0, 0, 0, 12)
+            };
+            txtSearch = new TextBox { Width = 320 };
+            var btnClearSearch = new Button { Text = "Clear", Width = 70, Height = 28 };
+            var flow = new FlowLayoutPanel
+            {
+                Dock = DockStyle.Fill,
+                FlowDirection = FlowDirection.LeftToRight,
+                WrapContents = false
+            };
+            flow.Controls.Add(new Label
+            {
+                Text = "Search:",
+                AutoSize = true,
+                Padding = new Padding(0, 6, 4, 0)
+            });
+            flow.Controls.Add(txtSearch);
+            flow.Controls.Add(new Label
+            {
+                Text = "(name, email, phone, or customer ID)",
+                AutoSize = true,
+                ForeColor = SystemColors.GrayText,
+                Padding = new Padding(8, 6, 0, 0)
+            });
+            flow.Controls.Add(btnClearSearch);
+            txtSearch.TextChanged += (s, e) => ApplySearchFilter();
+            btnClearSearch.Click += (s, e) =>
+            {
+                txtSearch.Clear();
+                ApplySearchFilter();
+            };
+            panel.Controls.Add(flow);
+            return panel;
         }
 
         private Panel CreateGridPanel()
@@ -203,7 +248,7 @@ namespace SmartMed.UI
 
             txtName = new TextBox();
             txtEmail = new TextBox();
-            txtPhone = new TextBox();
+            txtPhone = new TextBox { MaxLength = 14 };
             txtAddress = new TextBox
             {
                 Multiline = true,
@@ -212,12 +257,12 @@ namespace SmartMed.UI
             };
 
             columns.Controls.Add(CreateFieldColumn(
-                CreateField("Full Name", txtName),
-                CreateField("Email", txtEmail),
-                CreateField("Phone", txtPhone)), 0, 0);
+                CreateField("Full Name", txtName, required: true),
+                CreateField("Email", txtEmail, required: true),
+                CreateField("Phone", txtPhone, required: true)), 0, 0);
 
             columns.Controls.Add(CreateFieldColumn(
-                CreateAddressField("Residential Address", txtAddress)), 1, 0);
+                CreateAddressField("Residential Address", txtAddress, required: true)), 1, 0);
 
             btnClear = new Button { Text = "Clear Form", Width = 110, Height = 40 };
             btnDelete = new Button { Text = "Delete Entry", Width = 110, Height = 40 };
@@ -264,10 +309,15 @@ namespace SmartMed.UI
             return col;
         }
 
-        private Panel CreateField(string labelText, Control input)
+        private Panel CreateField(string labelText, Control input, bool required = false)
         {
             var wrap = new Panel { Height = 23 + 24, Dock = DockStyle.Top, Padding = new Padding(0, 0, 0, 8) };
-            var lbl = new Label { Text = labelText, Dock = DockStyle.Top, Height = 20 };
+            var lbl = new Label
+            {
+                Text = required ? ValidationService.RequiredLabel(labelText) : labelText,
+                Dock = DockStyle.Top,
+                Height = 20
+            };
             input.Dock = DockStyle.Top;
             input.Height = 23;
             if (input is TextBox tb) { tb.BorderStyle = BorderStyle.Fixed3D; }
@@ -276,10 +326,15 @@ namespace SmartMed.UI
             return wrap;
         }
 
-        private Panel CreateAddressField(string labelText, TextBox input)
+        private Panel CreateAddressField(string labelText, TextBox input, bool required = false)
         {
             var wrap = new Panel { Height = 23 + 76, Dock = DockStyle.Top, Padding = new Padding(0, 0, 0, 8) };
-            var lbl = new Label { Text = labelText, Dock = DockStyle.Top, Height = 20 };
+            var lbl = new Label
+            {
+                Text = required ? ValidationService.RequiredLabel(labelText) : labelText,
+                Dock = DockStyle.Top,
+                Height = 20
+            };
             input.Dock = DockStyle.Top;
             wrap.Controls.Add(input);
             wrap.Controls.Add(lbl);
@@ -352,15 +407,15 @@ namespace SmartMed.UI
         {
             gridCustomers.DataSource = new[]
             {
-                new { CustomerID = 1, Name = "Alice Thompson", Email = "a.thompson@email.com", Phone = "(555) 012-3456", Address = "123 Pine St, Seattle, WA 98101" },
-                new { CustomerID = 2, Name = "Robert Miller", Email = "r.miller88@email.com", Phone = "(555) 987-6543", Address = "456 Oak Lane, Portland, OR 97205" },
-                new { CustomerID = 3, Name = "Elena Rodriguez", Email = "elena.rod@provider.net", Phone = "(555) 234-5678", Address = "789 Maple Ave, San Francisco, CA 94103" }
+                new { CustomerID = 1, Name = "Alice Thompson", Email = "a.thompson@email.com", Phone = "0770123456", Address = "123 Pine St, Colombo" },
+                new { CustomerID = 2, Name = "Robert Miller", Email = "r.miller88@email.com", Phone = "0779876543", Address = "456 Oak Lane, Kandy" },
+                new { CustomerID = 3, Name = "Elena Rodriguez", Email = "elena.rod@provider.net", Phone = "0772345678", Address = "789 Maple Ave, Galle" }
             };
             HideCustomerIdColumn();
 
             txtName.Text = "Robert Miller";
             txtEmail.Text = "r.miller88@email.com";
-            txtPhone.Text = "(555) 987-6543";
+            txtPhone.Text = "0779876543";
             txtAddress.Text = "456 Oak Lane,\r\nApartment 12B,\r\nPortland, OR 97205";
 
             lblTotalCustomers.Text = "4";
@@ -372,8 +427,26 @@ namespace SmartMed.UI
         {
             if (IsDesignHost() || Customers == null) return;
 
-            var all = Customers.GetAll();
-            gridCustomers.DataSource = all.Select(c => new
+            _allCustomers = Customers.GetAll();
+            ApplySearchFilter();
+        }
+
+        private void ApplySearchFilter()
+        {
+            if (gridCustomers == null) return;
+            if (IsDesignHost() && _allCustomers.Count == 0) return;
+
+            var filtered = string.IsNullOrWhiteSpace(txtSearch?.Text)
+                ? _allCustomers
+                : SearchService.SearchCustomers(_allCustomers, txtSearch.Text);
+
+            BindGrid(filtered);
+            UpdateStats(_allCustomers);
+        }
+
+        private void BindGrid(List<Customer> customers)
+        {
+            gridCustomers.DataSource = customers.Select(c => new
             {
                 c.CustomerID,
                 Name = c.Name,
@@ -381,9 +454,14 @@ namespace SmartMed.UI
                 c.Phone,
                 c.Address
             }).ToList();
-
             HideCustomerIdColumn();
-            UpdateStats(all);
+        }
+
+        private List<Customer> GetFilteredCustomers()
+        {
+            return string.IsNullOrWhiteSpace(txtSearch?.Text)
+                ? _allCustomers
+                : SearchService.SearchCustomers(_allCustomers, txtSearch.Text);
         }
 
         private void HideCustomerIdColumn()
@@ -514,7 +592,7 @@ namespace SmartMed.UI
                 })
                 {
                     if (dialog.ShowDialog() != DialogResult.OK) return;
-                    Customers.ExportToCsv(Customers.GetAll(), dialog.FileName);
+                    Customers.ExportToCsv(GetFilteredCustomers(), dialog.FileName);
                     MessageBox.Show("Customers exported.", "Export", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
             }
