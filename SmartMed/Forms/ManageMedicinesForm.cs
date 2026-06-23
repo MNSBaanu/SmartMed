@@ -582,7 +582,7 @@ namespace SmartMed.UI
                 m.MedicineName,
                 m.Category,
                 m.Dosage,
-                Price = m.GetEffectivePrice().ToString("N2"),
+                Price = Medicines.GetEffectivePrice(m).ToString("N2"),
                 Stock = m.StockQuantity,
                 m.Supplier,
                 Expiry = m.ExpiryDate.ToString("yyyy-MM-dd"),
@@ -614,16 +614,13 @@ namespace SmartMed.UI
         private void UpdateStats(List<Medicine> all)
         {
             lblTotalItems.Text = all.Count.ToString("N0");
-            lblLowStock.Text = all.Count(m => m.IsLowStock()).ToString("N0");
-            var compliance = all.Count == 0
-                ? 0m
-                : (decimal)all.Count(m => m.CheckExpiry() != Medicine.ExpiryStatus.Expired) / all.Count * 100m;
-            lblCompliance.Text = $"{compliance:N1}%";
+            lblLowStock.Text = all.Count(m => Medicines.IsLowStock(m)).ToString("N0");
+            lblCompliance.Text = $"{Medicines.CompliancePercent(all):N1}%";
         }
         private void UpdateExpiryAlerts(List<Medicine> all)
         {
-            var expired = all.Count(m => m.CheckExpiry() == Medicine.ExpiryStatus.Expired);
-            var expiring = all.Count(m => m.CheckExpiry(30) == Medicine.ExpiryStatus.ExpiringSoon);
+            var expired = Medicines.CountExpired(all);
+            var expiring = Medicines.CountExpiringSoon(all);
             if (expired == 0 && expiring == 0)
             {
                 lblExpiryAlerts.Text = "No expiry alerts. All medicines are within safe expiry dates.";
@@ -634,7 +631,7 @@ namespace SmartMed.UI
             if (expired > 0) parts.Add($"{expired} expired");
             if (expiring > 0) parts.Add($"{expiring} expiring within 30 days");
             var names = all
-                .Where(m => m.CheckExpiry() != Medicine.ExpiryStatus.Valid)
+                .Where(m => Medicines.CheckExpiry(m) != MedicineService.ExpiryValid)
                 .OrderBy(m => m.ExpiryDate)
                 .Take(3)
                 .Select(m => m.MedicineName);
@@ -662,13 +659,13 @@ namespace SmartMed.UI
             }
             else if (columnName == "Expiry")
             {
-                var status = item.CheckExpiry();
-                if (status == Medicine.ExpiryStatus.Expired)
+                var status = Medicines.CheckExpiry(item);
+                if (status == MedicineService.ExpiryExpired)
                 {
                     e.CellStyle.ForeColor = Color.DarkRed;
                     e.CellStyle.Font = new Font(e.CellStyle.Font, FontStyle.Bold);
                 }
-                else if (status == Medicine.ExpiryStatus.ExpiringSoon)
+                else if (status == MedicineService.ExpiryExpiringSoon)
                 {
                     e.CellStyle.ForeColor = Color.DarkOrange;
                     e.CellStyle.Font = new Font(e.CellStyle.Font, FontStyle.Bold);

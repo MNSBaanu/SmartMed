@@ -13,6 +13,10 @@ namespace SmartMed.Services
 {
     public class MedicineService
     {
+        public const string ExpiryValid = "Valid";
+        public const string ExpiryExpiringSoon = "ExpiringSoon";
+        public const string ExpiryExpired = "Expired";
+
         private readonly MedicineRepository _medicines = new MedicineRepository();
 
         public List<Medicine> GetAll() => _medicines.GetAll();
@@ -78,17 +82,36 @@ namespace SmartMed.Services
             _medicines.Delete(medicineId);
         }
 
+        public string CheckExpiry(Medicine m, int warningDays = 30)
+        {
+            var today = DateTime.Today;
+            if (m.ExpiryDate.Date < today)
+                return ExpiryExpired;
+            if (m.ExpiryDate.Date <= today.AddDays(warningDays))
+                return ExpiryExpiringSoon;
+            return ExpiryValid;
+        }
+
+        public bool IsLowStock(Medicine m, int threshold = 20) => m.StockQuantity <= threshold;
+
+        public decimal GetEffectivePrice(Medicine m)
+        {
+            if (m.IsOnPromotion && m.DiscountPercent > 0)
+                return Math.Round(m.Price * (1 - m.DiscountPercent / 100m), 2);
+            return m.Price;
+        }
+
         public int CountExpired(IEnumerable<Medicine> items) =>
-            items.Count(m => m.CheckExpiry() == Medicine.ExpiryStatus.Expired);
+            items.Count(m => CheckExpiry(m) == ExpiryExpired);
 
         public int CountExpiringSoon(IEnumerable<Medicine> items, int warningDays = 30) =>
-            items.Count(m => m.CheckExpiry(warningDays) == Medicine.ExpiryStatus.ExpiringSoon);
+            items.Count(m => CheckExpiry(m, warningDays) == ExpiryExpiringSoon);
 
         public decimal CompliancePercent(IEnumerable<Medicine> items)
         {
             var list = items.ToList();
             if (list.Count == 0) return 0m;
-            var compliant = list.Count(m => m.CheckExpiry() != Medicine.ExpiryStatus.Expired);
+            var compliant = list.Count(m => CheckExpiry(m) != ExpiryExpired);
             return (decimal)compliant / list.Count * 100m;
         }
 
@@ -108,7 +131,7 @@ namespace SmartMed.Services
                 sb.Append(m.RequiresPrescription ? "Yes" : "No").Append(',');
                 sb.Append(m.DiscountPercent.ToString("F2")).Append(',');
                 sb.Append(m.IsOnPromotion ? "Yes" : "No").Append(',');
-                sb.AppendLine(m.GetEffectivePrice().ToString("F2"));
+                sb.AppendLine(GetEffectivePrice(m).ToString("F2"));
             }
             File.WriteAllText(filePath, sb.ToString(), Encoding.UTF8);
         }
@@ -143,7 +166,7 @@ namespace SmartMed.Services
                 while (index < medicines.Count && y + lineHeight < e.MarginBounds.Bottom)
                 {
                     var m = medicines[index++];
-                    var line = $"{m.MedicineName} | {m.Category} | {m.StockQuantity} | {m.GetEffectivePrice():N2} | {m.ExpiryDate:yyyy-MM-dd} | {(m.RequiresPrescription ? "Yes" : "No")}";
+                    var line = $"{m.MedicineName} | {m.Category} | {m.StockQuantity} | {GetEffectivePrice(m):N2} | {m.ExpiryDate:yyyy-MM-dd} | {(m.RequiresPrescription ? "Yes" : "No")}";
                     e.Graphics.DrawString(line, bodyFont, Brushes.Black, e.MarginBounds.Left, y);
                     y += lineHeight;
                 }
