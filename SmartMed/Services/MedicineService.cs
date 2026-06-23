@@ -44,6 +44,8 @@ namespace SmartMed.Services
                 throw new ArgumentException("Price must be non-negative.");
             if (item.StockQuantity < 0)
                 throw new ArgumentException("Stock quantity must be 0 or greater.");
+            if (isNew && item.StockQuantity <= 0)
+                throw new ArgumentException("Stock quantity must be greater than 0 when adding a new medicine.");
             if (item.DiscountPercent < 0 || item.DiscountPercent > 100)
                 throw new ArgumentException("Discount must be between 0 and 100.");
             if (item.ExpiryDate.Date < DateTime.Today)

@@ -677,7 +677,9 @@ namespace SmartMed.UI
         }
         private Medicine ReadForm()
         {
-            if (!ValidationService.IsNonNegativeInt(txtStock.Text.Trim(), out var stock))
+            if (!int.TryParse(txtStock.Text.Trim(), out var stock))
+                throw new ArgumentException("Stock quantity must be a valid number.");
+            if (stock < 0)
                 throw new ArgumentException("Stock quantity must be 0 or greater.");
             if (!decimal.TryParse(txtPrice.Text.Trim(), out var price))
                 throw new ArgumentException("Price must be a valid number.");
@@ -703,7 +705,7 @@ namespace SmartMed.UI
             _selectedId = null;
             txtName.Clear();
             txtDosage.Clear();
-            txtStock.Text = "0";
+            txtStock.Clear();
             txtPrice.Clear();
             txtSupplier.Clear();
             txtDiscount.Text = "0";
@@ -719,6 +721,8 @@ namespace SmartMed.UI
             try
             {
                 var item = ReadForm();
+                if (item.StockQuantity <= 0)
+                    throw new ArgumentException("Stock quantity must be greater than 0 when adding a new medicine.");
                 Medicines.Add(item);
                 ClearForm();
                 LoadMedicines();
