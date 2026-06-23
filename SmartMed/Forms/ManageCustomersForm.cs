@@ -109,9 +109,9 @@ namespace SmartMed.UI
                 Padding = new Padding(0, 8, 0, 0)
             };
             var btnExport = CreateToolbarButton("Export");
-            btnExport.Click += (s, e) => ShowComingSoon("Export");
+            btnExport.Click += BtnExport_Click;
             var btnPrint = CreateToolbarButton("Print");
-            btnPrint.Click += (s, e) => ShowComingSoon("Print");
+            btnPrint.Click += BtnPrint_Click;
             actions.Controls.Add(btnExport);
             actions.Controls.Add(btnPrint);
 
@@ -499,6 +499,45 @@ namespace SmartMed.UI
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message, "Delete Failed", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
+        }
+
+        private void BtnExport_Click(object sender, EventArgs e)
+        {
+            if (IsDesignHost() || Customers == null) return;
+            try
+            {
+                using (var dialog = new SaveFileDialog
+                {
+                    Filter = "CSV files (*.csv)|*.csv",
+                    FileName = "customers.csv"
+                })
+                {
+                    if (dialog.ShowDialog() != DialogResult.OK) return;
+                    Customers.ExportToCsv(Customers.GetAll(), dialog.FileName);
+                    MessageBox.Show("Customers exported.", "Export", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Export Failed", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
+        }
+
+        private void BtnPrint_Click(object sender, EventArgs e)
+        {
+            if (gridCustomers.Rows.Count == 0)
+            {
+                MessageBox.Show("No customers to print.", "Print", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return;
+            }
+            try
+            {
+                ExportHelper.PrintGrid(gridCustomers, "Customer List");
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Print Failed", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
         }
     }

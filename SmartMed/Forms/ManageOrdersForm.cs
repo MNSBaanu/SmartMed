@@ -36,6 +36,8 @@ namespace SmartMed.UI
 
         private OrderService _orders;
         private int? _selectedOrderId;
+        private string _statusFilter = "All";
+        private ComboBox cmbStatusFilter;
 
         private DataGridView gridOrders;
         private DataGridView gridItems;
@@ -111,12 +113,20 @@ namespace SmartMed.UI
                 WrapContents = false,
                 Padding = new Padding(0, 8, 0, 0)
             };
-            var btnFilter = CreateToolbarButton("Filter");
-            btnFilter.Click += (s, e) => ShowComingSoon("Filter");
-            var btnNew = CreateToolbarButton("New Order");
-            btnNew.Click += (s, e) => ShowComingSoon("New Order");
-            actions.Controls.Add(btnFilter);
-            actions.Controls.Add(btnNew);
+            actions.Controls.Add(new Label { Text = "Status:", AutoSize = true, Padding = new Padding(0, 8, 0, 0) });
+            cmbStatusFilter = new ComboBox
+            {
+                DropDownStyle = ComboBoxStyle.DropDownList,
+                Width = 150
+            };
+            cmbStatusFilter.Items.AddRange(new object[] { "All", "Pending", "Ready for Pickup", "Delivered" });
+            cmbStatusFilter.SelectedIndex = 0;
+            cmbStatusFilter.SelectedIndexChanged += (s, e) =>
+            {
+                _statusFilter = cmbStatusFilter.SelectedItem?.ToString() ?? "All";
+                if (!IsDesignHost()) LoadOrders();
+            };
+            actions.Controls.Add(cmbStatusFilter);
 
             header.Controls.Add(actions);
             header.Controls.Add(titleBlock);
@@ -382,6 +392,9 @@ namespace SmartMed.UI
             if (IsDesignHost() || Orders == null) return;
 
             var all = Orders.GetAll();
+            if (_statusFilter != "All")
+                all = all.Where(o => o.Status == _statusFilter).ToList();
+
             gridOrders.DataSource = all.Select(o => new
             {
                 o.OrderID,

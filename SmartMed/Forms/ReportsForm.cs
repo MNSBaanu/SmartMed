@@ -122,10 +122,10 @@ namespace SmartMed.UI
                 WrapContents = false,
                 Padding = new Padding(0, 8, 0, 0)
             };
-            var btnExport = CreateToolbarButton("Export PDF");
-            btnExport.Click += (s, e) => ShowComingSoon("Export PDF");
+            var btnExport = CreateToolbarButton("Export CSV");
+            btnExport.Click += BtnExport_Click;
             var btnPrint = CreateToolbarButton("Print");
-            btnPrint.Click += (s, e) => ShowComingSoon("Print");
+            btnPrint.Click += BtnPrint_Click;
             actions.Controls.Add(btnExport);
             actions.Controls.Add(btnPrint);
 
@@ -477,6 +477,51 @@ namespace SmartMed.UI
             }
             lblLowStock.Text = lowStock.ToString("N0");
             lblOutstanding.Text = $"LKR {outstanding:N2}";
+        }
+
+        private void BtnExport_Click(object sender, EventArgs e)
+        {
+            if (IsDesignHost() || Reports == null || gridReport.DataSource == null) return;
+            try
+            {
+                var table = gridReport.DataSource as DataTable;
+                if (table == null)
+                {
+                    MessageBox.Show("Nothing to export.", "Export", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    return;
+                }
+                using (var dialog = new SaveFileDialog
+                {
+                    Filter = "CSV files (*.csv)|*.csv",
+                    FileName = "report.csv"
+                })
+                {
+                    if (dialog.ShowDialog() != DialogResult.OK) return;
+                    Reports.ExportActiveReportToCsv(table, dialog.FileName);
+                    MessageBox.Show("Report exported.", "Export", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Export Failed", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
+        }
+
+        private void BtnPrint_Click(object sender, EventArgs e)
+        {
+            if (gridReport.Rows.Count == 0)
+            {
+                MessageBox.Show("No report data to print.", "Print", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return;
+            }
+            try
+            {
+                ExportHelper.PrintGrid(gridReport, "SmartMed Report");
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Print Failed", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
         }
     }
 }

@@ -140,12 +140,6 @@ namespace SmartMed.UI
                 login.Show();
         }
 
-        protected void ShowComingSoon(string feature)
-        {
-            MessageBox.Show($"{feature} will be available in the next update.", "SmartMed",
-                MessageBoxButtons.OK, MessageBoxIcon.Information);
-        }
-
         private void BtnNavOverview_Click(object sender, EventArgs e)
         {
             if (this is AdminDashboardForm dashboard)

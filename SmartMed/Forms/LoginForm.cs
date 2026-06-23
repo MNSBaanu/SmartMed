@@ -48,11 +48,24 @@ namespace SmartMed.UI
             adminForm.FormClosed += OnAdminFormClosed;
         }
 
+        internal void AttachCustomerReturn(CustomerShellForm customerForm)
+        {
+            customerForm.FormClosed += OnCustomerFormClosed;
+        }
+
         private void OnAdminFormClosed(object sender, FormClosedEventArgs e)
         {
             if (sender is Form form)
                 form.FormClosed -= OnAdminFormClosed;
             if (!Session.IsAdminLoggedIn && !IsDisposed)
+                Show();
+        }
+
+        private void OnCustomerFormClosed(object sender, FormClosedEventArgs e)
+        {
+            if (sender is Form form)
+                form.FormClosed -= OnCustomerFormClosed;
+            if (!Session.IsCustomerLoggedIn && !IsDisposed)
                 Show();
         }
 
@@ -89,8 +102,10 @@ namespace SmartMed.UI
                 }
 
                 Session.CurrentCustomer = customer;
-                MessageBox.Show($"Welcome, {customer.Name}. Customer portal coming next.", "Login Successful",
-                    MessageBoxButtons.OK, MessageBoxIcon.Information);
+                Hide();
+                var portal = new CustomerDashboardForm();
+                AttachCustomerReturn(portal);
+                portal.Show();
             }
             catch (Exception ex)
             {

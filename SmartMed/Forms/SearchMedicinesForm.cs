@@ -1,0 +1,154 @@
+using System;
+using System.Drawing;
+using System.Linq;
+using System.Windows.Forms;
+using SmartMed.Services;
+
+namespace SmartMed.UI
+{
+    public partial class SearchMedicinesForm : CustomerShellForm
+    {
+        private bool _pageBuilt;
+        private MedicineService _medicines;
+        private DataGridView grid;
+        private TextBox txtName;
+        private TextBox txtCategory;
+        private TextBox txtMinPrice;
+        private TextBox txtMaxPrice;
+        private NumericUpDown numQty;
+        private Label lblDetails;
+
+        public SearchMedicinesForm()
+            : base(CustomerNavItem.Browse, "Browse Medicines")
+        {
+            InitializeComponent();
+        }
+
+        private MedicineService Medicines => GetRuntimeService(ref _medicines);
+
+        protected override void InitializePageContent()
+        {
+            if (_pageBuilt) return;
+            _pageBuilt = true;
+            BuildContent();
+            if (IsDesignHost())
+                LoadDesignTimePreview();
+            else
+                Search();
+        }
+
+        private void BuildContent()
+        {
+            panelContent.Controls.Clear();
+            var root = new Panel { Dock = DockStyle.Top, AutoSize = true, Width = GetScrollContentWidth() };
+
+            var filter = new FlowLayoutPanel { Dock = DockStyle.Top, AutoSize = true, WrapContents = true, Margin = new Padding(0, 0, 0, 12) };
+            txtName = new TextBox { Width = 140 };
+            txtCategory = new TextBox { Width = 120 };
+            txtMinPrice = new TextBox { Width = 80 };
+            txtMaxPrice = new TextBox { Width = 80 };
+            var btnSearch = new Button { Text = "Search", Width = 80, Height = 28 };
+            btnSearch.Click += (s, e) => Search();
+            filter.Controls.AddRange(new Control[]
+            {
+                new Label { Text = "Name:", AutoSize = true, Padding = new Padding(0, 6, 0, 0) }, txtName,
+                new Label { Text = "Category:", AutoSize = true, Padding = new Padding(8, 6, 0, 0) }, txtCategory,
+                new Label { Text = "Min:", AutoSize = true, Padding = new Padding(8, 6, 0, 0) }, txtMinPrice,
+                new Label { Text = "Max:", AutoSize = true, Padding = new Padding(8, 6, 0, 0) }, txtMaxPrice,
+                btnSearch
+            });
+            root.Controls.Add(filter);
+
+            grid = new DataGridView
+            {
+                Dock = DockStyle.Top,
+                Height = 280,
+                ReadOnly = true,
+                SelectionMode = DataGridViewSelectionMode.FullRowSelect,
+                AllowUserToAddRows = false,
+                RowHeadersVisible = false,
+                AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill
+            };
+            grid.SelectionChanged += Grid_SelectionChanged;
+            root.Controls.Add(grid);
+
+            lblDetails = new Label { Dock = DockStyle.Top, Height = 60, AutoSize = false, ForeColor = SystemColors.GrayText };
+            root.Controls.Add(lblDetails);
+
+            var cartRow = new FlowLayoutPanel { Dock = DockStyle.Top, AutoSize = true, Margin = new Padding(0, 8, 0, 0) };
+            cartRow.Controls.Add(new Label { Text = "Qty:", AutoSize = true, Padding = new Padding(0, 6, 0, 0) });
+            numQty = new NumericUpDown { Minimum = 1, Maximum = 99, Value = 1, Width = 60 };
+            var btnAdd = new Button { Text = "Add to Cart", Width = 120, Height = 32 };
+            btnAdd.Click += BtnAdd_Click;
+            cartRow.Controls.Add(numQty);
+            cartRow.Controls.Add(btnAdd);
+            root.Controls.Add(cartRow);
+
+            WireScrollRoot(root);
+        }
+
+        private void Search()
+        {
+            if (IsDesignHost() || Medicines == null) return;
+            decimal? min = decimal.TryParse(txtMinPrice.Text, out var minVal) ? minVal : (decimal?)null;
+            decimal? max = decimal.TryParse(txtMaxPrice.Text, out var maxVal) ? maxVal : (decimal?)null;
+            var results = Medicines.Search(txtName.Text, txtCategory.Text, min, max)
+                .Where(m => m.StockQuantity > 0)
+                .Select(m => new
+                {
+                    m.MedicineID,
+                    m.MedicineName,
+                    m.Category,
+                    Price = $"LKR {Medicines.GetEffectivePrice(m):N2}",
+                    m.StockQuantity,
+                    Rx = m.RequiresPrescription ? "Yes" : "No",
+                    Promo = m.IsOnPromotion ? $"{m.DiscountPercent:N0}% off" : "-"
+                }).ToList();
+            grid.DataSource = results;
+            if (grid.Columns.Contains("MedicineID"))
+                grid.Columns["MedicineID"].Visible = false;
+        }
+
+        private void Grid_SelectionChanged(object sender, EventArgs e)
+        {
+            if (grid.CurrentRow == null) return;
+            var name = grid.CurrentRow.Cells["MedicineName"].Value?.ToString();
+            var category = grid.CurrentRow.Cells["Category"].Value?.ToString();
+            var price = grid.CurrentRow.Cells["Price"].Value?.ToString();
+            var stock = grid.CurrentRow.Cells["StockQuantity"].Value?.ToString();
+            var rx = grid.CurrentRow.Cells["Rx"].Value?.ToString();
+            var promo = grid.CurrentRow.Cells["Promo"].Value?.ToString();
+            lblDetails.Text = $"{name} | {category} | {price} | Stock: {stock} | Rx: {rx} | {promo}";
+        }
+
+        private void BtnAdd_Click(object sender, EventArgs e)
+        {
+            if (IsDesignHost() || Medicines == null || grid.CurrentRow == null) return;
+            try
+            {
+                var id = Convert.ToInt32(grid.CurrentRow.Cells["MedicineID"].Value);
+                var medicine = Medicines.GetById(id);
+                if (medicine == null) return;
+                var qty = (int)numQty.Value;
+                if (qty > medicine.StockQuantity)
+                    throw new InvalidOperationException("Quantity exceeds available stock.");
+                CartService.Add(medicine, qty, Medicines.GetEffectivePrice(medicine));
+                MessageBox.Show($"{medicine.MedicineName} added to cart.", "Cart", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Cart", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
+        }
+
+        private void LoadDesignTimePreview()
+        {
+            grid.DataSource = new[]
+            {
+                new { MedicineID = 1, MedicineName = "Paracetamol", Category = "Pain Relief", Price = "LKR 5.50", StockQuantity = 200, Rx = "No", Promo = "-" },
+                new { MedicineID = 2, MedicineName = "Amoxicillin", Category = "Antibiotic", Price = "LKR 10.80", StockQuantity = 80, Rx = "Yes", Promo = "10% off" }
+            };
+            lblDetails.Text = "Paracetamol | Pain Relief | LKR 5.50 | Stock: 200";
+        }
+    }
+}

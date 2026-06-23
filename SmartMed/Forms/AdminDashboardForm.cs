@@ -109,6 +109,22 @@ namespace SmartMed.UI
 
             header.Controls.Add(lblStatus);
             header.Controls.Add(lblWelcome);
+
+            var lnkPassword = new LinkLabel
+            {
+                Text = "Change Password",
+                AutoSize = true,
+                Dock = DockStyle.Right,
+                LinkColor = SystemColors.Highlight,
+                Padding = new Padding(0, 8, 0, 0)
+            };
+            lnkPassword.Click += (s, e) =>
+            {
+                using (var dlg = new ChangePasswordForm(isAdmin: true))
+                    dlg.ShowDialog(this);
+            };
+            header.Controls.Add(lnkPassword);
+
             return header;
         }
 
@@ -342,7 +358,7 @@ namespace SmartMed.UI
                     AutoSize = true,
                     LinkColor = SystemColors.Highlight
                 };
-                btnViewAll.Click += (s, e) => ShowComingSoon("View All Orders");
+                btnViewAll.Click += (s, e) => NavigateTo(new ManageOrdersForm());
                 header.Controls.Add(btnViewAll);
             }
 
@@ -430,7 +446,7 @@ namespace SmartMed.UI
                 Width = 72,
                 Height = 32
             };
-            btnStart.Click += (s, e) => ShowComingSoon("Order Fulfillment");
+            btnStart.Click += (s, e) => NavigateTo(new ManageOrdersForm());
             inputRow.Controls.Add(btnStart);
             inputRow.Controls.Add(txtScan);
             panel.Controls.Add(inputRow);
