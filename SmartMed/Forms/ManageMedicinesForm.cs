@@ -53,7 +53,10 @@ namespace SmartMed.UI
         private Label lblTotalItems;
         private Label lblLowStock;
         private Label lblCompliance;
-        private Label lblExpiryAlerts;
+        private Label lblExpirySummary;
+        private Button btnViewExpiryAlerts;
+        private Panel panelExpiryAlerts;
+        private List<string> _expiryAlertLines = new List<string>();
         private TextBox txtSearch;
         private ComboBox cmbSearchCategory;
         private TextBox txtMinPrice;
@@ -73,18 +76,18 @@ namespace SmartMed.UI
                 Width = GetScrollContentWidth()
             };
             _scrollRoot.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100f));
-            _scrollRoot.RowStyles.Add(new RowStyle(SizeType.AutoSize));
-            _scrollRoot.RowStyles.Add(new RowStyle(SizeType.AutoSize));
-            _scrollRoot.RowStyles.Add(new RowStyle(SizeType.AutoSize));
-            _scrollRoot.RowStyles.Add(new RowStyle(SizeType.Absolute, 220f));
-            _scrollRoot.RowStyles.Add(new RowStyle(SizeType.AutoSize));
-            _scrollRoot.RowStyles.Add(new RowStyle(SizeType.AutoSize));
+            _scrollRoot.RowStyles.Add(new RowStyle(SizeType.AutoSize));      // header
+            _scrollRoot.RowStyles.Add(new RowStyle(SizeType.AutoSize));      // stats
+            _scrollRoot.RowStyles.Add(new RowStyle(SizeType.AutoSize));      // search
+            _scrollRoot.RowStyles.Add(new RowStyle(SizeType.AutoSize));      // expiry alerts
+            _scrollRoot.RowStyles.Add(new RowStyle(SizeType.Absolute, 220f)); // grid
+            _scrollRoot.RowStyles.Add(new RowStyle(SizeType.AutoSize));      // form
             _scrollRoot.Controls.Add(CreatePageHeader(), 0, 0);
-            _scrollRoot.Controls.Add(CreateSearchPanel(), 0, 1);
-            _scrollRoot.Controls.Add(CreateExpiryAlertPanel(), 0, 2);
-            _scrollRoot.Controls.Add(CreateGridPanel(), 0, 3);
-            _scrollRoot.Controls.Add(CreateFormPanel(), 0, 4);
-            _scrollRoot.Controls.Add(CreateStatsRow(), 0, 5);
+            _scrollRoot.Controls.Add(CreateStatsRow(), 0, 1);
+            _scrollRoot.Controls.Add(CreateSearchPanel(), 0, 2);
+            _scrollRoot.Controls.Add(CreateExpiryAlertPanel(), 0, 3);
+            _scrollRoot.Controls.Add(CreateGridPanel(), 0, 4);
+            _scrollRoot.Controls.Add(CreateFormPanel(), 0, 5);
             WireScrollRoot(_scrollRoot);
         }
         private Panel CreatePageHeader()
@@ -173,28 +176,74 @@ namespace SmartMed.UI
         }
         private Panel CreateExpiryAlertPanel()
         {
-            var panel = new Panel
+            panelExpiryAlerts = new Panel
             {
                 Dock = DockStyle.Top,
-                Height = 36,
+                Height = 40,
                 BackColor = Color.FromArgb(255, 248, 240),
                 Padding = new Padding(12, 8, 12, 8),
                 Margin = new Padding(0, 0, 0, 12)
             };
-            panel.Paint += (s, e) =>
+            panelExpiryAlerts.Paint += (s, e) =>
             {
                 using (var pen = new Pen(Color.FromArgb(200, 120, 0)))
-                    e.Graphics.DrawRectangle(pen, 0, 0, panel.Width - 1, panel.Height - 1);
+                    e.Graphics.DrawRectangle(pen, 0, 0, panelExpiryAlerts.Width - 1, panelExpiryAlerts.Height - 1);
             };
-            lblExpiryAlerts = new Label
+            btnViewExpiryAlerts = new Button
+            {
+                Text = "View All Alerts",
+                Width = 130,
+                Height = 26,
+                Dock = DockStyle.Right,
+                Visible = false
+            };
+            btnViewExpiryAlerts.Click += BtnViewExpiryAlerts_Click;
+            lblExpirySummary = new Label
             {
                 Dock = DockStyle.Fill,
                 ForeColor = Color.FromArgb(140, 70, 0),
                 Text = "Expiry alerts will appear after loading medicines.",
-                AutoSize = false
+                AutoSize = false,
+                TextAlign = ContentAlignment.MiddleLeft
             };
-            panel.Controls.Add(lblExpiryAlerts);
-            return panel;
+            panelExpiryAlerts.Controls.Add(lblExpirySummary);
+            panelExpiryAlerts.Controls.Add(btnViewExpiryAlerts);
+            return panelExpiryAlerts;
+        }
+        private void BtnViewExpiryAlerts_Click(object sender, EventArgs e)
+        {
+            if (_expiryAlertLines.Count == 0) return;
+            using (var dlg = new Form
+            {
+                Text = "Expiry Alerts",
+                StartPosition = FormStartPosition.CenterParent,
+                Width = 520,
+                Height = 420,
+                MinimizeBox = false,
+                MaximizeBox = false,
+                FormBorderStyle = FormBorderStyle.FixedDialog
+            })
+            {
+                var list = new ListBox
+                {
+                    Dock = DockStyle.Fill,
+                    BorderStyle = BorderStyle.FixedSingle,
+                    IntegralHeight = false,
+                    Font = SystemFonts.DefaultFont
+                };
+                list.Items.AddRange(_expiryAlertLines.ToArray());
+                var btnClose = new Button
+                {
+                    Text = "Close",
+                    Dock = DockStyle.Bottom,
+                    Height = 36,
+                    DialogResult = DialogResult.OK
+                };
+                dlg.Controls.Add(btnClose);
+                dlg.Controls.Add(list);
+                dlg.AcceptButton = btnClose;
+                dlg.ShowDialog(FindForm());
+            }
         }
         private static Button CreateToolbarButton(string text)
         {
@@ -621,22 +670,40 @@ namespace SmartMed.UI
         {
             var expired = Medicines.CountExpired(all);
             var expiring = Medicines.CountExpiringSoon(all);
+            _expiryAlertLines = BuildExpiryAlertLines(all);
+
             if (expired == 0 && expiring == 0)
             {
-                lblExpiryAlerts.Text = "No expiry alerts. All medicines are within safe expiry dates.";
-                lblExpiryAlerts.ForeColor = Color.FromArgb(0, 100, 0);
+                lblExpirySummary.Text = "No expiry alerts. All medicines are within safe expiry dates.";
+                lblExpirySummary.ForeColor = Color.FromArgb(0, 100, 0);
+                btnViewExpiryAlerts.Visible = false;
+                panelExpiryAlerts.Height = 40;
                 return;
             }
+
             var parts = new List<string>();
             if (expired > 0) parts.Add($"{expired} expired");
             if (expiring > 0) parts.Add($"{expiring} expiring within 30 days");
-            var names = all
+            lblExpirySummary.Text = string.Join(" · ", parts);
+            lblExpirySummary.ForeColor = expired > 0 ? Color.DarkRed : Color.FromArgb(140, 70, 0);
+            btnViewExpiryAlerts.Text = $"View All Alerts ({_expiryAlertLines.Count})";
+            btnViewExpiryAlerts.Visible = true;
+            panelExpiryAlerts.Height = 40;
+        }
+
+        private List<string> BuildExpiryAlertLines(IEnumerable<Medicine> all)
+        {
+            return all
                 .Where(m => Medicines.CheckExpiry(m) != MedicineService.ExpiryValid)
                 .OrderBy(m => m.ExpiryDate)
-                .Take(3)
-                .Select(m => m.MedicineName);
-            lblExpiryAlerts.Text = string.Join(", ", parts) + ": " + string.Join(", ", names);
-            lblExpiryAlerts.ForeColor = expired > 0 ? Color.DarkRed : Color.FromArgb(140, 70, 0);
+                .Select(m =>
+                {
+                    var status = Medicines.CheckExpiry(m) == MedicineService.ExpiryExpired
+                        ? "Expired"
+                        : "Expiring soon";
+                    return $"{status} — {m.MedicineName} (exp. {m.ExpiryDate:yyyy-MM-dd})";
+                })
+                .ToList();
         }
         private void GridMedicines_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
         {

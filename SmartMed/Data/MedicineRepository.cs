@@ -41,12 +41,23 @@ namespace SmartMed.Data
             return Convert.ToInt32(result) > 0;
         }
 
-        public bool IsReferencedInOrders(int medicineId)
+        public bool HasActiveOrPendingOrderItems(int medicineId)
         {
             var result = DatabaseHelper.ExecuteScalar(
-                "SELECT COUNT(*) FROM OrderItem WHERE MedicineID=@id",
+                @"SELECT COUNT(*) FROM OrderItem oi
+                  INNER JOIN [Order] o ON o.OrderID = oi.OrderID
+                  WHERE oi.MedicineID = @id AND o.Status IN ('Pending', 'Ready for Pickup')",
                 new SqlParameter("@id", medicineId));
             return Convert.ToInt32(result) > 0;
+        }
+
+        public void RemoveDeliveredOrderItemReferences(int medicineId)
+        {
+            DatabaseHelper.ExecuteNonQuery(
+                @"DELETE oi FROM OrderItem oi
+                  INNER JOIN [Order] o ON o.OrderID = oi.OrderID
+                  WHERE oi.MedicineID = @id AND o.Status = 'Delivered'",
+                new SqlParameter("@id", medicineId));
         }
 
         public void Insert(Medicine item)

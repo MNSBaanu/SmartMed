@@ -79,9 +79,10 @@ namespace SmartMed.Services
                 throw new ArgumentException("Select a medicine to delete.");
             if (_medicines.GetById(medicineId) == null)
                 throw new InvalidOperationException("Medicine not found.");
-            if (_medicines.IsReferencedInOrders(medicineId))
+            if (_medicines.HasActiveOrPendingOrderItems(medicineId))
                 throw new InvalidOperationException(
-                    "Cannot delete this medicine because it is linked to existing orders.");
+                    "Cannot delete this medicine because it is linked to active or pending orders.");
+            _medicines.RemoveDeliveredOrderItemReferences(medicineId);
             _medicines.Delete(medicineId);
         }
 
