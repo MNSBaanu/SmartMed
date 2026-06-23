@@ -106,11 +106,7 @@ namespace SmartMed.UI
             Close();
         }
 
-        private void BtnCancel_Click(object sender, EventArgs e)
-        {
-            DialogResult = DialogResult.Cancel;
-            Close();
-        }
+        private void BtnCancel_Click(object sender, EventArgs e) => BtnClose_Click(sender, e);
 
         private void BtnReturnLogin_Click(object sender, EventArgs e)
         {

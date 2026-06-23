@@ -21,8 +21,11 @@ namespace SmartMed.UI
         {
             if (_pageBuilt) return;
             _pageBuilt = true;
-            BuildPageContent();
-            if (!IsDesignHost())
+            BuildContent();
+            UpdateTabStyles();
+            if (IsDesignHost())
+                LoadDesignTimePreview();
+            else
                 LoadActiveReport();
         }
 
@@ -38,7 +41,6 @@ namespace SmartMed.UI
         private ReportService _reports;
         private CustomerService _customers;
         private ReportTab _activeTab = ReportTab.Sales;
-        private bool _dataLoaded;
 
         private DataGridView gridReport;
         private ComboBox cmbCustomer;
@@ -53,49 +55,9 @@ namespace SmartMed.UI
         private Label lblFooterStatus;
         private TableLayoutPanel _scrollRoot;
 
-        private void BuildPageContent() {
-            BuildContent();
-            UpdateTabStyles();
-            if (IsDesignHost())
-                LoadDesignTimePreview();
-            
-        }
+        private ReportService Reports => GetRuntimeService(ref _reports);
 
-        private ReportService Reports
-        {
-            get
-            {
-                if (IsDesignHost()) return null;
-                return _reports ?? (_reports = new ReportService());
-            }
-        }
-
-        private CustomerService Customers
-        {
-            get
-            {
-                if (IsDesignHost()) return null;
-                return _customers ?? (_customers = new CustomerService());
-            }
-        }
-
-        private void LoadPageData(object sender, EventArgs e)
-        {
-            if (_dataLoaded) return;
-            _dataLoaded = true;
-            if (!IsDesignHost())
-                LoadActiveReport();
-        }
-
-        private int GetScrollContentWidth()
-        {
-            var w = panelContent.ClientSize.Width;
-            if (w < 200 && Parent != null)
-                w = Parent.ClientSize.Width - 48;
-            if (w < 200)
-                w = 850;
-            return w;
-        }
+        private CustomerService Customers => GetRuntimeService(ref _customers);
 
         private void BuildContent()
         {
@@ -125,13 +87,7 @@ namespace SmartMed.UI
             _scrollRoot.Controls.Add(CreateCustomerFilter(), 0, 3);
             _scrollRoot.Controls.Add(CreateReportGridPanel(), 0, 4);
             _scrollRoot.Controls.Add(CreateFooterBar(), 0, 5);
-
-            panelContent.Controls.Add(_scrollRoot);
-            panelContent.Resize += (s, e) =>
-            {
-                if (_scrollRoot != null)
-                    _scrollRoot.Width = GetScrollContentWidth();
-            };
+            WireScrollRoot(_scrollRoot);
         }
 
         private Panel CreatePageHeader()

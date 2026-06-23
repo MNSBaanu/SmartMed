@@ -21,8 +21,10 @@ namespace SmartMed.UI
         {
             if (_pageBuilt) return;
             _pageBuilt = true;
-            BuildPageContent();
-            if (!IsDesignHost())
+            BuildContent();
+            if (IsDesignHost())
+                LoadDesignTimePreview();
+            else
                 LoadMedicines();
         }
         private static readonly string[] DefaultCategories =
@@ -30,14 +32,7 @@ namespace SmartMed.UI
             "Antibiotic", "Analgesic", "Antidiabetic", "Hypertension", "Antiviral", "Vitamin", "Other"
         };
         private MedicineService _medicineService;
-        private MedicineService Medicines
-        {
-            get
-            {
-                if (IsDesignHost()) return null;
-                return _medicineService ?? (_medicineService = new MedicineService());
-            }
-        }
+        private MedicineService Medicines => GetRuntimeService(ref _medicineService);
         private List<Medicine> _allMedicines = new List<Medicine>();
         private int? _selectedId;
         private DataGridView gridMedicines;
@@ -64,21 +59,6 @@ namespace SmartMed.UI
         private TextBox txtMinPrice;
         private TextBox txtMaxPrice;
         private TableLayoutPanel _scrollRoot;
-        private void BuildPageContent()
-        {
-            BuildContent();
-            if (IsDesignHost())
-                LoadDesignTimePreview();
-        }
-        private int GetScrollContentWidth()
-        {
-            var w = panelContent.ClientSize.Width;
-            if (w < 200 && Parent != null)
-                w = Parent.ClientSize.Width - 48;
-            if (w < 200)
-                w = 850;
-            return w;
-        }
         private void BuildContent()
         {
             panelContent.Controls.Clear();
@@ -105,12 +85,7 @@ namespace SmartMed.UI
             _scrollRoot.Controls.Add(CreateGridPanel(), 0, 3);
             _scrollRoot.Controls.Add(CreateFormPanel(), 0, 4);
             _scrollRoot.Controls.Add(CreateStatsRow(), 0, 5);
-            panelContent.Controls.Add(_scrollRoot);
-            panelContent.Resize += (s, e) =>
-            {
-                if (_scrollRoot != null)
-                    _scrollRoot.Width = GetScrollContentWidth();
-            };
+            WireScrollRoot(_scrollRoot);
         }
         private Panel CreatePageHeader()
         {

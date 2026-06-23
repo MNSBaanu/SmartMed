@@ -21,8 +21,10 @@ namespace SmartMed.UI
         {
             if (_pageBuilt) return;
             _pageBuilt = true;
-            BuildPageContent();
-            if (!IsDesignHost())
+            BuildContent();
+            if (IsDesignHost())
+                LoadDesignTimePreview();
+            else
                 LoadDashboardData();
         }
 
@@ -31,7 +33,6 @@ namespace SmartMed.UI
         private readonly ReportService _reports = new ReportService();
         private readonly OrderService _orders = new OrderService();
         private readonly MedicineService _medicines = new MedicineService();
-        private bool _dataLoaded;
 
         private Label lblWelcome;
         private Label lblStatus;
@@ -41,31 +42,6 @@ namespace SmartMed.UI
         private DataGridView gridRecent;
         private FlowLayoutPanel panelAlerts;
         private TableLayoutPanel _scrollRoot;
-
-        private void BuildPageContent()
-        {
-            BuildContent();
-            if (IsDesignHost())
-                LoadDesignTimePreview();
-        }
-
-        private void LoadPageData(object sender, EventArgs e)
-        {
-            if (_dataLoaded) return;
-            _dataLoaded = true;
-            if (!IsDesignHost())
-                LoadDashboardData();
-        }
-
-        private int GetScrollContentWidth()
-        {
-            var w = panelContent.ClientSize.Width;
-            if (w < 200 && Parent != null)
-                w = Parent.ClientSize.Width - 48;
-            if (w < 200)
-                w = 850;
-            return w;
-        }
 
         private void BuildContent()
         {
@@ -105,13 +81,7 @@ namespace SmartMed.UI
             _scrollRoot.Controls.Add(CreateStatsRow(), 0, 1);
             _scrollRoot.Controls.Add(CreateMiddleRow(), 0, 2);
             _scrollRoot.Controls.Add(CreateTrendsSection(), 0, 3);
-
-            panelContent.Controls.Add(_scrollRoot);
-            panelContent.Resize += (s, e) =>
-            {
-                if (_scrollRoot != null)
-                    _scrollRoot.Width = GetScrollContentWidth();
-            };
+            WireScrollRoot(_scrollRoot);
         }
 
         private Panel CreatePageHeader()

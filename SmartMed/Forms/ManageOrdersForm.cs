@@ -1,5 +1,4 @@
 using System;
-using System.ComponentModel;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
@@ -23,8 +22,10 @@ namespace SmartMed.UI
         {
             if (_pageBuilt) return;
             _pageBuilt = true;
-            BuildPageContent();
-            if (!IsDesignHost())
+            BuildContent();
+            if (IsDesignHost())
+                LoadDesignTimePreview();
+            else
                 LoadOrders();
         }
 
@@ -35,7 +36,6 @@ namespace SmartMed.UI
 
         private OrderService _orders;
         private int? _selectedOrderId;
-        private bool _dataLoaded;
 
         private DataGridView gridOrders;
         private DataGridView gridItems;
@@ -48,39 +48,7 @@ namespace SmartMed.UI
         private Button btnUpdateStatus;
         private TableLayoutPanel _scrollRoot;
 
-        private void BuildPageContent()
-        {
-            BuildContent();
-            if (IsDesignHost())
-                LoadDesignTimePreview();
-        }
-
-        private OrderService Orders
-        {
-            get
-            {
-                if (IsDesignHost()) return null;
-                return _orders ?? (_orders = new OrderService());
-            }
-        }
-
-        private void LoadPageData(object sender, EventArgs e)
-        {
-            if (_dataLoaded) return;
-            _dataLoaded = true;
-            if (!IsDesignHost())
-                LoadOrders();
-        }
-
-        private int GetScrollContentWidth()
-        {
-            var w = panelContent.ClientSize.Width;
-            if (w < 200 && Parent != null)
-                w = Parent.ClientSize.Width - 48;
-            if (w < 200)
-                w = 850;
-            return w;
-        }
+        private OrderService Orders => GetRuntimeService(ref _orders);
 
         private void BuildContent()
         {
@@ -108,13 +76,7 @@ namespace SmartMed.UI
             _scrollRoot.Controls.Add(CreateOrdersGridPanel(), 0, 2);
             _scrollRoot.Controls.Add(CreateItemsGridPanel(), 0, 3);
             _scrollRoot.Controls.Add(CreateStatusPanel(), 0, 4);
-
-            panelContent.Controls.Add(_scrollRoot);
-            panelContent.Resize += (s, e) =>
-            {
-                if (_scrollRoot != null)
-                    _scrollRoot.Width = GetScrollContentWidth();
-            };
+            WireScrollRoot(_scrollRoot);
         }
 
         private Panel CreatePageHeader()
@@ -417,7 +379,7 @@ namespace SmartMed.UI
 
         public void LoadOrders()
         {
-            if ((LicenseManager.UsageMode == LicenseUsageMode.Designtime) || Orders == null) return;
+            if (IsDesignHost() || Orders == null) return;
 
             var all = Orders.GetAll();
             gridOrders.DataSource = all.Select(o => new
@@ -451,7 +413,7 @@ namespace SmartMed.UI
 
         private void GridOrders_SelectionChanged(object sender, EventArgs e)
         {
-            if ((LicenseManager.UsageMode == LicenseUsageMode.Designtime))
+            if (IsDesignHost())
                 return;
 
             if (gridOrders.CurrentRow == null) return;

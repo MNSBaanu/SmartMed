@@ -59,9 +59,6 @@ namespace SmartMed.UI
             // so DesignMode and LicenseUsageMode are reliable in the VS designer.
         }
 
-        protected static bool IsDesignTime =>
-            LicenseManager.UsageMode == LicenseUsageMode.Designtime;
-
         /// <summary>True in the VS WinForms designer (not only at ctor time).</summary>
         protected bool IsDesignHost()
         {
@@ -71,6 +68,27 @@ namespace SmartMed.UI
                 return true;
             return IsDesignToolsProcess.Value;
         }
+
+        protected int GetScrollContentWidth(int fallback = 850)
+        {
+            var w = panelContent.ClientSize.Width;
+            if (w < 200 && Parent != null)
+                w = Parent.ClientSize.Width - 48;
+            return w < 200 ? fallback : w;
+        }
+
+        protected void WireScrollRoot(TableLayoutPanel scrollRoot, int fallback = 850)
+        {
+            panelContent.Controls.Add(scrollRoot);
+            panelContent.Resize += (s, e) => scrollRoot.Width = GetScrollContentWidth(fallback);
+        }
+
+        protected T GetRuntimeService<T>(ref T service) where T : class, new()
+        {
+            if (IsDesignHost()) return null;
+            return service ?? (service = new T());
+        }
+
         protected void SetActiveNav(AdminNavItem active)
         {
         }
