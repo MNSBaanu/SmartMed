@@ -2,15 +2,35 @@ using System;
 
 namespace SmartMed.Models
 {
-    public enum ExpiryStatus
-    {
-        Valid,
-        ExpiringSoon,
-        Expired
-    }
-
     public class Medicine
     {
+        public class ExpiryStatus
+        {
+            public string Name { get; }
+
+            private ExpiryStatus(string name) => Name = name;
+
+            public static readonly ExpiryStatus Valid = new ExpiryStatus("Valid");
+            public static readonly ExpiryStatus ExpiringSoon = new ExpiryStatus("ExpiringSoon");
+            public static readonly ExpiryStatus Expired = new ExpiryStatus("Expired");
+
+            public static bool operator ==(ExpiryStatus left, ExpiryStatus right)
+            {
+                if (ReferenceEquals(left, right)) return true;
+                if (left is null || right is null) return false;
+                return left.Name == right.Name;
+            }
+
+            public static bool operator !=(ExpiryStatus left, ExpiryStatus right) => !(left == right);
+
+            public override bool Equals(object obj) =>
+                obj is ExpiryStatus other && Name == other.Name;
+
+            public override int GetHashCode() => Name?.GetHashCode() ?? 0;
+
+            public override string ToString() => Name;
+        }
+
         public int MedicineID { get; set; }
         public string MedicineName { get; set; }
         public string Category { get; set; }

@@ -617,13 +617,13 @@ namespace SmartMed.UI
             lblLowStock.Text = all.Count(m => m.IsLowStock()).ToString("N0");
             var compliance = all.Count == 0
                 ? 0m
-                : (decimal)all.Count(m => m.CheckExpiry() != ExpiryStatus.Expired) / all.Count * 100m;
+                : (decimal)all.Count(m => m.CheckExpiry() != Medicine.ExpiryStatus.Expired) / all.Count * 100m;
             lblCompliance.Text = $"{compliance:N1}%";
         }
         private void UpdateExpiryAlerts(List<Medicine> all)
         {
-            var expired = all.Count(m => m.CheckExpiry() == ExpiryStatus.Expired);
-            var expiring = all.Count(m => m.CheckExpiry(30) == ExpiryStatus.ExpiringSoon);
+            var expired = all.Count(m => m.CheckExpiry() == Medicine.ExpiryStatus.Expired);
+            var expiring = all.Count(m => m.CheckExpiry(30) == Medicine.ExpiryStatus.ExpiringSoon);
             if (expired == 0 && expiring == 0)
             {
                 lblExpiryAlerts.Text = "No expiry alerts. All medicines are within safe expiry dates.";
@@ -634,7 +634,7 @@ namespace SmartMed.UI
             if (expired > 0) parts.Add($"{expired} expired");
             if (expiring > 0) parts.Add($"{expiring} expiring within 30 days");
             var names = all
-                .Where(m => m.CheckExpiry() != ExpiryStatus.Valid)
+                .Where(m => m.CheckExpiry() != Medicine.ExpiryStatus.Valid)
                 .OrderBy(m => m.ExpiryDate)
                 .Take(3)
                 .Select(m => m.MedicineName);
@@ -663,12 +663,12 @@ namespace SmartMed.UI
             else if (columnName == "Expiry")
             {
                 var status = item.CheckExpiry();
-                if (status == ExpiryStatus.Expired)
+                if (status == Medicine.ExpiryStatus.Expired)
                 {
                     e.CellStyle.ForeColor = Color.DarkRed;
                     e.CellStyle.Font = new Font(e.CellStyle.Font, FontStyle.Bold);
                 }
-                else if (status == ExpiryStatus.ExpiringSoon)
+                else if (status == Medicine.ExpiryStatus.ExpiringSoon)
                 {
                     e.CellStyle.ForeColor = Color.DarkOrange;
                     e.CellStyle.Font = new Font(e.CellStyle.Font, FontStyle.Bold);

@@ -79,16 +79,16 @@ namespace SmartMed.Services
         }
 
         public int CountExpired(IEnumerable<Medicine> items) =>
-            items.Count(m => m.CheckExpiry() == ExpiryStatus.Expired);
+            items.Count(m => m.CheckExpiry() == Medicine.ExpiryStatus.Expired);
 
         public int CountExpiringSoon(IEnumerable<Medicine> items, int warningDays = 30) =>
-            items.Count(m => m.CheckExpiry(warningDays) == ExpiryStatus.ExpiringSoon);
+            items.Count(m => m.CheckExpiry(warningDays) == Medicine.ExpiryStatus.ExpiringSoon);
 
         public decimal CompliancePercent(IEnumerable<Medicine> items)
         {
             var list = items.ToList();
             if (list.Count == 0) return 0m;
-            var compliant = list.Count(m => m.CheckExpiry() != ExpiryStatus.Expired);
+            var compliant = list.Count(m => m.CheckExpiry() != Medicine.ExpiryStatus.Expired);
             return (decimal)compliant / list.Count * 100m;
         }
 
