@@ -66,9 +66,9 @@ namespace SmartMed.Data
                 new SqlParameter("@promo", item.IsOnPromotion));
         }
 
-        public void Update(Medicine item)
+        public int Update(Medicine item)
         {
-            DatabaseHelper.ExecuteNonQuery(
+            return DatabaseHelper.ExecuteNonQuery(
                 @"UPDATE Medicine SET MedicineName=@n, Category=@c, Dosage=@d, Price=@p, StockQuantity=@s,
                   Supplier=@su, ExpiryDate=@e, RequiresPrescription=@r, DiscountPercent=@disc, IsOnPromotion=@promo
                   WHERE MedicineID=@id",

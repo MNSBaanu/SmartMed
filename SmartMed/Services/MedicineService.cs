@@ -69,7 +69,8 @@ namespace SmartMed.Services
             if (!string.Equals(existing.MedicineName, item.MedicineName, StringComparison.OrdinalIgnoreCase)
                 && _medicines.NameExists(item.MedicineName))
                 throw new InvalidOperationException("This medicine is already in the inventory list.");
-            _medicines.Update(item);
+            if (_medicines.Update(item) == 0)
+                throw new InvalidOperationException("Medicine not found. Select an existing medicine from the list to update.");
         }
 
         public void Delete(int medicineId)

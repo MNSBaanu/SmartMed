@@ -348,6 +348,7 @@ namespace SmartMed.UI
             actions.Controls.Add(actionFlow);
             outer.Controls.Add(actions);
             outer.Controls.Add(columns);
+            SyncActionButtons();
             return outer;
         }
         private static Panel CreateFieldColumn(params Control[] fields)
@@ -551,6 +552,7 @@ namespace SmartMed.UI
         }
         private void BindGrid(List<Medicine> items)
         {
+            var keepId = _selectedId;
             gridMedicines.DataSource = items.Select(m => new
             {
                 m.MedicineID,
@@ -566,6 +568,29 @@ namespace SmartMed.UI
                 Promo = m.IsOnPromotion ? "Yes" : "No"
             }).ToList();
             HideMedicineIdColumn();
+            if (keepId.HasValue)
+                SelectGridRowById(keepId.Value);
+        }
+        private void SelectGridRowById(int id)
+        {
+            if (gridMedicines.Rows.Count == 0) return;
+            foreach (DataGridViewRow row in gridMedicines.Rows)
+            {
+                if (row.IsNewRow || row.Cells["MedicineID"]?.Value == null) continue;
+                if (Convert.ToInt32(row.Cells["MedicineID"].Value) != id) continue;
+                row.Selected = true;
+                if (row.Cells.Count > 1)
+                    gridMedicines.CurrentCell = row.Cells[1];
+                return;
+            }
+        }
+        private void SyncActionButtons()
+        {
+            if (btnAdd == null || btnUpdate == null || btnDelete == null) return;
+            var editing = _selectedId.HasValue;
+            btnAdd.Enabled = !editing;
+            btnUpdate.Enabled = editing;
+            btnDelete.Enabled = editing;
         }
         private void HideMedicineIdColumn()
         {
@@ -656,14 +681,30 @@ namespace SmartMed.UI
         }
         private void GridMedicines_SelectionChanged(object sender, EventArgs e)
         {
-            if (gridMedicines.CurrentRow == null) return;
+            if (gridMedicines.CurrentRow == null || gridMedicines.CurrentRow.IsNewRow)
+            {
+                _selectedId = null;
+                SyncActionButtons();
+                return;
+            }
             var idCell = gridMedicines.CurrentRow.Cells["MedicineID"];
-            if (idCell?.Value == null) return;
-            _selectedId = Convert.ToInt32(idCell.Value);
+            if (idCell?.Value == null)
+            {
+                _selectedId = null;
+                SyncActionButtons();
+                return;
+            }
+            var id = Convert.ToInt32(idCell.Value);
             var item = IsDesignHost()
-                ? _allMedicines.FirstOrDefault(m => m.MedicineID == _selectedId)
-                : Medicines.GetById(_selectedId.Value);
-            if (item == null) return;
+                ? _allMedicines.FirstOrDefault(m => m.MedicineID == id)
+                : Medicines.GetById(id);
+            if (item == null)
+            {
+                _selectedId = null;
+                SyncActionButtons();
+                return;
+            }
+            _selectedId = id;
             txtName.Text = item.MedicineName;
             txtDosage.Text = item.Dosage;
             txtStock.Text = item.StockQuantity.ToString();
@@ -674,6 +715,7 @@ namespace SmartMed.UI
             txtDiscount.Text = item.DiscountPercent.ToString("N0");
             chkPrescription.Checked = item.RequiresPrescription;
             chkPromotion.Checked = item.IsOnPromotion;
+            SyncActionButtons();
         }
         private Medicine ReadForm()
         {
@@ -715,9 +757,17 @@ namespace SmartMed.UI
             chkPrescription.Checked = false;
             chkPromotion.Checked = false;
             gridMedicines.ClearSelection();
+            SyncActionButtons();
         }
         private void BtnAdd_Click(object sender, EventArgs e)
         {
+            if (_selectedId.HasValue)
+            {
+                MessageBox.Show(
+                    "A medicine is selected from the list. Use Update Record to save changes, or Clear Form before adding a new medicine.",
+                    "SmartMed", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return;
+            }
             try
             {
                 var item = ReadForm();
@@ -739,6 +789,15 @@ namespace SmartMed.UI
             {
                 MessageBox.Show("Select a medicine from the grid to update.", "SmartMed",
                     MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return;
+            }
+            if (Medicines.GetById(_selectedId.Value) == null)
+            {
+                MessageBox.Show(
+                    "The selected medicine is no longer in the inventory. Select an existing record or use Add New Medicine.",
+                    "SmartMed", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                ClearForm();
+                LoadMedicines();
                 return;
             }
             try
