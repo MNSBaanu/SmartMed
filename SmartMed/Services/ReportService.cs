@@ -12,6 +12,8 @@ namespace SmartMed.Services
 
         public DataTable GetStockReport() => _orders.GetStockReport();
 
+        public DataTable GetExpiryReport() => _medicines.GetExpiryReport();
+
         public DataTable GetCustomerOrderHistory(int customerId) =>
             _orders.GetCustomerOrderHistory(customerId);
 

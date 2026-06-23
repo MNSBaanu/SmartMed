@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using SmartMed.Models;
@@ -30,6 +31,8 @@ namespace SmartMed.Services
 
         public static void Add(Medicine medicine, int quantity, decimal unitPrice)
         {
+            ValidateLine(medicine, quantity);
+
             var existing = Lines.FirstOrDefault(l => l.MedicineID == medicine.MedicineID);
             if (existing != null)
             {
@@ -58,6 +61,18 @@ namespace SmartMed.Services
                 Lines.Remove(line);
             else
                 line.Quantity = quantity;
+        }
+
+        private static void ValidateLine(Medicine medicine, int quantity)
+        {
+            if (medicine == null)
+                throw new InvalidOperationException("Medicine not found.");
+            if (medicine.ExpiryDate.Date < DateTime.Today)
+                throw new InvalidOperationException($"{medicine.MedicineName} has expired and cannot be purchased.");
+            if (quantity <= 0)
+                throw new ArgumentException("Quantity must be greater than zero.");
+            if (quantity > medicine.StockQuantity)
+                throw new InvalidOperationException("Quantity exceeds available stock.");
         }
     }
 }

@@ -115,7 +115,10 @@ namespace SmartMed.Data
         public DataTable GetStockReport()
         {
             return DatabaseHelper.ExecuteQuery(
-                @"SELECT MedicineName, Category, StockQuantity, Price, Supplier, ExpiryDate
+                @"SELECT MedicineName, Category, StockQuantity, Price, Supplier, ExpiryDate,
+                  CASE WHEN ExpiryDate < CAST(GETDATE() AS DATE) THEN 'Expired'
+                       WHEN ExpiryDate <= DATEADD(day, 30, CAST(GETDATE() AS DATE)) THEN 'Expiring Soon'
+                       ELSE 'Valid' END AS ExpiryStatus
                   FROM Medicine ORDER BY MedicineName");
         }
 

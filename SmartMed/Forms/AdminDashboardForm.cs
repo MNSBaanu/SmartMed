@@ -484,13 +484,28 @@ namespace SmartMed.UI
             gridRecent.DataSource = _orders.GetRecentSummaries(8);
 
             panelAlerts.Controls.Clear();
-            var lowStock = _medicines.GetLowStock();
+            var alerts = new System.Collections.Generic.List<(string Name, string Message, bool Critical)>();
 
-            if (lowStock.Count == 0)
+            foreach (var med in _medicines.GetExpiredMedicines().Take(4))
+                alerts.Add((med.MedicineName, $"EXPIRED: exp. {med.ExpiryDate:yyyy-MM-dd}", Critical: true));
+
+            foreach (var med in _medicines.GetExpiringSoonMedicines().Take(3))
+                alerts.Add((med.MedicineName, $"EXPIRING SOON: exp. {med.ExpiryDate:yyyy-MM-dd}", Critical: false));
+
+            foreach (var med in _medicines.GetLowStock())
+            {
+                if (alerts.Count >= 8) break;
+                var critical = med.StockQuantity <= 5;
+                alerts.Add((med.MedicineName,
+                    critical ? $"CRITICAL: {med.StockQuantity} units left" : $"LOW: {med.StockQuantity} units left",
+                    Critical: critical));
+            }
+
+            if (alerts.Count == 0)
             {
                 panelAlerts.Controls.Add(new Label
                 {
-                    Text = "No critical stock alerts.",
+                    Text = "No expiry or stock alerts.",
                     AutoSize = true,
                     ForeColor = SystemColors.GrayText,
                     Padding = new Padding(4)
@@ -498,13 +513,8 @@ namespace SmartMed.UI
                 return;
             }
 
-            foreach (var med in lowStock)
-            {
-                var critical = med.StockQuantity <= 5;
-                panelAlerts.Controls.Add(CreateAlertRow(med.MedicineName,
-                    critical ? $"CRITICAL: {med.StockQuantity} units left" : $"LOW: {med.StockQuantity} units left",
-                    critical));
-            }
+            foreach (var alert in alerts)
+                panelAlerts.Controls.Add(CreateAlertRow(alert.Name, alert.Message, alert.Critical));
         }
 
         private Panel CreateAlertRow(string name, string message, bool critical)

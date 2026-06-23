@@ -92,8 +92,7 @@ namespace SmartMed.UI
             if (IsDesignHost() || Medicines == null) return;
             decimal? min = decimal.TryParse(txtMinPrice.Text, out var minVal) ? minVal : (decimal?)null;
             decimal? max = decimal.TryParse(txtMaxPrice.Text, out var maxVal) ? maxVal : (decimal?)null;
-            var results = Medicines.Search(txtName.Text, txtCategory.Text, min, max)
-                .Where(m => m.StockQuantity > 0)
+            var results = Medicines.SearchForCustomers(txtName.Text, txtCategory.Text, min, max)
                 .Select(m => new
                 {
                     m.MedicineID,
@@ -129,9 +128,8 @@ namespace SmartMed.UI
                 var id = Convert.ToInt32(grid.CurrentRow.Cells["MedicineID"].Value);
                 var medicine = Medicines.GetById(id);
                 if (medicine == null) return;
+                Medicines.ValidateForCustomerPurchase(medicine);
                 var qty = (int)numQty.Value;
-                if (qty > medicine.StockQuantity)
-                    throw new InvalidOperationException("Quantity exceeds available stock.");
                 CartService.Add(medicine, qty, Medicines.GetEffectivePrice(medicine));
                 MessageBox.Show($"{medicine.MedicineName} added to cart.", "Cart", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }

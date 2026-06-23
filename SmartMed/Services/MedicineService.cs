@@ -28,6 +28,35 @@ namespace SmartMed.Services
             return SearchService.Search(GetAll(), name, category, minPrice, maxPrice);
         }
 
+        public List<Medicine> SearchForCustomers(string name, string category, decimal? minPrice, decimal? maxPrice)
+        {
+            return Search(name, category, minPrice, maxPrice).Where(IsAvailableForSale).ToList();
+        }
+
+        public bool IsExpired(Medicine m) => CheckExpiry(m) == ExpiryExpired;
+
+        public bool IsAvailableForSale(Medicine m) =>
+            !IsExpired(m) && m.StockQuantity > 0;
+
+        public void ValidateForCustomerPurchase(Medicine m)
+        {
+            if (m == null)
+                throw new InvalidOperationException("Medicine not found.");
+            if (IsExpired(m))
+                throw new InvalidOperationException($"{m.MedicineName} has expired and cannot be purchased.");
+            if (m.StockQuantity <= 0)
+                throw new InvalidOperationException($"{m.MedicineName} is out of stock.");
+        }
+
+        public List<Medicine> GetExpiredMedicines() =>
+            GetAll().Where(IsExpired).OrderBy(m => m.ExpiryDate).ToList();
+
+        public List<Medicine> GetExpiringSoonMedicines(int warningDays = 30) =>
+            GetAll()
+                .Where(m => CheckExpiry(m, warningDays) == ExpiryExpiringSoon)
+                .OrderBy(m => m.ExpiryDate)
+                .ToList();
+
         public void ValidateMedicine(Medicine item, bool isNew)
         {
             if (!isNew && item.MedicineID <= 0)
@@ -48,7 +77,7 @@ namespace SmartMed.Services
                 throw new ArgumentException("Stock quantity must be greater than 0 when adding a new medicine.");
             if (item.DiscountPercent < 0 || item.DiscountPercent > 100)
                 throw new ArgumentException("Discount must be between 0 and 100.");
-            if (item.ExpiryDate.Date < DateTime.Today)
+            if (isNew && item.ExpiryDate.Date < DateTime.Today)
                 throw new ArgumentException("Expiry date cannot be in the past.");
         }
 

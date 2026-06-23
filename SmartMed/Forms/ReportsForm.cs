@@ -35,6 +35,7 @@ namespace SmartMed.UI
         {
             Sales,
             Stock,
+            Expiry,
             History
         }
 
@@ -47,6 +48,7 @@ namespace SmartMed.UI
         private Panel panelCustomerFilter;
         private Button btnSalesTab;
         private Button btnStockTab;
+        private Button btnExpiryTab;
         private Button btnHistoryTab;
         private Label lblTotalRevenue;
         private Label lblTotalOrders;
@@ -224,13 +226,16 @@ namespace SmartMed.UI
 
             btnSalesTab = CreateTabButton("Sales Report", ReportTab.Sales);
             btnStockTab = CreateTabButton("Stock Report", ReportTab.Stock);
-            btnHistoryTab = CreateTabButton("Customer Order History", ReportTab.History);
+            btnExpiryTab = CreateTabButton("Expiry Report", ReportTab.Expiry);
+            btnHistoryTab = CreateTabButton("Order History", ReportTab.History);
 
             btnSalesTab.Location = new Point(8, 8);
             btnStockTab.Location = new Point(132, 8);
-            btnHistoryTab.Location = new Point(256, 8);
+            btnExpiryTab.Location = new Point(256, 8);
+            btnHistoryTab.Location = new Point(380, 8);
 
             bar.Controls.Add(btnHistoryTab);
+            bar.Controls.Add(btnExpiryTab);
             bar.Controls.Add(btnStockTab);
             bar.Controls.Add(btnSalesTab);
             UpdateTabStyles();
@@ -242,7 +247,7 @@ namespace SmartMed.UI
             var btn = new Button
             {
                 Text = text,
-                Width = tab == ReportTab.History ? 180 : 120,
+                Width = tab == ReportTab.History ? 120 : 120,
                 Height = 32,
                 FlatStyle = FlatStyle.Flat
             };
@@ -356,6 +361,7 @@ namespace SmartMed.UI
         {
             StyleTab(btnSalesTab, _activeTab == ReportTab.Sales);
             StyleTab(btnStockTab, _activeTab == ReportTab.Stock);
+            StyleTab(btnExpiryTab, _activeTab == ReportTab.Expiry);
             StyleTab(btnHistoryTab, _activeTab == ReportTab.History);
         }
 
@@ -398,6 +404,8 @@ namespace SmartMed.UI
                     LoadSalesReport();
                 else if (_activeTab == ReportTab.Stock)
                     LoadStockReport();
+                else if (_activeTab == ReportTab.Expiry)
+                    LoadExpiryReport();
                 else
                     LoadHistoryReport();
 
@@ -421,6 +429,13 @@ namespace SmartMed.UI
             var table = Reports.GetStockReport();
             gridReport.DataSource = table;
             lblFooterStatus.Text = $"Items: {table.Rows.Count} | Server Connected | {DateTime.Now:hh:mm tt | MMM dd, yyyy}";
+        }
+
+        private void LoadExpiryReport()
+        {
+            var table = Reports.GetExpiryReport();
+            gridReport.DataSource = table;
+            lblFooterStatus.Text = $"Items: {table.Rows.Count} | Expiry report | {DateTime.Now:hh:mm tt | MMM dd, yyyy}";
         }
 
         private void LoadHistoryReport()

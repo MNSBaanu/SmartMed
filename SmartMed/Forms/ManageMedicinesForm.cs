@@ -304,6 +304,7 @@ namespace SmartMed.UI
             };
             gridMedicines.SelectionChanged += GridMedicines_SelectionChanged;
             gridMedicines.CellFormatting += GridMedicines_CellFormatting;
+            gridMedicines.RowPrePaint += GridMedicines_RowPrePaint;
             outer.Controls.Add(gridMedicines);
             return outer;
         }
@@ -617,6 +618,9 @@ namespace SmartMed.UI
                 Stock = m.StockQuantity,
                 m.Supplier,
                 Expiry = m.ExpiryDate.ToString("yyyy-MM-dd"),
+                Status = Medicines.CheckExpiry(m) == MedicineService.ExpiryExpired ? "Expired"
+                    : Medicines.CheckExpiry(m) == MedicineService.ExpiryExpiringSoon ? "Expiring Soon"
+                    : "Valid",
                 Rx = m.RequiresPrescription ? "\u2713" : "\u2717",
                 Discount = $"{m.DiscountPercent:N0}%",
                 Promo = m.IsOnPromotion ? "Yes" : "No"
@@ -710,6 +714,28 @@ namespace SmartMed.UI
                 })
                 .ToList();
         }
+        private void GridMedicines_RowPrePaint(object sender, DataGridViewRowPrePaintEventArgs e)
+        {
+            if (e.RowIndex < 0 || gridMedicines.Rows[e.RowIndex].IsNewRow) return;
+            var idCell = gridMedicines.Rows[e.RowIndex].Cells["MedicineID"];
+            if (idCell?.Value == null) return;
+            var id = Convert.ToInt32(idCell.Value);
+            var item = _allMedicines.FirstOrDefault(m => m.MedicineID == id);
+            if (item == null) return;
+
+            var row = gridMedicines.Rows[e.RowIndex];
+            if (Medicines.CheckExpiry(item) == MedicineService.ExpiryExpired)
+            {
+                row.DefaultCellStyle.BackColor = Color.FromArgb(255, 230, 230);
+                row.DefaultCellStyle.ForeColor = Color.DarkRed;
+            }
+            else
+            {
+                row.DefaultCellStyle.BackColor = SystemColors.Window;
+                row.DefaultCellStyle.ForeColor = SystemColors.ControlText;
+            }
+        }
+
         private void GridMedicines_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
         {
             if (e.RowIndex < 0 || gridMedicines.Rows[e.RowIndex].Cells["MedicineID"]?.Value == null)
@@ -718,6 +744,12 @@ namespace SmartMed.UI
             var item = _allMedicines.FirstOrDefault(m => m.MedicineID == id);
             if (item == null) return;
             var columnName = gridMedicines.Columns[e.ColumnIndex].Name;
+            var expiryStatus = Medicines.CheckExpiry(item);
+            if (columnName != "Stock" && expiryStatus == MedicineService.ExpiryExpired)
+            {
+                e.CellStyle.BackColor = Color.FromArgb(255, 230, 230);
+                e.CellStyle.ForeColor = Color.DarkRed;
+            }
             if (columnName == "Stock")
             {
                 e.CellStyle.ForeColor = Color.White;
@@ -728,6 +760,19 @@ namespace SmartMed.UI
                 else
                     e.CellStyle.BackColor = Color.FromArgb(40, 167, 69);
                 e.Value = $"{item.StockQuantity} Units";
+            }
+            else if (columnName == "Status")
+            {
+                if (expiryStatus == MedicineService.ExpiryExpired)
+                {
+                    e.CellStyle.ForeColor = Color.DarkRed;
+                    e.CellStyle.Font = new Font(e.CellStyle.Font, FontStyle.Bold);
+                }
+                else if (expiryStatus == MedicineService.ExpiryExpiringSoon)
+                {
+                    e.CellStyle.ForeColor = Color.DarkOrange;
+                    e.CellStyle.Font = new Font(e.CellStyle.Font, FontStyle.Bold);
+                }
             }
             else if (columnName == "Expiry")
             {
@@ -799,6 +844,7 @@ namespace SmartMed.UI
                 throw new ArgumentException("Price must be a valid number.");
             if (!decimal.TryParse(txtDiscount.Text.Trim(), out var discount))
                 throw new ArgumentException("Discount must be a valid number.");
+
             return new Medicine
             {
                 MedicineID = _selectedId ?? 0,

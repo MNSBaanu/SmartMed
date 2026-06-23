@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Data.SqlClient;
 using SmartMed.Models;
 
@@ -15,7 +16,7 @@ namespace SmartMed.Data
             var list = new List<Medicine>();
             var table = DatabaseHelper.ExecuteQuery(
                 $"SELECT {SelectColumns} FROM Medicine ORDER BY MedicineName");
-            foreach (System.Data.DataRow row in table.Rows)
+            foreach (DataRow row in table.Rows)
                 list.Add(Map(row));
             return list;
         }
@@ -111,7 +112,19 @@ namespace SmartMed.Data
                 new SqlParameter("@id", medicineId));
         }
 
-        private static Medicine Map(System.Data.DataRow row)
+        public DataTable GetExpiryReport()
+        {
+            return DatabaseHelper.ExecuteQuery(
+                @"SELECT MedicineName, Category, StockQuantity, ExpiryDate,
+                  CASE WHEN ExpiryDate < CAST(GETDATE() AS DATE) THEN 'Expired'
+                       WHEN ExpiryDate <= DATEADD(day, 30, CAST(GETDATE() AS DATE)) THEN 'Expiring Soon'
+                       ELSE 'Valid' END AS ExpiryStatus
+                  FROM Medicine
+                  WHERE ExpiryDate <= DATEADD(day, 30, CAST(GETDATE() AS DATE))
+                  ORDER BY ExpiryDate");
+        }
+
+        private static Medicine Map(DataRow row)
         {
             return new Medicine
             {

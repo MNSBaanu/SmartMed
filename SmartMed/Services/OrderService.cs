@@ -48,6 +48,8 @@ namespace SmartMed.Services
                 var medicine = _medicines.GetById(line.MedicineID);
                 if (medicine == null)
                     throw new InvalidOperationException($"Medicine not found: {line.MedicineName}");
+                if (medicine.ExpiryDate.Date < DateTime.Today)
+                    throw new InvalidOperationException($"{medicine.MedicineName} has expired and cannot be ordered.");
                 if (medicine.StockQuantity < line.Quantity)
                     throw new InvalidOperationException($"Insufficient stock for {medicine.MedicineName}.");
                 if (medicine.RequiresPrescription)
