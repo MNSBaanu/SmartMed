@@ -1,0 +1,173 @@
+using System;
+using System.ComponentModel;
+using System.Diagnostics;
+using System.Drawing;
+using System.Linq;
+using System.Windows.Forms;
+using SmartMed.Services;
+
+namespace SmartMed.UI
+{
+    [DesignerCategory("Form")]
+    public partial class CustomerShellForm : Form
+    {
+        private bool _pageContentInitialized;
+
+        private static readonly Lazy<bool> IsDesignToolsProcess = new Lazy<bool>(() =>
+        {
+            var name = Process.GetCurrentProcess().ProcessName;
+            return name.IndexOf("devenv", StringComparison.OrdinalIgnoreCase) >= 0
+                || name.IndexOf("DesignToolsServer", StringComparison.OrdinalIgnoreCase) >= 0
+                || name.IndexOf("XDesProc", StringComparison.OrdinalIgnoreCase) >= 0;
+        });
+
+        public CustomerShellForm()
+        {
+            InitializeComponent();
+            if (IsDesignHost()) SyncShellChrome();
+        }
+
+        protected CustomerShellForm(CustomerNavItem activeNav, string subtitle)
+            : this()
+        {
+            DoubleBuffered = true;
+            Text = "SmartMed Customer Portal";
+            lblTopSubtitle.Text = subtitle;
+            SyncShellChrome();
+            if (IsDesignHost())
+                EnsurePageContent();
+        }
+
+        protected override void OnLoad(EventArgs e)
+        {
+            base.OnLoad(e);
+            EnsurePageContent();
+        }
+
+        protected void EnsurePageContent()
+        {
+            if (_pageContentInitialized) return;
+            _pageContentInitialized = true;
+            InitializePageContent();
+            SyncShellChrome();
+        }
+
+        protected virtual void InitializePageContent()
+        {
+        }
+
+        protected bool IsDesignHost()
+        {
+            if (LicenseManager.UsageMode == LicenseUsageMode.Designtime)
+                return true;
+            if (Site?.DesignMode == true)
+                return true;
+            return IsDesignToolsProcess.Value;
+        }
+
+        protected int GetScrollContentWidth(int fallback = 800)
+        {
+            var w = panelContent.ClientSize.Width;
+            if (w < 200 && Parent != null)
+                w = Parent.ClientSize.Width - 48;
+            return w < 200 ? fallback : w;
+        }
+
+        protected void WireScrollRoot(Control scrollRoot, int fallback = 800)
+        {
+            panelContent.Controls.Add(scrollRoot);
+            panelContent.Resize += (s, e) => scrollRoot.Width = GetScrollContentWidth(fallback);
+        }
+
+        protected T GetRuntimeService<T>(ref T service) where T : class, new()
+        {
+            if (IsDesignHost()) return null;
+            return service ?? (service = new T());
+        }
+
+        protected void SyncShellChrome()
+        {
+            var closeLeft = Math.Max(8, panelTop.ClientSize.Width - btnClose.Width - 8);
+            if (btnClose.Left != closeLeft)
+                btnClose.Left = closeLeft;
+
+            var logoutTop = Math.Max(0, panelSidebar.ClientSize.Height - btnNavLogout.Height - panelSidebar.Padding.Bottom);
+            if (btnNavLogout.Top != logoutTop)
+                btnNavLogout.Top = logoutTop;
+        }
+
+        protected override void OnLayout(LayoutEventArgs levent)
+        {
+            base.OnLayout(levent);
+            if (panelTop != null && panelSidebar != null && btnClose != null && btnNavLogout != null)
+                SyncShellChrome();
+        }
+
+        protected void NavigateTo(CustomerShellForm next)
+        {
+            next.StartPosition = FormStartPosition.Manual;
+            next.Location = Location;
+            next.Size = Size;
+            next.WindowState = WindowState;
+
+            var login = Application.OpenForms.OfType<LoginForm>().FirstOrDefault();
+            login?.AttachCustomerReturn(next);
+
+            next.Show();
+            Hide();
+            Close();
+        }
+
+        private void BtnClose_Click(object sender, EventArgs e) => Logout();
+
+        private void BtnNavLogout_Click(object sender, EventArgs e) => Logout();
+
+        protected void Logout()
+        {
+            CartService.Clear();
+            Session.Clear();
+            Close();
+            var login = Application.OpenForms.OfType<LoginForm>().FirstOrDefault();
+            if (login != null && !login.IsDisposed)
+                login.Show();
+        }
+
+        private void BtnNavHome_Click(object sender, EventArgs e)
+        {
+            if (this is CustomerDashboardForm dashboard)
+            {
+                dashboard.RefreshData();
+                return;
+            }
+            NavigateTo(new CustomerDashboardForm());
+        }
+
+        private void BtnNavBrowse_Click(object sender, EventArgs e)
+        {
+            if (this is SearchMedicinesForm) return;
+            NavigateTo(new SearchMedicinesForm());
+        }
+
+        private void BtnNavCart_Click(object sender, EventArgs e)
+        {
+            if (this is PlaceOrderForm) return;
+            NavigateTo(new PlaceOrderForm());
+        }
+
+        private void BtnNavOrders_Click(object sender, EventArgs e)
+        {
+            if (this is TrackOrdersForm orders)
+            {
+                orders.RefreshOrders();
+                return;
+            }
+            NavigateTo(new TrackOrdersForm());
+        }
+
+        private void BtnNavProfile_Click(object sender, EventArgs e)
+        {
+            if (this is ProfileManagementForm) return;
+            NavigateTo(new ProfileManagementForm());
+        }
+    }
+}

@@ -25,5 +25,30 @@ namespace SmartMed.Data
                 Name = row["Username"].ToString()
             };
         }
+
+        public Admin GetById(int adminId)
+        {
+            var table = DatabaseHelper.ExecuteQuery(
+                "SELECT AdminID, Username, Password, Email FROM Admin WHERE AdminID=@id",
+                new SqlParameter("@id", adminId));
+            if (table.Rows.Count == 0) return null;
+            var row = table.Rows[0];
+            return new Admin
+            {
+                AdminID = Convert.ToInt32(row["AdminID"]),
+                Username = row["Username"].ToString(),
+                Password = row["Password"].ToString(),
+                Email = row["Email"].ToString(),
+                Name = row["Username"].ToString()
+            };
+        }
+
+        public void UpdatePassword(int adminId, string newPassword)
+        {
+            DatabaseHelper.ExecuteNonQuery(
+                "UPDATE Admin SET Password=@p WHERE AdminID=@id",
+                new SqlParameter("@p", newPassword),
+                new SqlParameter("@id", adminId));
+        }
     }
 }

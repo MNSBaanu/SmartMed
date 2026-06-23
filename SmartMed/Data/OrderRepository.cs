@@ -20,6 +20,17 @@ namespace SmartMed.Data
             return list;
         }
 
+        public Order GetById(int orderId)
+        {
+            var table = DatabaseHelper.ExecuteQuery(
+                @"SELECT o.OrderID, o.CustomerID, c.FullName AS CustomerName, o.OrderDate, o.Status, o.TotalAmount
+                  FROM [Order] o INNER JOIN Customer c ON o.CustomerID = c.CustomerID
+                  WHERE o.OrderID=@id",
+                new SqlParameter("@id", orderId));
+            if (table.Rows.Count == 0) return null;
+            return MapOrder(table.Rows[0]);
+        }
+
         public List<Order> GetByCustomer(int customerId)
         {
             var list = new List<Order>();
@@ -80,6 +91,16 @@ namespace SmartMed.Data
             DatabaseHelper.ExecuteNonQuery(
                 "UPDATE [Order] SET Status=@s WHERE OrderID=@id",
                 new SqlParameter("@s", status),
+                new SqlParameter("@id", orderId));
+        }
+
+        public void DeleteOrder(int orderId)
+        {
+            DatabaseHelper.ExecuteNonQuery(
+                "DELETE FROM OrderItem WHERE OrderID=@id",
+                new SqlParameter("@id", orderId));
+            DatabaseHelper.ExecuteNonQuery(
+                "DELETE FROM [Order] WHERE OrderID=@id",
                 new SqlParameter("@id", orderId));
         }
 

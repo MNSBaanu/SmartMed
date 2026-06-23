@@ -29,5 +29,10 @@ namespace SmartMed.Services
                 return total;
             }
         }
+
+        public void ExportActiveReportToCsv(DataTable table, string filePath)
+        {
+            ExportHelper.ExportDataTableToCsv(table, filePath);
+        }
     }
 }

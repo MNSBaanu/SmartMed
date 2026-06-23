@@ -15,6 +15,49 @@ namespace SmartMed.Services
 
         public Customer GetById(int id) => _customers.GetById(id);
 
+        public void UpdateProfile(Customer customer)
+        {
+            Update(customer);
+        }
+
+        public void ChangePassword(int customerId, string currentPassword, string newPassword)
+        {
+            if (customerId <= 0)
+                throw new ArgumentException("Customer session is required.");
+            if (ValidationService.IsNullOrWhiteSpace(currentPassword) || ValidationService.IsNullOrWhiteSpace(newPassword))
+                throw new ArgumentException("Current and new passwords are required.");
+            if (newPassword.Length < 6)
+                throw new ArgumentException("New password must be at least 6 characters.");
+
+            var customer = _customers.GetById(customerId);
+            if (customer == null || customer.Password != currentPassword)
+                throw new InvalidOperationException("Current password is incorrect.");
+
+            _customers.UpdatePassword(customerId, newPassword);
+            customer.Password = newPassword;
+        }
+
+        public void ExportToCsv(IList<Customer> customers, string filePath)
+        {
+            var sb = new System.Text.StringBuilder();
+            sb.AppendLine("CustomerID,Name,Email,Phone,Address");
+            foreach (var c in customers)
+            {
+                sb.Append(c.CustomerID).Append(',');
+                sb.Append(EscapeCsv(c.Name)).Append(',');
+                sb.Append(EscapeCsv(c.Email)).Append(',');
+                sb.Append(EscapeCsv(c.Phone)).Append(',');
+                sb.AppendLine(EscapeCsv(c.Address));
+            }
+            System.IO.File.WriteAllText(filePath, sb.ToString(), System.Text.Encoding.UTF8);
+        }
+
+        private static string EscapeCsv(string value)
+        {
+            if (string.IsNullOrEmpty(value)) return "\"\"";
+            return "\"" + value.Replace("\"", "\"\"") + "\"";
+        }
+
         public void Add(Customer customer, string defaultPassword = "customer123")
         {
             ValidateCustomer(customer, isNew: true);

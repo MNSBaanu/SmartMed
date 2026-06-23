@@ -44,5 +44,21 @@ namespace SmartMed.Services
 
             _customerRepo.Insert(customer);
         }
+
+        public void ChangeAdminPassword(int adminId, string currentPassword, string newPassword)
+        {
+            if (adminId <= 0)
+                throw new System.ArgumentException("Admin session is required.");
+            if (ValidationService.IsNullOrWhiteSpace(currentPassword) || ValidationService.IsNullOrWhiteSpace(newPassword))
+                throw new System.ArgumentException("Current and new passwords are required.");
+            if (newPassword.Length < 6)
+                throw new System.ArgumentException("New password must be at least 6 characters.");
+
+            var admin = _adminRepo.GetById(adminId);
+            if (admin == null || admin.Password != currentPassword)
+                throw new System.InvalidOperationException("Current password is incorrect.");
+
+            _adminRepo.UpdatePassword(adminId, newPassword);
+        }
     }
 }

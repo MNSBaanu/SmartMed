@@ -78,6 +78,14 @@ namespace SmartMed.Data
                 new SqlParameter("@id", id));
         }
 
+        public void UpdatePassword(int customerId, string newPassword)
+        {
+            DatabaseHelper.ExecuteNonQuery(
+                "UPDATE Customer SET Password=@p WHERE CustomerID=@id",
+                new SqlParameter("@p", newPassword),
+                new SqlParameter("@id", customerId));
+        }
+
         private static Customer Map(System.Data.DataRow row)
         {
             return new Customer
