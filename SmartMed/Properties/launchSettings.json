@@ -1,0 +1,13 @@
+{
+  "profiles": {
+    "SmartMed": {
+      "commandName": "Project"
+    },
+    "SmartMed (dotnet run)": {
+      "commandName": "Executable",
+      "executablePath": "dotnet",
+      "commandLineArgs": "run",
+      "workingDirectory": "."
+    }
+  }
+}

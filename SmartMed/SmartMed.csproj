@@ -14,6 +14,15 @@
   <ItemGroup>
     <PackageReference Include="System.Data.SqlClient" Version="4.8.6" />
   </ItemGroup>
+  <!-- Stop a running debug session so the output exe is not locked during build. -->
+  <Target Name="StopRunningSmartMed" BeforeTargets="Build">
+    <Exec Command="powershell -NoProfile -ExecutionPolicy Bypass -Command &quot;Get-Process -Name SmartMed -ErrorAction SilentlyContinue | Stop-Process -Force -ErrorAction SilentlyContinue&quot;"
+          IgnoreExitCode="true" />
+  </Target>
+  <!-- Remove Mark-of-the-Web after build (helps some Windows blocks; does not disable Smart App Control). -->
+  <Target Name="UnblockBuiltExe" AfterTargets="Build" Condition="Exists('$(TargetPath)')">
+    <Exec Command="powershell -NoProfile -ExecutionPolicy Bypass -Command &quot;Unblock-File -LiteralPath '$(TargetPath)' -ErrorAction SilentlyContinue&quot;" />
+  </Target>
   <ItemGroup>
     <None Update="App.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

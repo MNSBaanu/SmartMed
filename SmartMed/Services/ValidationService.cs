@@ -7,7 +7,7 @@ namespace SmartMed.Services
     public static class ValidationService
     {
         public const string SriLankaPhoneMessage =
-            "Phone number must contain exactly 10 digits (Sri Lanka format, e.g. 0771234567).";
+            "Phone number must contain exactly 10 digits.";
 
         public static bool IsNullOrWhiteSpace(string value) =>
             string.IsNullOrWhiteSpace(value);

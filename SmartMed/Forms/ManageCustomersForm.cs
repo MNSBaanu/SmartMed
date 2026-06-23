@@ -405,13 +405,13 @@ namespace SmartMed.UI
 
         private void LoadDesignTimePreview()
         {
-            gridCustomers.DataSource = new[]
+            _allCustomers = new List<Customer>
             {
-                new { CustomerID = 1, Name = "Alice Thompson", Email = "a.thompson@email.com", Phone = "0770123456", Address = "123 Pine St, Colombo" },
-                new { CustomerID = 2, Name = "Robert Miller", Email = "r.miller88@email.com", Phone = "0779876543", Address = "456 Oak Lane, Kandy" },
-                new { CustomerID = 3, Name = "Elena Rodriguez", Email = "elena.rod@provider.net", Phone = "0772345678", Address = "789 Maple Ave, Galle" }
+                new Customer { CustomerID = 1, Name = "Alice Thompson", Email = "a.thompson@email.com", Phone = "0770123456", Address = "123 Pine St, Colombo" },
+                new Customer { CustomerID = 2, Name = "Robert Miller", Email = "r.miller88@email.com", Phone = "0779876543", Address = "456 Oak Lane, Kandy" },
+                new Customer { CustomerID = 3, Name = "Elena Rodriguez", Email = "elena.rod@provider.net", Phone = "0772345678", Address = "789 Maple Ave, Galle" }
             };
-            HideCustomerIdColumn();
+            ApplySearchFilter();
 
             txtName.Text = "Robert Miller";
             txtEmail.Text = "r.miller88@email.com";
@@ -434,14 +434,14 @@ namespace SmartMed.UI
         private void ApplySearchFilter()
         {
             if (gridCustomers == null) return;
-            if (IsDesignHost() && _allCustomers.Count == 0) return;
 
             var filtered = string.IsNullOrWhiteSpace(txtSearch?.Text)
                 ? _allCustomers
                 : SearchService.SearchCustomers(_allCustomers, txtSearch.Text);
 
             BindGrid(filtered);
-            UpdateStats(_allCustomers);
+            if (!IsDesignHost() && Customers != null)
+                UpdateStats(_allCustomers);
         }
 
         private void BindGrid(List<Customer> customers)

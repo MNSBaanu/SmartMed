@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using SmartMed.Models;
 
 namespace SmartMed.Services
@@ -68,7 +69,6 @@ namespace SmartMed.Services
                 return new List<Customer>(customers);
 
             var key = keyword.Trim();
-            var keyLower = key.ToLowerInvariant();
             var keyDigits = ValidationService.NormalizePhoneDigits(key);
             var results = new List<Customer>();
 
@@ -91,9 +91,10 @@ namespace SmartMed.Services
                     results.Add(customer);
                     continue;
                 }
-                if (customer.Phone != null
+                if (keyDigits.Length > 0
+                    && customer.Phone != null
                     && ValidationService.NormalizePhoneDigits(customer.Phone)
-                        .IndexOf(keyDigits, StringComparison.OrdinalIgnoreCase) >= 0)
+                        .IndexOf(keyDigits, StringComparison.Ordinal) >= 0)
                     results.Add(customer);
             }
             return results;
@@ -103,7 +104,9 @@ namespace SmartMed.Services
         {
             if (int.TryParse(key, out var id) && customer.CustomerID == id)
                 return true;
-            return customer.CustomerID.ToString().IndexOf(key, StringComparison.OrdinalIgnoreCase) >= 0;
+            if (key.All(char.IsDigit))
+                return customer.CustomerID.ToString().IndexOf(key, StringComparison.Ordinal) >= 0;
+            return false;
         }
     }
 }
