@@ -3,7 +3,6 @@ using System.ComponentModel;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
-using SmartMed.Data;
 using SmartMed.Services;
 
 namespace SmartMed.UI
@@ -30,8 +29,8 @@ namespace SmartMed.UI
         public void RefreshData() => LoadDashboardData();
 
         private readonly ReportService _reports = new ReportService();
-        private readonly OrderRepository _orders = new OrderRepository();
-        private readonly MedicineRepository _medicines = new MedicineRepository();
+        private readonly OrderService _orders = new OrderService();
+        private readonly MedicineService _medicines = new MedicineService();
         private bool _dataLoaded;
 
         private Label lblWelcome;
@@ -496,29 +495,10 @@ namespace SmartMed.UI
             lblOrdersValue.Text = _reports.ActiveOrders.ToString("N0");
             lblSalesValue.Text = $"LKR {_reports.TotalSales:N2}";
 
-            var rows = _orders.GetAll().Take(8).Select(o =>
-            {
-                var items = _orders.GetItems(o.OrderID);
-                var med = items.Count > 0 ? items[0].MedicineName : "-";
-                if (items.Count > 1) med += $" (+{items.Count - 1})";
-                return new
-                {
-                    OrderId = $"#SM-{o.OrderID:D4}",
-                    Patient = o.CustomerName,
-                    Medication = med,
-                    Status = o.Status,
-                    Time = o.OrderDate.ToString("hh:mm tt")
-                };
-            }).ToList();
-
-            gridRecent.DataSource = rows;
+            gridRecent.DataSource = _orders.GetRecentSummaries(8);
 
             panelAlerts.Controls.Clear();
-            var lowStock = _medicines.GetAll()
-                .Where(m => m.StockQuantity <= 20)
-                .OrderBy(m => m.StockQuantity)
-                .Take(4)
-                .ToList();
+            var lowStock = _medicines.GetLowStock();
 
             if (lowStock.Count == 0)
             {

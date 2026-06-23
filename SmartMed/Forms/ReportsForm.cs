@@ -3,7 +3,6 @@ using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Windows.Forms;
-using SmartMed.Data;
 using SmartMed.Services;
 
 namespace SmartMed.UI
@@ -37,7 +36,7 @@ namespace SmartMed.UI
         }
 
         private ReportService _reports;
-        private CustomerRepository _customers;
+        private CustomerService _customers;
         private ReportTab _activeTab = ReportTab.Sales;
         private bool _dataLoaded;
 
@@ -71,12 +70,12 @@ namespace SmartMed.UI
             }
         }
 
-        private CustomerRepository Customers
+        private CustomerService Customers
         {
             get
             {
                 if (IsDesignHost()) return null;
-                return _customers ?? (_customers = new CustomerRepository());
+                return _customers ?? (_customers = new CustomerService());
             }
         }
 

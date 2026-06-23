@@ -4,7 +4,6 @@ using System.ComponentModel;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
-using SmartMed.Data;
 using SmartMed.Models;
 using SmartMed.Services;
 
@@ -29,8 +28,7 @@ namespace SmartMed.UI
                 LoadCustomers();
         }
 
-        private CustomerRepository _customers;
-        private OrderRepository _orders;
+        private CustomerService _customers;
         private int? _selectedId;
         private bool _dataLoaded;
 
@@ -55,21 +53,12 @@ namespace SmartMed.UI
             
         }
 
-        private CustomerRepository Customers
+        private CustomerService Customers
         {
             get
             {
                 if (IsDesignHost()) return null;
-                return _customers ?? (_customers = new CustomerRepository());
-            }
-        }
-
-        private OrderRepository Orders
-        {
-            get
-            {
-                if (IsDesignHost()) return null;
-                return _orders ?? (_orders = new OrderRepository());
+                return _customers ?? (_customers = new CustomerService());
             }
         }
 
@@ -442,12 +431,10 @@ namespace SmartMed.UI
 
         private void UpdateStats(List<Customer> all)
         {
-            var orderCustomerIds = new HashSet<int>(Orders.GetAll().Select(o => o.CustomerID));
-            var withOrders = all.Count(c => orderCustomerIds.Contains(c.CustomerID));
-
+            Customers.GetOrderStats(all, out var withOrders, out var withoutOrders);
             lblTotalCustomers.Text = all.Count.ToString("N0");
             lblWithOrders.Text = withOrders.ToString("N0");
-            lblWithoutOrders.Text = (all.Count - withOrders).ToString("N0");
+            lblWithoutOrders.Text = withoutOrders.ToString("N0");
         }
 
         private void GridCustomers_SelectionChanged(object sender, EventArgs e)
@@ -492,13 +479,7 @@ namespace SmartMed.UI
         {
             try
             {
-                var customer = ReadForm();
-                ValidateCustomer(customer, isNew: true);
-                if (Customers.EmailExists(customer.Email))
-                    throw new InvalidOperationException("Email already registered.");
-                if (ValidationService.IsNullOrWhiteSpace(customer.Password))
-                    customer.Password = "customer123";
-                Customers.Insert(customer);
+                Customers.Add(ReadForm());
                 ClearForm();
                 LoadCustomers();
                 MessageBox.Show("Customer added successfully.", "SmartMed", MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -522,14 +503,6 @@ namespace SmartMed.UI
             {
                 var customer = ReadForm();
                 customer.CustomerID = _selectedId.Value;
-                ValidateCustomer(customer, isNew: false);
-                var existing = Customers.GetById(customer.CustomerID);
-                if (existing == null)
-                    throw new InvalidOperationException("Customer not found.");
-                if (!string.Equals(existing.Email, customer.Email, StringComparison.OrdinalIgnoreCase)
-                    && Customers.EmailExists(customer.Email))
-                    throw new InvalidOperationException("Email already registered.");
-                customer.Password = existing.Password;
                 Customers.Update(customer);
                 LoadCustomers();
                 MessageBox.Show("Customer updated successfully.", "SmartMed", MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -555,10 +528,6 @@ namespace SmartMed.UI
 
             try
             {
-                if (_selectedId.Value <= 0)
-                    throw new ArgumentException("Select a customer to delete.");
-                if (Customers.GetById(_selectedId.Value) == null)
-                    throw new InvalidOperationException("Customer not found.");
                 Customers.Delete(_selectedId.Value);
                 ClearForm();
                 LoadCustomers();
@@ -568,20 +537,6 @@ namespace SmartMed.UI
             {
                 MessageBox.Show(ex.Message, "Delete Failed", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
-        }
-
-        private static void ValidateCustomer(Customer customer, bool isNew)
-        {
-            if (!isNew && customer.CustomerID <= 0)
-                throw new ArgumentException("Select a customer to update.");
-            if (ValidationService.IsNullOrWhiteSpace(customer.Name))
-                throw new ArgumentException("Full name is required.");
-            if (!ValidationService.IsValidEmail(customer.Email))
-                throw new ArgumentException("Valid email is required.");
-            if (ValidationService.IsNullOrWhiteSpace(customer.Phone))
-                throw new ArgumentException("Phone is required.");
-            if (ValidationService.IsNullOrWhiteSpace(customer.Address))
-                throw new ArgumentException("Address is required.");
         }
     }
 }

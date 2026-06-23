@@ -115,6 +115,13 @@ namespace SmartMed.Services
             return (decimal)compliant / list.Count * 100m;
         }
 
+        public List<Medicine> GetLowStock(int threshold = 20, int maxCount = 4) =>
+            GetAll()
+                .Where(m => IsLowStock(m, threshold))
+                .OrderBy(m => m.StockQuantity)
+                .Take(maxCount)
+                .ToList();
+
         public void ExportToCsv(IList<Medicine> medicines, string filePath)
         {
             var sb = new StringBuilder();

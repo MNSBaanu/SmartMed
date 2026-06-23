@@ -11,7 +11,7 @@ namespace SmartMed.Models
         public string Status { get; set; }
         public decimal TotalAmount { get; set; }
 
-        public decimal CalculateTotal() => TotalAmount;
-        public void UpdateStatus(string status) => Status = status;
+        public void CalculateTotal() { }
+        public void UpdateStatus(string status) { }
     }
 }
