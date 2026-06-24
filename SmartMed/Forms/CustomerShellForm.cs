@@ -52,6 +52,12 @@ namespace SmartMed.UI
             if (_pageContentInitialized) return;
             _pageContentInitialized = true;
             InitializePageContent();
+            if (!IsDesignHost())
+            {
+                UiTheme.ApplyFontTree(panelTop);
+                UiTheme.ApplyFontTree(panelSidebar);
+                UiTheme.ApplyFontTree(panelContent);
+            }
             SyncShellChrome();
         }
 

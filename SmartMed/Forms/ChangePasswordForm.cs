@@ -40,6 +40,14 @@ namespace SmartMed.UI
             });
             AcceptButton = btnSave;
             CancelButton = btnCancel;
+
+            Font = UiTheme.UiFont;
+            UiTheme.ApplyFontTree(this);
+            UiTheme.ApplyFlatButton(btnSave, UiButtonStyle.Primary);
+            UiTheme.ApplyFlatButton(btnCancel, UiButtonStyle.Secondary);
+            UiTheme.StyleTextBox(txtCurrent);
+            UiTheme.StyleTextBox(txtNew);
+            UiTheme.StyleTextBox(txtConfirm);
         }
 
         private void BtnSave_Click(object sender, EventArgs e)

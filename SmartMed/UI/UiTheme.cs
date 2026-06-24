@@ -1,5 +1,7 @@
 using System;
 using System.Drawing;
+using System.Drawing.Text;
+using System.IO;
 using System.Reflection;
 using System.Windows.Forms;
 using MaterialButton = ReaLTaiizor.Controls.MaterialButton;
@@ -33,18 +35,110 @@ namespace SmartMed.UI
         public static readonly Color Muted = Color.FromArgb(127, 140, 141);
         public static readonly Color GridHeader = Color.FromArgb(236, 240, 241);
         public static readonly Color GridHeaderText = Color.FromArgb(44, 62, 80);
-        public static readonly Font UiFont = new Font("Segoe UI", 9F);
-        public static readonly Font UiFontBold = new Font("Segoe UI", 9F, FontStyle.Bold);
+        public const string FontFamilyName = "Roboto";
+        public const float FontSize = 9F;
 
+        private static PrivateFontCollection _fontCollection;
+        private static Font _uiFont;
+        private static Font _uiFontBold;
         private static bool _initialized;
+
+        public static Font UiFont
+        {
+            get
+            {
+                EnsureFonts();
+                return _uiFont;
+            }
+        }
+
+        public static Font UiFontBold
+        {
+            get
+            {
+                EnsureFonts();
+                return _uiFontBold;
+            }
+        }
 
         public static void Init()
         {
             if (_initialized) return;
+            EnsureFonts();
             _initialized = true;
 
             var skin = MaterialSkinManager.Instance;
             skin.Theme = MaterialSkinManager.Themes.LIGHT;
+        }
+
+        private static void EnsureFonts()
+        {
+            if (_uiFont != null) return;
+
+            try
+            {
+                var baseDir = AppDomain.CurrentDomain.BaseDirectory;
+                var regularPath = Path.Combine(baseDir, "Assets", "Fonts", "Roboto-Regular.ttf");
+                var boldPath = Path.Combine(baseDir, "Assets", "Fonts", "Roboto-Bold.ttf");
+
+                if (File.Exists(regularPath) && File.Exists(boldPath))
+                {
+                    _fontCollection = new PrivateFontCollection();
+                    _fontCollection.AddFontFile(regularPath);
+                    _fontCollection.AddFontFile(boldPath);
+
+                    FontFamily regularFamily = null;
+                    FontFamily boldFamily = null;
+                    foreach (var family in _fontCollection.Families)
+                    {
+                        if (family.IsStyleAvailable(FontStyle.Regular))
+                            regularFamily = family;
+                        if (family.IsStyleAvailable(FontStyle.Bold))
+                            boldFamily = family;
+                    }
+
+                    if (regularFamily != null)
+                    {
+                        _uiFont = new Font(regularFamily, FontSize, FontStyle.Regular, GraphicsUnit.Point);
+                        _uiFontBold = boldFamily != null
+                            ? new Font(boldFamily, FontSize, FontStyle.Bold, GraphicsUnit.Point)
+                            : new Font(regularFamily, FontSize, FontStyle.Bold, GraphicsUnit.Point);
+                        return;
+                    }
+                }
+            }
+            catch
+            {
+                // Fall back to installed Roboto if bundled files cannot be loaded.
+            }
+
+            _uiFont = new Font(FontFamilyName, FontSize, FontStyle.Regular, GraphicsUnit.Point);
+            _uiFontBold = new Font(FontFamilyName, FontSize, FontStyle.Bold, GraphicsUnit.Point);
+        }
+
+        public static void ApplyFontTree(Control root)
+        {
+            if (root == null) return;
+            EnsureFonts();
+
+            if (root is DataGridView grid)
+                ApplyGrid(grid);
+            else
+                root.Font = root.Font.Bold ? UiFontBold : UiFont;
+
+            if (root is TextBox textBox)
+                StyleTextBox(textBox);
+            else if (root is ComboBox comboBox)
+                StyleComboBox(comboBox);
+            else if (root is CheckBox checkBox)
+                checkBox.Font = UiFont;
+            else if (root is NumericUpDown numeric)
+                numeric.Font = UiFont;
+            else if (root is LinkLabel link)
+                link.Font = UiFont;
+
+            foreach (Control child in root.Controls)
+                ApplyFontTree(child);
         }
 
         public static void RegisterForm(MaterialForm form)
@@ -83,8 +177,8 @@ namespace SmartMed.UI
                     if (c is Label lbl)
                     {
                         lbl.ForeColor = Color.White;
-                        if (lbl.Font.Bold || lbl.Text == "SmartMed")
-                            lbl.Font = UiFontBold;
+                        lbl.BackColor = HeaderBackground;
+                        lbl.Font = lbl.Font.Bold || lbl.Text == "SmartMed" ? UiFontBold : UiFont;
                     }
                     else if (c is Button btn)
                         StyleIconButton(btn);
@@ -104,22 +198,30 @@ namespace SmartMed.UI
             if (content != null)
             {
                 content.BackColor = PageBackground;
+                content.Font = UiFont;
             }
         }
 
-        public static void ApplyLoginForm(MaterialForm form, params Control[] inputs)
+        public static void ApplyLoginForm(MaterialForm form, Panel body, LinkLabel forgotLink = null)
         {
             RegisterForm(form);
             form.BackColor = CardBackground;
             form.Font = UiFont;
             form.Padding = new Padding(0, 64, 0, 0);
 
-            foreach (var c in inputs)
+            if (body != null)
             {
-                if (c is Panel panel)
-                    panel.BackColor = CardBackground;
-                if (c is Label lbl)
-                    lbl.ForeColor = GridHeaderText;
+                body.BackColor = CardBackground;
+                ApplyFontTree(body);
+            }
+
+            if (forgotLink != null)
+            {
+                forgotLink.Font = UiFont;
+                forgotLink.BackColor = CardBackground;
+                forgotLink.LinkColor = Primary;
+                forgotLink.ActiveLinkColor = PrimaryDark;
+                forgotLink.VisitedLinkColor = PrimaryDark;
             }
         }
 

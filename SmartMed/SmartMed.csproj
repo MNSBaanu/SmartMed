@@ -24,6 +24,12 @@
     <Exec Command="powershell -NoProfile -ExecutionPolicy Bypass -Command &quot;Unblock-File -LiteralPath '$(TargetPath)' -ErrorAction SilentlyContinue&quot;" />
   </Target>
   <ItemGroup>
+    <None Include="Assets\Fonts\Roboto-Regular.ttf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Assets\Fonts\Roboto-Bold.ttf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="App.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

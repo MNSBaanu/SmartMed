@@ -357,6 +357,7 @@ namespace SmartMed.UI
                 MultiSelect = false,
                 ScrollBars = ScrollBars.Vertical
             };
+            UiTheme.ApplyGrid(grid);
             return grid;
         }
 

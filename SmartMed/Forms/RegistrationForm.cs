@@ -21,6 +21,7 @@ namespace SmartMed.UI
                 UiTheme.RegisterForm(this);
                 UiTheme.ApplyFlatButton(btnRegister, UiButtonStyle.Success);
                 UiTheme.ApplyFlatButton(btnCancel, UiButtonStyle.Secondary);
+                UiTheme.ApplyFontTree(panelCard);
             }
             LayoutForm();
         }

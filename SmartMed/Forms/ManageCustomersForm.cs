@@ -210,6 +210,7 @@ namespace SmartMed.UI
                 MultiSelect = false,
                 ScrollBars = ScrollBars.Vertical
             };
+            UiTheme.ApplyGrid(gridCustomers);
             gridCustomers.SelectionChanged += GridCustomers_SelectionChanged;
 
             outer.Controls.Add(gridCustomers);

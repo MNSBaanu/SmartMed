@@ -256,6 +256,7 @@ namespace SmartMed.UI
                 EnableHeadersVisualStyles = false,
                 ScrollBars = ScrollBars.Vertical
             };
+            UiTheme.ApplyGrid(grid);
             return grid;
         }
 

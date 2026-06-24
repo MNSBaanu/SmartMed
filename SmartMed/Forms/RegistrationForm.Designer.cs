@@ -76,7 +76,7 @@ namespace SmartMed.UI
             // lblMedicalIcon
             // 
             this.lblMedicalIcon.AutoSize = true;
-            this.lblMedicalIcon.Font = new System.Drawing.Font("Segoe MDL2 Assets", 11F);
+            this.lblMedicalIcon.Font = new System.Drawing.Font("Roboto", 9F);
             this.lblMedicalIcon.ForeColor = System.Drawing.Color.White;
             this.lblMedicalIcon.Location = new System.Drawing.Point(24, 18);
             this.lblMedicalIcon.Name = "lblMedicalIcon";
@@ -88,7 +88,7 @@ namespace SmartMed.UI
             // lblHeaderTitle
             // 
             this.lblHeaderTitle.AutoSize = true;
-            this.lblHeaderTitle.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
+            this.lblHeaderTitle.Font = new System.Drawing.Font("Roboto", 9F, System.Drawing.FontStyle.Bold);
             this.lblHeaderTitle.ForeColor = System.Drawing.Color.White;
             this.lblHeaderTitle.Location = new System.Drawing.Point(48, 16);
             this.lblHeaderTitle.Name = "lblHeaderTitle";
@@ -100,7 +100,7 @@ namespace SmartMed.UI
             // 
             this.lblLockIcon.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.lblLockIcon.AutoSize = true;
-            this.lblLockIcon.Font = new System.Drawing.Font("Segoe MDL2 Assets", 11F);
+            this.lblLockIcon.Font = new System.Drawing.Font("Roboto", 9F);
             this.lblLockIcon.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(128)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
             this.lblLockIcon.Location = new System.Drawing.Point(362, 18);
             this.lblLockIcon.Name = "lblLockIcon";
@@ -117,7 +117,7 @@ namespace SmartMed.UI
             this.btnClose.FlatAppearance.BorderSize = 0;
             this.btnClose.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(40)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
             this.btnClose.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnClose.Font = new System.Drawing.Font("Segoe MDL2 Assets", 11F);
+            this.btnClose.Font = new System.Drawing.Font("Roboto", 9F, System.Drawing.FontStyle.Bold);
             this.btnClose.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(180)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
             this.btnClose.Location = new System.Drawing.Point(390, 12);
             this.btnClose.Name = "btnClose";
@@ -238,7 +238,7 @@ namespace SmartMed.UI
             this.btnTogglePassword.Cursor = System.Windows.Forms.Cursors.Hand;
             this.btnTogglePassword.FlatAppearance.BorderSize = 0;
             this.btnTogglePassword.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnTogglePassword.Font = new System.Drawing.Font("Segoe MDL2 Assets", 10F);
+            this.btnTogglePassword.Font = new System.Drawing.Font("Roboto", 9F);
             this.btnTogglePassword.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(68)))), ((int)(((byte)(70)))), ((int)(((byte)(82)))));
             this.btnTogglePassword.Location = new System.Drawing.Point(390, 237);
             this.btnTogglePassword.Name = "btnTogglePassword";
@@ -271,7 +271,7 @@ namespace SmartMed.UI
             this.btnToggleConfirm.Cursor = System.Windows.Forms.Cursors.Hand;
             this.btnToggleConfirm.FlatAppearance.BorderSize = 0;
             this.btnToggleConfirm.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnToggleConfirm.Font = new System.Drawing.Font("Segoe MDL2 Assets", 10F);
+            this.btnToggleConfirm.Font = new System.Drawing.Font("Roboto", 9F);
             this.btnToggleConfirm.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(68)))), ((int)(((byte)(70)))), ((int)(((byte)(82)))));
             this.btnToggleConfirm.Location = new System.Drawing.Point(390, 297);
             this.btnToggleConfirm.Name = "btnToggleConfirm";
@@ -324,7 +324,7 @@ namespace SmartMed.UI
             // 
             // lblSuccessIcon
             // 
-            this.lblSuccessIcon.Font = new System.Drawing.Font("Segoe MDL2 Assets", 20F);
+            this.lblSuccessIcon.Font = new System.Drawing.Font("Roboto", 9F, System.Drawing.FontStyle.Bold);
             this.lblSuccessIcon.Location = new System.Drawing.Point(24, 80);
             this.lblSuccessIcon.Name = "lblSuccessIcon";
             this.lblSuccessIcon.Size = new System.Drawing.Size(402, 48);
@@ -334,7 +334,7 @@ namespace SmartMed.UI
             // 
             // lblSuccessTitle
             // 
-            this.lblSuccessTitle.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
+            this.lblSuccessTitle.Font = new System.Drawing.Font("Roboto", 9F, System.Drawing.FontStyle.Bold);
             this.lblSuccessTitle.Location = new System.Drawing.Point(24, 140);
             this.lblSuccessTitle.Name = "lblSuccessTitle";
             this.lblSuccessTitle.Size = new System.Drawing.Size(402, 28);
@@ -369,7 +369,7 @@ namespace SmartMed.UI
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(249)))), ((int)(((byte)(249)))), ((int)(((byte)(249)))));
             this.ClientSize = new System.Drawing.Size(500, 660);
             this.Controls.Add(this.panelCard);
-            this.Font = new System.Drawing.Font("Segoe UI", 9F);
+            this.Font = new System.Drawing.Font("Roboto", 9F);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.MaximizeBox = false;
             this.MinimizeBox = false;

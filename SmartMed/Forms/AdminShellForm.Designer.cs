@@ -43,7 +43,7 @@ namespace SmartMed.UI
             // lblTopBrand
             // 
             this.lblTopBrand.AutoSize = true;
-            this.lblTopBrand.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
+            this.lblTopBrand.Font = new System.Drawing.Font("Roboto", 9F, System.Drawing.FontStyle.Bold);
             this.lblTopBrand.Location = new System.Drawing.Point(16, 10);
             this.lblTopBrand.Name = "lblTopBrand";
             this.lblTopBrand.Size = new System.Drawing.Size(74, 20);
@@ -170,7 +170,7 @@ namespace SmartMed.UI
             this.Controls.Add(this.panelContent);
             this.Controls.Add(this.panelSidebar);
             this.Controls.Add(this.panelTop);
-            this.Font = new System.Drawing.Font("Segoe UI", 9F);
+            this.Font = new System.Drawing.Font("Roboto", 9F);
             this.MinimumSize = new System.Drawing.Size(1000, 640);
             this.Name = "AdminShellForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;

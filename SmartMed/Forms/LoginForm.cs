@@ -32,7 +32,7 @@ namespace SmartMed.UI
 
             {
 
-                UiTheme.ApplyLoginForm(this, panelBody, lblUsername, lblPassword, txtUsername, txtPassword);
+                UiTheme.ApplyLoginForm(this, panelBody, lnkForgot);
 
                 UiTheme.ApplyFlatButton(btnLogin, UiButtonStyle.Primary);
 
