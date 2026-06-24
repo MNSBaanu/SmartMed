@@ -34,13 +34,6 @@ namespace SmartMed.UI
                 LoadOrders();
         }
 
-        private static readonly string[] OrderStatuses =
-        {
-            OrderService.StatusPending,
-            OrderService.StatusReadyForPickup,
-            OrderService.StatusDelivered
-        };
-
         private OrderService _orders;
         private int? _selectedOrderId;
         private string _statusFilter = "All";
@@ -355,9 +348,9 @@ namespace SmartMed.UI
             {
                 DropDownStyle = ComboBoxStyle.DropDownList,
                 Width = 200,
-                Location = new Point(88, 16)
+                Location = new Point(88, 16),
+                Enabled = false
             };
-            cmbStatus.Items.AddRange(OrderStatuses);
 
             lblLastUpdated = new Label
             {
@@ -373,7 +366,8 @@ namespace SmartMed.UI
                 Text = "Update Status",
                 Width = 150,
                 Height = 40,
-                Anchor = AnchorStyles.Top | AnchorStyles.Right
+                Anchor = AnchorStyles.Top | AnchorStyles.Right,
+                Enabled = false
             };
             btnUpdateStatus.Click += BtnUpdateStatus_Click;
 
@@ -506,9 +500,9 @@ namespace SmartMed.UI
             lblOrderDetails.Text = $"Order Details: {orderRef}";
             PopulateStatusOptions(status);
 
-            var isDelivered = string.Equals(status, OrderService.StatusDelivered, StringComparison.OrdinalIgnoreCase);
-            cmbStatus.Enabled = !isDelivered;
-            btnUpdateStatus.Enabled = !isDelivered;
+            var canUpdate = cmbStatus.Items.Count > 0;
+            cmbStatus.Enabled = canUpdate;
+            btnUpdateStatus.Enabled = canUpdate;
 
             lblLastUpdated.Text = $"Last Updated: {DateTime.Now:MMM dd, yyyy hh:mm tt}";
 
@@ -531,22 +525,23 @@ namespace SmartMed.UI
             gridOrders.ClearSelection();
             gridItems.DataSource = null;
             lblOrderDetails.Text = "Order Details";
+            cmbStatus.Items.Clear();
             cmbStatus.SelectedIndex = -1;
-            cmbStatus.Enabled = true;
-            btnUpdateStatus.Enabled = true;
+            cmbStatus.Enabled = false;
+            btnUpdateStatus.Enabled = false;
             lblLastUpdated.Text = "Last Updated: —";
         }
 
         private void PopulateStatusOptions(string currentStatus)
         {
-            var selected = currentStatus;
             cmbStatus.Items.Clear();
             foreach (var status in OrderService.GetAllowedNextStatuses(currentStatus))
                 cmbStatus.Items.Add(status);
 
-            cmbStatus.SelectedItem = selected;
-            if (cmbStatus.SelectedIndex < 0 && cmbStatus.Items.Count > 0)
+            if (cmbStatus.Items.Count > 0)
                 cmbStatus.SelectedIndex = 0;
+            else
+                cmbStatus.SelectedIndex = -1;
         }
 
         private void BtnUpdateStatus_Click(object sender, EventArgs e)

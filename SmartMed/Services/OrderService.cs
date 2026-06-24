@@ -22,23 +22,17 @@ namespace SmartMed.Services
         public static IReadOnlyList<string> GetAllowedNextStatuses(string currentStatus)
         {
             if (string.IsNullOrWhiteSpace(currentStatus))
-                return new[] { StatusPending };
+                return Array.Empty<string>();
 
-            if (currentStatus == StatusDelivered)
-                return new[] { StatusDelivered };
-
-            var allowed = new List<string> { currentStatus };
             switch (currentStatus)
             {
                 case StatusPending:
-                    allowed.Add(StatusReadyForPickup);
-                    break;
+                    return new[] { StatusReadyForPickup };
                 case StatusReadyForPickup:
-                    allowed.Add(StatusDelivered);
-                    break;
+                    return new[] { StatusDelivered };
+                default:
+                    return Array.Empty<string>();
             }
-
-            return allowed;
         }
 
         private readonly OrderRepository _orders = new OrderRepository();
