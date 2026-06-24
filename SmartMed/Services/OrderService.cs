@@ -30,6 +30,13 @@ namespace SmartMed.Services
                 throw new ArgumentException("Status is required.");
             if (!ValidStatuses.Contains(status))
                 throw new ArgumentException("Invalid order status.");
+
+            var order = _orders.GetById(orderId);
+            if (order == null)
+                throw new InvalidOperationException("Order not found.");
+            if (order.Status == "Delivered" && status != "Delivered")
+                throw new InvalidOperationException("Delivered orders cannot be changed to Pending or Ready for Pickup.");
+
             _orders.UpdateStatus(orderId, status);
         }
 

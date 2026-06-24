@@ -500,6 +500,10 @@ namespace SmartMed.UI
             if (cmbStatus.SelectedIndex < 0)
                 cmbStatus.Text = status;
 
+            var isDelivered = string.Equals(status, "Delivered", StringComparison.OrdinalIgnoreCase);
+            cmbStatus.Enabled = !isDelivered;
+            btnUpdateStatus.Enabled = !isDelivered;
+
             lblLastUpdated.Text = $"Last Updated: {DateTime.Now:MMM dd, yyyy hh:mm tt}";
 
             if (Orders == null)
@@ -522,6 +526,8 @@ namespace SmartMed.UI
             gridItems.DataSource = null;
             lblOrderDetails.Text = "Order Details";
             cmbStatus.SelectedIndex = -1;
+            cmbStatus.Enabled = true;
+            btnUpdateStatus.Enabled = true;
             lblLastUpdated.Text = "Last Updated: —";
         }
 
