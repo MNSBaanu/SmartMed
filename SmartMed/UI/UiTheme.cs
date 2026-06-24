@@ -11,16 +11,6 @@ using ReaLTaiizor.Manager;
 
 namespace SmartMed.UI
 {
-    public enum UiButtonStyle
-    {
-        Primary,
-        Success,
-        Danger,
-        Warning,
-        Secondary,
-        Accent
-    }
-
     /// <summary>Central ReaLTaiizor Material theme and flat control styling for SmartMed.</summary>
     public static class UiTheme
     {
@@ -356,38 +346,41 @@ namespace SmartMed.UI
             button.Cursor = Cursors.Hand;
             button.Height = Math.Max(button.Height, 36);
 
-            switch (style)
+            if (style == UiButtonStyle.Success)
             {
-                case UiButtonStyle.Success:
-                    button.BackColor = Success;
-                    button.ForeColor = Color.White;
-                    button.FlatAppearance.MouseOverBackColor = Color.FromArgb(34, 153, 84);
-                    break;
-                case UiButtonStyle.Danger:
-                    button.BackColor = Danger;
-                    button.ForeColor = Color.White;
-                    button.FlatAppearance.MouseOverBackColor = Color.FromArgb(192, 57, 43);
-                    break;
-                case UiButtonStyle.Warning:
-                    button.BackColor = Warning;
-                    button.ForeColor = Color.White;
-                    button.FlatAppearance.MouseOverBackColor = Color.FromArgb(211, 132, 18);
-                    break;
-                case UiButtonStyle.Secondary:
-                    button.BackColor = Color.FromArgb(189, 195, 199);
-                    button.ForeColor = Color.FromArgb(44, 62, 80);
-                    button.FlatAppearance.MouseOverBackColor = Color.FromArgb(149, 165, 166);
-                    break;
-                case UiButtonStyle.Accent:
-                    button.BackColor = Color.FromArgb(155, 89, 182);
-                    button.ForeColor = Color.White;
-                    button.FlatAppearance.MouseOverBackColor = Color.FromArgb(142, 68, 173);
-                    break;
-                default:
-                    button.BackColor = Primary;
-                    button.ForeColor = Color.White;
-                    button.FlatAppearance.MouseOverBackColor = PrimaryDark;
-                    break;
+                button.BackColor = Success;
+                button.ForeColor = Color.White;
+                button.FlatAppearance.MouseOverBackColor = Color.FromArgb(34, 153, 84);
+            }
+            else if (style == UiButtonStyle.Danger)
+            {
+                button.BackColor = Danger;
+                button.ForeColor = Color.White;
+                button.FlatAppearance.MouseOverBackColor = Color.FromArgb(192, 57, 43);
+            }
+            else if (style == UiButtonStyle.Warning)
+            {
+                button.BackColor = Warning;
+                button.ForeColor = Color.White;
+                button.FlatAppearance.MouseOverBackColor = Color.FromArgb(211, 132, 18);
+            }
+            else if (style == UiButtonStyle.Secondary)
+            {
+                button.BackColor = Color.FromArgb(189, 195, 199);
+                button.ForeColor = Color.FromArgb(44, 62, 80);
+                button.FlatAppearance.MouseOverBackColor = Color.FromArgb(149, 165, 166);
+            }
+            else if (style == UiButtonStyle.Accent)
+            {
+                button.BackColor = Color.FromArgb(155, 89, 182);
+                button.ForeColor = Color.White;
+                button.FlatAppearance.MouseOverBackColor = Color.FromArgb(142, 68, 173);
+            }
+            else
+            {
+                button.BackColor = Primary;
+                button.ForeColor = Color.White;
+                button.FlatAppearance.MouseOverBackColor = PrimaryDark;
             }
             button.UseVisualStyleBackColor = false;
         }

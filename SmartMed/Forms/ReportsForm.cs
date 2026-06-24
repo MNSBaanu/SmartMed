@@ -36,14 +36,6 @@ namespace SmartMed.UI
 
         public void RefreshReports() => LoadActiveReport();
 
-        private enum ReportTab
-        {
-            Sales,
-            Stock,
-            Expiry,
-            History
-        }
-
         private ReportService _reports;
         private CustomerService _customers;
         private ReportTab _activeTab = ReportTab.Sales;
