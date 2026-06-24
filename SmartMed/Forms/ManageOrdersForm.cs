@@ -18,6 +18,11 @@ namespace SmartMed.UI
             InitializeComponent();
         }
 
+        internal ManageOrdersForm(bool embedded)
+            : base(AdminNavItem.Orders, "Manage Orders", embedded)
+        {
+        }
+
         protected override void InitializePageContent()
         {
             if (_pageBuilt) return;

@@ -17,6 +17,11 @@ namespace SmartMed.UI
             InitializeComponent();
         }
 
+        internal ReportsForm(bool embedded)
+            : base(AdminNavItem.Reports, "Generate Reports", embedded)
+        {
+        }
+
         protected override void InitializePageContent()
         {
             if (_pageBuilt) return;

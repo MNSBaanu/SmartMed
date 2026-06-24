@@ -72,6 +72,12 @@
     <EmbeddedResource Update="Forms\ReportsForm.resx">
       <DependentUpon>ReportsForm.cs</DependentUpon>
     </EmbeddedResource>
+    <Compile Update="Forms\AdminHostForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Forms\AdminHostForm.Designer.cs">
+      <DependentUpon>AdminHostForm.cs</DependentUpon>
+    </Compile>
     <Compile Update="Forms\AdminDashboardForm.cs" />
     <Compile Update="Forms\AdminDashboardForm.Designer.cs">
       <DependentUpon>AdminDashboardForm.cs</DependentUpon>

@@ -17,6 +17,11 @@ namespace SmartMed.UI
         {
             InitializeComponent();
         }
+
+        internal ManageMedicinesForm(bool embedded)
+            : base(AdminNavItem.Medicines, "Manage Medicines", embedded)
+        {
+        }
         protected override void InitializePageContent()
         {
             if (_pageBuilt) return;

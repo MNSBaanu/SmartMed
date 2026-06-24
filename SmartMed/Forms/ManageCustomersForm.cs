@@ -19,6 +19,11 @@ namespace SmartMed.UI
             InitializeComponent();
         }
 
+        internal ManageCustomersForm(bool embedded)
+            : base(AdminNavItem.Customers, "Manage Customers", embedded)
+        {
+        }
+
         protected override void InitializePageContent()
         {
             if (_pageBuilt) return;

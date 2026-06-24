@@ -17,6 +17,11 @@ namespace SmartMed.UI
             InitializeComponent();
         }
 
+        internal AdminDashboardForm(bool embedded)
+            : base(AdminNavItem.Overview, "Admin Dashboard", embedded)
+        {
+        }
+
         protected override void InitializePageContent()
         {
             if (_pageBuilt) return;
@@ -359,7 +364,7 @@ namespace SmartMed.UI
                     AutoSize = true,
                     LinkColor = SystemColors.Highlight
                 };
-                btnViewAll.Click += (s, e) => NavigateTo(new ManageOrdersForm());
+                btnViewAll.Click += (s, e) => GoToAdminSection(AdminNavItem.Orders);
                 header.Controls.Add(btnViewAll);
             }
 
@@ -447,7 +452,7 @@ namespace SmartMed.UI
                 Width = 72,
                 Height = 32
             };
-            btnStart.Click += (s, e) => NavigateTo(new ManageOrdersForm());
+            btnStart.Click += (s, e) => GoToAdminSection(AdminNavItem.Orders);
             inputRow.Controls.Add(btnStart);
             inputRow.Controls.Add(txtScan);
             panel.Controls.Add(inputRow);

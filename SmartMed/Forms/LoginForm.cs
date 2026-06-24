@@ -176,16 +176,13 @@ namespace SmartMed.UI
 
                     Session.CurrentAdmin = admin;
 
-                    var dashboard = new AdminDashboardForm();
+                    var dashboard = new AdminHostForm();
 
                     AttachAdminReturn(dashboard);
 
                     dashboard.PrepareForNavigation();
-
                     Hide();
-
-                    dashboard.Show();
-
+                    UiTheme.RevealForm(dashboard);
                     return;
 
                 }

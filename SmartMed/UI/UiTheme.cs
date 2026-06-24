@@ -3,6 +3,7 @@ using System.Drawing;
 using System.Drawing.Text;
 using System.IO;
 using System.Reflection;
+using System.Runtime.InteropServices;
 using System.Windows.Forms;
 using MaterialButton = ReaLTaiizor.Controls.MaterialButton;
 using MaterialForm = ReaLTaiizor.Forms.MaterialForm;
@@ -157,6 +158,98 @@ namespace SmartMed.UI
                 null,
                 control,
                 new object[] { true });
+        }
+
+        private const int WmSetRedraw = 0x000B;
+
+        [DllImport("user32.dll", CharSet = CharSet.Auto)]
+        private static extern IntPtr SendMessage(IntPtr hWnd, int msg, bool wParam, int lParam);
+
+        public static IDisposable BatchUpdate(Control root, params Control[] alsoSuspend)
+        {
+            return new BatchUpdateScope(root, alsoSuspend);
+        }
+
+        public static void RevealForm(Form form)
+        {
+            if (form == null || form.IsDisposed) return;
+
+            var targetOpacity = form.Opacity;
+            if (targetOpacity < 0.01) targetOpacity = 1;
+
+            form.Opacity = 0;
+            if (!form.Visible)
+                form.Show();
+
+            form.SuspendLayout();
+            try { form.PerformLayout(); }
+            finally { form.ResumeLayout(false); }
+
+            form.Refresh();
+            form.Opacity = targetOpacity;
+        }
+
+        public static void SetGridDataSource(DataGridView grid, object dataSource)
+        {
+            if (grid == null) return;
+            grid.SuspendLayout();
+            try { grid.DataSource = dataSource; }
+            finally { grid.ResumeLayout(false); }
+        }
+
+        private sealed class BatchUpdateScope : IDisposable
+        {
+            private readonly Control _root;
+            private readonly Control[] _extras;
+            private bool _disposed;
+
+            public BatchUpdateScope(Control root, Control[] extras)
+            {
+                _root = root;
+                _extras = extras ?? Array.Empty<Control>();
+                if (_root == null) return;
+
+                EnsureHandle(_root);
+                _root.SuspendLayout();
+                SetRedraw(_root, false);
+
+                foreach (var extra in _extras)
+                {
+                    if (extra == null) continue;
+                    EnsureHandle(extra);
+                    extra.SuspendLayout();
+                    SetRedraw(extra, false);
+                }
+            }
+
+            public void Dispose()
+            {
+                if (_disposed || _root == null) return;
+                _disposed = true;
+
+                foreach (var extra in _extras)
+                {
+                    if (extra == null) continue;
+                    SetRedraw(extra, true);
+                    extra.ResumeLayout(false);
+                }
+
+                SetRedraw(_root, true);
+                _root.ResumeLayout(false);
+                _root.Invalidate(true);
+            }
+
+            private static void EnsureHandle(Control control)
+            {
+                if (!control.IsHandleCreated)
+                    control.CreateControl();
+            }
+
+            private static void SetRedraw(Control control, bool enable)
+            {
+                if (control.IsHandleCreated)
+                    SendMessage(control.Handle, WmSetRedraw, enable, 0);
+            }
         }
 
         public static void ApplyShell(MaterialForm form, Panel header, Panel sidebar, Panel content)

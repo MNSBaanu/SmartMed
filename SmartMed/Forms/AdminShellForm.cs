@@ -13,203 +13,525 @@ namespace SmartMed.UI
     public partial class AdminShellForm : MaterialForm
     {
         private bool _pageContentInitialized;
+        private readonly bool _isEmbeddedPage;
 
         private static readonly Lazy<bool> IsDesignToolsProcess = new Lazy<bool>(() =>
         {
+
             var name = Process.GetCurrentProcess().ProcessName;
+
             return name.IndexOf("devenv", StringComparison.OrdinalIgnoreCase) >= 0
+
                 || name.IndexOf("DesignToolsServer", StringComparison.OrdinalIgnoreCase) >= 0
+
                 || name.IndexOf("XDesProc", StringComparison.OrdinalIgnoreCase) >= 0;
+
         });
 
+
+
         public AdminShellForm()
+
         {
+
             InitializeComponent();
+
             if (IsDesignHost()) { SetActiveNav(AdminNavItem.Overview); SyncShellChrome(); }
+
         }
 
-        protected AdminShellForm(AdminNavItem activeNav, string subtitle)
+
+
+        protected AdminShellForm(AdminNavItem activeNav, string subtitle, bool embeddedPage = false)
+
             : this()
+
         {
+
+            _isEmbeddedPage = embeddedPage;
+
             DoubleBuffered = true;
+
             Text = "Pharmacy Management System";
+
             lblTopSubtitle.Text = subtitle;
+
             SetActiveNav(activeNav);
-            if (!IsDesignHost())
+
+            if (!IsDesignHost() && !embeddedPage)
+
                 UiTheme.ApplyShell(this, panelTop, panelSidebar, panelContent);
+
             SyncShellChrome();
+
             if (IsDesignHost())
+
                 EnsurePageContent();
+
         }
+
+
 
         protected override void OnLoad(EventArgs e)
+
         {
+
             base.OnLoad(e);
-            EnsurePageContent();
+
+            if (!_isEmbeddedPage)
+
+                EnsurePageContent();
+
         }
+
+
 
         protected void EnsurePageContent()
+
         {
+
             if (_pageContentInitialized) return;
+
             _pageContentInitialized = true;
-            InitializePageContent();
-            if (!IsDesignHost())
+
+
+
+            if (IsDesignHost())
+
             {
-                UiTheme.ApplyFontTree(panelTop);
-                UiTheme.ApplyFontTree(panelSidebar);
-                UiTheme.ApplyFontTree(panelContent);
+
+                InitializePageContent();
+
+                SyncShellChrome();
+
+                return;
+
             }
+
+
+
+            using (UiTheme.BatchUpdate(this, panelTop, panelSidebar, panelContent))
+
+            {
+
+                if (panelContent != null)
+
+                    panelContent.Visible = false;
+
+
+
+                InitializePageContent();
+
+
+
+                if (!_isEmbeddedPage)
+
+                {
+
+                    UiTheme.ApplyFontTree(panelTop);
+
+                    UiTheme.ApplyFontTree(panelSidebar);
+
+                }
+
+                UiTheme.ApplyFontTree(panelContent);
+
+
+
+                if (panelContent != null)
+
+                    panelContent.Visible = true;
+
+            }
+
+
+
             SyncShellChrome();
+
         }
+
+
 
         protected virtual void InitializePageContent()
+
         {
-            // Derived admin forms override this to build panelContent at Load time
-            // so DesignMode and LicenseUsageMode are reliable in the VS designer.
+
         }
 
-        /// <summary>True in the VS WinForms designer (not only at ctor time).</summary>
+
+
         protected bool IsDesignHost()
+
         {
+
             if (LicenseManager.UsageMode == LicenseUsageMode.Designtime)
+
                 return true;
+
             if (Site?.DesignMode == true)
+
                 return true;
+
             return IsDesignToolsProcess.Value;
+
         }
+
+
 
         protected int GetScrollContentWidth(int fallback = 850)
+
         {
+
             var w = panelContent.ClientSize.Width;
+
             if (w < 200 && Parent != null)
+
                 w = Parent.ClientSize.Width - 48;
+
             return w < 200 ? fallback : w;
+
         }
 
-        protected void WireScrollRoot(TableLayoutPanel scrollRoot, int fallback = 850)
+
+
+        protected void WireScrollRoot(Control scrollRoot, int fallback = 850)
+
         {
+
+            UiTheme.EnableDoubleBuffer(scrollRoot);
+
             panelContent.Controls.Add(scrollRoot);
+
             panelContent.Resize += (s, e) => scrollRoot.Width = GetScrollContentWidth(fallback);
+
         }
+
+
 
         protected T GetRuntimeService<T>(ref T service) where T : class, new()
+
         {
+
             if (IsDesignHost()) return null;
+
             return service ?? (service = new T());
+
         }
+
+
 
         protected void SetActiveNav(AdminNavItem active)
+
         {
+
+            if (btnNavOverview == null) return;
+
+            StyleNavButton(btnNavOverview, active == AdminNavItem.Overview);
+
+            StyleNavButton(btnNavMedicines, active == AdminNavItem.Medicines);
+
+            StyleNavButton(btnNavCustomers, active == AdminNavItem.Customers);
+
+            StyleNavButton(btnNavOrders, active == AdminNavItem.Orders);
+
+            StyleNavButton(btnNavReports, active == AdminNavItem.Reports);
+
         }
 
-        /// <summary>Keep anchored chrome aligned with shell panels in designer and at runtime.</summary>
-        protected void SyncShellChrome()
+
+
+        private void StyleNavButton(Button button, bool active)
+
         {
+
+            if (button == null) return;
+
+            if (active)
+
+            {
+
+                button.BackColor = UiTheme.PrimaryDark;
+
+                button.ForeColor = Color.White;
+
+                button.Font = UiTheme.UiFontBold;
+
+            }
+
+            else
+
+            {
+
+                UiTheme.StyleNavButton(button);
+
+            }
+
+        }
+
+
+
+        protected void SyncShellChrome()
+
+        {
+
             var closeLeft = Math.Max(8, panelTop.ClientSize.Width - btnClose.Width - 8);
+
             if (btnClose.Left != closeLeft)
+
                 btnClose.Left = closeLeft;
 
+
+
             var logoutTop = Math.Max(0, panelSidebar.ClientSize.Height - btnNavLogout.Height - panelSidebar.Padding.Bottom);
+
             if (btnNavLogout.Top != logoutTop)
+
                 btnNavLogout.Top = logoutTop;
+
         }
+
+
 
         protected override void OnLayout(LayoutEventArgs levent)
+
         {
+
             base.OnLayout(levent);
+
             if (panelTop != null && panelSidebar != null && btnClose != null && btnNavLogout != null)
+
                 SyncShellChrome();
+
         }
 
-        /// <summary>Build page UI and load data before the form is shown (avoids empty-shell flicker).</summary>
-        internal void PrepareForNavigation()
+
+
+        internal void HideShellChromeForEmbed()
         {
-            SuspendLayout();
-            panelContent?.SuspendLayout();
-            try
-            {
-                EnsurePageContent();
-            }
-            finally
-            {
-                panelContent?.ResumeLayout(true);
-                ResumeLayout(true);
-                SyncShellChrome();
-            }
+            panelTop.Visible = false;
+            panelSidebar.Visible = false;
         }
+
+        internal void PrepareForNavigation()
+
+        {
+
+            if (!IsHandleCreated)
+
+                CreateControl();
+
+            EnsurePageContent();
+
+            PerformLayout();
+
+        }
+
+
+
+        protected AdminHostForm GetAdminHost()
+
+        {
+
+            for (var parent = Parent; parent != null; parent = parent.Parent)
+
+            {
+
+                if (parent is AdminHostForm host)
+
+                    return host;
+
+            }
+
+            return this as AdminHostForm;
+
+        }
+
+
+
+        protected void GoToAdminSection(AdminNavItem nav)
+
+        {
+
+            var host = GetAdminHost();
+
+            if (host != null)
+
+                host.NavigateAdmin(nav);
+
+            else
+
+                NavigateAdmin(nav);
+
+        }
+
+
+
+        protected virtual void NavigateAdmin(AdminNavItem nav)
+
+        {
+
+            if (IsCurrentPage(nav))
+
+            {
+
+                RefreshCurrentPage(nav);
+
+                return;
+
+            }
+
+            NavigateTo(CreatePageForm(nav));
+
+        }
+
+
+
+        private bool IsCurrentPage(AdminNavItem nav)
+
+        {
+
+            if (nav == AdminNavItem.Overview && this is AdminDashboardForm) return true;
+
+            if (nav == AdminNavItem.Medicines && this is ManageMedicinesForm) return true;
+
+            if (nav == AdminNavItem.Customers && this is ManageCustomersForm) return true;
+
+            if (nav == AdminNavItem.Orders && this is ManageOrdersForm) return true;
+
+            if (nav == AdminNavItem.Reports && this is ReportsForm) return true;
+
+            return false;
+
+        }
+
+
+
+        private void RefreshCurrentPage(AdminNavItem nav)
+
+        {
+
+            if (nav == AdminNavItem.Overview && this is AdminDashboardForm dashboard)
+
+                dashboard.RefreshData();
+
+            else if (nav == AdminNavItem.Reports && this is ReportsForm reports)
+
+                reports.RefreshReports();
+
+        }
+
+
+
+        private static AdminShellForm CreatePageForm(AdminNavItem nav)
+
+        {
+
+            if (nav == AdminNavItem.Overview) return new AdminDashboardForm();
+
+            if (nav == AdminNavItem.Medicines) return new ManageMedicinesForm();
+
+            if (nav == AdminNavItem.Customers) return new ManageCustomersForm();
+
+            if (nav == AdminNavItem.Orders) return new ManageOrdersForm();
+
+            if (nav == AdminNavItem.Reports) return new ReportsForm();
+
+            throw new ArgumentException("Unknown admin section.");
+
+        }
+
+
 
         protected void NavigateTo(AdminShellForm next)
+
         {
+
             next.StartPosition = FormStartPosition.Manual;
+
             next.Location = Location;
+
             next.Size = Size;
+
             next.WindowState = WindowState;
 
+
+
             var login = Application.OpenForms.OfType<LoginForm>().FirstOrDefault();
+
             login?.AttachAdminReturn(next);
+
+
 
             next.PrepareForNavigation();
 
-            SuspendLayout();
-            try
-            {
-                next.Show();
-                Hide();
-            }
-            finally
-            {
-                ResumeLayout(false);
-                Close();
-            }
+            Hide();
+
+            UiTheme.RevealForm(next);
+
+            Close();
+
         }
+
+
 
         private void BtnClose_Click(object sender, EventArgs e) => Logout();
 
+
+
         private void BtnNavLogout_Click(object sender, EventArgs e) => Logout();
 
+
+
         protected void Logout()
+
         {
+
+            if (_isEmbeddedPage)
+
+            {
+
+                GetAdminHost()?.Logout();
+
+                return;
+
+            }
+
+
+
             Session.Clear();
+
             Close();
+
             var login = Application.OpenForms.OfType<LoginForm>().FirstOrDefault();
+
             if (login != null && !login.IsDisposed)
+
                 login.Show();
+
         }
 
-        private void BtnNavOverview_Click(object sender, EventArgs e)
-        {
-            if (this is AdminDashboardForm dashboard)
-            {
-                dashboard.RefreshData();
-                return;
-            }
-            NavigateTo(new AdminDashboardForm());
-        }
 
-        private void BtnNavMedicines_Click(object sender, EventArgs e)
-        {
-            if (this is ManageMedicinesForm) return;
-            NavigateTo(new ManageMedicinesForm());
-        }
 
-        private void BtnNavCustomers_Click(object sender, EventArgs e)
-        {
-            if (this is ManageCustomersForm) return;
-            NavigateTo(new ManageCustomersForm());
-        }
-        private void BtnNavOrders_Click(object sender, EventArgs e)
-        {
-            if (this is ManageOrdersForm) return;
-            NavigateTo(new ManageOrdersForm());
-        }
-        private void BtnNavReports_Click(object sender, EventArgs e)
-        {
-            if (this is ReportsForm reports)
-            {
-                reports.RefreshReports();
-                return;
-            }
-            NavigateTo(new ReportsForm());
-        }
+        private void BtnNavOverview_Click(object sender, EventArgs e) => NavigateAdmin(AdminNavItem.Overview);
+
+
+
+        private void BtnNavMedicines_Click(object sender, EventArgs e) => NavigateAdmin(AdminNavItem.Medicines);
+
+
+
+        private void BtnNavCustomers_Click(object sender, EventArgs e) => NavigateAdmin(AdminNavItem.Customers);
+
+
+
+        private void BtnNavOrders_Click(object sender, EventArgs e) => NavigateAdmin(AdminNavItem.Orders);
+
+
+
+        private void BtnNavReports_Click(object sender, EventArgs e) => NavigateAdmin(AdminNavItem.Reports);
+
     }
+
 }
+
+
