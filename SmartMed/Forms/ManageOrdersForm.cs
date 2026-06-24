@@ -43,6 +43,8 @@ namespace SmartMed.UI
         private DataGridView gridOrders;
         private DataGridView gridItems;
         private ComboBox cmbStatus;
+        private Label lblStatusCaption;
+        private Label lblOrderStatus;
         private Label lblOrderDetails;
         private Label lblLastUpdated;
         private Label lblTotalOrders;
@@ -68,6 +70,7 @@ namespace SmartMed.UI
                 Width = GetScrollContentWidth()
             };
             _scrollRoot.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100f));
+            _scrollRoot.RowStyles.Add(new RowStyle(SizeType.AutoSize));
             _scrollRoot.RowStyles.Add(new RowStyle(SizeType.AutoSize));
             _scrollRoot.RowStyles.Add(new RowStyle(SizeType.AutoSize));
             _scrollRoot.RowStyles.Add(new RowStyle(SizeType.Absolute, 220f));
@@ -147,11 +150,11 @@ namespace SmartMed.UI
             {
                 Dock = DockStyle.Top,
                 Height = 40,
-                Margin = new Padding(0, 0, 0, 12)
+                Margin = new Padding(0)
             };
 
             txtSearch = new TextBox { Width = 280 };
-            var btnClearSearch = new Button { Text = "Clear", Width = 70, Height = 28 };
+            var btnClearSearch = new Button { Text = "Clear", Width = 70, Height = 28, Margin = new Padding(8, 0, 0, 0) };
             var flow = new FlowLayoutPanel
             {
                 Dock = DockStyle.Fill,
@@ -165,13 +168,6 @@ namespace SmartMed.UI
                 Padding = new Padding(0, 6, 4, 0)
             });
             flow.Controls.Add(txtSearch);
-            flow.Controls.Add(new Label
-            {
-                Text = "(order ID, customer name, or status)",
-                AutoSize = true,
-                ForeColor = SystemColors.GrayText,
-                Padding = new Padding(8, 6, 0, 0)
-            });
             flow.Controls.Add(btnClearSearch);
             txtSearch.TextChanged += (s, e) => ApplySearchFilter();
             btnClearSearch.Click += (s, e) =>
@@ -349,7 +345,8 @@ namespace SmartMed.UI
                 DropDownStyle = ComboBoxStyle.DropDownList,
                 Width = 200,
                 Location = new Point(88, 16),
-                Enabled = false
+                Enabled = false,
+                Visible = false
             };
 
             lblLastUpdated = new Label
@@ -367,18 +364,32 @@ namespace SmartMed.UI
                 Width = 150,
                 Height = 40,
                 Anchor = AnchorStyles.Top | AnchorStyles.Right,
-                Enabled = false
+                Enabled = false,
+                Visible = false
             };
             btnUpdateStatus.Click += BtnUpdateStatus_Click;
 
-            panel.Controls.Add(new Label
+            lblStatusCaption = new Label
             {
                 Text = "STATUS:",
                 ForeColor = SystemColors.HighlightText,
                 Font = UiTheme.UiFont,
                 AutoSize = true,
                 Location = new Point(16, 20)
-            });
+            };
+
+            lblOrderStatus = new Label
+            {
+                Text = OrderService.StatusDelivered,
+                ForeColor = SystemColors.HighlightText,
+                Font = UiTheme.UiFont,
+                AutoSize = true,
+                Location = new Point(88, 20),
+                Visible = false
+            };
+
+            panel.Controls.Add(lblStatusCaption);
+            panel.Controls.Add(lblOrderStatus);
             panel.Controls.Add(cmbStatus);
             panel.Controls.Add(lblLastUpdated);
             panel.Controls.Add(btnUpdateStatus);
@@ -499,10 +510,7 @@ namespace SmartMed.UI
 
             lblOrderDetails.Text = $"Order Details: {orderRef}";
             PopulateStatusOptions(status);
-
-            var canUpdate = cmbStatus.Items.Count > 0;
-            cmbStatus.Enabled = canUpdate;
-            btnUpdateStatus.Enabled = canUpdate;
+            UpdateStatusControls(status);
 
             lblLastUpdated.Text = $"Last Updated: {DateTime.Now:MMM dd, yyyy hh:mm tt}";
 
@@ -527,9 +535,27 @@ namespace SmartMed.UI
             lblOrderDetails.Text = "Order Details";
             cmbStatus.Items.Clear();
             cmbStatus.SelectedIndex = -1;
-            cmbStatus.Enabled = false;
-            btnUpdateStatus.Enabled = false;
+            UpdateStatusControls(null);
             lblLastUpdated.Text = "Last Updated: —";
+        }
+
+        private void UpdateStatusControls(string currentStatus)
+        {
+            var canUpdate = !string.IsNullOrWhiteSpace(currentStatus)
+                && OrderService.GetAllowedNextStatuses(currentStatus).Count > 0;
+            var isDelivered = string.Equals(currentStatus, OrderService.StatusDelivered, StringComparison.OrdinalIgnoreCase);
+
+            cmbStatus.Visible = canUpdate;
+            btnUpdateStatus.Visible = canUpdate;
+            lblOrderStatus.Visible = isDelivered;
+            if (isDelivered)
+                lblOrderStatus.Text = OrderService.StatusDelivered;
+
+            if (canUpdate)
+            {
+                cmbStatus.Enabled = true;
+                btnUpdateStatus.Enabled = true;
+            }
         }
 
         private void PopulateStatusOptions(string currentStatus)
