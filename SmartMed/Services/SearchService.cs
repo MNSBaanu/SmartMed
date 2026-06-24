@@ -108,5 +108,57 @@ namespace SmartMed.Services
                 return customer.CustomerID.ToString().IndexOf(key, StringComparison.Ordinal) >= 0;
             return false;
         }
+
+        /// <summary>Matches order ID, customer name, or status.</summary>
+        public static List<Order> SearchOrders(IList<Order> orders, string keyword)
+        {
+            if (string.IsNullOrWhiteSpace(keyword))
+                return new List<Order>(orders);
+
+            var key = keyword.Trim();
+            var results = new List<Order>();
+
+            foreach (var order in orders)
+            {
+                if (MatchesOrderId(order, key))
+                {
+                    results.Add(order);
+                    continue;
+                }
+                if (order.CustomerName != null
+                    && order.CustomerName.IndexOf(key, StringComparison.OrdinalIgnoreCase) >= 0)
+                {
+                    results.Add(order);
+                    continue;
+                }
+                if (order.Status != null
+                    && order.Status.IndexOf(key, StringComparison.OrdinalIgnoreCase) >= 0)
+                    results.Add(order);
+            }
+
+            return results;
+        }
+
+        private static bool MatchesOrderId(Order order, string key)
+        {
+            if (int.TryParse(key, out var id) && order.OrderID == id)
+                return true;
+
+            var normalized = key.TrimStart('#');
+            if (normalized.StartsWith("SM-", StringComparison.OrdinalIgnoreCase))
+                normalized = normalized.Substring(3);
+            else if (normalized.StartsWith("ORD-", StringComparison.OrdinalIgnoreCase))
+                normalized = normalized.Substring(4);
+
+            if (int.TryParse(normalized, out id) && order.OrderID == id)
+                return true;
+
+            if (key.All(char.IsDigit))
+                return order.OrderID.ToString().IndexOf(key, StringComparison.Ordinal) >= 0;
+
+            var orderRef = $"SM-{order.OrderID:D4}";
+            return orderRef.IndexOf(key, StringComparison.OrdinalIgnoreCase) >= 0
+                || $"#{orderRef}".IndexOf(key, StringComparison.OrdinalIgnoreCase) >= 0;
+        }
     }
 }

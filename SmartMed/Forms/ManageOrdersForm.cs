@@ -43,6 +43,7 @@ namespace SmartMed.UI
         private int? _selectedOrderId;
         private string _statusFilter = "All";
         private ComboBox cmbStatusFilter;
+        private TextBox txtSearch;
 
         private DataGridView gridOrders;
         private DataGridView gridItems;
@@ -67,8 +68,8 @@ namespace SmartMed.UI
                 AutoSizeMode = AutoSizeMode.GrowAndShrink,
                 Dock = DockStyle.Top,
                 ColumnCount = 1,
-                RowCount = 5,
-                MinimumSize = new Size(0, 900),
+                RowCount = 6,
+                MinimumSize = new Size(0, 940),
                 Width = GetScrollContentWidth()
             };
             _scrollRoot.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100f));
@@ -80,9 +81,10 @@ namespace SmartMed.UI
 
             _scrollRoot.Controls.Add(CreatePageHeader(), 0, 0);
             _scrollRoot.Controls.Add(CreateStatsRow(), 0, 1);
-            _scrollRoot.Controls.Add(CreateOrdersGridPanel(), 0, 2);
-            _scrollRoot.Controls.Add(CreateItemsGridPanel(), 0, 3);
-            _scrollRoot.Controls.Add(CreateStatusPanel(), 0, 4);
+            _scrollRoot.Controls.Add(CreateSearchPanel(), 0, 2);
+            _scrollRoot.Controls.Add(CreateOrdersGridPanel(), 0, 3);
+            _scrollRoot.Controls.Add(CreateItemsGridPanel(), 0, 4);
+            _scrollRoot.Controls.Add(CreateStatusPanel(), 0, 5);
             WireScrollRoot(_scrollRoot);
         }
 
@@ -129,13 +131,55 @@ namespace SmartMed.UI
             cmbStatusFilter.SelectedIndexChanged += (s, e) =>
             {
                 _statusFilter = cmbStatusFilter.SelectedItem?.ToString() ?? "All";
-                if (!IsDesignHost()) LoadOrders();
+                if (!IsDesignHost()) ApplySearchFilter();
             };
             actions.Controls.Add(cmbStatusFilter);
 
             header.Controls.Add(actions);
             header.Controls.Add(titleBlock);
             return header;
+        }
+
+        private Panel CreateSearchPanel()
+        {
+            var panel = new Panel
+            {
+                Dock = DockStyle.Top,
+                Height = 40,
+                Margin = new Padding(0, 0, 0, 12)
+            };
+
+            txtSearch = new TextBox { Width = 280 };
+            var btnClearSearch = new Button { Text = "Clear", Width = 70, Height = 28 };
+            var flow = new FlowLayoutPanel
+            {
+                Dock = DockStyle.Fill,
+                FlowDirection = FlowDirection.LeftToRight,
+                WrapContents = false
+            };
+            flow.Controls.Add(new Label
+            {
+                Text = "Search:",
+                AutoSize = true,
+                Padding = new Padding(0, 6, 4, 0)
+            });
+            flow.Controls.Add(txtSearch);
+            flow.Controls.Add(new Label
+            {
+                Text = "(order ID, customer name, or status)",
+                AutoSize = true,
+                ForeColor = SystemColors.GrayText,
+                Padding = new Padding(8, 6, 0, 0)
+            });
+            flow.Controls.Add(btnClearSearch);
+            txtSearch.TextChanged += (s, e) => ApplySearchFilter();
+            btnClearSearch.Click += (s, e) =>
+            {
+                txtSearch.Clear();
+                ApplySearchFilter();
+            };
+            panel.Controls.Add(flow);
+            return panel;
         }
 
         private static Button CreateToolbarButton(string text)
@@ -396,12 +440,20 @@ namespace SmartMed.UI
         public void LoadOrders()
         {
             if (IsDesignHost() || Orders == null) return;
+            ApplySearchFilter();
+        }
+
+        private void ApplySearchFilter()
+        {
+            if (IsDesignHost() || Orders == null) return;
 
             var all = Orders.GetAll();
             if (_statusFilter != "All")
                 all = all.Where(o => o.Status == _statusFilter).ToList();
 
-            gridOrders.DataSource = all.Select(o => new
+            all = SearchService.SearchOrders(all, txtSearch?.Text);
+
+            UiTheme.SetGridDataSource(gridOrders, all.Select(o => new
             {
                 o.OrderID,
                 OrderRef = $"#SM-{o.OrderID:D4}",
@@ -409,7 +461,7 @@ namespace SmartMed.UI
                 OrderDate = o.OrderDate.ToString("MMM dd, yyyy"),
                 o.Status,
                 Total = $"LKR {o.TotalAmount:N2}"
-            }).ToList();
+            }).ToList());
 
             HideOrderIdColumn();
             UpdateStats(all);
