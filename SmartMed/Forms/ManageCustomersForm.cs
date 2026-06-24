@@ -99,7 +99,7 @@ namespace SmartMed.UI
             titleBlock.Controls.Add(new Label
             {
                 Text = "View and update registered customer contact details.",
-                Font = SystemFonts.DefaultFont,
+                Font = UiTheme.UiFont,
                 ForeColor = SystemColors.GrayText,
                 Dock = DockStyle.Fill
             });
@@ -386,7 +386,7 @@ namespace SmartMed.UI
             };
 
             valueLabel.Text = "0";
-            valueLabel.Font = SystemFonts.DefaultFont;
+            valueLabel.Font = UiTheme.UiFont;
             valueLabel.ForeColor = accent;
             valueLabel.Location = new Point(16, 36);
             valueLabel.AutoSize = true;
@@ -394,7 +394,7 @@ namespace SmartMed.UI
             card.Controls.Add(new Label
             {
                 Text = title.ToUpperInvariant(),
-                Font = SystemFonts.DefaultFont,
+                Font = UiTheme.UiFont,
                 ForeColor = SystemColors.GrayText,
                 Location = new Point(16, 16),
                 AutoSize = true

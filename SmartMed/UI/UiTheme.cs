@@ -84,7 +84,7 @@ namespace SmartMed.UI
                     {
                         lbl.ForeColor = Color.White;
                         if (lbl.Font.Bold || lbl.Text == "SmartMed")
-                            lbl.Font = new Font("Segoe UI", 11F, FontStyle.Bold);
+                            lbl.Font = UiFontBold;
                     }
                     else if (c is Button btn)
                         StyleIconButton(btn);

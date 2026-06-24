@@ -88,7 +88,7 @@ namespace SmartMed.UI
             // lblHeaderTitle
             // 
             this.lblHeaderTitle.AutoSize = true;
-            this.lblHeaderTitle.Font = new System.Drawing.Font("Segoe UI", 11.25F, System.Drawing.FontStyle.Bold);
+            this.lblHeaderTitle.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
             this.lblHeaderTitle.ForeColor = System.Drawing.Color.White;
             this.lblHeaderTitle.Location = new System.Drawing.Point(48, 16);
             this.lblHeaderTitle.Name = "lblHeaderTitle";
@@ -334,7 +334,7 @@ namespace SmartMed.UI
             // 
             // lblSuccessTitle
             // 
-            this.lblSuccessTitle.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold);
+            this.lblSuccessTitle.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
             this.lblSuccessTitle.Location = new System.Drawing.Point(24, 140);
             this.lblSuccessTitle.Name = "lblSuccessTitle";
             this.lblSuccessTitle.Size = new System.Drawing.Size(402, 28);

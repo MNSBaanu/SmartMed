@@ -51,7 +51,7 @@ namespace SmartMed.UI
             };
             root.Controls.Add(gridCart);
 
-            lblTotal = new Label { Dock = DockStyle.Top, Height = 28, Font = new Font(SystemFonts.DefaultFont, FontStyle.Bold) };
+            lblTotal = new Label { Dock = DockStyle.Top, Height = 28, Font = UiTheme.UiFontBold };
             root.Controls.Add(lblTotal);
 
             lblRxNote = new Label

@@ -234,7 +234,7 @@ namespace SmartMed.UI
                 Dock = DockStyle.Fill,
                 TextAlign = ContentAlignment.MiddleCenter,
                 ForeColor = SystemColors.GrayText,
-                Font = SystemFonts.DefaultFont
+                Font = UiTheme.UiFont
             });
 
             trendsBody.Controls.Add(chartArea);
@@ -280,7 +280,7 @@ namespace SmartMed.UI
             var badgeLabel = new Label
             {
                 Text = badge,
-                Font = SystemFonts.DefaultFont,
+                Font = UiTheme.UiFont,
                 ForeColor = badge == "Priority" ? Color.Red : SystemColors.ControlText,
                 BackColor = badge == "Priority" ? Color.FromArgb(255, 218, 214) : SystemColors.ControlLight,
                 AutoSize = true,
@@ -291,14 +291,14 @@ namespace SmartMed.UI
             card.Controls.Add(new Label
             {
                 Text = title,
-                Font = SystemFonts.DefaultFont,
+                Font = UiTheme.UiFont,
                 ForeColor = SystemColors.GrayText,
                 AutoSize = true,
                 Location = new Point(16, 12)
             });
 
             valueLabel.Text = "0";
-            valueLabel.Font = SystemFonts.DefaultFont;
+            valueLabel.Font = UiTheme.UiFont;
             valueLabel.ForeColor = SystemColors.Highlight;
             valueLabel.AutoSize = true;
             valueLabel.Location = new Point(16, 32);
@@ -307,7 +307,7 @@ namespace SmartMed.UI
             card.Controls.Add(new Label
             {
                 Text = subtitle,
-                Font = SystemFonts.DefaultFont,
+                Font = UiTheme.UiFont,
                 ForeColor = SystemColors.GrayText,
                 AutoSize = true,
                 Location = new Point(16, 64)
@@ -343,7 +343,7 @@ namespace SmartMed.UI
             header.Controls.Add(new Label
             {
                 Text = title,
-                Font = SystemFonts.DefaultFont,
+                Font = UiTheme.UiFont,
                 ForeColor = SystemColors.Highlight,
                 Dock = DockStyle.Left,
                 AutoSize = true
@@ -404,7 +404,7 @@ namespace SmartMed.UI
                 btn.BackColor = SystemColors.Control;
                 btn.ForeColor = SystemColors.ControlText;
             }
-            btn.Font = SystemFonts.DefaultFont;
+            btn.Font = UiTheme.UiFont;
             return btn;
         }
 
@@ -419,7 +419,7 @@ namespace SmartMed.UI
             panel.Controls.Add(new Label
             {
                 Text = "Quick Fulfillment",
-                Font = SystemFonts.DefaultFont,
+                Font = UiTheme.UiFont,
                 ForeColor = SystemColors.HighlightText,
                 Dock = DockStyle.Top,
                 Height = 24
@@ -535,7 +535,7 @@ namespace SmartMed.UI
             row.Controls.Add(new Label
             {
                 Text = critical ? "!" : "i",
-                Font = new Font(SystemFonts.DefaultFont, FontStyle.Bold),
+                Font = UiTheme.UiFontBold,
                 ForeColor = critical ? Color.Red : SystemColors.ControlDark,
                 Location = new Point(4, 12),
                 AutoSize = true
@@ -543,7 +543,7 @@ namespace SmartMed.UI
             row.Controls.Add(new Label
             {
                 Text = name,
-                Font = SystemFonts.DefaultFont,
+                Font = UiTheme.UiFont,
                 ForeColor = SystemColors.ControlText,
                 Location = new Point(20, 4),
                 AutoSize = true
@@ -551,7 +551,7 @@ namespace SmartMed.UI
             row.Controls.Add(new Label
             {
                 Text = message,
-                Font = SystemFonts.DefaultFont,
+                Font = UiTheme.UiFont,
                 ForeColor = critical ? Color.Red : SystemColors.ControlText,
                 Location = new Point(28, 24),
                 AutoSize = true

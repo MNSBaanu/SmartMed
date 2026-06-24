@@ -100,7 +100,7 @@ namespace SmartMed.UI
             titleBlock.Controls.Add(new Label
             {
                 Text = "Review fulfillment queue and update order status.",
-                Font = SystemFonts.DefaultFont,
+                Font = UiTheme.UiFont,
                 ForeColor = SystemColors.GrayText,
                 Dock = DockStyle.Fill
             });
@@ -190,7 +190,7 @@ namespace SmartMed.UI
             };
 
             valueLabel.Text = "0";
-            valueLabel.Font = SystemFonts.DefaultFont;
+            valueLabel.Font = UiTheme.UiFont;
             valueLabel.ForeColor = accent;
             valueLabel.Location = new Point(16, 36);
             valueLabel.AutoSize = true;
@@ -198,7 +198,7 @@ namespace SmartMed.UI
             card.Controls.Add(new Label
             {
                 Text = title.ToUpperInvariant(),
-                Font = SystemFonts.DefaultFont,
+                Font = UiTheme.UiFont,
                 ForeColor = SystemColors.GrayText,
                 Location = new Point(16, 16),
                 AutoSize = true
@@ -235,7 +235,7 @@ namespace SmartMed.UI
             header.Controls.Add(new Label
             {
                 Text = "Recent Orders",
-                Font = SystemFonts.DefaultFont,
+                Font = UiTheme.UiFont,
                 ForeColor = SystemColors.Highlight,
                 Dock = DockStyle.Left,
                 AutoSize = true
@@ -270,7 +270,7 @@ namespace SmartMed.UI
             lblOrderDetails = new Label
             {
                 Text = "Order Details",
-                Font = SystemFonts.DefaultFont,
+                Font = UiTheme.UiFont,
                 ForeColor = SystemColors.GrayText,
                 Dock = DockStyle.Top,
                 Height = 36,
@@ -306,7 +306,7 @@ namespace SmartMed.UI
             {
                 Text = "Last Updated: —",
                 ForeColor = SystemColors.ControlLightLight,
-                Font = SystemFonts.DefaultFont,
+                Font = UiTheme.UiFont,
                 AutoSize = true,
                 Location = new Point(320, 20)
             };
@@ -324,7 +324,7 @@ namespace SmartMed.UI
             {
                 Text = "STATUS:",
                 ForeColor = SystemColors.HighlightText,
-                Font = SystemFonts.DefaultFont,
+                Font = UiTheme.UiFont,
                 AutoSize = true,
                 Location = new Point(16, 20)
             });

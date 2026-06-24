@@ -108,7 +108,7 @@ namespace SmartMed.UI
             titleBlock.Controls.Add(new Label
             {
                 Text = "Update and monitor pharmaceutical inventory levels.",
-                Font = SystemFonts.DefaultFont,
+                Font = UiTheme.UiFont,
                 ForeColor = SystemColors.GrayText,
                 Dock = DockStyle.Fill
             });
@@ -229,7 +229,7 @@ namespace SmartMed.UI
                     Dock = DockStyle.Fill,
                     BorderStyle = BorderStyle.FixedSingle,
                     IntegralHeight = false,
-                    Font = SystemFonts.DefaultFont
+                    Font = UiTheme.UiFont
                 };
                 list.Items.AddRange(_expiryAlertLines.ToArray());
                 var btnClose = new Button
@@ -290,7 +290,7 @@ namespace SmartMed.UI
                 {
                     BackColor = Color.FromArgb(232, 232, 232),
                     ForeColor = Color.FromArgb(0, 31, 102),
-                    Font = new Font(SystemFonts.DefaultFont, FontStyle.Bold)
+                    Font = UiTheme.UiFontBold
                 },
                 DefaultCellStyle = new DataGridViewCellStyle
                 {
@@ -353,7 +353,7 @@ namespace SmartMed.UI
                 CreateField("Current Stock", txtStock, required: true),
                 CreateField("Expiry Date", dtpExpiry, required: true)), 0, 0);
             var promoPanel = new Panel { Height = 23 + 24, Dock = DockStyle.Top };
-            chkPrescription.Font = SystemFonts.DefaultFont;
+            chkPrescription.Font = UiTheme.UiFont;
             chkPrescription.ForeColor = SystemColors.Highlight;
             chkPrescription.Location = new Point(0, 28);
             promoPanel.Controls.Add(chkPrescription);
@@ -361,7 +361,7 @@ namespace SmartMed.UI
             var discountPanel = CreateField("Discount %", txtDiscount);
             var promotionPanel = new Panel { Height = 23 + 24, Dock = DockStyle.Top };
             chkPromotion.Location = new Point(0, 28);
-            chkPromotion.Font = SystemFonts.DefaultFont;
+            chkPromotion.Font = UiTheme.UiFont;
             promotionPanel.Controls.Add(chkPromotion);
             promotionPanel.Controls.Add(new Label { Text = "Promotion", Dock = DockStyle.Top, Height = 20 });
             columns.Controls.Add(CreateFieldColumn(
@@ -478,19 +478,19 @@ namespace SmartMed.UI
             var iconLabel = new Label
             {
                 Text = icon,
-                Font = new Font("Segoe UI", 16f),
+                Font = UiTheme.UiFont,
                 Location = new Point(16, 16),
                 AutoSize = true
             };
             valueLabel.Text = "0";
-            valueLabel.Font = new Font(SystemFonts.DefaultFont.FontFamily, 14f, FontStyle.Bold);
+            valueLabel.Font = UiTheme.UiFontBold;
             valueLabel.ForeColor = accent;
             valueLabel.Location = new Point(52, 34);
             valueLabel.AutoSize = true;
             card.Controls.Add(new Label
             {
                 Text = title.ToUpperInvariant(),
-                Font = SystemFonts.DefaultFont,
+                Font = UiTheme.UiFont,
                 ForeColor = SystemColors.GrayText,
                 Location = new Point(52, 16),
                 AutoSize = true
@@ -775,12 +775,12 @@ namespace SmartMed.UI
                 if (expiryStatus == MedicineService.ExpiryExpired)
                 {
                     e.CellStyle.ForeColor = Color.DarkRed;
-                    e.CellStyle.Font = new Font(e.CellStyle.Font, FontStyle.Bold);
+                    e.CellStyle.Font = UiTheme.UiFontBold;
                 }
                 else if (expiryStatus == MedicineService.ExpiryExpiringSoon)
                 {
                     e.CellStyle.ForeColor = Color.DarkOrange;
-                    e.CellStyle.Font = new Font(e.CellStyle.Font, FontStyle.Bold);
+                    e.CellStyle.Font = UiTheme.UiFontBold;
                 }
             }
             else if (columnName == "Expiry")
@@ -789,12 +789,12 @@ namespace SmartMed.UI
                 if (status == MedicineService.ExpiryExpired)
                 {
                     e.CellStyle.ForeColor = Color.DarkRed;
-                    e.CellStyle.Font = new Font(e.CellStyle.Font, FontStyle.Bold);
+                    e.CellStyle.Font = UiTheme.UiFontBold;
                 }
                 else if (status == MedicineService.ExpiryExpiringSoon)
                 {
                     e.CellStyle.ForeColor = Color.DarkOrange;
-                    e.CellStyle.Font = new Font(e.CellStyle.Font, FontStyle.Bold);
+                    e.CellStyle.Font = UiTheme.UiFontBold;
                 }
             }
             else if (columnName == "Rx")

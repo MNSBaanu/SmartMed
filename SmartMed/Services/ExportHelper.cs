@@ -5,6 +5,7 @@ using System.Drawing.Printing;
 using System.IO;
 using System.Text;
 using System.Windows.Forms;
+using SmartMed.UI;
 
 namespace SmartMed.Services
 {
@@ -40,18 +41,15 @@ namespace SmartMed.Services
                 throw new InvalidOperationException("No data to print.");
 
             var rowIndex = 0;
-            var bodyFont = SystemFonts.DefaultFont;
+            var bodyFont = UiTheme.UiFont;
             var doc = new PrintDocument { DocumentName = title };
             doc.PrintPage += (s, e) =>
             {
                 float y = e.MarginBounds.Top;
                 float lineHeight = e.Graphics.MeasureString("X", bodyFont).Height + 4;
 
-                using (var headerFont = new Font(bodyFont.FontFamily, 14, FontStyle.Bold))
-                {
-                    e.Graphics.DrawString(title, headerFont, Brushes.Black, e.MarginBounds.Left, y);
-                    y += lineHeight * 2;
-                }
+                e.Graphics.DrawString(title, UiTheme.UiFontBold, Brushes.Black, e.MarginBounds.Left, y);
+                y += lineHeight * 2;
 
                 var headers = new StringBuilder();
                 foreach (DataGridViewColumn col in grid.Columns)
@@ -60,7 +58,7 @@ namespace SmartMed.Services
                     if (headers.Length > 0) headers.Append(" | ");
                     headers.Append(col.HeaderText);
                 }
-                e.Graphics.DrawString(headers.ToString(), new Font(bodyFont, FontStyle.Bold), Brushes.Black, e.MarginBounds.Left, y);
+                e.Graphics.DrawString(headers.ToString(), UiTheme.UiFontBold, Brushes.Black, e.MarginBounds.Left, y);
                 y += lineHeight;
 
                 while (rowIndex < grid.Rows.Count && y + lineHeight < e.MarginBounds.Bottom)

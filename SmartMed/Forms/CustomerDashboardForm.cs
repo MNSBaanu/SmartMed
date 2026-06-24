@@ -63,7 +63,7 @@ namespace SmartMed.UI
             };
             root.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100f));
 
-            lblWelcome = new Label { AutoSize = true, Font = new Font(SystemFonts.DefaultFont.FontFamily, 12, FontStyle.Bold), Margin = new Padding(0, 0, 0, 12) };
+            lblWelcome = new Label { AutoSize = true, Font = UiTheme.UiFontBold, Margin = new Padding(0, 0, 0, 12) };
             root.Controls.Add(lblWelcome);
 
             var stats = new TableLayoutPanel { Dock = DockStyle.Top, ColumnCount = 3, Height = 90, Margin = new Padding(0, 0, 0, 16) };
@@ -109,7 +109,7 @@ namespace SmartMed.UI
             card.Controls.Add(new Label { Text = title, Dock = DockStyle.Top, Height = 20, ForeColor = SystemColors.GrayText });
             valueLabel.Text = "0";
             valueLabel.Dock = DockStyle.Fill;
-            valueLabel.Font = new Font(SystemFonts.DefaultFont.FontFamily, 14, FontStyle.Bold);
+            valueLabel.Font = UiTheme.UiFontBold;
             card.Controls.Add(valueLabel);
             return card;
         }

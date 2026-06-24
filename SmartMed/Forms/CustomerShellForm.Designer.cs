@@ -43,7 +43,7 @@ namespace SmartMed.UI
             // lblTopBrand
             // 
             this.lblTopBrand.AutoSize = true;
-            this.lblTopBrand.Font = new System.Drawing.Font("Segoe UI", 11.25F, System.Drawing.FontStyle.Bold);
+            this.lblTopBrand.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
             this.lblTopBrand.Location = new System.Drawing.Point(16, 10);
             this.lblTopBrand.Name = "lblTopBrand";
             this.lblTopBrand.Size = new System.Drawing.Size(74, 20);
