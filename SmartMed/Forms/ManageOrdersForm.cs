@@ -35,6 +35,7 @@ namespace SmartMed.UI
         }
 
         private OrderService _orders;
+        private CustomerService _customers;
         private int? _selectedOrderId;
         private string _statusFilter = "All";
         private ComboBox cmbStatusFilter;
@@ -50,10 +51,12 @@ namespace SmartMed.UI
         private Label lblTotalOrders;
         private Label lblPendingOrders;
         private Label lblDeliveredOrders;
+        private Label lblRegisteredCustomers;
         private Button btnUpdateStatus;
         private TableLayoutPanel _scrollRoot;
 
         private OrderService Orders => GetRuntimeService(ref _orders);
+        private CustomerService Customers => GetRuntimeService(ref _customers);
 
         private void BuildContent()
         {
@@ -200,18 +203,21 @@ namespace SmartMed.UI
                 Margin = new Padding(0, 0, 0, 16)
             };
 
-            var row = new TableLayoutPanel { Dock = DockStyle.Fill, ColumnCount = 3, RowCount = 1 };
-            row.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 33.33f));
-            row.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 33.33f));
-            row.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 33.34f));
+            var row = new TableLayoutPanel { Dock = DockStyle.Fill, ColumnCount = 4, RowCount = 1 };
+            row.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 25f));
+            row.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 25f));
+            row.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 25f));
+            row.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 25f));
 
             lblTotalOrders = new Label();
             lblPendingOrders = new Label();
             lblDeliveredOrders = new Label();
+            lblRegisteredCustomers = new Label();
 
             row.Controls.Add(CreateStatTile("Total Orders", lblTotalOrders, SystemColors.Highlight), 0, 0);
             row.Controls.Add(CreateStatTile("Pending", lblPendingOrders, SystemColors.ControlText), 1, 0);
             row.Controls.Add(CreateStatTile("Delivered", lblDeliveredOrders, Color.Green), 2, 0);
+            row.Controls.Add(CreateStatTile("Registered Customers", lblRegisteredCustomers, SystemColors.Highlight), 3, 0);
 
             wrap.Controls.Add(row);
             return wrap;
@@ -448,6 +454,7 @@ namespace SmartMed.UI
             lblTotalOrders.Text = "4";
             lblPendingOrders.Text = "1";
             lblDeliveredOrders.Text = "2";
+            lblRegisteredCustomers.Text = "248";
         }
 
         public void LoadOrders()
@@ -493,6 +500,8 @@ namespace SmartMed.UI
             lblTotalOrders.Text = all.Count.ToString("N0");
             lblPendingOrders.Text = pending.ToString("N0");
             lblDeliveredOrders.Text = delivered.ToString("N0");
+            if (Customers != null)
+                lblRegisteredCustomers.Text = Customers.GetRegisteredCount().ToString("N0");
         }
 
         private void GridOrders_SelectionChanged(object sender, EventArgs e)

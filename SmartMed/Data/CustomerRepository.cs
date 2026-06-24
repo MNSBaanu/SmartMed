@@ -37,6 +37,11 @@ namespace SmartMed.Data
             return list;
         }
 
+        public int GetCount()
+        {
+            return Convert.ToInt32(DatabaseHelper.ExecuteScalar("SELECT COUNT(*) FROM Customer"));
+        }
+
         public bool EmailExists(string email)
         {
             var result = DatabaseHelper.ExecuteScalar(

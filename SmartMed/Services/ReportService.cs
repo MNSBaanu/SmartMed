@@ -7,6 +7,7 @@ namespace SmartMed.Services
     {
         private readonly OrderRepository _orders = new OrderRepository();
         private readonly MedicineRepository _medicines = new MedicineRepository();
+        private readonly CustomerRepository _customers = new CustomerRepository();
 
         public DataTable GetSalesReport() => _orders.GetSalesReport();
 
@@ -20,6 +21,8 @@ namespace SmartMed.Services
         public decimal TotalSales => _orders.GetTotalSales();
 
         public int ActiveOrders => _orders.GetActiveOrderCount();
+
+        public int RegisteredCustomers => _customers.GetCount();
 
         public int MedicinesInStock
         {

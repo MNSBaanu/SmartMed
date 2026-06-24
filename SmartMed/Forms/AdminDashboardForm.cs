@@ -44,6 +44,7 @@ namespace SmartMed.UI
         private Label lblStockValue;
         private Label lblOrdersValue;
         private Label lblSalesValue;
+        private Label lblCustomersValue;
         private DataGridView gridRecent;
         private FlowLayoutPanel panelAlerts;
         private TableLayoutPanel _scrollRoot;
@@ -55,6 +56,7 @@ namespace SmartMed.UI
             lblStockValue = new Label();
             lblOrdersValue = new Label();
             lblSalesValue = new Label();
+            lblCustomersValue = new Label();
             gridRecent = CreateGrid();
             panelAlerts = new FlowLayoutPanel
             {
@@ -145,12 +147,13 @@ namespace SmartMed.UI
             var statsRow = new TableLayoutPanel
             {
                 Dock = DockStyle.Fill,
-                ColumnCount = 3,
+                ColumnCount = 4,
                 RowCount = 1
             };
-            statsRow.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 33.33f));
-            statsRow.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 33.33f));
-            statsRow.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 33.34f));
+            statsRow.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 25f));
+            statsRow.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 25f));
+            statsRow.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 25f));
+            statsRow.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 25f));
 
             statsRow.Controls.Add(CreateStatCard("Medicines in Stock", lblStockValue,
                 "SKUs tracked across inventory", "+12%"), 0, 0);
@@ -158,6 +161,8 @@ namespace SmartMed.UI
                 "Orders requiring verification", "Priority"), 1, 0);
             statsRow.Controls.Add(CreateStatCard("Total Sales", lblSalesValue,
                 "Lifetime pharmacy revenue (LKR)", "Daily"), 2, 0);
+            statsRow.Controls.Add(CreateStatCard("Registered Customers", lblCustomersValue,
+                "Customers signed up in the system", "Users"), 3, 0);
 
             wrap.Controls.Add(statsRow);
             return wrap;
@@ -466,6 +471,7 @@ namespace SmartMed.UI
             lblStockValue.Text = "4,281";
             lblOrdersValue.Text = "127";
             lblSalesValue.Text = "LKR 12,402.50";
+            lblCustomersValue.Text = "248";
 
             gridRecent.DataSource = new[]
             {
@@ -486,6 +492,7 @@ namespace SmartMed.UI
             lblStockValue.Text = _reports.MedicinesInStock.ToString("N0");
             lblOrdersValue.Text = _reports.ActiveOrders.ToString("N0");
             lblSalesValue.Text = $"LKR {_reports.TotalSales:N2}";
+            lblCustomersValue.Text = _reports.RegisteredCustomers.ToString("N0");
 
             gridRecent.DataSource = _orders.GetRecentSummaries(8);
 

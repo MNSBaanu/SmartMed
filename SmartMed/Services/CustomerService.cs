@@ -13,6 +13,8 @@ namespace SmartMed.Services
 
         public List<Customer> GetAll() => _customers.GetAll();
 
+        public int GetRegisteredCount() => _customers.GetCount();
+
         public Customer GetById(int id) => _customers.GetById(id);
 
         public List<Customer> Search(string keyword) =>
