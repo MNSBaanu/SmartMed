@@ -248,8 +248,8 @@ namespace SmartMed.UI
 
 
         protected void SyncShellChrome()
-
         {
+            if (panelTop == null || !panelTop.Visible) return;
 
             var closeLeft = Math.Max(8, panelTop.ClientSize.Width - btnClose.Width - 8);
 
@@ -282,6 +282,15 @@ namespace SmartMed.UI
         }
 
 
+
+        protected void HideTopChrome()
+        {
+            if (panelTop == null) return;
+            panelTop.Visible = false;
+            panelTop.Height = 0;
+            if (btnClose != null)
+                btnClose.Visible = false;
+        }
 
         internal void HideShellChromeForEmbed()
         {

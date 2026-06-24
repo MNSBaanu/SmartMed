@@ -1,5 +1,7 @@
 using System;
+using System.Linq;
 using System.Windows.Forms;
+using SmartMed.Services;
 
 namespace SmartMed.UI
 {
@@ -13,7 +15,20 @@ namespace SmartMed.UI
             : base(AdminNavItem.Overview, "Admin Dashboard")
         {
             InitializeComponent();
-            Text = "SmartMed";
+            HideTopChrome();
+            Text = "SmartMed - Admin Dashboard";
+        }
+
+        protected override void OnFormClosing(FormClosingEventArgs e)
+        {
+            if (e.CloseReason == CloseReason.UserClosing)
+            {
+                Session.Clear();
+                var login = Application.OpenForms.OfType<LoginForm>().FirstOrDefault();
+                if (login != null && !login.IsDisposed)
+                    login.Show();
+            }
+            base.OnFormClosing(e);
         }
 
         protected override void NavigateAdmin(AdminNavItem nav)
@@ -24,10 +39,11 @@ namespace SmartMed.UI
                 return;
             }
 
-            lblTopSubtitle.Text = GetPageSubtitle(nav);
+            var subtitle = GetPageSubtitle(nav);
+            Text = $"SmartMed - {subtitle}";
             SetActiveNav(nav);
 
-            using (UiTheme.BatchUpdate(this, panelTop, panelSidebar, panelContent))
+            using (UiTheme.BatchUpdate(this, panelSidebar, panelContent))
             {
                 panelContent.Visible = false;
                 DisposeEmbeddedPage();
