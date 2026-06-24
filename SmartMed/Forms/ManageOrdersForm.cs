@@ -36,7 +36,9 @@ namespace SmartMed.UI
 
         private static readonly string[] OrderStatuses =
         {
-            "Pending", "Ready for Pickup", "Delivered"
+            OrderService.StatusPending,
+            OrderService.StatusReadyForPickup,
+            OrderService.StatusDelivered
         };
 
         private OrderService _orders;
@@ -126,7 +128,13 @@ namespace SmartMed.UI
                 DropDownStyle = ComboBoxStyle.DropDownList,
                 Width = 150
             };
-            cmbStatusFilter.Items.AddRange(new object[] { "All", "Pending", "Ready for Pickup", "Delivered" });
+            cmbStatusFilter.Items.AddRange(new object[]
+            {
+                "All",
+                OrderService.StatusPending,
+                OrderService.StatusReadyForPickup,
+                OrderService.StatusDelivered
+            });
             cmbStatusFilter.SelectedIndex = 0;
             cmbStatusFilter.SelectedIndexChanged += (s, e) =>
             {
@@ -415,9 +423,9 @@ namespace SmartMed.UI
             gridOrders.SelectionChanged -= GridOrders_SelectionChanged;
             gridOrders.DataSource = new[]
             {
-                new { OrderID = 9421, OrderRef = "#ORD-9421", CustomerName = "Margaret Sullivan", OrderDate = "Oct 24, 2023", Status = "Pending", Total = "LKR 124.50" },
-                new { OrderID = 9420, OrderRef = "#ORD-9420", CustomerName = "Jonathan Wick", OrderDate = "Oct 24, 2023", Status = "Ready for Pickup", Total = "LKR 45.00" },
-                new { OrderID = 9419, OrderRef = "#ORD-9419", CustomerName = "Sarah Connor", OrderDate = "Oct 23, 2023", Status = "Delivered", Total = "LKR 312.20" }
+                new { OrderID = 9421, OrderRef = "#ORD-9421", CustomerName = "Margaret Sullivan", OrderDate = "Oct 24, 2023", Status = OrderService.StatusPending, Total = "LKR 124.50" },
+                new { OrderID = 9420, OrderRef = "#ORD-9420", CustomerName = "Jonathan Wick", OrderDate = "Oct 24, 2023", Status = OrderService.StatusReadyForPickup, Total = "LKR 45.00" },
+                new { OrderID = 9419, OrderRef = "#ORD-9419", CustomerName = "Sarah Connor", OrderDate = "Oct 23, 2023", Status = OrderService.StatusDelivered, Total = "LKR 312.20" }
             };
             HideOrderIdColumn();
             gridOrders.ClearSelection();
@@ -430,7 +438,7 @@ namespace SmartMed.UI
             };
 
             lblOrderDetails.Text = "Order Details: #ORD-9420";
-            cmbStatus.SelectedItem = "Ready for Pickup";
+            cmbStatus.SelectedItem = OrderService.StatusReadyForPickup;
             lblLastUpdated.Text = "Last Updated: Today, 10:42 AM";
             lblTotalOrders.Text = "4";
             lblPendingOrders.Text = "1";
@@ -492,15 +500,13 @@ namespace SmartMed.UI
             if (idCell?.Value == null) return;
 
             _selectedOrderId = Convert.ToInt32(idCell.Value);
-            var status = gridOrders.CurrentRow.Cells["Status"].Value?.ToString() ?? "Pending";
+            var status = gridOrders.CurrentRow.Cells["Status"].Value?.ToString() ?? OrderService.StatusPending;
             var orderRef = gridOrders.CurrentRow.Cells["OrderRef"].Value?.ToString() ?? string.Empty;
 
             lblOrderDetails.Text = $"Order Details: {orderRef}";
-            cmbStatus.SelectedItem = status;
-            if (cmbStatus.SelectedIndex < 0)
-                cmbStatus.Text = status;
+            PopulateStatusOptions(status);
 
-            var isDelivered = string.Equals(status, "Delivered", StringComparison.OrdinalIgnoreCase);
+            var isDelivered = string.Equals(status, OrderService.StatusDelivered, StringComparison.OrdinalIgnoreCase);
             cmbStatus.Enabled = !isDelivered;
             btnUpdateStatus.Enabled = !isDelivered;
 
@@ -529,6 +535,18 @@ namespace SmartMed.UI
             cmbStatus.Enabled = true;
             btnUpdateStatus.Enabled = true;
             lblLastUpdated.Text = "Last Updated: —";
+        }
+
+        private void PopulateStatusOptions(string currentStatus)
+        {
+            var selected = currentStatus;
+            cmbStatus.Items.Clear();
+            foreach (var status in OrderService.GetAllowedNextStatuses(currentStatus))
+                cmbStatus.Items.Add(status);
+
+            cmbStatus.SelectedItem = selected;
+            if (cmbStatus.SelectedIndex < 0 && cmbStatus.Items.Count > 0)
+                cmbStatus.SelectedIndex = 0;
         }
 
         private void BtnUpdateStatus_Click(object sender, EventArgs e)

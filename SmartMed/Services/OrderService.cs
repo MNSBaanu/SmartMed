@@ -10,7 +10,36 @@ namespace SmartMed.Services
 {
     public class OrderService
     {
-        private static readonly string[] ValidStatuses = { "Pending", "Ready for Pickup", "Delivered" };
+        public const string StatusPending = "Pending";
+        public const string StatusReadyForPickup = "Ready for Pickup";
+        public const string StatusDelivered = "Delivered";
+
+        private static readonly string[] ValidStatuses =
+        {
+            StatusPending, StatusReadyForPickup, StatusDelivered
+        };
+
+        public static IReadOnlyList<string> GetAllowedNextStatuses(string currentStatus)
+        {
+            if (string.IsNullOrWhiteSpace(currentStatus))
+                return new[] { StatusPending };
+
+            if (currentStatus == StatusDelivered)
+                return new[] { StatusDelivered };
+
+            var allowed = new List<string> { currentStatus };
+            switch (currentStatus)
+            {
+                case StatusPending:
+                    allowed.Add(StatusReadyForPickup);
+                    break;
+                case StatusReadyForPickup:
+                    allowed.Add(StatusDelivered);
+                    break;
+            }
+
+            return allowed;
+        }
 
         private readonly OrderRepository _orders = new OrderRepository();
         private readonly MedicineRepository _medicines = new MedicineRepository();
@@ -34,10 +63,32 @@ namespace SmartMed.Services
             var order = _orders.GetById(orderId);
             if (order == null)
                 throw new InvalidOperationException("Order not found.");
-            if (order.Status == "Delivered" && status != "Delivered")
-                throw new InvalidOperationException("Delivered orders cannot be changed to Pending or Ready for Pickup.");
+
+            var transitionError = GetTransitionError(order.Status, status);
+            if (transitionError != null)
+                throw new InvalidOperationException(transitionError);
 
             _orders.UpdateStatus(orderId, status);
+        }
+
+        private static string GetTransitionError(string currentStatus, string newStatus)
+        {
+            if (currentStatus == newStatus)
+                return null;
+
+            if (currentStatus == StatusDelivered)
+                return "Delivered orders cannot be changed.";
+
+            if (newStatus == StatusReadyForPickup && currentStatus != StatusPending)
+                return "Order must be Pending before it can be marked Ready for Pickup.";
+
+            if (newStatus == StatusDelivered && currentStatus != StatusReadyForPickup)
+                return "Order must be Ready for Pickup before it can be marked Delivered.";
+
+            if (newStatus == StatusPending)
+                return "Order status cannot be changed back to Pending.";
+
+            return "Invalid order status transition.";
         }
 
         public int PlaceOrder(int customerId, IReadOnlyList<CartLine> cart, string prescriptionSourcePath)
@@ -91,7 +142,7 @@ namespace SmartMed.Services
                 throw new InvalidOperationException("Order not found.");
             if (order.CustomerID != customerId)
                 throw new InvalidOperationException("You can only cancel your own orders.");
-            if (order.Status != "Pending")
+            if (order.Status != StatusPending)
                 throw new InvalidOperationException("Only pending orders can be cancelled.");
 
             var items = _orders.GetItems(orderId);
@@ -117,8 +168,8 @@ namespace SmartMed.Services
 
         public void GetStatusStats(IReadOnlyList<Order> all, out int pending, out int delivered)
         {
-            pending = all.Count(o => o.Status == "Pending");
-            delivered = all.Count(o => o.Status == "Delivered");
+            pending = all.Count(o => o.Status == StatusPending);
+            delivered = all.Count(o => o.Status == StatusDelivered);
         }
 
         public List<RecentOrderSummary> GetRecentSummaries(int take)
