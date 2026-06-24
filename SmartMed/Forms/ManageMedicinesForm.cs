@@ -305,6 +305,7 @@ namespace SmartMed.UI
             gridMedicines.SelectionChanged += GridMedicines_SelectionChanged;
             gridMedicines.CellFormatting += GridMedicines_CellFormatting;
             gridMedicines.RowPrePaint += GridMedicines_RowPrePaint;
+            UiTheme.ApplyGrid(gridMedicines);
             outer.Controls.Add(gridMedicines);
             return outer;
         }
@@ -370,10 +371,10 @@ namespace SmartMed.UI
                 discountPanel,
                 promotionPanel,
                 promoPanel), 1, 0);
-            btnClear = new Button { Text = "Clear Form", Width = 110, Height = 40 };
-            btnDelete = new Button { Text = "Delete Entry", Width = 110, Height = 40 };
-            btnUpdate = new Button { Text = "Update Record", Width = 120, Height = 40 };
-            btnAdd = new Button { Text = "Add New Medicine", Width = 150, Height = 40 };
+            btnClear = UiTheme.CreateFlatButton("Clear Form", UiButtonStyle.Secondary, 110, 40);
+            btnDelete = UiTheme.CreateFlatButton("Delete Entry", UiButtonStyle.Danger, 110, 40);
+            btnUpdate = UiTheme.CreateFlatButton("Update Record", UiButtonStyle.Primary, 120, 40);
+            btnAdd = UiTheme.CreateFlatButton("Add New Medicine", UiButtonStyle.Success, 150, 40);
             btnClear.Click += (s, e) => ClearForm();
             btnDelete.Click += BtnDelete_Click;
             btnUpdate.Click += BtnUpdate_Click;
@@ -422,8 +423,16 @@ namespace SmartMed.UI
             };
             input.Dock = DockStyle.Top;
             input.Height = 23;
-            if (input is TextBox tb) { tb.BorderStyle = BorderStyle.Fixed3D; }
-            if (input is ComboBox cb) { cb.DropDownStyle = ComboBoxStyle.DropDown; }
+            if (input is TextBox tb)
+            {
+                tb.BorderStyle = BorderStyle.FixedSingle;
+                UiTheme.StyleTextBox(tb);
+            }
+            if (input is ComboBox cb)
+            {
+                cb.DropDownStyle = ComboBoxStyle.DropDown;
+                UiTheme.StyleComboBox(cb);
+            }
             wrap.Controls.Add(input);
             wrap.Controls.Add(lbl);
             return wrap;

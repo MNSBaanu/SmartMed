@@ -1,12 +1,13 @@
 using System;
 using System.Drawing;
 using System.Windows.Forms;
+using ReaLTaiizor.Forms;
 using SmartMed.Models;
 using SmartMed.Services;
 
 namespace SmartMed.UI
 {
-    public partial class RegistrationForm : Form
+    public partial class RegistrationForm : MaterialForm
     {
         private readonly AuthService _auth = new AuthService();
         private bool _passwordVisible;
@@ -15,6 +16,12 @@ namespace SmartMed.UI
         {
             InitializeComponent();
             DoubleBuffered = true;
+            if (Site?.DesignMode != true)
+            {
+                UiTheme.RegisterForm(this);
+                UiTheme.ApplyFlatButton(btnRegister, UiButtonStyle.Success);
+                UiTheme.ApplyFlatButton(btnCancel, UiButtonStyle.Secondary);
+            }
             LayoutForm();
         }
 

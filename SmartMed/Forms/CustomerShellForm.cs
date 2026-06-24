@@ -4,12 +4,13 @@ using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
+using ReaLTaiizor.Forms;
 using SmartMed.Services;
 
 namespace SmartMed.UI
 {
     [DesignerCategory("Form")]
-    public partial class CustomerShellForm : Form
+    public partial class CustomerShellForm : MaterialForm
     {
         private bool _pageContentInitialized;
 
@@ -33,6 +34,8 @@ namespace SmartMed.UI
             DoubleBuffered = true;
             Text = "SmartMed Customer Portal";
             lblTopSubtitle.Text = subtitle;
+            if (!IsDesignHost())
+                UiTheme.ApplyShell(this, panelTop, panelSidebar, panelContent);
             SyncShellChrome();
             if (IsDesignHost())
                 EnsurePageContent();
@@ -103,6 +106,22 @@ namespace SmartMed.UI
                 SyncShellChrome();
         }
 
+        internal void PrepareForNavigation()
+        {
+            SuspendLayout();
+            panelContent?.SuspendLayout();
+            try
+            {
+                EnsurePageContent();
+            }
+            finally
+            {
+                panelContent?.ResumeLayout(true);
+                ResumeLayout(true);
+                SyncShellChrome();
+            }
+        }
+
         protected void NavigateTo(CustomerShellForm next)
         {
             next.StartPosition = FormStartPosition.Manual;
@@ -113,9 +132,19 @@ namespace SmartMed.UI
             var login = Application.OpenForms.OfType<LoginForm>().FirstOrDefault();
             login?.AttachCustomerReturn(next);
 
-            next.Show();
-            Hide();
-            Close();
+            next.PrepareForNavigation();
+
+            SuspendLayout();
+            try
+            {
+                next.Show();
+                Hide();
+            }
+            finally
+            {
+                ResumeLayout(false);
+                Close();
+            }
         }
 
         private void BtnClose_Click(object sender, EventArgs e) => Logout();

@@ -320,6 +320,7 @@ namespace SmartMed.UI
                 ScrollBars = ScrollBars.Both
             };
 
+            UiTheme.ApplyGrid(gridReport);
             outer.Controls.Add(gridReport);
             return outer;
         }
@@ -365,19 +366,7 @@ namespace SmartMed.UI
             StyleTab(btnHistoryTab, _activeTab == ReportTab.History);
         }
 
-        private static void StyleTab(Button btn, bool active)
-        {
-            if (active)
-            {
-                btn.ForeColor = SystemColors.Highlight;
-                btn.Font = new Font(SystemFonts.DefaultFont, FontStyle.Bold);
-            }
-            else
-            {
-                btn.ForeColor = SystemColors.GrayText;
-                btn.Font = SystemFonts.DefaultFont;
-            }
-        }
+        private static void StyleTab(Button btn, bool active) => UiTheme.StyleTabButton(btn, active);
 
         private void LoadDesignTimePreview()
         {

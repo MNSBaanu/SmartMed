@@ -1,17 +1,27 @@
 using System;
 using System.Linq;
 using System.Windows.Forms;
+using ReaLTaiizor.Forms;
 using SmartMed.Services;
 
 namespace SmartMed.UI
 {
-    public partial class LoginForm : Form
+    public partial class LoginForm : MaterialForm
     {
         private readonly AuthService _auth = new AuthService();
 
         public LoginForm()
         {
             InitializeComponent();
+            if (Site?.DesignMode != true)
+            {
+                UiTheme.ApplyLoginForm(this, lblRole, lblUsername, lblPassword, cmbRole, txtUsername, txtPassword);
+                UiTheme.ApplyFlatButton(btnLogin, UiButtonStyle.Primary);
+                UiTheme.ApplyFlatButton(btnRegister, UiButtonStyle.Success);
+                UiTheme.StyleTextBox(txtUsername);
+                UiTheme.StyleTextBox(txtPassword);
+                UiTheme.StyleComboBox(cmbRole);
+            }
             UpdateRoleUi();
         }
 
@@ -87,9 +97,10 @@ namespace SmartMed.UI
                     }
 
                     Session.CurrentAdmin = admin;
-                    Hide();
                     var dashboard = new AdminDashboardForm();
                     AttachAdminReturn(dashboard);
+                    dashboard.PrepareForNavigation();
+                    Hide();
                     dashboard.Show();
                     return;
                 }
@@ -102,9 +113,10 @@ namespace SmartMed.UI
                 }
 
                 Session.CurrentCustomer = customer;
-                Hide();
                 var portal = new CustomerDashboardForm();
                 AttachCustomerReturn(portal);
+                portal.PrepareForNavigation();
+                Hide();
                 portal.Show();
             }
             catch (Exception ex)
