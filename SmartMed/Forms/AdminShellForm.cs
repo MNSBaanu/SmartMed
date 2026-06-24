@@ -52,7 +52,7 @@ namespace SmartMed.UI
 
             DoubleBuffered = true;
 
-            Text = "Pharmacy Management System";
+            Text = "SmartMed";
 
             lblTopSubtitle.Text = subtitle;
 
@@ -110,41 +110,23 @@ namespace SmartMed.UI
 
 
 
-            using (UiTheme.BatchUpdate(this, panelTop, panelSidebar, panelContent))
-
+            using (UiTheme.BatchUpdate(this, panelTop, panelSidebar, PagePanel))
             {
-
-                if (panelContent != null)
-
-                    panelContent.Visible = false;
-
-
+                if (PagePanel != null)
+                    PagePanel.Visible = false;
 
                 InitializePageContent();
 
-
-
                 if (!_isEmbeddedPage)
-
                 {
-
                     UiTheme.ApplyFontTree(panelTop);
-
                     UiTheme.ApplyFontTree(panelSidebar);
-
                 }
+                UiTheme.ApplyFontTree(PagePanel);
 
-                UiTheme.ApplyFontTree(panelContent);
-
-
-
-                if (panelContent != null)
-
-                    panelContent.Visible = true;
-
+                if (PagePanel != null)
+                    PagePanel.Visible = true;
             }
-
-
 
             SyncShellChrome();
 
@@ -178,32 +160,27 @@ namespace SmartMed.UI
 
 
 
+        private Panel _contentTarget;
+
+        internal void SetContentTarget(Panel host) => _contentTarget = host;
+
+        /// <summary>Host content panel — uses AdminHostForm.panelContent when embedded.</summary>
+        protected Panel PagePanel => _contentTarget ?? panelContent;
+
         protected int GetScrollContentWidth(int fallback = 850)
-
         {
-
-            var w = panelContent.ClientSize.Width;
-
+            var w = PagePanel.ClientSize.Width;
             if (w < 200 && Parent != null)
-
                 w = Parent.ClientSize.Width - 48;
-
             return w < 200 ? fallback : w;
-
         }
 
-
-
         protected void WireScrollRoot(Control scrollRoot, int fallback = 850)
-
         {
-
             UiTheme.EnableDoubleBuffer(scrollRoot);
-
-            panelContent.Controls.Add(scrollRoot);
-
-            panelContent.Resize += (s, e) => scrollRoot.Width = GetScrollContentWidth(fallback);
-
+            var host = PagePanel;
+            host.Controls.Add(scrollRoot);
+            host.Resize += (s, e) => scrollRoot.Width = GetScrollContentWidth(fallback);
         }
 
 

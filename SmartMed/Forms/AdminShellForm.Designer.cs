@@ -174,7 +174,7 @@ namespace SmartMed.UI
             this.MinimumSize = new System.Drawing.Size(1000, 640);
             this.Name = "AdminShellForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "Pharmacy Management System";
+            this.Text = "SmartMed";
             this.panelTop.ResumeLayout(false);
             this.panelTop.PerformLayout();
             this.panelSidebar.ResumeLayout(false);

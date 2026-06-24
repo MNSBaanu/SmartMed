@@ -68,7 +68,7 @@ namespace SmartMed.UI
 
         private void BuildContent()
         {
-            panelContent.Controls.Clear();
+            PagePanel.Controls.Clear();
 
             _scrollRoot = new TableLayoutPanel
             {

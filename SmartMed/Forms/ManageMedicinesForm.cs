@@ -69,7 +69,7 @@ namespace SmartMed.UI
         private TableLayoutPanel _scrollRoot;
         private void BuildContent()
         {
-            panelContent.Controls.Clear();
+            PagePanel.Controls.Clear();
             _scrollRoot = new TableLayoutPanel
             {
                 AutoSize = true,

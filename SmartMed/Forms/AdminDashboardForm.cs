@@ -64,7 +64,7 @@ namespace SmartMed.UI
                 Dock = DockStyle.Fill
             };
 
-            panelContent.Controls.Clear();
+            PagePanel.Controls.Clear();
 
             _scrollRoot = new TableLayoutPanel
             {

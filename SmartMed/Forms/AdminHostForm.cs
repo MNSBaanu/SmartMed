@@ -13,6 +13,7 @@ namespace SmartMed.UI
             : base(AdminNavItem.Overview, "Admin Dashboard")
         {
             InitializeComponent();
+            Text = "SmartMed";
         }
 
         protected override void NavigateAdmin(AdminNavItem nav)
@@ -33,10 +34,8 @@ namespace SmartMed.UI
                 panelContent.Controls.Clear();
 
                 _embeddedPage = CreateEmbeddedPage(nav);
-                ConfigureEmbeddedPage(_embeddedPage);
-                panelContent.Controls.Add(_embeddedPage);
+                _embeddedPage.SetContentTarget(panelContent);
                 _embeddedPage.PrepareForNavigation();
-                _embeddedPage.Show();
                 UiTheme.ApplyFontTree(panelContent);
                 panelContent.Visible = true;
             }
@@ -70,20 +69,10 @@ namespace SmartMed.UI
             throw new ArgumentException("Unknown admin section.");
         }
 
-        private static void ConfigureEmbeddedPage(AdminShellForm page)
-        {
-            page.TopLevel = false;
-            page.FormBorderStyle = FormBorderStyle.None;
-            page.Dock = DockStyle.Fill;
-            page.ShowInTaskbar = false;
-            page.Padding = Padding.Empty;
-            page.HideShellChromeForEmbed();
-        }
-
         private void DisposeEmbeddedPage()
         {
             if (_embeddedPage == null) return;
-            panelContent.Controls.Remove(_embeddedPage);
+            _embeddedPage.SetContentTarget(null);
             _embeddedPage.Dispose();
             _embeddedPage = null;
         }
