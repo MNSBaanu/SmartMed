@@ -112,9 +112,12 @@ namespace SmartMed.UI
             RegisterForm(form);
             form.BackColor = CardBackground;
             form.Font = UiFont;
+            form.Padding = new Padding(0, 64, 0, 0);
 
             foreach (var c in inputs)
             {
+                if (c is Panel panel)
+                    panel.BackColor = CardBackground;
                 if (c is Label lbl)
                     lbl.ForeColor = GridHeaderText;
             }
