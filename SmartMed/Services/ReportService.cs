@@ -1,3 +1,4 @@
+using System;
 using System.Data;
 using SmartMed.Data;
 
@@ -9,14 +10,21 @@ namespace SmartMed.Services
         private readonly MedicineRepository _medicines = new MedicineRepository();
         private readonly CustomerRepository _customers = new CustomerRepository();
 
-        public DataTable GetSalesReport() => _orders.GetSalesReport();
+        public DataTable GetSalesReport(ReportPeriod period)
+        {
+            var range = ReportPeriodHelper.GetRange(period);
+            return _orders.GetSalesReport(range.From, range.ToExclusive);
+        }
 
         public DataTable GetStockReport() => _orders.GetStockReport();
 
         public DataTable GetExpiryReport() => _medicines.GetExpiryReport();
 
-        public DataTable GetCustomerOrderHistory(int customerId) =>
-            _orders.GetCustomerOrderHistory(customerId);
+        public DataTable GetCustomerOrderHistory(int customerId, ReportPeriod period)
+        {
+            var range = ReportPeriodHelper.GetRange(period);
+            return _orders.GetCustomerOrderHistory(customerId, range.From, range.ToExclusive);
+        }
 
         public decimal TotalSales => _orders.GetTotalSales();
 

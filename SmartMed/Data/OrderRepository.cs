@@ -104,12 +104,18 @@ namespace SmartMed.Data
                 new SqlParameter("@id", orderId));
         }
 
-        public DataTable GetSalesReport()
+        public DataTable GetSalesReport() =>
+            GetSalesReport(new DateTime(2000, 1, 1), DateTime.MaxValue);
+
+        public DataTable GetSalesReport(DateTime from, DateTime toExclusive)
         {
             return DatabaseHelper.ExecuteQuery(
                 @"SELECT o.OrderID, c.FullName AS Customer, o.OrderDate, o.Status, o.TotalAmount
                   FROM [Order] o INNER JOIN Customer c ON o.CustomerID = c.CustomerID
-                  ORDER BY o.OrderDate DESC");
+                  WHERE o.OrderDate >= @from AND o.OrderDate < @to
+                  ORDER BY o.OrderDate DESC",
+                new SqlParameter("@from", from),
+                new SqlParameter("@to", toExclusive));
         }
 
         public DataTable GetStockReport()
@@ -122,12 +128,19 @@ namespace SmartMed.Data
                   FROM Medicine ORDER BY MedicineName");
         }
 
-        public DataTable GetCustomerOrderHistory(int customerId)
+        public DataTable GetCustomerOrderHistory(int customerId) =>
+            GetCustomerOrderHistory(customerId, new DateTime(2000, 1, 1), DateTime.MaxValue);
+
+        public DataTable GetCustomerOrderHistory(int customerId, DateTime from, DateTime toExclusive)
         {
             return DatabaseHelper.ExecuteQuery(
                 @"SELECT o.OrderID, o.OrderDate, o.Status, o.TotalAmount
-                  FROM [Order] o WHERE o.CustomerID=@cid ORDER BY o.OrderDate DESC",
-                new SqlParameter("@cid", customerId));
+                  FROM [Order] o
+                  WHERE o.CustomerID=@cid AND o.OrderDate >= @from AND o.OrderDate < @to
+                  ORDER BY o.OrderDate DESC",
+                new SqlParameter("@cid", customerId),
+                new SqlParameter("@from", from),
+                new SqlParameter("@to", toExclusive));
         }
 
         public decimal GetTotalSales()

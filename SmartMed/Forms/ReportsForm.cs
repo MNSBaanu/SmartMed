@@ -39,10 +39,15 @@ namespace SmartMed.UI
         private ReportService _reports;
         private CustomerService _customers;
         private ReportTab _activeTab = ReportTab.SalesPerformance;
+        private ReportPeriod _activePeriod = ReportPeriod.Month;
 
         private DataGridView gridReport;
         private ComboBox cmbCustomer;
         private Panel panelCustomerFilter;
+        private Panel panelPeriodFilter;
+        private Button btnWeekPeriod;
+        private Button btnMonthPeriod;
+        private Button btnYearPeriod;
         private Button btnSalesTab;
         private Button btnInventoryTab;
         private Button btnHistoryTab;
@@ -67,11 +72,12 @@ namespace SmartMed.UI
                 AutoSizeMode = AutoSizeMode.GrowAndShrink,
                 Dock = DockStyle.Top,
                 ColumnCount = 1,
-                RowCount = 6,
+                RowCount = 7,
                 MinimumSize = new Size(0, 900),
                 Width = GetScrollContentWidth()
             };
             _scrollRoot.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100f));
+            _scrollRoot.RowStyles.Add(new RowStyle(SizeType.AutoSize));
             _scrollRoot.RowStyles.Add(new RowStyle(SizeType.AutoSize));
             _scrollRoot.RowStyles.Add(new RowStyle(SizeType.AutoSize));
             _scrollRoot.RowStyles.Add(new RowStyle(SizeType.AutoSize));
@@ -82,9 +88,10 @@ namespace SmartMed.UI
             _scrollRoot.Controls.Add(CreatePageHeader(), 0, 0);
             _scrollRoot.Controls.Add(CreateStatsRow(), 0, 1);
             _scrollRoot.Controls.Add(CreateTabBar(), 0, 2);
-            _scrollRoot.Controls.Add(CreateCustomerFilter(), 0, 3);
-            _scrollRoot.Controls.Add(CreateReportGridPanel(), 0, 4);
-            _scrollRoot.Controls.Add(CreateFooterBar(), 0, 5);
+            _scrollRoot.Controls.Add(CreatePeriodFilter(), 0, 3);
+            _scrollRoot.Controls.Add(CreateCustomerFilter(), 0, 4);
+            _scrollRoot.Controls.Add(CreateReportGridPanel(), 0, 5);
+            _scrollRoot.Controls.Add(CreateFooterBar(), 0, 6);
             WireScrollRoot(_scrollRoot);
         }
 
@@ -258,6 +265,62 @@ namespace SmartMed.UI
             return btn;
         }
 
+        private Panel CreatePeriodFilter()
+        {
+            panelPeriodFilter = new Panel
+            {
+                Dock = DockStyle.Top,
+                Height = 44,
+                Margin = new Padding(0, 0, 0, 8)
+            };
+
+            var lbl = new Label
+            {
+                Text = "Period:",
+                AutoSize = true,
+                Location = new Point(0, 12),
+                Font = UiTheme.UiFont
+            };
+
+            var tabs = new FlowLayoutPanel
+            {
+                Location = new Point(56, 6),
+                AutoSize = true,
+                FlowDirection = FlowDirection.LeftToRight,
+                WrapContents = false
+            };
+
+            btnWeekPeriod = CreatePeriodButton("Week", ReportPeriod.Week);
+            btnMonthPeriod = CreatePeriodButton("Month", ReportPeriod.Month);
+            btnYearPeriod = CreatePeriodButton("Year", ReportPeriod.Year);
+            tabs.Controls.Add(btnWeekPeriod);
+            tabs.Controls.Add(btnMonthPeriod);
+            tabs.Controls.Add(btnYearPeriod);
+
+            panelPeriodFilter.Controls.Add(tabs);
+            panelPeriodFilter.Controls.Add(lbl);
+            UpdatePeriodFilterVisibility();
+            UpdatePeriodStyles();
+            return panelPeriodFilter;
+        }
+
+        private Button CreatePeriodButton(string text, ReportPeriod period)
+        {
+            var btn = new Button
+            {
+                Text = text,
+                Width = 64,
+                Height = 28,
+                FlatStyle = FlatStyle.Flat,
+                Margin = new Padding(0, 0, 6, 0),
+                Font = UiTheme.UiFont
+            };
+            btn.FlatAppearance.BorderSize = 0;
+            btn.Tag = period;
+            btn.Click += (s, e) => SwitchPeriod(period);
+            return btn;
+        }
+
         private Panel CreateCustomerFilter()
         {
             panelCustomerFilter = new Panel
@@ -354,10 +417,52 @@ namespace SmartMed.UI
         {
             _activeTab = tab;
             panelCustomerFilter.Visible = tab == ReportTab.CustomerOrderHistory;
+            UpdatePeriodFilterVisibility();
             UpdateTabStyles();
             if (!IsDesignHost())
                 LoadActiveReport();
         }
+
+        private void SwitchPeriod(ReportPeriod period)
+        {
+            _activePeriod = period;
+            UpdatePeriodStyles();
+            if (!IsDesignHost())
+                LoadActiveReport();
+        }
+
+        private void UpdatePeriodFilterVisibility()
+        {
+            if (panelPeriodFilter == null) return;
+            panelPeriodFilter.Visible = _activeTab != ReportTab.MedicineInventory;
+        }
+
+        private void UpdatePeriodStyles()
+        {
+            StylePeriod(btnWeekPeriod, _activePeriod == ReportPeriod.Week);
+            StylePeriod(btnMonthPeriod, _activePeriod == ReportPeriod.Month);
+            StylePeriod(btnYearPeriod, _activePeriod == ReportPeriod.Year);
+        }
+
+        private static void StylePeriod(Button btn, bool active)
+        {
+            if (btn == null) return;
+            if (active)
+            {
+                btn.BackColor = UiTheme.Primary;
+                btn.ForeColor = Color.White;
+                btn.Font = UiTheme.UiFontBold;
+            }
+            else
+            {
+                btn.BackColor = SystemColors.Control;
+                btn.ForeColor = SystemColors.ControlText;
+                btn.Font = UiTheme.UiFont;
+            }
+        }
+
+        private string GetPeriodStatusText() =>
+            ReportPeriodHelper.GetLabel(_activePeriod);
 
         private void UpdateTabStyles()
         {
@@ -406,16 +511,18 @@ namespace SmartMed.UI
 
         private void LoadSalesReport()
         {
-            var table = Reports.GetSalesReport();
+            var table = Reports.GetSalesReport(_activePeriod);
             gridReport.DataSource = table;
-            lblFooterStatus.Text = $"Items: {table.Rows.Count} | Sales performance | {DateTime.Now:hh:mm tt | MMM dd, yyyy}";
+            lblFooterStatus.Text =
+                $"Items: {table.Rows.Count} | Sales performance | {GetPeriodStatusText()} | {DateTime.Now:hh:mm tt | MMM dd, yyyy}";
         }
 
         private void LoadInventoryReport()
         {
             var table = Reports.GetStockReport();
             gridReport.DataSource = table;
-            lblFooterStatus.Text = $"Items: {table.Rows.Count} | Medicine inventory | {DateTime.Now:hh:mm tt | MMM dd, yyyy}";
+            lblFooterStatus.Text =
+                $"Items: {table.Rows.Count} | Medicine inventory (current stock) | {DateTime.Now:hh:mm tt | MMM dd, yyyy}";
         }
 
         private void LoadHistoryReport()
@@ -441,14 +548,15 @@ namespace SmartMed.UI
             }
 
             var customerId = Convert.ToInt32(cmbCustomer.SelectedValue);
-            var table = Reports.GetCustomerOrderHistory(customerId);
+            var table = Reports.GetCustomerOrderHistory(customerId, _activePeriod);
             gridReport.DataSource = table;
-            lblFooterStatus.Text = $"Items: {table.Rows.Count} | Customer order history | {cmbCustomer.Text} | {DateTime.Now:hh:mm tt}";
+            lblFooterStatus.Text =
+                $"Items: {table.Rows.Count} | Customer order history | {cmbCustomer.Text} | {GetPeriodStatusText()} | {DateTime.Now:hh:mm tt}";
         }
 
         private void UpdateSummaryStats()
         {
-            var sales = Reports.GetSalesReport();
+            var sales = Reports.GetSalesReport(_activePeriod);
             decimal totalRevenue = 0;
             decimal outstanding = 0;
             foreach (DataRow row in sales.Rows)
@@ -485,10 +593,13 @@ namespace SmartMed.UI
                     MessageBox.Show("Nothing to export.", "Export", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     return;
                 }
+                var periodSuffix = _activeTab == ReportTab.MedicineInventory
+                    ? string.Empty
+                    : $"_{ReportPeriodHelper.GetFileSuffix(_activePeriod)}";
                 using (var dialog = new SaveFileDialog
                 {
                     Filter = "CSV files (*.csv)|*.csv",
-                    FileName = "report.csv"
+                    FileName = $"{GetExportBaseName()}{periodSuffix}_{DateTime.Now:yyyyMMdd}.csv"
                 })
                 {
                     if (dialog.ShowDialog() != DialogResult.OK) return;
@@ -517,6 +628,13 @@ namespace SmartMed.UI
             {
                 MessageBox.Show(ex.Message, "Print Failed", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
+        }
+
+        private string GetExportBaseName()
+        {
+            if (_activeTab == ReportTab.SalesPerformance) return "sales-performance";
+            if (_activeTab == ReportTab.MedicineInventory) return "medicine-inventory";
+            return "customer-order-history";
         }
     }
 }
