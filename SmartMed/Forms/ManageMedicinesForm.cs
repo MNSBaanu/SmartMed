@@ -51,6 +51,8 @@ namespace SmartMed.UI
         private TextBox txtSupplier;
         private CheckBox chkPrescription;
         private CheckBox chkPromotion;
+        private DateTimePicker dtpPromoStart;
+        private DateTimePicker dtpPromoEnd;
         private Button btnClear;
         private Button btnDelete;
         private Button btnUpdate;
@@ -285,12 +287,12 @@ namespace SmartMed.UI
                 AllowUserToDeleteRows = false,
                 RowHeadersVisible = false,
                 SelectionMode = DataGridViewSelectionMode.FullRowSelect,
-                AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill,
+                AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.None,
                 BackgroundColor = SystemColors.Window,
                 BorderStyle = BorderStyle.None,
                 EnableHeadersVisualStyles = false,
                 MultiSelect = false,
-                ScrollBars = ScrollBars.Vertical,
+                ScrollBars = ScrollBars.Both,
                 ColumnHeadersDefaultCellStyle = new DataGridViewCellStyle
                 {
                     BackColor = Color.FromArgb(232, 232, 232),
@@ -338,7 +340,7 @@ namespace SmartMed.UI
                 Dock = DockStyle.Top,
                 ColumnCount = 2,
                 RowCount = 1,
-                Height = 280
+                Height = 380
             };
             columns.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50f));
             columns.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50f));
@@ -352,6 +354,9 @@ namespace SmartMed.UI
             txtSupplier = new TextBox();
             chkPrescription = new CheckBox { Text = "Requires Prescription (Rx)", AutoSize = true };
             chkPromotion = new CheckBox { Text = "On Promotion", AutoSize = true };
+            dtpPromoStart = new DateTimePicker { Format = DateTimePickerFormat.Short, Enabled = false };
+            dtpPromoEnd = new DateTimePicker { Format = DateTimePickerFormat.Short, Enabled = false };
+            chkPromotion.CheckedChanged += ChkPromotion_CheckedChanged;
             columns.Controls.Add(CreateFieldColumn(
                 CreateField("Medicine Name", txtName, required: true),
                 CreateField("Dosage / Form", txtDosage, required: true),
@@ -369,12 +374,16 @@ namespace SmartMed.UI
             chkPromotion.Font = UiTheme.UiFont;
             promotionPanel.Controls.Add(chkPromotion);
             promotionPanel.Controls.Add(new Label { Text = "Promotion", Dock = DockStyle.Top, Height = 20 });
+            var promoStartPanel = CreateField("Promotion Start Date", dtpPromoStart);
+            var promoEndPanel = CreateField("Promotion End Date", dtpPromoEnd);
             columns.Controls.Add(CreateFieldColumn(
                 CreateField("Category", cmbCategory, required: true),
                 CreateField("Unit Price (LKR)", txtPrice, required: true),
                 CreateField("Supplier", txtSupplier, required: true),
                 discountPanel,
                 promotionPanel,
+                promoStartPanel,
+                promoEndPanel,
                 promoPanel), 1, 0);
             btnClear = UiTheme.CreateFlatButton("Clear Form", UiButtonStyle.Secondary, 110, 40);
             btnDelete = UiTheme.CreateFlatButton("Delete Entry", UiButtonStyle.Danger, 110, 40);
@@ -522,6 +531,9 @@ namespace SmartMed.UI
             dtpExpiry.Value = new DateTime(2025, 12, 1);
             chkPrescription.Checked = true;
             chkPromotion.Checked = false;
+            dtpPromoStart.Value = DateTime.Today;
+            dtpPromoEnd.Value = DateTime.Today.AddDays(30);
+            UpdatePromotionFieldsEnabled();
             UpdateStats(_allMedicines);
             UpdateExpiryAlerts(_allMedicines);
         }
@@ -553,7 +565,9 @@ namespace SmartMed.UI
                     ExpiryDate = new DateTime(2024, 8, 15),
                     RequiresPrescription = true,
                     DiscountPercent = 10,
-                    IsOnPromotion = true
+                    IsOnPromotion = true,
+                    PromotionStartDate = DateTime.Today.AddDays(-7),
+                    PromotionEndDate = DateTime.Today.AddDays(21)
                 },
                 new Medicine
                 {
@@ -637,9 +651,12 @@ namespace SmartMed.UI
                     : "Valid",
                 Rx = m.RequiresPrescription ? "\u2713" : "\u2717",
                 Discount = $"{m.DiscountPercent:N0}%",
-                Promo = m.IsOnPromotion ? "Yes" : "No"
+                StartDate = FormatPromoDate(m.PromotionStartDate),
+                EndDate = FormatPromoDate(m.PromotionEndDate),
+                Promo = FormatPromotionStatus(m)
             }).ToList();
             HideMedicineIdColumn();
+            ApplyGridColumnWidths();
             if (keepId.HasValue)
                 SelectGridRowById(keepId.Value);
         }
@@ -669,6 +686,37 @@ namespace SmartMed.UI
             if (gridMedicines.Columns.Contains("MedicineID"))
                 gridMedicines.Columns["MedicineID"].Visible = false;
         }
+
+        private void ApplyGridColumnWidths()
+        {
+            if (gridMedicines == null) return;
+            SetColumnWidth("MedicineName", 150);
+            SetColumnWidth("Category", 100);
+            SetColumnWidth("Dosage", 110);
+            SetColumnWidth("Price", 80);
+            SetColumnWidth("Stock", 70);
+            SetColumnWidth("Supplier", 130);
+            SetColumnWidth("Expiry", 95);
+            SetColumnWidth("Status", 95);
+            SetColumnWidth("Rx", 45);
+            SetColumnWidth("Discount", 80);
+            SetColumnWidth("StartDate", 95, "Start Date");
+            SetColumnWidth("EndDate", 95, "End Date");
+            SetColumnWidth("Promo", 100);
+        }
+
+        private void SetColumnWidth(string columnName, int width, string headerText = null)
+        {
+            if (!gridMedicines.Columns.Contains(columnName)) return;
+            var col = gridMedicines.Columns[columnName];
+            col.Width = width;
+            col.MinimumWidth = width;
+            if (!string.IsNullOrEmpty(headerText))
+                col.HeaderText = headerText;
+        }
+
+        private static string FormatPromoDate(DateTime? date) =>
+            date?.ToString("yyyy-MM-dd") ?? "—";
         private void RefreshCategories(List<Medicine> all)
         {
             if (cmbCategory == null) return;
@@ -846,7 +894,41 @@ namespace SmartMed.UI
             txtDiscount.Text = item.DiscountPercent.ToString("N0");
             chkPrescription.Checked = item.RequiresPrescription;
             chkPromotion.Checked = item.IsOnPromotion;
+            if (item.PromotionStartDate.HasValue)
+                dtpPromoStart.Value = item.PromotionStartDate.Value;
+            if (item.PromotionEndDate.HasValue)
+                dtpPromoEnd.Value = item.PromotionEndDate.Value;
+            UpdatePromotionFieldsEnabled();
             SyncActionButtons();
+        }
+
+        private void ChkPromotion_CheckedChanged(object sender, EventArgs e)
+        {
+            if (chkPromotion.Checked)
+            {
+                dtpPromoStart.Value = DateTime.Today;
+                dtpPromoEnd.Value = DateTime.Today.AddDays(30);
+            }
+            UpdatePromotionFieldsEnabled();
+        }
+
+        private void UpdatePromotionFieldsEnabled()
+        {
+            if (dtpPromoStart == null || dtpPromoEnd == null) return;
+            var on = chkPromotion.Checked;
+            dtpPromoStart.Enabled = on;
+            dtpPromoEnd.Enabled = on;
+        }
+
+        private string FormatPromotionStatus(Medicine m)
+        {
+            if (!m.IsOnPromotion)
+                return "No";
+
+            if (IsDesignHost())
+                return "Yes";
+
+            return Medicines != null && Medicines.IsPromotionActive(m) ? "Active" : "Scheduled";
         }
         private Medicine ReadForm()
         {
@@ -871,7 +953,9 @@ namespace SmartMed.UI
                 ExpiryDate = dtpExpiry.Value.Date,
                 RequiresPrescription = chkPrescription.Checked,
                 DiscountPercent = discount,
-                IsOnPromotion = chkPromotion.Checked
+                IsOnPromotion = chkPromotion.Checked,
+                PromotionStartDate = chkPromotion.Checked ? (DateTime?)dtpPromoStart.Value.Date : null,
+                PromotionEndDate = chkPromotion.Checked ? (DateTime?)dtpPromoEnd.Value.Date : null
             };
         }
         private void ClearForm()
@@ -888,6 +972,9 @@ namespace SmartMed.UI
             dtpExpiry.Value = DateTime.Today.AddMonths(6);
             chkPrescription.Checked = false;
             chkPromotion.Checked = false;
+            dtpPromoStart.Value = DateTime.Today;
+            dtpPromoEnd.Value = DateTime.Today.AddDays(30);
+            UpdatePromotionFieldsEnabled();
             gridMedicines.ClearSelection();
             SyncActionButtons();
         }

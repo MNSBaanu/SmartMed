@@ -78,6 +78,20 @@ namespace SmartMed.Services
                 throw new ArgumentException("Stock quantity must be greater than 0 when adding a new medicine.");
             if (item.DiscountPercent < 0 || item.DiscountPercent > 100)
                 throw new ArgumentException("Discount must be between 0 and 100.");
+            if (item.IsOnPromotion)
+            {
+                if (!item.PromotionStartDate.HasValue || !item.PromotionEndDate.HasValue)
+                    throw new ArgumentException("Promotion start date and end date are required when a medicine is on promotion.");
+                if (item.PromotionStartDate.Value.Date > item.PromotionEndDate.Value.Date)
+                    throw new ArgumentException("Promotion start date cannot be after the end date.");
+                if (item.DiscountPercent <= 0)
+                    throw new ArgumentException("Discount must be greater than 0 for a promotion.");
+            }
+            else
+            {
+                item.PromotionStartDate = null;
+                item.PromotionEndDate = null;
+            }
             if (isNew && item.ExpiryDate.Date < DateTime.Today)
                 throw new ArgumentException("Expiry date cannot be in the past.");
         }
@@ -128,9 +142,22 @@ namespace SmartMed.Services
 
         public bool IsLowStock(Medicine m, int threshold = 20) => m.StockQuantity <= threshold;
 
+        public bool IsPromotionActive(Medicine m)
+        {
+            if (m == null || !m.IsOnPromotion || m.DiscountPercent <= 0)
+                return false;
+
+            var today = DateTime.Today;
+            if (m.PromotionStartDate.HasValue && m.PromotionStartDate.Value.Date > today)
+                return false;
+            if (m.PromotionEndDate.HasValue && m.PromotionEndDate.Value.Date < today)
+                return false;
+            return true;
+        }
+
         public decimal GetEffectivePrice(Medicine m)
         {
-            if (m.IsOnPromotion && m.DiscountPercent > 0)
+            if (IsPromotionActive(m))
                 return Math.Round(m.Price * (1 - m.DiscountPercent / 100m), 2);
             return m.Price;
         }

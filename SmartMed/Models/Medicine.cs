@@ -15,6 +15,8 @@ namespace SmartMed.Models
         public bool RequiresPrescription { get; set; }
         public decimal DiscountPercent { get; set; }
         public bool IsOnPromotion { get; set; }
+        public DateTime? PromotionStartDate { get; set; }
+        public DateTime? PromotionEndDate { get; set; }
 
         public void AddMedicine() { }
         public void UpdateMedicine() { }

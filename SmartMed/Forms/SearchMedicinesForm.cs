@@ -106,7 +106,7 @@ namespace SmartMed.UI
                     Price = $"LKR {Medicines.GetEffectivePrice(m):N2}",
                     m.StockQuantity,
                     Rx = m.RequiresPrescription ? "Yes" : "No",
-                    Promo = m.IsOnPromotion ? $"{m.DiscountPercent:N0}% off" : "-"
+                    Promo = Medicines.IsPromotionActive(m) ? $"{m.DiscountPercent:N0}% off" : "-"
                 }).ToList();
             grid.DataSource = results;
             if (grid.Columns.Contains("MedicineID"))

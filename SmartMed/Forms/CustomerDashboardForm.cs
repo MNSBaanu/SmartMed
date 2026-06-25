@@ -45,7 +45,8 @@ namespace SmartMed.UI
             lblCart.Text = CartService.ItemCount.ToString();
             var orders = new OrderService().GetByCustomer(customer?.CustomerID ?? 0);
             lblOrders.Text = orders.Count(o => o.Status != "Delivered").ToString();
-            var promos = new MedicineService().GetAll().Count(m => m.IsOnPromotion && m.DiscountPercent > 0);
+            var medicineService = new MedicineService();
+            var promos = medicineService.GetAll().Count(m => medicineService.IsPromotionActive(m));
             lblPromotions.Text = promos.ToString();
             gridRecent.DataSource = orders.Take(5).Select(o => new
             {
