@@ -294,12 +294,12 @@ namespace SmartMed.UI
                 ColumnHeadersDefaultCellStyle = new DataGridViewCellStyle
                 {
                     BackColor = Color.FromArgb(232, 232, 232),
-                    ForeColor = Color.FromArgb(0, 31, 102),
+                    ForeColor = UiTheme.GridHeaderText,
                     Font = UiTheme.UiFontBold
                 },
                 DefaultCellStyle = new DataGridViewCellStyle
                 {
-                    SelectionBackColor = Color.FromArgb(180, 203, 249),
+                    SelectionBackColor = Color.FromArgb(225, 225, 225),
                     SelectionForeColor = SystemColors.ControlText
                 },
                 AlternatingRowsDefaultCellStyle = new DataGridViewCellStyle
@@ -359,7 +359,7 @@ namespace SmartMed.UI
                 CreateField("Expiry Date", dtpExpiry, required: true)), 0, 0);
             var promoPanel = new Panel { Height = 23 + 24, Dock = DockStyle.Top };
             chkPrescription.Font = UiTheme.UiFont;
-            chkPrescription.ForeColor = SystemColors.Highlight;
+            chkPrescription.ForeColor = UiTheme.GridHeaderText;
             chkPrescription.Location = new Point(0, 28);
             promoPanel.Controls.Add(chkPrescription);
             promoPanel.Controls.Add(new Label { Text = "", Height = 20, Dock = DockStyle.Top });
@@ -457,9 +457,9 @@ namespace SmartMed.UI
             lblTotalItems = new Label();
             lblLowStock = new Label();
             lblCompliance = new Label();
-            row.Controls.Add(CreateStatTile("\uD83D\uDCE6", "Total Items", lblTotalItems, SystemColors.Highlight), 0, 0);
+            row.Controls.Add(CreateStatTile("\uD83D\uDCE6", "Total Items", lblTotalItems, UiTheme.GridHeaderText), 0, 0);
             row.Controls.Add(CreateStatTile("\u26A0", "Low Stock Alert", lblLowStock, Color.Red), 1, 0);
-            row.Controls.Add(CreateStatTile("\u2713", "Compliance", lblCompliance, Color.FromArgb(72, 95, 135)), 2, 0);
+            row.Controls.Add(CreateStatTile("\u2713", "Compliance", lblCompliance, UiTheme.GridHeaderText), 2, 0);
             wrap.Controls.Add(row);
             return wrap;
         }
@@ -805,7 +805,7 @@ namespace SmartMed.UI
             else if (columnName == "Rx")
             {
                 e.CellStyle.ForeColor = item.RequiresPrescription
-                    ? Color.FromArgb(0, 31, 102)
+                    ? UiTheme.GridHeaderText
                     : SystemColors.GrayText;
                 e.CellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
             }

@@ -214,10 +214,10 @@ namespace SmartMed.UI
             lblDeliveredOrders = new Label();
             lblRegisteredCustomers = new Label();
 
-            row.Controls.Add(CreateStatTile("Total Orders", lblTotalOrders, SystemColors.Highlight), 0, 0);
+            row.Controls.Add(CreateStatTile("Total Orders", lblTotalOrders, UiTheme.GridHeaderText), 0, 0);
             row.Controls.Add(CreateStatTile("Pending", lblPendingOrders, SystemColors.ControlText), 1, 0);
             row.Controls.Add(CreateStatTile("Delivered", lblDeliveredOrders, Color.Green), 2, 0);
-            row.Controls.Add(CreateStatTile("Registered Customers", lblRegisteredCustomers, SystemColors.Highlight), 3, 0);
+            row.Controls.Add(CreateStatTile("Registered Customers", lblRegisteredCustomers, UiTheme.GridHeaderText), 3, 0);
 
             wrap.Controls.Add(row);
             return wrap;
@@ -288,7 +288,7 @@ namespace SmartMed.UI
             {
                 Text = "Recent Orders",
                 Font = UiTheme.UiFont,
-                ForeColor = SystemColors.Highlight,
+                ForeColor = UiTheme.GridHeaderText,
                 Dock = DockStyle.Left,
                 AutoSize = true
             });
@@ -342,6 +342,7 @@ namespace SmartMed.UI
             {
                 Dock = DockStyle.Top,
                 Height = 72,
+                BackColor = UiTheme.Primary,
                 Padding = new Padding(16, 12, 16, 12),
                 Margin = new Padding(0, 0, 0, 16)
             };
@@ -378,7 +379,7 @@ namespace SmartMed.UI
             lblStatusCaption = new Label
             {
                 Text = "STATUS:",
-                ForeColor = SystemColors.HighlightText,
+                ForeColor = Color.White,
                 Font = UiTheme.UiFont,
                 AutoSize = true,
                 Location = new Point(16, 20)
@@ -387,7 +388,7 @@ namespace SmartMed.UI
             lblOrderStatus = new Label
             {
                 Text = OrderService.StatusDelivered,
-                ForeColor = SystemColors.HighlightText,
+                ForeColor = Color.White,
                 Font = UiTheme.UiFont,
                 AutoSize = true,
                 Location = new Point(88, 20),

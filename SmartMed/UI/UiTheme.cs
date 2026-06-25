@@ -7,22 +7,25 @@ using System.Runtime.InteropServices;
 using System.Windows.Forms;
 using MaterialButton = ReaLTaiizor.Controls.MaterialButton;
 using MaterialForm = ReaLTaiizor.Forms.MaterialForm;
+using ReaLTaiizor.Colors;
 using ReaLTaiizor.Manager;
+using ReaLTaiizor.Util;
 
 namespace SmartMed.UI
 {
     /// <summary>Central ReaLTaiizor Material theme and flat control styling for SmartMed.</summary>
     public static class UiTheme
     {
-        public static readonly Color PageBackground = Color.FromArgb(245, 247, 250);
+        public static readonly Color PageBackground = Color.FromArgb(245, 245, 245);
         public static readonly Color CardBackground = Color.White;
-        public static readonly Color SidebarBackground = Color.FromArgb(52, 73, 94);
-        public static readonly Color HeaderBackground = Color.FromArgb(41, 128, 185);
-        public static readonly Color Primary = Color.FromArgb(52, 152, 219);
-        public static readonly Color PrimaryDark = Color.FromArgb(41, 128, 185);
+        public static readonly Color SidebarBackground = Color.FromArgb(30, 30, 30);
+        public static readonly Color HeaderBackground = Color.FromArgb(24, 24, 24);
+        public static readonly Color Primary = Color.FromArgb(33, 33, 33);
+        public static readonly Color PrimaryDark = Color.FromArgb(18, 18, 18);
         public static readonly Color Success = Color.FromArgb(39, 174, 96);
         public static readonly Color Danger = Color.FromArgb(231, 76, 60);
         public static readonly Color Warning = Color.FromArgb(243, 156, 18);
+        public static readonly Color HeaderSubtitle = Color.FromArgb(190, 190, 190);
         public static readonly Color Muted = Color.FromArgb(127, 140, 141);
         public static readonly Color GridHeader = Color.FromArgb(236, 240, 241);
         public static readonly Color GridHeaderText = Color.FromArgb(44, 62, 80);
@@ -60,6 +63,12 @@ namespace SmartMed.UI
 
             var skin = MaterialSkinManager.Instance;
             skin.Theme = MaterialSkinManager.Themes.LIGHT;
+            skin.ColorScheme = new MaterialColorScheme(
+                HeaderBackground,
+                PrimaryDark,
+                Color.FromArgb(50, 50, 50),
+                Primary,
+                MaterialTextShade.WHITE);
         }
 
         private static void EnsureFonts()
@@ -242,6 +251,25 @@ namespace SmartMed.UI
             }
         }
 
+        public static void ApplyHeaderPanel(Panel header)
+        {
+            if (header == null) return;
+            EnableDoubleBuffer(header);
+            header.BackColor = HeaderBackground;
+            foreach (Control c in header.Controls)
+            {
+                if (c is Label lbl)
+                {
+                    lbl.BackColor = HeaderBackground;
+                    var isBrand = lbl.Font.Bold || string.Equals(lbl.Text, "SmartMed", StringComparison.Ordinal);
+                    lbl.ForeColor = isBrand ? Color.White : HeaderSubtitle;
+                    lbl.Font = isBrand ? UiFontBold : UiFont;
+                }
+                else if (c is Button btn)
+                    StyleIconButton(btn);
+            }
+        }
+
         public static void ApplyShell(MaterialForm form, Panel header, Panel sidebar, Panel content)
         {
             RegisterForm(form);
@@ -253,20 +281,7 @@ namespace SmartMed.UI
             EnableDoubleBuffer(content);
 
             if (header != null)
-            {
-                header.BackColor = HeaderBackground;
-                foreach (Control c in header.Controls)
-                {
-                    if (c is Label lbl)
-                    {
-                        lbl.ForeColor = Color.White;
-                        lbl.BackColor = HeaderBackground;
-                        lbl.Font = lbl.Font.Bold || lbl.Text == "SmartMed" ? UiFontBold : UiFont;
-                    }
-                    else if (c is Button btn)
-                        StyleIconButton(btn);
-                }
-            }
+                ApplyHeaderPanel(header);
 
             if (sidebar != null)
             {
@@ -302,9 +317,9 @@ namespace SmartMed.UI
             {
                 forgotLink.Font = UiFont;
                 forgotLink.BackColor = CardBackground;
-                forgotLink.LinkColor = Primary;
+                forgotLink.LinkColor = GridHeaderText;
                 forgotLink.ActiveLinkColor = PrimaryDark;
-                forgotLink.VisitedLinkColor = PrimaryDark;
+                forgotLink.VisitedLinkColor = Primary;
             }
         }
 
@@ -397,8 +412,8 @@ namespace SmartMed.UI
             button.Padding = new Padding(16, 0, 0, 0);
             button.Cursor = Cursors.Hand;
             button.UseVisualStyleBackColor = false;
-            button.FlatAppearance.MouseOverBackColor = Color.FromArgb(44, 62, 80);
-            button.FlatAppearance.MouseDownBackColor = PrimaryDark;
+            button.FlatAppearance.MouseOverBackColor = Color.FromArgb(50, 50, 50);
+            button.FlatAppearance.MouseDownBackColor = Color.FromArgb(60, 60, 60);
         }
 
         public static void StyleIconButton(Button button)
@@ -411,7 +426,7 @@ namespace SmartMed.UI
             button.Font = UiFontBold;
             button.Cursor = Cursors.Hand;
             button.UseVisualStyleBackColor = false;
-            button.FlatAppearance.MouseOverBackColor = PrimaryDark;
+            button.FlatAppearance.MouseOverBackColor = Color.FromArgb(50, 50, 50);
         }
 
         public static void StyleTextBox(TextBox textBox)
@@ -441,7 +456,7 @@ namespace SmartMed.UI
             grid.GridColor = Color.FromArgb(220, 224, 228);
             grid.DefaultCellStyle.BackColor = CardBackground;
             grid.DefaultCellStyle.ForeColor = GridHeaderText;
-            grid.DefaultCellStyle.SelectionBackColor = Color.FromArgb(210, 230, 250);
+            grid.DefaultCellStyle.SelectionBackColor = Color.FromArgb(225, 225, 225);
             grid.DefaultCellStyle.SelectionForeColor = GridHeaderText;
             grid.DefaultCellStyle.Font = UiFont;
             grid.ColumnHeadersDefaultCellStyle.BackColor = GridHeader;
@@ -482,8 +497,8 @@ namespace SmartMed.UI
             btn.UseVisualStyleBackColor = false;
             if (active)
             {
-                btn.BackColor = Color.FromArgb(232, 242, 252);
-                btn.ForeColor = PrimaryDark;
+                btn.BackColor = Color.FromArgb(235, 235, 235);
+                btn.ForeColor = GridHeaderText;
                 btn.Font = UiFontBold;
             }
             else

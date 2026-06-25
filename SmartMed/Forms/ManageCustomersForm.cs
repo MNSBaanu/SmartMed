@@ -365,7 +365,7 @@ namespace SmartMed.UI
             lblWithOrders = new Label();
             lblWithoutOrders = new Label();
 
-            row.Controls.Add(CreateStatTile("Total Customers", lblTotalCustomers, SystemColors.Highlight), 0, 0);
+            row.Controls.Add(CreateStatTile("Total Customers", lblTotalCustomers, UiTheme.GridHeaderText), 0, 0);
             row.Controls.Add(CreateStatTile("With Orders", lblWithOrders, SystemColors.ControlText), 1, 0);
             row.Controls.Add(CreateStatTile("Without Orders", lblWithoutOrders, Color.Red), 2, 0);
 

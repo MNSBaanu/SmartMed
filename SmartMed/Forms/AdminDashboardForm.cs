@@ -122,7 +122,7 @@ namespace SmartMed.UI
                 Text = "Change Password",
                 AutoSize = true,
                 Dock = DockStyle.Right,
-                LinkColor = SystemColors.Highlight,
+                LinkColor = UiTheme.GridHeaderText,
                 Padding = new Padding(0, 8, 0, 0)
             };
             lnkPassword.Click += (s, e) =>
@@ -231,7 +231,7 @@ namespace SmartMed.UI
                 {
                     var h = (int)((rect.Height - 20) * barHeights[i]);
                     var alpha = (int)(50 + barHeights[i] * 180);
-                    using (var brush = new SolidBrush(Color.FromArgb(alpha, SystemColors.Highlight)))
+                    using (var brush = new SolidBrush(Color.FromArgb(alpha, UiTheme.Primary)))
                     {
                         e.Graphics.FillRectangle(brush, x, rect.Bottom - h, barWidth, h);
                     }
@@ -310,7 +310,7 @@ namespace SmartMed.UI
 
             valueLabel.Text = "0";
             valueLabel.Font = UiTheme.UiFont;
-            valueLabel.ForeColor = SystemColors.Highlight;
+            valueLabel.ForeColor = UiTheme.GridHeaderText;
             valueLabel.AutoSize = true;
             valueLabel.Location = new Point(16, 32);
             card.Controls.Add(valueLabel);
@@ -355,7 +355,7 @@ namespace SmartMed.UI
             {
                 Text = title,
                 Font = UiTheme.UiFont,
-                ForeColor = SystemColors.Highlight,
+                ForeColor = UiTheme.GridHeaderText,
                 Dock = DockStyle.Left,
                 AutoSize = true
             });
@@ -367,7 +367,7 @@ namespace SmartMed.UI
                     Text = "View All",
                     Dock = DockStyle.Right,
                     AutoSize = true,
-                    LinkColor = SystemColors.Highlight
+                    LinkColor = UiTheme.GridHeaderText
                 };
                 btnViewAll.Click += (s, e) => GoToAdminSection(AdminNavItem.Orders);
                 header.Controls.Add(btnViewAll);
@@ -407,8 +407,8 @@ namespace SmartMed.UI
             btn.FlatAppearance.BorderSize = 0;
             if (active)
             {
-                btn.BackColor = SystemColors.Highlight;
-                btn.ForeColor = SystemColors.HighlightText;
+                btn.BackColor = UiTheme.Primary;
+                btn.ForeColor = Color.White;
             }
             else
             {
@@ -423,7 +423,7 @@ namespace SmartMed.UI
         {
             var panel = new Panel
             {
-                BackColor = SystemColors.Highlight,
+                BackColor = UiTheme.Primary,
                 Padding = new Padding(16),
                 Margin = new Padding(0, 0, 0, 8)
             };
@@ -431,7 +431,7 @@ namespace SmartMed.UI
             {
                 Text = "Quick Fulfillment",
                 Font = UiTheme.UiFont,
-                ForeColor = SystemColors.HighlightText,
+                ForeColor = Color.White,
                 Dock = DockStyle.Top,
                 Height = 24
             });
@@ -537,7 +537,7 @@ namespace SmartMed.UI
                 Width = Math.Max(200, panelAlerts.ClientSize.Width - 24),
                 Height = 52,
                 Margin = new Padding(0, 0, 0, 8),
-                BackColor = critical ? Color.FromArgb(255, 245, 245) : Color.FromArgb(248, 250, 255),
+                BackColor = critical ? Color.FromArgb(255, 245, 245) : Color.FromArgb(248, 248, 248),
                 Padding = new Padding(12, 8, 8, 8)
             };
             row.Paint += (s, e) =>

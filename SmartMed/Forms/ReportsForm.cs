@@ -165,7 +165,7 @@ namespace SmartMed.UI
             lblLowStock = new Label();
             lblOutstanding = new Label();
 
-            row.Controls.Add(CreateStatTile("Total Revenue", lblTotalRevenue, SystemColors.Highlight), 0, 0);
+            row.Controls.Add(CreateStatTile("Total Revenue", lblTotalRevenue, UiTheme.GridHeaderText), 0, 0);
             row.Controls.Add(CreateStatTile("Total Orders", lblTotalOrders, SystemColors.ControlText), 1, 0);
             row.Controls.Add(CreateStatTile("Low Stock Items", lblLowStock, Color.Red), 2, 0);
             row.Controls.Add(CreateStatTile("Outstanding", lblOutstanding, SystemColors.ControlText), 3, 0);
