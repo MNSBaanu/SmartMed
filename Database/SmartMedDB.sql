@@ -78,7 +78,8 @@ VALUES ('admin', 'admin123', 'admin@smartmed.com');
 INSERT INTO Customer (FullName, Email, Phone, Address, Password)
 VALUES
     ('John Smith', 'john@email.com', '0771234567', '12 Main Street, Colombo', 'customer123'),
-    ('Jane Doe', 'jane@email.com', '0779876543', '45 Park Road, Kandy', 'customer123');
+    ('Jane Doe', 'jane@email.com', '0779876543', '45 Park Road, Kandy', 'customer123'),
+    ('Demo Customer', 'customer@gmail.com', '0771112233', '10 Demo Lane, Colombo', 'Customer123');
 
 INSERT INTO Medicine (MedicineName, Category, Dosage, Price, StockQuantity, Supplier, ExpiryDate, RequiresPrescription)
 VALUES

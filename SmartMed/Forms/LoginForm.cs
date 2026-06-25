@@ -9,8 +9,8 @@ namespace SmartMed.UI
     {
         private const string DemoAdminUsername = "admin";
         private const string DemoAdminPassword = "admin123";
-        private const string DemoCustomerEmail = "john@email.com";
-        private const string DemoCustomerPassword = "customer123";
+        private const string DemoCustomerEmail = "customer@gmail.com";
+        private const string DemoCustomerPassword = "Customer123";
 
         private readonly AuthService _auth = new AuthService();
         private bool _passwordVisible;

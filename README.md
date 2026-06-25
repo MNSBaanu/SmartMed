@@ -28,7 +28,7 @@ Built in **C# / .NET Framework 4.8** as a single WinForms project (forms, servic
 2. Run `Database/SmartMedDB.sql`.
 3. Default credentials after seed:
    - **Admin:** `admin` / `admin123`
-   - **Customer:** `john@email.com` / `customer123`
+   - **Customer:** `customer@gmail.com` / `Customer123` (quick login button)
 
 ### 2. Connection string
 
