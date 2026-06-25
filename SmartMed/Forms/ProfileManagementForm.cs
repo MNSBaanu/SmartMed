@@ -21,6 +21,11 @@ namespace SmartMed.UI
             InitializeComponent();
         }
 
+        internal ProfileManagementForm(bool embedded)
+            : base(CustomerNavItem.Profile, "My Profile", embedded)
+        {
+        }
+
         private CustomerService Customers => GetRuntimeService(ref _customers);
 
         protected override void InitializePageContent()
@@ -36,7 +41,7 @@ namespace SmartMed.UI
 
         private void BuildContent()
         {
-            panelContent.Controls.Clear();
+            PagePanel.Controls.Clear();
             var root = new Panel { Dock = DockStyle.Top, AutoSize = true, Width = GetScrollContentWidth(), Padding = new Padding(0, 0, 0, 16) };
 
             txtName = CreateField(root, ValidationService.RequiredLabel("Full Name"), 0);
@@ -68,6 +73,8 @@ namespace SmartMed.UI
             parent.Controls.Add(box);
             return box;
         }
+
+        public void RefreshProfile() => LoadProfile();
 
         private void LoadProfile()
         {

@@ -20,6 +20,11 @@ namespace SmartMed.UI
             InitializeComponent();
         }
 
+        internal TrackOrdersForm(bool embedded)
+            : base(CustomerNavItem.Orders, "My Orders", embedded)
+        {
+        }
+
         private OrderService Orders => GetRuntimeService(ref _orders);
 
         protected override void InitializePageContent()
@@ -54,7 +59,7 @@ namespace SmartMed.UI
 
         private void BuildContent()
         {
-            panelContent.Controls.Clear();
+            PagePanel.Controls.Clear();
             var root = new Panel { Dock = DockStyle.Top, AutoSize = true, Width = GetScrollContentWidth() };
 
             var header = new FlowLayoutPanel { Dock = DockStyle.Top, AutoSize = true, Margin = new Padding(0, 0, 0, 8) };

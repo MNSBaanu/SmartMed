@@ -13,6 +13,7 @@ namespace SmartMed.UI
     public partial class CustomerShellForm : MaterialForm
     {
         private bool _pageContentInitialized;
+        private readonly bool _isEmbeddedPage;
 
         private static readonly Lazy<bool> IsDesignToolsProcess = new Lazy<bool>(() =>
         {
@@ -25,16 +26,22 @@ namespace SmartMed.UI
         public CustomerShellForm()
         {
             InitializeComponent();
-            if (IsDesignHost()) SyncShellChrome();
+            if (IsDesignHost())
+            {
+                SetActiveNav(CustomerNavItem.Home);
+                SyncShellChrome();
+            }
         }
 
-        protected CustomerShellForm(CustomerNavItem activeNav, string subtitle)
+        protected CustomerShellForm(CustomerNavItem activeNav, string subtitle, bool embeddedPage = false)
             : this()
         {
+            _isEmbeddedPage = embeddedPage;
             DoubleBuffered = true;
             Text = "SmartMed Customer Portal";
             lblTopSubtitle.Text = subtitle;
-            if (!IsDesignHost())
+            SetActiveNav(activeNav);
+            if (!IsDesignHost() && !embeddedPage)
                 UiTheme.ApplyShell(this, panelTop, panelSidebar, panelContent);
             SyncShellChrome();
             if (IsDesignHost())
@@ -44,20 +51,40 @@ namespace SmartMed.UI
         protected override void OnLoad(EventArgs e)
         {
             base.OnLoad(e);
-            EnsurePageContent();
+            if (!_isEmbeddedPage)
+                EnsurePageContent();
         }
 
         protected void EnsurePageContent()
         {
             if (_pageContentInitialized) return;
             _pageContentInitialized = true;
-            InitializePageContent();
-            if (!IsDesignHost())
+
+            if (IsDesignHost())
             {
-                UiTheme.ApplyFontTree(panelTop);
-                UiTheme.ApplyFontTree(panelSidebar);
-                UiTheme.ApplyFontTree(panelContent);
+                InitializePageContent();
+                SyncShellChrome();
+                return;
             }
+
+            using (UiTheme.BatchUpdate(this, panelTop, panelSidebar, PagePanel))
+            {
+                if (PagePanel != null)
+                    PagePanel.Visible = false;
+
+                InitializePageContent();
+
+                if (!_isEmbeddedPage)
+                {
+                    UiTheme.ApplyFontTree(panelTop);
+                    UiTheme.ApplyFontTree(panelSidebar);
+                }
+                UiTheme.ApplyFontTree(PagePanel);
+
+                if (PagePanel != null)
+                    PagePanel.Visible = true;
+            }
+
             SyncShellChrome();
         }
 
@@ -74,9 +101,15 @@ namespace SmartMed.UI
             return IsDesignToolsProcess.Value;
         }
 
+        private Panel _contentTarget;
+
+        internal void SetContentTarget(Panel host) => _contentTarget = host;
+
+        protected Panel PagePanel => _contentTarget ?? panelContent;
+
         protected int GetScrollContentWidth(int fallback = 800)
         {
-            var w = panelContent.ClientSize.Width;
+            var w = PagePanel.ClientSize.Width;
             if (w < 200 && Parent != null)
                 w = Parent.ClientSize.Width - 48;
             return w < 200 ? fallback : w;
@@ -84,8 +117,10 @@ namespace SmartMed.UI
 
         protected void WireScrollRoot(Control scrollRoot, int fallback = 800)
         {
-            panelContent.Controls.Add(scrollRoot);
-            panelContent.Resize += (s, e) => scrollRoot.Width = GetScrollContentWidth(fallback);
+            UiTheme.EnableDoubleBuffer(scrollRoot);
+            var host = PagePanel;
+            host.Controls.Add(scrollRoot);
+            host.Resize += (s, e) => scrollRoot.Width = GetScrollContentWidth(fallback);
         }
 
         protected T GetRuntimeService<T>(ref T service) where T : class, new()
@@ -94,8 +129,35 @@ namespace SmartMed.UI
             return service ?? (service = new T());
         }
 
+        protected void SetActiveNav(CustomerNavItem active)
+        {
+            if (btnNavHome == null) return;
+            StyleNavButton(btnNavHome, active == CustomerNavItem.Home);
+            StyleNavButton(btnNavBrowse, active == CustomerNavItem.Browse);
+            StyleNavButton(btnNavCart, active == CustomerNavItem.Cart);
+            StyleNavButton(btnNavOrders, active == CustomerNavItem.Orders);
+            StyleNavButton(btnNavProfile, active == CustomerNavItem.Profile);
+        }
+
+        private void StyleNavButton(Button button, bool active)
+        {
+            if (button == null) return;
+            if (active)
+            {
+                button.BackColor = UiTheme.PrimaryDark;
+                button.ForeColor = Color.White;
+                button.Font = UiTheme.UiFontBold;
+            }
+            else
+            {
+                UiTheme.StyleNavButton(button);
+            }
+        }
+
         protected void SyncShellChrome()
         {
+            if (panelTop == null || !panelTop.Visible) return;
+
             var closeLeft = Math.Max(8, panelTop.ClientSize.Width - btnClose.Width - 8);
             if (btnClose.Left != closeLeft)
                 btnClose.Left = closeLeft;
@@ -112,20 +174,82 @@ namespace SmartMed.UI
                 SyncShellChrome();
         }
 
+        protected void HideTopChrome()
+        {
+            if (panelTop == null) return;
+            panelTop.Visible = false;
+            panelTop.Height = 0;
+            if (btnClose != null)
+                btnClose.Visible = false;
+        }
+
         internal void PrepareForNavigation()
         {
-            SuspendLayout();
-            panelContent?.SuspendLayout();
-            try
+            if (!IsHandleCreated)
+                CreateControl();
+            EnsurePageContent();
+            PerformLayout();
+        }
+
+        protected CustomerHostForm GetCustomerHost()
+        {
+            for (var parent = Parent; parent != null; parent = parent.Parent)
             {
-                EnsurePageContent();
+                if (parent is CustomerHostForm host)
+                    return host;
             }
-            finally
+            return this as CustomerHostForm;
+        }
+
+        protected void GoToCustomerSection(CustomerNavItem nav)
+        {
+            var host = GetCustomerHost();
+            if (host != null)
+                host.NavigateCustomer(nav);
+            else
+                NavigateCustomer(nav);
+        }
+
+        protected virtual void NavigateCustomer(CustomerNavItem nav)
+        {
+            if (IsCurrentPage(nav))
             {
-                panelContent?.ResumeLayout(true);
-                ResumeLayout(true);
-                SyncShellChrome();
+                RefreshCurrentPage(nav);
+                return;
             }
+            NavigateTo(CreatePageForm(nav));
+        }
+
+        private bool IsCurrentPage(CustomerNavItem nav)
+        {
+            if (nav == CustomerNavItem.Home && this is CustomerDashboardForm) return true;
+            if (nav == CustomerNavItem.Browse && this is SearchMedicinesForm) return true;
+            if (nav == CustomerNavItem.Cart && this is PlaceOrderForm) return true;
+            if (nav == CustomerNavItem.Orders && this is TrackOrdersForm) return true;
+            if (nav == CustomerNavItem.Profile && this is ProfileManagementForm) return true;
+            return false;
+        }
+
+        private void RefreshCurrentPage(CustomerNavItem nav)
+        {
+            if (nav == CustomerNavItem.Home && this is CustomerDashboardForm dashboard)
+                dashboard.RefreshData();
+            else if (nav == CustomerNavItem.Cart && this is PlaceOrderForm cart)
+                cart.RefreshCart();
+            else if (nav == CustomerNavItem.Orders && this is TrackOrdersForm orders)
+                orders.RefreshOrders();
+            else if (nav == CustomerNavItem.Profile && this is ProfileManagementForm profile)
+                profile.RefreshProfile();
+        }
+
+        private static CustomerShellForm CreatePageForm(CustomerNavItem nav)
+        {
+            if (nav == CustomerNavItem.Home) return new CustomerDashboardForm();
+            if (nav == CustomerNavItem.Browse) return new SearchMedicinesForm();
+            if (nav == CustomerNavItem.Cart) return new PlaceOrderForm();
+            if (nav == CustomerNavItem.Orders) return new TrackOrdersForm();
+            if (nav == CustomerNavItem.Profile) return new ProfileManagementForm();
+            throw new ArgumentException("Unknown customer section.");
         }
 
         protected void NavigateTo(CustomerShellForm next)
@@ -139,17 +263,9 @@ namespace SmartMed.UI
 
             SmartMedApplicationContext.Current?.HandoffMainForm(next);
 
-            SuspendLayout();
-            try
-            {
-                next.Show();
-                Hide();
-            }
-            finally
-            {
-                ResumeLayout(false);
-                Close();
-            }
+            Hide();
+            UiTheme.RevealForm(next);
+            Close();
         }
 
         private void BtnClose_Click(object sender, EventArgs e) => ExitApplication();
@@ -158,6 +274,12 @@ namespace SmartMed.UI
 
         protected void ExitApplication()
         {
+            if (_isEmbeddedPage)
+            {
+                GetCustomerHost()?.ExitApplication();
+                return;
+            }
+
             CartService.Clear();
             Session.Clear();
             Close();
@@ -165,45 +287,23 @@ namespace SmartMed.UI
 
         protected void Logout()
         {
+            if (_isEmbeddedPage)
+            {
+                GetCustomerHost()?.Logout();
+                return;
+            }
+
             SmartMedApplicationContext.Current?.ShowLoginAfterLogout();
         }
 
-        private void BtnNavHome_Click(object sender, EventArgs e)
-        {
-            if (this is CustomerDashboardForm dashboard)
-            {
-                dashboard.RefreshData();
-                return;
-            }
-            NavigateTo(new CustomerDashboardForm());
-        }
+        private void BtnNavHome_Click(object sender, EventArgs e) => NavigateCustomer(CustomerNavItem.Home);
 
-        private void BtnNavBrowse_Click(object sender, EventArgs e)
-        {
-            if (this is SearchMedicinesForm) return;
-            NavigateTo(new SearchMedicinesForm());
-        }
+        private void BtnNavBrowse_Click(object sender, EventArgs e) => NavigateCustomer(CustomerNavItem.Browse);
 
-        private void BtnNavCart_Click(object sender, EventArgs e)
-        {
-            if (this is PlaceOrderForm) return;
-            NavigateTo(new PlaceOrderForm());
-        }
+        private void BtnNavCart_Click(object sender, EventArgs e) => NavigateCustomer(CustomerNavItem.Cart);
 
-        private void BtnNavOrders_Click(object sender, EventArgs e)
-        {
-            if (this is TrackOrdersForm orders)
-            {
-                orders.RefreshOrders();
-                return;
-            }
-            NavigateTo(new TrackOrdersForm());
-        }
+        private void BtnNavOrders_Click(object sender, EventArgs e) => NavigateCustomer(CustomerNavItem.Orders);
 
-        private void BtnNavProfile_Click(object sender, EventArgs e)
-        {
-            if (this is ProfileManagementForm) return;
-            NavigateTo(new ProfileManagementForm());
-        }
+        private void BtnNavProfile_Click(object sender, EventArgs e) => NavigateCustomer(CustomerNavItem.Profile);
     }
 }

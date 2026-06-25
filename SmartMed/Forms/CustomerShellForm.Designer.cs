@@ -98,7 +98,7 @@ namespace SmartMed.UI
             this.btnNavHome.TabIndex = 0;
             this.btnNavHome.Text = "Home";
             this.btnNavHome.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnNavHome.UseVisualStyleBackColor = true;
+            this.btnNavHome.UseVisualStyleBackColor = false;
             this.btnNavHome.Click += new System.EventHandler(this.BtnNavHome_Click);
             // 
             // btnNavBrowse
@@ -109,7 +109,7 @@ namespace SmartMed.UI
             this.btnNavBrowse.TabIndex = 1;
             this.btnNavBrowse.Text = "Browse Medicines";
             this.btnNavBrowse.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnNavBrowse.UseVisualStyleBackColor = true;
+            this.btnNavBrowse.UseVisualStyleBackColor = false;
             this.btnNavBrowse.Click += new System.EventHandler(this.BtnNavBrowse_Click);
             // 
             // btnNavCart
@@ -120,7 +120,7 @@ namespace SmartMed.UI
             this.btnNavCart.TabIndex = 2;
             this.btnNavCart.Text = "My Cart";
             this.btnNavCart.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnNavCart.UseVisualStyleBackColor = true;
+            this.btnNavCart.UseVisualStyleBackColor = false;
             this.btnNavCart.Click += new System.EventHandler(this.BtnNavCart_Click);
             // 
             // btnNavOrders
@@ -131,7 +131,7 @@ namespace SmartMed.UI
             this.btnNavOrders.TabIndex = 3;
             this.btnNavOrders.Text = "My Orders";
             this.btnNavOrders.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnNavOrders.UseVisualStyleBackColor = true;
+            this.btnNavOrders.UseVisualStyleBackColor = false;
             this.btnNavOrders.Click += new System.EventHandler(this.BtnNavOrders_Click);
             // 
             // btnNavProfile
@@ -142,7 +142,7 @@ namespace SmartMed.UI
             this.btnNavProfile.TabIndex = 4;
             this.btnNavProfile.Text = "My Profile";
             this.btnNavProfile.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnNavProfile.UseVisualStyleBackColor = true;
+            this.btnNavProfile.UseVisualStyleBackColor = false;
             this.btnNavProfile.Click += new System.EventHandler(this.BtnNavProfile_Click);
             // 
             // btnNavLogout
@@ -154,7 +154,7 @@ namespace SmartMed.UI
             this.btnNavLogout.TabIndex = 5;
             this.btnNavLogout.Text = "Logout";
             this.btnNavLogout.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnNavLogout.UseVisualStyleBackColor = true;
+            this.btnNavLogout.UseVisualStyleBackColor = false;
             this.btnNavLogout.Click += new System.EventHandler(this.BtnNavLogout_Click);
             // 
             // panelContent

@@ -97,6 +97,12 @@
     <Compile Update="Forms\RegistrationForm.Designer.cs">
       <DependentUpon>RegistrationForm.cs</DependentUpon>
     </Compile>
+    <Compile Update="Forms\CustomerHostForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Forms\CustomerHostForm.Designer.cs">
+      <DependentUpon>CustomerHostForm.cs</DependentUpon>
+    </Compile>
     <Compile Update="Forms\CustomerShellForm.cs">
       <SubType>Form</SubType>
     </Compile>

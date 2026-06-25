@@ -22,6 +22,11 @@ namespace SmartMed.UI
             InitializeComponent();
         }
 
+        internal PlaceOrderForm(bool embedded)
+            : base(CustomerNavItem.Cart, "My Cart & Checkout", embedded)
+        {
+        }
+
         private OrderService Orders => GetRuntimeService(ref _orders);
 
         protected override void InitializePageContent()
@@ -37,7 +42,7 @@ namespace SmartMed.UI
 
         private void BuildContent()
         {
-            panelContent.Controls.Clear();
+            PagePanel.Controls.Clear();
             var root = new Panel { Dock = DockStyle.Top, AutoSize = true, Width = GetScrollContentWidth() };
 
             gridCart = new DataGridView
@@ -86,7 +91,7 @@ namespace SmartMed.UI
             WireScrollRoot(root);
         }
 
-        private void RefreshCart()
+        public void RefreshCart()
         {
             gridCart.DataSource = CartService.Items.Select(l => new
             {

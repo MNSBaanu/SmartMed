@@ -24,6 +24,11 @@ namespace SmartMed.UI
             InitializeComponent();
         }
 
+        internal SearchMedicinesForm(bool embedded)
+            : base(CustomerNavItem.Browse, "Browse Medicines", embedded)
+        {
+        }
+
         private MedicineService Medicines => GetRuntimeService(ref _medicines);
 
         protected override void InitializePageContent()
@@ -39,7 +44,7 @@ namespace SmartMed.UI
 
         private void BuildContent()
         {
-            panelContent.Controls.Clear();
+            PagePanel.Controls.Clear();
             var root = new Panel { Dock = DockStyle.Top, AutoSize = true, Width = GetScrollContentWidth() };
 
             var filter = new FlowLayoutPanel { Dock = DockStyle.Top, AutoSize = true, WrapContents = true, Margin = new Padding(0, 0, 0, 12) };

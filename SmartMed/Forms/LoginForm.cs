@@ -125,7 +125,7 @@ namespace SmartMed.UI
                     if (customer != null)
                     {
                         Session.CurrentCustomer = customer;
-                        var portal = new CustomerDashboardForm();
+                        var portal = new CustomerHostForm();
                         portal.PrepareForNavigation();
                         LoginSucceeded?.Invoke(this, portal);
                         Close();

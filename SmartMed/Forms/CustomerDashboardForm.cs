@@ -21,6 +21,11 @@ namespace SmartMed.UI
             InitializeComponent();
         }
 
+        internal CustomerDashboardForm(bool embedded)
+            : base(CustomerNavItem.Home, "Customer Home", embedded)
+        {
+        }
+
         protected override void InitializePageContent()
         {
             if (_pageBuilt) return;
@@ -53,7 +58,7 @@ namespace SmartMed.UI
 
         private void BuildContent()
         {
-            panelContent.Controls.Clear();
+            PagePanel.Controls.Clear();
             var root = new TableLayoutPanel
             {
                 AutoSize = true,
@@ -91,8 +96,8 @@ namespace SmartMed.UI
             root.Controls.Add(gridRecent);
 
             var actions = new FlowLayoutPanel { AutoSize = true, Margin = new Padding(0, 16, 0, 0) };
-            actions.Controls.Add(CreateNavButton("Browse Medicines", () => NavigateTo(new SearchMedicinesForm())));
-            actions.Controls.Add(CreateNavButton("View Cart", () => NavigateTo(new PlaceOrderForm())));
+            actions.Controls.Add(CreateNavButton("Browse Medicines", () => GoToCustomerSection(CustomerNavItem.Browse)));
+            actions.Controls.Add(CreateNavButton("View Cart", () => GoToCustomerSection(CustomerNavItem.Cart)));
             actions.Controls.Add(CreateNavButton("Change Password", () =>
             {
                 using (var dlg = new ChangePasswordForm(isAdmin: false))
