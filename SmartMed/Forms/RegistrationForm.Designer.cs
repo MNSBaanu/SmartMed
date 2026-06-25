@@ -375,8 +375,8 @@ namespace SmartMed.UI
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "RegistrationForm";
-            this.ShowInTaskbar = false;
-            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
+            this.ShowInTaskbar = true;
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "SmartMed Pharmacy - Customer Registration";
             this.panelCard.ResumeLayout(false);
             this.panelSuccess.ResumeLayout(false);

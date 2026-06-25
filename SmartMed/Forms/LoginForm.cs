@@ -29,7 +29,7 @@ namespace SmartMed.UI
             txtUsername.Clear();
             txtPassword.Clear();
             _passwordVisible = false;
-            ApplyChrome();
+            RestoreLoginAppearance();
         }
 
         private void ApplyChrome()
@@ -73,8 +73,29 @@ namespace SmartMed.UI
 
         private void BtnRegister_Click(object sender, EventArgs e)
         {
-            using (var registration = new RegistrationForm())
-                registration.ShowDialog(this);
+            Hide();
+            try
+            {
+                using (var registration = new RegistrationForm())
+                {
+                    registration.StartPosition = FormStartPosition.CenterScreen;
+                    registration.ShowInTaskbar = true;
+                    registration.ShowDialog();
+                }
+            }
+            finally
+            {
+                RestoreLoginAppearance();
+            }
+        }
+
+        internal void RestoreLoginAppearance()
+        {
+            ApplyChrome();
+            Show();
+            WindowState = FormWindowState.Normal;
+            BringToFront();
+            Activate();
         }
 
         private void BtnLogin_Click(object sender, EventArgs e) => PerformLogin();
