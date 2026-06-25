@@ -66,22 +66,20 @@ namespace SmartMed.UI
                 AutoSizeMode = AutoSizeMode.GrowAndShrink,
                 Dock = DockStyle.Top,
                 ColumnCount = 1,
-                RowCount = 5,
+                RowCount = 4,
                 MinimumSize = new Size(0, 900),
                 Width = GetScrollContentWidth()
             };
             _scrollRoot.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100f));
             _scrollRoot.RowStyles.Add(new RowStyle(SizeType.AutoSize));      // header
             _scrollRoot.RowStyles.Add(new RowStyle(SizeType.AutoSize));      // stats
-            _scrollRoot.RowStyles.Add(new RowStyle(SizeType.AutoSize));      // search
             _scrollRoot.RowStyles.Add(new RowStyle(SizeType.Absolute, 220f)); // grid
             _scrollRoot.RowStyles.Add(new RowStyle(SizeType.AutoSize));      // form
 
             _scrollRoot.Controls.Add(CreatePageHeader(), 0, 0);
             _scrollRoot.Controls.Add(CreateStatsRow(), 0, 1);
-            _scrollRoot.Controls.Add(CreateSearchPanel(), 0, 2);
-            _scrollRoot.Controls.Add(CreateGridPanel(), 0, 3);
-            _scrollRoot.Controls.Add(CreateFormPanel(), 0, 4);
+            _scrollRoot.Controls.Add(CreateGridPanel(), 0, 2);
+            _scrollRoot.Controls.Add(CreateFormPanel(), 0, 3);
             WireScrollRoot(_scrollRoot);
         }
 
@@ -146,8 +144,10 @@ namespace SmartMed.UI
             var panel = new Panel
             {
                 Dock = DockStyle.Top,
-                Height = 40,
-                Margin = new Padding(0, 0, 0, 12)
+                Height = 44,
+                Padding = new Padding(8, 8, 8, 4),
+                Margin = new Padding(0),
+                BackColor = Color.FromArgb(248, 248, 248)
             };
             txtSearch = new TextBox { Width = 320 };
             var btnClearSearch = new Button { Text = "Clear", Width = 70, Height = 28 };
@@ -219,6 +219,7 @@ namespace SmartMed.UI
             gridCustomers.SelectionChanged += GridCustomers_SelectionChanged;
 
             outer.Controls.Add(gridCustomers);
+            outer.Controls.Add(CreateSearchPanel());
             return outer;
         }
 

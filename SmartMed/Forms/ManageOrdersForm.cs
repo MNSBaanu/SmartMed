@@ -68,12 +68,11 @@ namespace SmartMed.UI
                 AutoSizeMode = AutoSizeMode.GrowAndShrink,
                 Dock = DockStyle.Top,
                 ColumnCount = 1,
-                RowCount = 6,
+                RowCount = 5,
                 MinimumSize = new Size(0, 940),
                 Width = GetScrollContentWidth()
             };
             _scrollRoot.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100f));
-            _scrollRoot.RowStyles.Add(new RowStyle(SizeType.AutoSize));
             _scrollRoot.RowStyles.Add(new RowStyle(SizeType.AutoSize));
             _scrollRoot.RowStyles.Add(new RowStyle(SizeType.AutoSize));
             _scrollRoot.RowStyles.Add(new RowStyle(SizeType.Absolute, 220f));
@@ -82,10 +81,9 @@ namespace SmartMed.UI
 
             _scrollRoot.Controls.Add(CreatePageHeader(), 0, 0);
             _scrollRoot.Controls.Add(CreateStatsRow(), 0, 1);
-            _scrollRoot.Controls.Add(CreateSearchPanel(), 0, 2);
-            _scrollRoot.Controls.Add(CreateOrdersGridPanel(), 0, 3);
-            _scrollRoot.Controls.Add(CreateItemsGridPanel(), 0, 4);
-            _scrollRoot.Controls.Add(CreateStatusPanel(), 0, 5);
+            _scrollRoot.Controls.Add(CreateOrdersGridPanel(), 0, 2);
+            _scrollRoot.Controls.Add(CreateItemsGridPanel(), 0, 3);
+            _scrollRoot.Controls.Add(CreateStatusPanel(), 0, 4);
             WireScrollRoot(_scrollRoot);
         }
 
@@ -152,8 +150,10 @@ namespace SmartMed.UI
             var panel = new Panel
             {
                 Dock = DockStyle.Top,
-                Height = 40,
-                Margin = new Padding(0)
+                Height = 44,
+                Padding = new Padding(8, 8, 8, 4),
+                Margin = new Padding(0),
+                BackColor = Color.FromArgb(248, 248, 248)
             };
 
             txtSearch = new TextBox { Width = 280 };
@@ -297,6 +297,7 @@ namespace SmartMed.UI
             gridOrders.SelectionChanged += GridOrders_SelectionChanged;
 
             outer.Controls.Add(gridOrders);
+            outer.Controls.Add(CreateSearchPanel());
             outer.Controls.Add(header);
             return outer;
         }
