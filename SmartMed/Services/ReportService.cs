@@ -18,6 +18,12 @@ namespace SmartMed.Services
 
         public DataTable GetStockReport() => _orders.GetStockReport();
 
+        public decimal GetOutstandingAmount(ReportPeriod period)
+        {
+            var range = ReportPeriodHelper.GetRange(period);
+            return _orders.GetOutstandingAmount(range.From, range.ToExclusive);
+        }
+
         public DataTable GetExpiryReport() => _medicines.GetExpiryReport();
 
         public DataTable GetCustomerOrderHistory(int customerId, ReportPeriod period)

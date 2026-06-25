@@ -28,6 +28,7 @@ namespace SmartMed.UI
             _pageBuilt = true;
             BuildContent();
             UpdateTabStyles();
+            UpdateStatTitlesForTab();
             if (IsDesignHost())
                 LoadDesignTimePreview();
             else
@@ -66,6 +67,10 @@ namespace SmartMed.UI
         private Label lblTotalOrders;
         private Label lblLowStock;
         private Label lblOutstanding;
+        private Label lblStatTitleRevenue;
+        private Label lblStatTitleOrders;
+        private Label lblStatTitleLowStock;
+        private Label lblStatTitleOutstanding;
         private Label lblFooterStatus;
         private TableLayoutPanel _scrollRoot;
 
@@ -124,7 +129,7 @@ namespace SmartMed.UI
             var titleBlock = new Panel { Dock = DockStyle.Left, Width = 520 };
             titleBlock.Controls.Add(new Label
             {
-                Text = "Sales performance, medicine inventory, and customer order history reports.",
+                Text = "Completed sales, stock alerts, and customer order history for quick decisions.",
                 Font = UiTheme.UiFont,
                 ForeColor = SystemColors.GrayText,
                 Dock = DockStyle.Fill
@@ -187,16 +192,16 @@ namespace SmartMed.UI
             lblLowStock = new Label();
             lblOutstanding = new Label();
 
-            row.Controls.Add(CreateStatTile("Total Revenue", lblTotalRevenue, UiTheme.GridHeaderText), 0, 0);
-            row.Controls.Add(CreateStatTile("Total Orders", lblTotalOrders, SystemColors.ControlText), 1, 0);
-            row.Controls.Add(CreateStatTile("Low Stock Items", lblLowStock, Color.Red), 2, 0);
-            row.Controls.Add(CreateStatTile("Outstanding", lblOutstanding, SystemColors.ControlText), 3, 0);
+            row.Controls.Add(CreateStatTile("Completed Revenue", lblTotalRevenue, UiTheme.GridHeaderText, out lblStatTitleRevenue), 0, 0);
+            row.Controls.Add(CreateStatTile("Completed Orders", lblTotalOrders, SystemColors.ControlText, out lblStatTitleOrders), 1, 0);
+            row.Controls.Add(CreateStatTile("Low Stock Items", lblLowStock, Color.Red, out lblStatTitleLowStock), 2, 0);
+            row.Controls.Add(CreateStatTile("Outstanding", lblOutstanding, SystemColors.ControlText, out lblStatTitleOutstanding), 3, 0);
 
             wrap.Controls.Add(row);
             return wrap;
         }
 
-        private Panel CreateStatTile(string title, Label valueLabel, Color accent)
+        private Panel CreateStatTile(string title, Label valueLabel, Color accent, out Label titleLabel)
         {
             var card = new Panel
             {
@@ -220,14 +225,15 @@ namespace SmartMed.UI
             valueLabel.Location = new Point(12, 34);
             valueLabel.AutoSize = true;
 
-            card.Controls.Add(new Label
+            titleLabel = new Label
             {
                 Text = title.ToUpperInvariant(),
                 Font = UiTheme.UiFont,
                 ForeColor = SystemColors.GrayText,
                 Location = new Point(12, 14),
                 AutoSize = true
-            });
+            };
+            card.Controls.Add(titleLabel);
             card.Controls.Add(valueLabel);
             return card;
         }
@@ -401,6 +407,7 @@ namespace SmartMed.UI
             };
 
             UiTheme.ApplyGrid(gridReport);
+            gridReport.CellFormatting += GridReport_CellFormatting;
             outer.Controls.Add(gridReport);
             return outer;
         }
@@ -435,6 +442,7 @@ namespace SmartMed.UI
             panelCustomerFilter.Visible = tab == ReportTab.CustomerOrderHistory;
             UpdatePeriodFilterVisibility();
             UpdateTabStyles();
+            UpdateStatTitlesForTab();
             if (!IsDesignHost())
                 ResetReportPreview();
         }
@@ -445,6 +453,34 @@ namespace SmartMed.UI
             UpdatePeriodStyles();
             if (!IsDesignHost())
                 ResetReportPreview();
+        }
+
+        private void UpdateStatTitlesForTab()
+        {
+            if (lblStatTitleRevenue == null) return;
+
+            if (_activeTab == ReportTab.MedicineInventory)
+            {
+                lblStatTitleRevenue.Text = "TOTAL ITEMS";
+                lblStatTitleOrders.Text = "LOW STOCK";
+                lblStatTitleLowStock.Text = "EXPIRED";
+                lblStatTitleOutstanding.Text = "NEAR EXPIRY";
+                return;
+            }
+
+            if (_activeTab == ReportTab.CustomerOrderHistory)
+            {
+                lblStatTitleRevenue.Text = "PERIOD SPEND";
+                lblStatTitleOrders.Text = "ORDERS";
+                lblStatTitleLowStock.Text = "LOW STOCK";
+                lblStatTitleOutstanding.Text = "OUTSTANDING";
+                return;
+            }
+
+            lblStatTitleRevenue.Text = "COMPLETED REVENUE";
+            lblStatTitleOrders.Text = "COMPLETED ORDERS";
+            lblStatTitleLowStock.Text = "LOW STOCK ITEMS";
+            lblStatTitleOutstanding.Text = "OUTSTANDING";
         }
 
         private void UpdatePeriodFilterVisibility()
@@ -533,8 +569,8 @@ namespace SmartMed.UI
 
             gridReport.DataSource = new[]
             {
-                new { OrderID = 1, Customer = "Margaret Sullivan", OrderDate = "Oct 24, 2023", Status = "Delivered", TotalAmount = "LKR 124.50" },
-                new { OrderID = 2, Customer = "Jonathan Wick", OrderDate = "Oct 24, 2023", Status = "Pending", TotalAmount = "LKR 45.00" }
+                new { MedicineName = "Paracetamol", Category = "Analgesic", StockQuantity = 120, Price = 5.50m, Supplier = "PharmaCo", ExpiryDate = DateTime.Today.AddMonths(8), StockStatus = "Current", ExpiryStatus = "Current", InventoryStatus = "Current" },
+                new { MedicineName = "Amoxicillin", Category = "Antibiotic", StockQuantity = 12, Price = 10.80m, Supplier = "MediSupply", ExpiryDate = DateTime.Today.AddDays(14), StockStatus = "Low Stock", ExpiryStatus = "Near Expiry", InventoryStatus = "Near Expiry" }
             };
             lblFooterStatus.Text = "Items: 2 | Server Connected | " + DateTime.Now.ToString("hh:mm tt | MMM dd, yyyy");
         }
@@ -573,7 +609,7 @@ namespace SmartMed.UI
             _currentReportTable = table;
             gridReport.DataSource = table;
             lblFooterStatus.Text =
-                $"Items: {table.Rows.Count} | Sales performance | {GetPeriodStatusText()} | {DateTime.Now:hh:mm tt | MMM dd, yyyy}";
+                $"Items: {table.Rows.Count} | Completed sales only | {GetPeriodStatusText()} | {DateTime.Now:hh:mm tt | MMM dd, yyyy}";
         }
 
         private void LoadInventoryReport()
@@ -581,8 +617,14 @@ namespace SmartMed.UI
             var table = Reports.GetStockReport();
             _currentReportTable = table;
             gridReport.DataSource = table;
+
+            var current = CountColumnValue(table, "InventoryStatus", "Current");
+            var lowStock = CountColumnValue(table, "StockStatus", "Low Stock");
+            var expired = CountColumnValue(table, "ExpiryStatus", "Expired");
+            var nearExpiry = CountColumnValue(table, "ExpiryStatus", "Near Expiry");
+
             lblFooterStatus.Text =
-                $"Items: {table.Rows.Count} | Medicine inventory (current stock) | {DateTime.Now:hh:mm tt | MMM dd, yyyy}";
+                $"Items: {table.Rows.Count} | Current: {current} | Low stock: {lowStock} | Expired: {expired} | Near expiry: {nearExpiry} | {DateTime.Now:hh:mm tt | MMM dd, yyyy}";
         }
 
         private void LoadHistoryReport()
@@ -618,30 +660,78 @@ namespace SmartMed.UI
 
         private void UpdateSummaryStats()
         {
+            if (_activeTab == ReportTab.MedicineInventory)
+            {
+                var stock = _currentReportTable ?? Reports.GetStockReport();
+                lblTotalRevenue.Text = stock.Rows.Count.ToString("N0");
+                lblTotalOrders.Text = CountColumnValue(stock, "StockStatus", "Low Stock").ToString("N0");
+                lblLowStock.Text = CountColumnValue(stock, "ExpiryStatus", "Expired").ToString("N0");
+                lblOutstanding.Text = CountColumnValue(stock, "ExpiryStatus", "Near Expiry").ToString("N0");
+                return;
+            }
+
+            if (_activeTab == ReportTab.CustomerOrderHistory && _currentReportTable != null)
+            {
+                decimal spend = 0;
+                foreach (DataRow row in _currentReportTable.Rows)
+                    spend += Convert.ToDecimal(row["TotalAmount"]);
+
+                lblTotalRevenue.Text = $"LKR {spend:N2}";
+                lblTotalOrders.Text = _currentReportTable.Rows.Count.ToString("N0");
+
+                var stock = Reports.GetStockReport();
+                lblLowStock.Text = CountColumnValue(stock, "StockStatus", "Low Stock").ToString("N0");
+                lblOutstanding.Text = $"LKR {Reports.GetOutstandingAmount(_activePeriod):N2}";
+                return;
+            }
+
             var sales = Reports.GetSalesReport(_activePeriod);
             decimal totalRevenue = 0;
-            decimal outstanding = 0;
             foreach (DataRow row in sales.Rows)
-            {
-                var amount = Convert.ToDecimal(row["TotalAmount"]);
-                totalRevenue += amount;
-                var status = row["Status"]?.ToString() ?? string.Empty;
-                if (status != "Delivered")
-                    outstanding += amount;
-            }
+                totalRevenue += Convert.ToDecimal(row["TotalAmount"]);
 
             lblTotalRevenue.Text = $"LKR {totalRevenue:N2}";
             lblTotalOrders.Text = sales.Rows.Count.ToString("N0");
 
-            var stock = Reports.GetStockReport();
-            var lowStock = 0;
-            foreach (DataRow row in stock.Rows)
+            var inventory = Reports.GetStockReport();
+            lblLowStock.Text = CountColumnValue(inventory, "StockStatus", "Low Stock").ToString("N0");
+            lblOutstanding.Text = $"LKR {Reports.GetOutstandingAmount(_activePeriod):N2}";
+        }
+
+        private static int CountColumnValue(DataTable table, string column, string value)
+        {
+            if (table == null || !table.Columns.Contains(column)) return 0;
+            var count = 0;
+            foreach (DataRow row in table.Rows)
             {
-                if (Convert.ToInt32(row["StockQuantity"]) <= 20)
-                    lowStock++;
+                if (string.Equals(row[column]?.ToString(), value, StringComparison.OrdinalIgnoreCase))
+                    count++;
             }
-            lblLowStock.Text = lowStock.ToString("N0");
-            lblOutstanding.Text = $"LKR {outstanding:N2}";
+            return count;
+        }
+
+        private void GridReport_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
+        {
+            if (_activeTab != ReportTab.MedicineInventory || e.RowIndex < 0 || gridReport == null) return;
+
+            var status = gridReport.Rows[e.RowIndex].Cells["InventoryStatus"]?.Value?.ToString();
+            if (string.IsNullOrEmpty(status)) return;
+
+            if (status == "Expired")
+            {
+                e.CellStyle.BackColor = Color.FromArgb(255, 235, 235);
+                e.CellStyle.ForeColor = Color.DarkRed;
+            }
+            else if (status == "Near Expiry")
+            {
+                e.CellStyle.BackColor = Color.FromArgb(255, 248, 220);
+                e.CellStyle.ForeColor = Color.FromArgb(140, 70, 0);
+            }
+            else if (status == "Low Stock")
+            {
+                e.CellStyle.BackColor = Color.FromArgb(255, 242, 230);
+                e.CellStyle.ForeColor = Color.DarkOrange;
+            }
         }
 
         private void BtnExportCsv_Click(object sender, EventArgs e) => ExportReport(isPdf: false);
@@ -712,12 +802,12 @@ namespace SmartMed.UI
         private string GetReportSubtitle()
         {
             if (_activeTab == ReportTab.MedicineInventory)
-                return $"Generated {DateTime.Now:MMM dd, yyyy hh:mm tt} | Current stock snapshot";
+                return $"Generated {DateTime.Now:MMM dd, yyyy hh:mm tt} | Current, low stock, expired, and near-expiry items";
 
             if (_activeTab == ReportTab.CustomerOrderHistory)
                 return $"Customer: {cmbCustomer?.Text} | Period: {GetPeriodStatusText()} | Generated {DateTime.Now:MMM dd, yyyy hh:mm tt}";
 
-            return $"Period: {GetPeriodStatusText()} | Generated {DateTime.Now:MMM dd, yyyy hh:mm tt}";
+            return $"Period: {GetPeriodStatusText()} | Completed orders only | Generated {DateTime.Now:MMM dd, yyyy hh:mm tt}";
         }
 
         private string GetExportBaseName()

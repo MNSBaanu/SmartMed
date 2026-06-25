@@ -113,19 +113,45 @@ namespace SmartMed.Data
                 @"SELECT o.OrderID, c.FullName AS Customer, o.OrderDate, o.Status, o.TotalAmount
                   FROM [Order] o INNER JOIN Customer c ON o.CustomerID = c.CustomerID
                   WHERE o.OrderDate >= @from AND o.OrderDate < @to
+                    AND o.Status = 'Delivered'
                   ORDER BY o.OrderDate DESC",
                 new SqlParameter("@from", from),
                 new SqlParameter("@to", toExclusive));
+        }
+
+        public decimal GetOutstandingAmount(DateTime from, DateTime toExclusive)
+        {
+            var result = DatabaseHelper.ExecuteScalar(
+                @"SELECT ISNULL(SUM(TotalAmount), 0)
+                  FROM [Order]
+                  WHERE OrderDate >= @from AND OrderDate < @to
+                    AND Status <> 'Delivered'",
+                new SqlParameter("@from", from),
+                new SqlParameter("@to", toExclusive));
+            return Convert.ToDecimal(result);
         }
 
         public DataTable GetStockReport()
         {
             return DatabaseHelper.ExecuteQuery(
                 @"SELECT MedicineName, Category, StockQuantity, Price, Supplier, ExpiryDate,
+                  CASE WHEN StockQuantity <= 20 THEN 'Low Stock' ELSE 'Current' END AS StockStatus,
                   CASE WHEN ExpiryDate < CAST(GETDATE() AS DATE) THEN 'Expired'
-                       WHEN ExpiryDate <= DATEADD(day, 30, CAST(GETDATE() AS DATE)) THEN 'Expiring Soon'
-                       ELSE 'Valid' END AS ExpiryStatus
-                  FROM Medicine ORDER BY MedicineName");
+                       WHEN ExpiryDate <= DATEADD(day, 30, CAST(GETDATE() AS DATE)) THEN 'Near Expiry'
+                       ELSE 'Current' END AS ExpiryStatus,
+                  CASE WHEN ExpiryDate < CAST(GETDATE() AS DATE) THEN 'Expired'
+                       WHEN ExpiryDate <= DATEADD(day, 30, CAST(GETDATE() AS DATE)) THEN 'Near Expiry'
+                       WHEN StockQuantity <= 20 THEN 'Low Stock'
+                       ELSE 'Current' END AS InventoryStatus
+                  FROM Medicine
+                  ORDER BY
+                    CASE
+                      WHEN ExpiryDate < CAST(GETDATE() AS DATE) THEN 0
+                      WHEN ExpiryDate <= DATEADD(day, 30, CAST(GETDATE() AS DATE)) THEN 1
+                      WHEN StockQuantity <= 20 THEN 2
+                      ELSE 3
+                    END,
+                    MedicineName");
         }
 
         public DataTable GetCustomerOrderHistory(int customerId) =>

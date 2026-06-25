@@ -117,7 +117,7 @@ namespace SmartMed.Data
             return DatabaseHelper.ExecuteQuery(
                 @"SELECT MedicineName, Category, StockQuantity, ExpiryDate,
                   CASE WHEN ExpiryDate < CAST(GETDATE() AS DATE) THEN 'Expired'
-                       WHEN ExpiryDate <= DATEADD(day, 30, CAST(GETDATE() AS DATE)) THEN 'Expiring Soon'
+                       WHEN ExpiryDate <= DATEADD(day, 30, CAST(GETDATE() AS DATE)) THEN 'Near Expiry'
                        ELSE 'Valid' END AS ExpiryStatus
                   FROM Medicine
                   WHERE ExpiryDate <= DATEADD(day, 30, CAST(GETDATE() AS DATE))
