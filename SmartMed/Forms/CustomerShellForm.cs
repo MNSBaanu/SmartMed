@@ -162,9 +162,7 @@ namespace SmartMed.UI
             CartService.Clear();
             Session.Clear();
             Close();
-            var login = Application.OpenForms.OfType<LoginForm>().FirstOrDefault();
-            if (login != null && !login.IsDisposed)
-                login.Show();
+            LoginForm.PresentExisting();
         }
 
         private void BtnNavHome_Click(object sender, EventArgs e)

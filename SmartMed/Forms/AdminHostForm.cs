@@ -24,9 +24,7 @@ namespace SmartMed.UI
             if (e.CloseReason == CloseReason.UserClosing)
             {
                 Session.Clear();
-                var login = Application.OpenForms.OfType<LoginForm>().FirstOrDefault();
-                if (login != null && !login.IsDisposed)
-                    login.Show();
+                LoginForm.PresentExisting();
             }
             base.OnFormClosing(e);
         }

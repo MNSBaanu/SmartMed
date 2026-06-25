@@ -29,21 +29,33 @@ namespace SmartMed.UI
             InitializeComponent();
 
             if (Site?.DesignMode != true)
+                ApplyChrome();
+        }
 
-            {
+        private void ApplyChrome()
+        {
+            UiTheme.ApplyLoginForm(this, panelBody, lnkForgot);
+            UiTheme.ApplyFlatButton(btnLogin, UiButtonStyle.Primary);
+            UiTheme.ApplyFlatButton(btnRegister, UiButtonStyle.Success);
+            UiTheme.StyleTextBox(txtUsername);
+            UiTheme.StyleTextBox(txtPassword);
+        }
 
-                UiTheme.ApplyLoginForm(this, panelBody, lnkForgot);
+        internal static void PresentExisting()
+        {
+            var login = Application.OpenForms.OfType<LoginForm>().FirstOrDefault();
+            if (login == null || login.IsDisposed) return;
+            login.PresentAfterLogout();
+        }
 
-                UiTheme.ApplyFlatButton(btnLogin, UiButtonStyle.Primary);
-
-                UiTheme.ApplyFlatButton(btnRegister, UiButtonStyle.Success);
-
-                UiTheme.StyleTextBox(txtUsername);
-
-                UiTheme.StyleTextBox(txtPassword);
-
-            }
-
+        private void PresentAfterLogout()
+        {
+            txtUsername.Clear();
+            txtPassword.Clear();
+            ApplyChrome();
+            UiTheme.RevealForm(this);
+            Activate();
+            BringToFront();
         }
 
 
@@ -115,9 +127,7 @@ namespace SmartMed.UI
                 form.FormClosed -= OnAdminFormClosed;
 
             if (!Session.IsAdminLoggedIn && !IsDisposed)
-
-                Show();
-
+                PresentAfterLogout();
         }
 
 
@@ -131,9 +141,7 @@ namespace SmartMed.UI
                 form.FormClosed -= OnCustomerFormClosed;
 
             if (!Session.IsCustomerLoggedIn && !IsDisposed)
-
-                Show();
-
+                PresentAfterLogout();
         }
 
 

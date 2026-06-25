@@ -488,11 +488,7 @@ namespace SmartMed.UI
 
             Close();
 
-            var login = Application.OpenForms.OfType<LoginForm>().FirstOrDefault();
-
-            if (login != null && !login.IsDisposed)
-
-                login.Show();
+            LoginForm.PresentExisting();
 
         }
 
