@@ -45,7 +45,8 @@ namespace SmartMed.UI
             this.btnLogin = new System.Windows.Forms.Button();
 
             this.btnRegister = new System.Windows.Forms.Button();
-
+            this.btnQuickAdmin = new System.Windows.Forms.Button();
+            this.btnQuickCustomer = new System.Windows.Forms.Button();
             this.lnkForgot = new System.Windows.Forms.LinkLabel();
 
             this.panelBody.SuspendLayout();
@@ -59,7 +60,8 @@ namespace SmartMed.UI
             // 
 
             this.panelBody.Controls.Add(this.lnkForgot);
-
+            this.panelBody.Controls.Add(this.btnQuickCustomer);
+            this.panelBody.Controls.Add(this.btnQuickAdmin);
             this.panelBody.Controls.Add(this.btnRegister);
 
             this.panelBody.Controls.Add(this.btnLogin);
@@ -81,7 +83,7 @@ namespace SmartMed.UI
 
             this.panelBody.Padding = new System.Windows.Forms.Padding(24, 16, 24, 16);
 
-            this.panelBody.Size = new System.Drawing.Size(368, 220);
+            this.panelBody.Size = new System.Drawing.Size(368, 252);
 
             this.panelBody.TabIndex = 0;
 
@@ -202,6 +204,27 @@ namespace SmartMed.UI
             this.btnRegister.Click += new System.EventHandler(this.BtnRegister_Click);
 
             // 
+            // btnQuickAdmin
+            // 
+            this.btnQuickAdmin.Location = new System.Drawing.Point(24, 176);
+            this.btnQuickAdmin.Name = "btnQuickAdmin";
+            this.btnQuickAdmin.Size = new System.Drawing.Size(155, 32);
+            this.btnQuickAdmin.TabIndex = 5;
+            this.btnQuickAdmin.Text = "Admin Login";
+            this.btnQuickAdmin.UseVisualStyleBackColor = true;
+            this.btnQuickAdmin.Click += new System.EventHandler(this.BtnQuickAdmin_Click);
+            // 
+            // btnQuickCustomer
+            // 
+            this.btnQuickCustomer.Location = new System.Drawing.Point(189, 176);
+            this.btnQuickCustomer.Name = "btnQuickCustomer";
+            this.btnQuickCustomer.Size = new System.Drawing.Size(155, 32);
+            this.btnQuickCustomer.TabIndex = 6;
+            this.btnQuickCustomer.Text = "Customer Login";
+            this.btnQuickCustomer.UseVisualStyleBackColor = true;
+            this.btnQuickCustomer.Click += new System.EventHandler(this.BtnQuickCustomer_Click);
+
+            // 
 
             // lnkForgot
 
@@ -209,7 +232,7 @@ namespace SmartMed.UI
 
             this.lnkForgot.AutoSize = true;
 
-            this.lnkForgot.Location = new System.Drawing.Point(24, 176);
+            this.lnkForgot.Location = new System.Drawing.Point(24, 220);
 
             this.lnkForgot.Name = "lnkForgot";
 
@@ -235,7 +258,7 @@ namespace SmartMed.UI
 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 
-            this.ClientSize = new System.Drawing.Size(368, 284);
+            this.ClientSize = new System.Drawing.Size(368, 316);
 
             this.Controls.Add(this.panelBody);
 
@@ -282,6 +305,8 @@ namespace SmartMed.UI
         private System.Windows.Forms.Button btnLogin;
 
         private System.Windows.Forms.Button btnRegister;
+        private System.Windows.Forms.Button btnQuickAdmin;
+        private System.Windows.Forms.Button btnQuickCustomer;
 
         private System.Windows.Forms.LinkLabel lnkForgot;
 

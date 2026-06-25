@@ -7,6 +7,11 @@ namespace SmartMed.UI
 {
     public partial class LoginForm : MaterialForm
     {
+        private const string DemoAdminUsername = "admin";
+        private const string DemoAdminPassword = "admin123";
+        private const string DemoCustomerEmail = "john@email.com";
+        private const string DemoCustomerPassword = "customer123";
+
         private readonly AuthService _auth = new AuthService();
         private bool _passwordVisible;
 
@@ -32,6 +37,8 @@ namespace SmartMed.UI
             UiTheme.ApplyLoginForm(this, panelBody, lnkForgot);
             UiTheme.ApplyFlatButton(btnLogin, UiButtonStyle.Primary);
             UiTheme.ApplyFlatButton(btnRegister, UiButtonStyle.Success);
+            UiTheme.ApplyFlatButton(btnQuickAdmin, UiButtonStyle.Primary);
+            UiTheme.ApplyFlatButton(btnQuickCustomer, UiButtonStyle.Success);
             UiTheme.StyleTextBox(txtUsername);
             UiTheme.StyleTextBox(txtPassword);
             SetPasswordVisible(false);
@@ -71,6 +78,19 @@ namespace SmartMed.UI
         }
 
         private void BtnLogin_Click(object sender, EventArgs e) => PerformLogin();
+
+        private void BtnQuickAdmin_Click(object sender, EventArgs e) =>
+            PerformLoginWith(DemoAdminUsername, DemoAdminPassword);
+
+        private void BtnQuickCustomer_Click(object sender, EventArgs e) =>
+            PerformLoginWith(DemoCustomerEmail, DemoCustomerPassword);
+
+        private void PerformLoginWith(string identity, string password)
+        {
+            txtUsername.Text = identity;
+            txtPassword.Text = password;
+            PerformLogin();
+        }
 
         private void PerformLogin()
         {
