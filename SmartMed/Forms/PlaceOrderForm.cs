@@ -45,38 +45,7 @@ namespace SmartMed.UI
             PagePanel.Controls.Clear();
             var root = new Panel { Dock = DockStyle.Top, AutoSize = true, Width = GetScrollContentWidth() };
 
-            gridCart = new DataGridView
-            {
-                Dock = DockStyle.Top,
-                Height = 260,
-                ReadOnly = true,
-                AllowUserToAddRows = false,
-                RowHeadersVisible = false,
-                AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill
-            };
-            root.Controls.Add(gridCart);
-
-            lblTotal = new Label { Dock = DockStyle.Top, Height = 28, Font = UiTheme.UiFontBold };
-            root.Controls.Add(lblTotal);
-
-            lblRxNote = new Label
-            {
-                Dock = DockStyle.Top,
-                Height = 24,
-                ForeColor = Color.DarkRed,
-                Text = "Rx medicines require a prescription upload."
-            };
-            root.Controls.Add(lblRxNote);
-
-            var rxRow = new FlowLayoutPanel { Dock = DockStyle.Top, AutoSize = true, Margin = new Padding(0, 8, 0, 8) };
-            txtPrescriptionPath = new TextBox { Width = 360, ReadOnly = true };
-            var btnBrowse = new Button { Text = "Upload Prescription", Width = 150, Height = 28 };
-            btnBrowse.Click += BtnBrowse_Click;
-            rxRow.Controls.Add(txtPrescriptionPath);
-            rxRow.Controls.Add(btnBrowse);
-            root.Controls.Add(rxRow);
-
-            var actions = new FlowLayoutPanel { Dock = DockStyle.Top, AutoSize = true };
+            var actions = new FlowLayoutPanel { Dock = DockStyle.Top, AutoSize = true, Margin = new Padding(0, 8, 0, 0) };
             var btnRemove = new Button { Text = "Remove Selected", Width = 130, Height = 32 };
             btnRemove.Click += BtnRemove_Click;
             var btnClear = new Button { Text = "Clear Cart", Width = 100, Height = 32 };
@@ -86,7 +55,41 @@ namespace SmartMed.UI
             actions.Controls.Add(btnRemove);
             actions.Controls.Add(btnClear);
             actions.Controls.Add(btnPlace);
+
+            var rxRow = new FlowLayoutPanel { Dock = DockStyle.Top, AutoSize = true, Margin = new Padding(0, 8, 0, 8) };
+            txtPrescriptionPath = new TextBox { Width = 360, ReadOnly = true };
+            var btnBrowse = new Button { Text = "Upload Prescription", Width = 150, Height = 28 };
+            btnBrowse.Click += BtnBrowse_Click;
+            rxRow.Controls.Add(txtPrescriptionPath);
+            rxRow.Controls.Add(btnBrowse);
+
+            lblRxNote = new Label
+            {
+                Dock = DockStyle.Top,
+                Height = 24,
+                ForeColor = Color.DarkRed,
+                Text = "Rx medicines require a prescription upload."
+            };
+
+            lblTotal = new Label { Dock = DockStyle.Top, Height = 28, Font = UiTheme.UiFontBold, Margin = new Padding(0, 8, 0, 0) };
+
+            gridCart = new DataGridView
+            {
+                Dock = DockStyle.Top,
+                Height = 260,
+                ReadOnly = true,
+                AllowUserToAddRows = false,
+                RowHeadersVisible = false,
+                AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill,
+                Margin = new Padding(0, 0, 0, 8)
+            };
+
+            // Dock.Top: last added appears at the top — add bottom sections first.
+            root.Controls.Add(rxRow);
+            root.Controls.Add(lblRxNote);
+            root.Controls.Add(lblTotal);
             root.Controls.Add(actions);
+            root.Controls.Add(gridCart);
 
             WireScrollRoot(root, minHeight: 400);
         }
