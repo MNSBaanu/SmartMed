@@ -88,11 +88,12 @@ namespace SmartMed.UI
             actions.Controls.Add(btnPlace);
             root.Controls.Add(actions);
 
-            WireScrollRoot(root);
+            WireScrollRoot(root, minHeight: 400);
         }
 
         public void RefreshCart()
         {
+            if (IsDesignHost() || gridCart == null) return;
             gridCart.DataSource = CartService.Items.Select(l => new
             {
                 l.MedicineID,

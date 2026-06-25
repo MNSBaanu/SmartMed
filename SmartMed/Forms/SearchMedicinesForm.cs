@@ -89,7 +89,7 @@ namespace SmartMed.UI
             cartRow.Controls.Add(btnAdd);
             root.Controls.Add(cartRow);
 
-            WireScrollRoot(root);
+            WireScrollRoot(root, minHeight: 420);
         }
 
         private void Search()

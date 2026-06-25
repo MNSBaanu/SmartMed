@@ -63,7 +63,7 @@ namespace SmartMed.UI
             actions.Controls.Add(btnPassword);
             root.Controls.Add(actions);
 
-            WireScrollRoot(root);
+            WireScrollRoot(root, minHeight: 220);
         }
 
         private static TextBox CreateField(Panel parent, string label, int top)

@@ -67,6 +67,14 @@ namespace SmartMed.UI
                 return;
             }
 
+            if (_isEmbeddedPage)
+            {
+                InitializePageContent();
+                if (PagePanel != null)
+                    UiTheme.ApplyFontTree(PagePanel);
+                return;
+            }
+
             using (UiTheme.BatchUpdate(this, panelTop, panelSidebar, PagePanel))
             {
                 if (PagePanel != null)
@@ -74,11 +82,8 @@ namespace SmartMed.UI
 
                 InitializePageContent();
 
-                if (!_isEmbeddedPage)
-                {
-                    UiTheme.ApplyFontTree(panelTop);
-                    UiTheme.ApplyFontTree(panelSidebar);
-                }
+                UiTheme.ApplyFontTree(panelTop);
+                UiTheme.ApplyFontTree(panelSidebar);
                 UiTheme.ApplyFontTree(PagePanel);
 
                 if (PagePanel != null)
@@ -102,8 +107,13 @@ namespace SmartMed.UI
         }
 
         private Panel _contentTarget;
+        private CustomerHostForm _customerHost;
 
-        internal void SetContentTarget(Panel host) => _contentTarget = host;
+        internal void SetContentTarget(Panel host)
+        {
+            _contentTarget = host;
+            _customerHost = host?.FindForm() as CustomerHostForm;
+        }
 
         protected Panel PagePanel => _contentTarget ?? panelContent;
 
@@ -115,12 +125,23 @@ namespace SmartMed.UI
             return w < 200 ? fallback : w;
         }
 
-        protected void WireScrollRoot(Control scrollRoot, int fallback = 800)
+        protected void WireScrollRoot(Control scrollRoot, int fallback = 800, int minHeight = 0)
         {
             UiTheme.EnableDoubleBuffer(scrollRoot);
+            if (scrollRoot is Panel panel)
+            {
+                panel.AutoSize = true;
+                panel.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            }
+
             var host = PagePanel;
+            scrollRoot.Width = GetScrollContentWidth(fallback);
+            if (minHeight > 0)
+                scrollRoot.MinimumSize = new Size(0, minHeight);
+
             host.Controls.Add(scrollRoot);
             host.Resize += (s, e) => scrollRoot.Width = GetScrollContentWidth(fallback);
+            scrollRoot.PerformLayout();
         }
 
         protected T GetRuntimeService<T>(ref T service) where T : class, new()
@@ -193,6 +214,9 @@ namespace SmartMed.UI
 
         protected CustomerHostForm GetCustomerHost()
         {
+            if (_customerHost != null && !_customerHost.IsDisposed)
+                return _customerHost;
+
             for (var parent = Parent; parent != null; parent = parent.Parent)
             {
                 if (parent is CustomerHostForm host)

@@ -40,7 +40,7 @@ namespace SmartMed.UI
 
         public void RefreshOrders()
         {
-            if (IsDesignHost() || Orders == null) return;
+            if (IsDesignHost() || Orders == null || gridOrders == null) return;
             var customerId = Session.CurrentCustomer?.CustomerID ?? 0;
             var orders = Orders.GetByCustomer(customerId);
             gridOrders.DataSource = orders.Select(o => new
@@ -95,7 +95,7 @@ namespace SmartMed.UI
             };
             root.Controls.Add(gridItems);
 
-            WireScrollRoot(root);
+            WireScrollRoot(root, minHeight: 460);
         }
 
         private void GridOrders_SelectionChanged(object sender, EventArgs e)

@@ -32,7 +32,6 @@ namespace SmartMed.UI
 
             using (UiTheme.BatchUpdate(this, panelSidebar, panelContent))
             {
-                panelContent.Visible = false;
                 DisposeEmbeddedPage();
                 panelContent.Controls.Clear();
 
@@ -40,7 +39,7 @@ namespace SmartMed.UI
                 _embeddedPage.SetContentTarget(panelContent);
                 _embeddedPage.PrepareForNavigation();
                 UiTheme.ApplyFontTree(panelContent);
-                panelContent.Visible = true;
+                RelayoutPageContent();
             }
 
             _activeNav = nav;
@@ -90,6 +89,27 @@ namespace SmartMed.UI
                 orders.RefreshOrders();
             else if (nav == CustomerNavItem.Profile && _embeddedPage is ProfileManagementForm profile)
                 profile.RefreshProfile();
+        }
+
+        private void RelayoutPageContent()
+        {
+            if (panelContent.Controls.Count == 0) return;
+
+            panelContent.SuspendLayout();
+            try
+            {
+                var width = Math.Max(200, panelContent.ClientSize.Width - panelContent.Padding.Horizontal);
+                foreach (Control child in panelContent.Controls)
+                {
+                    child.Width = width;
+                    child.PerformLayout();
+                }
+                panelContent.PerformLayout();
+            }
+            finally
+            {
+                panelContent.ResumeLayout(true);
+            }
         }
     }
 }

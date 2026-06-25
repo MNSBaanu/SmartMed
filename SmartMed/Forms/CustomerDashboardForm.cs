@@ -39,7 +39,7 @@ namespace SmartMed.UI
 
         public void RefreshData()
         {
-            if (IsDesignHost()) return;
+            if (IsDesignHost() || lblWelcome == null || gridRecent == null) return;
             var customer = Session.CurrentCustomer;
             lblWelcome.Text = $"Welcome, {customer?.Name ?? "Customer"}";
             lblCart.Text = CartService.ItemCount.ToString();
@@ -105,7 +105,7 @@ namespace SmartMed.UI
             }));
             root.Controls.Add(actions);
 
-            WireScrollRoot(root);
+            WireScrollRoot(root, minHeight: 520);
         }
 
         private static Panel CreateStatCard(string title, Label valueLabel)
