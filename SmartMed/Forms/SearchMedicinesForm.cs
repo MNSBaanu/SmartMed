@@ -47,7 +47,7 @@ namespace SmartMed.UI
             PagePanel.Controls.Clear();
             var root = new Panel { Dock = DockStyle.Top, AutoSize = true, Width = GetScrollContentWidth() };
 
-            var filter = new FlowLayoutPanel { Dock = DockStyle.Top, AutoSize = true, WrapContents = true, Margin = new Padding(0, 0, 0, 12) };
+            var filter = new FlowLayoutPanel { Dock = DockStyle.Top, AutoSize = true, WrapContents = true, Margin = new Padding(0, 0, 0, 8) };
             txtName = new TextBox { Width = 140 };
             txtCategory = new TextBox { Width = 120 };
             txtMinPrice = new TextBox { Width = 80 };
@@ -62,7 +62,6 @@ namespace SmartMed.UI
                 new Label { Text = "Max:", AutoSize = true, Padding = new Padding(8, 6, 0, 0) }, txtMaxPrice,
                 btnSearch
             });
-            root.Controls.Add(filter);
 
             grid = new DataGridView
             {
@@ -72,22 +71,26 @@ namespace SmartMed.UI
                 SelectionMode = DataGridViewSelectionMode.FullRowSelect,
                 AllowUserToAddRows = false,
                 RowHeadersVisible = false,
-                AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill
+                AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill,
+                Margin = new Padding(0, 0, 0, 8)
             };
             grid.SelectionChanged += Grid_SelectionChanged;
-            root.Controls.Add(grid);
 
-            lblDetails = new Label { Dock = DockStyle.Top, Height = 60, AutoSize = false, ForeColor = SystemColors.GrayText };
-            root.Controls.Add(lblDetails);
+            lblDetails = new Label { Dock = DockStyle.Top, Height = 60, AutoSize = false, ForeColor = SystemColors.GrayText, Margin = new Padding(0, 0, 0, 8) };
 
-            var cartRow = new FlowLayoutPanel { Dock = DockStyle.Top, AutoSize = true, Margin = new Padding(0, 8, 0, 0) };
+            var cartRow = new FlowLayoutPanel { Dock = DockStyle.Top, AutoSize = true, Margin = new Padding(0, 0, 0, 0) };
             cartRow.Controls.Add(new Label { Text = "Qty:", AutoSize = true, Padding = new Padding(0, 6, 0, 0) });
             numQty = new NumericUpDown { Minimum = 1, Maximum = 99, Value = 1, Width = 60 };
             var btnAdd = new Button { Text = "Add to Cart", Width = 120, Height = 32 };
             btnAdd.Click += BtnAdd_Click;
             cartRow.Controls.Add(numQty);
             cartRow.Controls.Add(btnAdd);
+
+            // Dock.Top stacks with the last-added control at the top — add bottom sections first.
             root.Controls.Add(cartRow);
+            root.Controls.Add(lblDetails);
+            root.Controls.Add(grid);
+            root.Controls.Add(filter);
 
             WireScrollRoot(root, minHeight: 420);
         }
