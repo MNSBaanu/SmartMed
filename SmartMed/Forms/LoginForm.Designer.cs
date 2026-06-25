@@ -41,7 +41,7 @@ namespace SmartMed.UI
             this.lblPassword = new System.Windows.Forms.Label();
 
             this.txtPassword = new System.Windows.Forms.TextBox();
-
+            this.btnTogglePassword = new System.Windows.Forms.Button();
             this.btnLogin = new System.Windows.Forms.Button();
 
             this.btnRegister = new System.Windows.Forms.Button();
@@ -64,6 +64,7 @@ namespace SmartMed.UI
 
             this.panelBody.Controls.Add(this.btnLogin);
 
+            this.panelBody.Controls.Add(this.btnTogglePassword);
             this.panelBody.Controls.Add(this.txtPassword);
 
             this.panelBody.Controls.Add(this.lblPassword);
@@ -115,8 +116,7 @@ namespace SmartMed.UI
             this.txtUsername.Size = new System.Drawing.Size(320, 23);
 
             this.txtUsername.TabIndex = 1;
-
-            // 
+            this.txtUsername.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TxtUsername_KeyDown);
 
             // lblPassword
 
@@ -141,14 +141,25 @@ namespace SmartMed.UI
             // 
 
             this.txtPassword.Location = new System.Drawing.Point(24, 90);
-
             this.txtPassword.Name = "txtPassword";
-
-            this.txtPassword.Size = new System.Drawing.Size(320, 23);
-
-            this.txtPassword.TabIndex = 3;
-
-            this.txtPassword.UseSystemPasswordChar = true;
+            this.txtPassword.Size = new System.Drawing.Size(284, 23);
+            this.txtPassword.TabIndex = 2;
+            // 
+            // btnTogglePassword
+            // 
+            this.btnTogglePassword.BackColor = System.Drawing.Color.White;
+            this.btnTogglePassword.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.btnTogglePassword.FlatAppearance.BorderSize = 0;
+            this.btnTogglePassword.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnTogglePassword.Font = new System.Drawing.Font("Roboto", 8F);
+            this.btnTogglePassword.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(68)))), ((int)(((byte)(70)))), ((int)(((byte)(82)))));
+            this.btnTogglePassword.Location = new System.Drawing.Point(308, 90);
+            this.btnTogglePassword.Name = "btnTogglePassword";
+            this.btnTogglePassword.Size = new System.Drawing.Size(36, 23);
+            this.btnTogglePassword.TabIndex = 7;
+            this.btnTogglePassword.Text = "Show";
+            this.btnTogglePassword.UseVisualStyleBackColor = false;
+            this.btnTogglePassword.Click += new System.EventHandler(this.BtnTogglePassword_Click);
 
             // 
 
@@ -162,7 +173,7 @@ namespace SmartMed.UI
 
             this.btnLogin.Size = new System.Drawing.Size(155, 32);
 
-            this.btnLogin.TabIndex = 4;
+            this.btnLogin.TabIndex = 3;
 
             this.btnLogin.Text = "Login";
 
@@ -182,7 +193,7 @@ namespace SmartMed.UI
 
             this.btnRegister.Size = new System.Drawing.Size(155, 32);
 
-            this.btnRegister.TabIndex = 5;
+            this.btnRegister.TabIndex = 4;
 
             this.btnRegister.Text = "Register";
 
@@ -204,7 +215,7 @@ namespace SmartMed.UI
 
             this.lnkForgot.Size = new System.Drawing.Size(94, 15);
 
-            this.lnkForgot.TabIndex = 6;
+            this.lnkForgot.TabIndex = 5;
 
             this.lnkForgot.TabStop = true;
 
@@ -267,7 +278,7 @@ namespace SmartMed.UI
         private System.Windows.Forms.Label lblPassword;
 
         private System.Windows.Forms.TextBox txtPassword;
-
+        private System.Windows.Forms.Button btnTogglePassword;
         private System.Windows.Forms.Button btnLogin;
 
         private System.Windows.Forms.Button btnRegister;

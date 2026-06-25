@@ -15,15 +15,11 @@ namespace SmartMed.UI
 {
 
     public partial class LoginForm : MaterialForm
-
     {
-
         private readonly AuthService _auth = new AuthService();
-
-
+        private bool _passwordVisible;
 
         public LoginForm()
-
         {
 
             InitializeComponent();
@@ -39,6 +35,25 @@ namespace SmartMed.UI
             UiTheme.ApplyFlatButton(btnRegister, UiButtonStyle.Success);
             UiTheme.StyleTextBox(txtUsername);
             UiTheme.StyleTextBox(txtPassword);
+            SetPasswordVisible(false);
+        }
+
+        private void SetPasswordVisible(bool visible)
+        {
+            _passwordVisible = visible;
+            txtPassword.UseSystemPasswordChar = false;
+            txtPassword.PasswordChar = visible ? '\0' : '\u2022';
+            btnTogglePassword.Text = visible ? "Hide" : "Show";
+        }
+
+        private void BtnTogglePassword_Click(object sender, EventArgs e) =>
+            SetPasswordVisible(!_passwordVisible);
+
+        private void TxtUsername_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode != Keys.Enter) return;
+            e.SuppressKeyPress = true;
+            txtPassword.Focus();
         }
 
         internal static void PresentExisting()
@@ -52,6 +67,7 @@ namespace SmartMed.UI
         {
             txtUsername.Clear();
             txtPassword.Clear();
+            _passwordVisible = false;
             ApplyChrome();
             UiTheme.RevealForm(this);
             Activate();
