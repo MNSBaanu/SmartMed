@@ -38,14 +38,13 @@ namespace SmartMed.UI
 
         private ReportService _reports;
         private CustomerService _customers;
-        private ReportTab _activeTab = ReportTab.Sales;
+        private ReportTab _activeTab = ReportTab.SalesPerformance;
 
         private DataGridView gridReport;
         private ComboBox cmbCustomer;
         private Panel panelCustomerFilter;
         private Button btnSalesTab;
-        private Button btnStockTab;
-        private Button btnExpiryTab;
+        private Button btnInventoryTab;
         private Button btnHistoryTab;
         private Label lblTotalRevenue;
         private Label lblTotalOrders;
@@ -107,7 +106,7 @@ namespace SmartMed.UI
             var titleBlock = new Panel { Dock = DockStyle.Left, Width = 520 };
             titleBlock.Controls.Add(new Label
             {
-                Text = "Generate sales, stock, and customer order history reports.",
+                Text = "Sales performance, medicine inventory, and customer order history reports.",
                 Font = UiTheme.UiFont,
                 ForeColor = SystemColors.GrayText,
                 Dock = DockStyle.Fill
@@ -221,20 +220,22 @@ namespace SmartMed.UI
                 Margin = new Padding(0, 0, 0, 8)
             };
 
-            btnSalesTab = CreateTabButton("Sales Report", ReportTab.Sales);
-            btnStockTab = CreateTabButton("Stock Report", ReportTab.Stock);
-            btnExpiryTab = CreateTabButton("Expiry Report", ReportTab.Expiry);
-            btnHistoryTab = CreateTabButton("Order History", ReportTab.History);
+            var tabs = new FlowLayoutPanel
+            {
+                Dock = DockStyle.Fill,
+                FlowDirection = FlowDirection.LeftToRight,
+                WrapContents = false,
+                AutoSize = true
+            };
 
-            btnSalesTab.Location = new Point(8, 8);
-            btnStockTab.Location = new Point(132, 8);
-            btnExpiryTab.Location = new Point(256, 8);
-            btnHistoryTab.Location = new Point(380, 8);
+            btnSalesTab = CreateTabButton("Sales Performance", ReportTab.SalesPerformance);
+            btnInventoryTab = CreateTabButton("Medicine Inventory", ReportTab.MedicineInventory);
+            btnHistoryTab = CreateTabButton("Customer Order History", ReportTab.CustomerOrderHistory);
 
-            bar.Controls.Add(btnHistoryTab);
-            bar.Controls.Add(btnExpiryTab);
-            bar.Controls.Add(btnStockTab);
-            bar.Controls.Add(btnSalesTab);
+            tabs.Controls.Add(btnSalesTab);
+            tabs.Controls.Add(btnInventoryTab);
+            tabs.Controls.Add(btnHistoryTab);
+            bar.Controls.Add(tabs);
             UpdateTabStyles();
             return bar;
         }
@@ -244,9 +245,12 @@ namespace SmartMed.UI
             var btn = new Button
             {
                 Text = text,
-                Width = tab == ReportTab.History ? 120 : 120,
+                AutoSize = true,
                 Height = 32,
-                FlatStyle = FlatStyle.Flat
+                MinimumSize = new Size(120, 32),
+                Padding = new Padding(12, 0, 12, 0),
+                FlatStyle = FlatStyle.Flat,
+                Margin = new Padding(0, 0, 8, 0)
             };
             btn.FlatAppearance.BorderSize = 0;
             btn.Tag = tab;
@@ -349,7 +353,7 @@ namespace SmartMed.UI
         private void SwitchTab(ReportTab tab)
         {
             _activeTab = tab;
-            panelCustomerFilter.Visible = tab == ReportTab.History;
+            panelCustomerFilter.Visible = tab == ReportTab.CustomerOrderHistory;
             UpdateTabStyles();
             if (!IsDesignHost())
                 LoadActiveReport();
@@ -357,10 +361,9 @@ namespace SmartMed.UI
 
         private void UpdateTabStyles()
         {
-            StyleTab(btnSalesTab, _activeTab == ReportTab.Sales);
-            StyleTab(btnStockTab, _activeTab == ReportTab.Stock);
-            StyleTab(btnExpiryTab, _activeTab == ReportTab.Expiry);
-            StyleTab(btnHistoryTab, _activeTab == ReportTab.History);
+            StyleTab(btnSalesTab, _activeTab == ReportTab.SalesPerformance);
+            StyleTab(btnInventoryTab, _activeTab == ReportTab.MedicineInventory);
+            StyleTab(btnHistoryTab, _activeTab == ReportTab.CustomerOrderHistory);
         }
 
         private static void StyleTab(Button btn, bool active) => UiTheme.StyleTabButton(btn, active);
@@ -386,12 +389,10 @@ namespace SmartMed.UI
 
             try
             {
-                if (_activeTab == ReportTab.Sales)
+                if (_activeTab == ReportTab.SalesPerformance)
                     LoadSalesReport();
-                else if (_activeTab == ReportTab.Stock)
-                    LoadStockReport();
-                else if (_activeTab == ReportTab.Expiry)
-                    LoadExpiryReport();
+                else if (_activeTab == ReportTab.MedicineInventory)
+                    LoadInventoryReport();
                 else
                     LoadHistoryReport();
 
@@ -407,21 +408,14 @@ namespace SmartMed.UI
         {
             var table = Reports.GetSalesReport();
             gridReport.DataSource = table;
-            lblFooterStatus.Text = $"Items: {table.Rows.Count} | Server Connected | {DateTime.Now:hh:mm tt | MMM dd, yyyy}";
+            lblFooterStatus.Text = $"Items: {table.Rows.Count} | Sales performance | {DateTime.Now:hh:mm tt | MMM dd, yyyy}";
         }
 
-        private void LoadStockReport()
+        private void LoadInventoryReport()
         {
             var table = Reports.GetStockReport();
             gridReport.DataSource = table;
-            lblFooterStatus.Text = $"Items: {table.Rows.Count} | Server Connected | {DateTime.Now:hh:mm tt | MMM dd, yyyy}";
-        }
-
-        private void LoadExpiryReport()
-        {
-            var table = Reports.GetExpiryReport();
-            gridReport.DataSource = table;
-            lblFooterStatus.Text = $"Items: {table.Rows.Count} | Expiry report | {DateTime.Now:hh:mm tt | MMM dd, yyyy}";
+            lblFooterStatus.Text = $"Items: {table.Rows.Count} | Medicine inventory | {DateTime.Now:hh:mm tt | MMM dd, yyyy}";
         }
 
         private void LoadHistoryReport()
@@ -449,7 +443,7 @@ namespace SmartMed.UI
             var customerId = Convert.ToInt32(cmbCustomer.SelectedValue);
             var table = Reports.GetCustomerOrderHistory(customerId);
             gridReport.DataSource = table;
-            lblFooterStatus.Text = $"Items: {table.Rows.Count} | Customer: {cmbCustomer.Text} | {DateTime.Now:hh:mm tt}";
+            lblFooterStatus.Text = $"Items: {table.Rows.Count} | Customer order history | {cmbCustomer.Text} | {DateTime.Now:hh:mm tt}";
         }
 
         private void UpdateSummaryStats()
