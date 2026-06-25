@@ -22,13 +22,13 @@ namespace SmartMed.UI
             ClientSize = new System.Drawing.Size(360, 220);
 
             var lblCurrent = new Label { Text = "Current Password:", Left = 16, Top = 20, AutoSize = true };
-            txtCurrent = new TextBox { Left = 16, Top = 40, Width = 320, UseSystemPasswordChar = true };
+            txtCurrent = new TextBox { Left = 16, Top = 40, Width = 320 };
 
             var lblNew = new Label { Text = "New Password:", Left = 16, Top = 72, AutoSize = true };
-            txtNew = new TextBox { Left = 16, Top = 92, Width = 320, UseSystemPasswordChar = true };
+            txtNew = new TextBox { Left = 16, Top = 92, Width = 320 };
 
             var lblConfirm = new Label { Text = "Confirm Password:", Left = 16, Top = 124, AutoSize = true };
-            txtConfirm = new TextBox { Left = 16, Top = 144, Width = 320, UseSystemPasswordChar = true };
+            txtConfirm = new TextBox { Left = 16, Top = 144, Width = 320 };
 
             var btnSave = new Button { Text = "Save", Left = 168, Top = 176, Width = 80, DialogResult = DialogResult.None };
             var btnCancel = new Button { Text = "Cancel", Left = 256, Top = 176, Width = 80, DialogResult = DialogResult.Cancel };
@@ -45,9 +45,9 @@ namespace SmartMed.UI
             UiTheme.ApplyFontTree(this);
             UiTheme.ApplyFlatButton(btnSave, UiButtonStyle.Primary);
             UiTheme.ApplyFlatButton(btnCancel, UiButtonStyle.Secondary);
-            UiTheme.StyleTextBox(txtCurrent);
-            UiTheme.StyleTextBox(txtNew);
-            UiTheme.StyleTextBox(txtConfirm);
+            UiTheme.StylePasswordBox(txtCurrent);
+            UiTheme.StylePasswordBox(txtNew);
+            UiTheme.StylePasswordBox(txtConfirm);
         }
 
         private void BtnSave_Click(object sender, EventArgs e)

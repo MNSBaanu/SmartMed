@@ -22,6 +22,7 @@ namespace SmartMed.UI
                 UiTheme.ApplyFlatButton(btnReturnLogin, UiButtonStyle.Primary);
                 UiTheme.ApplyHeaderPanel(panelHeader);
                 UiTheme.ApplyFontTree(panelCard);
+                SetPasswordVisible(false);
             }
             LayoutForm();
         }
@@ -101,8 +102,8 @@ namespace SmartMed.UI
         private void SetPasswordVisible(bool visible)
         {
             _passwordVisible = visible;
-            txtPassword.UseSystemPasswordChar = !visible;
-            txtConfirm.UseSystemPasswordChar = !visible;
+            UiTheme.StylePasswordBox(txtPassword, masked: !visible);
+            UiTheme.StylePasswordBox(txtConfirm, masked: !visible);
             var label = visible ? "Hide" : "Show";
             btnTogglePassword.Text = label;
             btnToggleConfirm.Text = label;

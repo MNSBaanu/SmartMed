@@ -230,8 +230,7 @@ namespace SmartMed.UI
             this.txtPassword.Location = new System.Drawing.Point(24, 236);
             this.txtPassword.Name = "txtPassword";
             this.txtPassword.Size = new System.Drawing.Size(402, 23);
-            this.txtPassword.TabIndex = 9;
-            this.txtPassword.UseSystemPasswordChar = true;
+            this.            txtPassword.TabIndex = 9;
             // 
             // btnTogglePassword
             // 
@@ -264,7 +263,6 @@ namespace SmartMed.UI
             this.txtConfirm.Name = "txtConfirm";
             this.txtConfirm.Size = new System.Drawing.Size(402, 23);
             this.txtConfirm.TabIndex = 12;
-            this.txtConfirm.UseSystemPasswordChar = true;
             // 
             // btnToggleConfirm
             // 

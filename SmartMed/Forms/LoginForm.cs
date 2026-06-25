@@ -40,15 +40,14 @@ namespace SmartMed.UI
             UiTheme.ApplyFlatButton(btnQuickAdmin, UiButtonStyle.Primary);
             UiTheme.ApplyFlatButton(btnQuickCustomer, UiButtonStyle.Success);
             UiTheme.StyleTextBox(txtUsername);
-            UiTheme.StyleTextBox(txtPassword);
-            SetPasswordVisible(false);
+            UiTheme.StylePasswordBox(txtPassword, masked: !_passwordVisible);
+            SetPasswordVisible(_passwordVisible);
         }
 
         private void SetPasswordVisible(bool visible)
         {
             _passwordVisible = visible;
-            txtPassword.UseSystemPasswordChar = false;
-            txtPassword.PasswordChar = visible ? '\0' : '\u2022';
+            UiTheme.StylePasswordBox(txtPassword, masked: !visible);
             btnTogglePassword.Text = visible ? "Hide" : "Show";
         }
 

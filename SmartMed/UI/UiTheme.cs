@@ -429,6 +429,8 @@ namespace SmartMed.UI
             button.FlatAppearance.MouseOverBackColor = Color.FromArgb(50, 50, 50);
         }
 
+        public const char PasswordMaskChar = '\u2022';
+
         public static void StyleTextBox(TextBox textBox)
         {
             if (textBox == null) return;
@@ -436,6 +438,14 @@ namespace SmartMed.UI
             textBox.BackColor = Color.White;
             textBox.ForeColor = GridHeaderText;
             textBox.Font = UiFont;
+        }
+
+        public static void StylePasswordBox(TextBox textBox, bool masked = true)
+        {
+            if (textBox == null) return;
+            StyleTextBox(textBox);
+            textBox.UseSystemPasswordChar = false;
+            textBox.PasswordChar = masked ? PasswordMaskChar : '\0';
         }
 
         public static void StyleComboBox(ComboBox comboBox)
