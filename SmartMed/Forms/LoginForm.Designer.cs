@@ -144,7 +144,7 @@ namespace SmartMed.UI
 
             this.txtPassword.Location = new System.Drawing.Point(24, 90);
             this.txtPassword.Name = "txtPassword";
-            this.txtPassword.Size = new System.Drawing.Size(284, 23);
+            this.txtPassword.Size = new System.Drawing.Size(272, 23);
             this.txtPassword.TabIndex = 2;
             // 
             // btnTogglePassword
@@ -155,9 +155,9 @@ namespace SmartMed.UI
             this.btnTogglePassword.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnTogglePassword.Font = new System.Drawing.Font("Roboto", 8F);
             this.btnTogglePassword.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(68)))), ((int)(((byte)(70)))), ((int)(((byte)(82)))));
-            this.btnTogglePassword.Location = new System.Drawing.Point(308, 90);
+            this.btnTogglePassword.Location = new System.Drawing.Point(296, 90);
             this.btnTogglePassword.Name = "btnTogglePassword";
-            this.btnTogglePassword.Size = new System.Drawing.Size(36, 23);
+            this.btnTogglePassword.Size = new System.Drawing.Size(48, 23);
             this.btnTogglePassword.TabIndex = 7;
             this.btnTogglePassword.Text = "Show";
             this.btnTogglePassword.UseVisualStyleBackColor = false;

@@ -240,9 +240,9 @@ namespace SmartMed.UI
             this.btnTogglePassword.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnTogglePassword.Font = new System.Drawing.Font("Roboto", 9F);
             this.btnTogglePassword.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(68)))), ((int)(((byte)(70)))), ((int)(((byte)(82)))));
-            this.btnTogglePassword.Location = new System.Drawing.Point(390, 237);
+            this.btnTogglePassword.Location = new System.Drawing.Point(378, 237);
             this.btnTogglePassword.Name = "btnTogglePassword";
-            this.btnTogglePassword.Size = new System.Drawing.Size(36, 22);
+            this.btnTogglePassword.Size = new System.Drawing.Size(48, 22);
             this.btnTogglePassword.TabIndex = 10;
             this.btnTogglePassword.Text = "Show";
             this.btnTogglePassword.UseVisualStyleBackColor = false;
@@ -272,9 +272,9 @@ namespace SmartMed.UI
             this.btnToggleConfirm.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnToggleConfirm.Font = new System.Drawing.Font("Roboto", 9F);
             this.btnToggleConfirm.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(68)))), ((int)(((byte)(70)))), ((int)(((byte)(82)))));
-            this.btnToggleConfirm.Location = new System.Drawing.Point(390, 297);
+            this.btnToggleConfirm.Location = new System.Drawing.Point(378, 297);
             this.btnToggleConfirm.Name = "btnToggleConfirm";
-            this.btnToggleConfirm.Size = new System.Drawing.Size(36, 22);
+            this.btnToggleConfirm.Size = new System.Drawing.Size(48, 22);
             this.btnToggleConfirm.TabIndex = 13;
             this.btnToggleConfirm.Text = "Show";
             this.btnToggleConfirm.UseVisualStyleBackColor = false;

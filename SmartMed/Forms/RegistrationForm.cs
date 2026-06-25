@@ -39,6 +39,7 @@ namespace SmartMed.UI
             const int gap = 16;
             const int labelGap = 4;
             const int inputH = 36;
+            const int toggleBtnW = 48;
             const int headerH = 56;
             const int footerH = 124;
             int cardW = 450;
@@ -78,13 +79,13 @@ namespace SmartMed.UI
             lblPassword.SetBounds(x, y, fieldW, 16);
             y += 16 + labelGap;
             txtPassword.SetBounds(x, y, fieldW, inputH);
-            btnTogglePassword.SetBounds(x + fieldW - 36, y + 1, 36, inputH - 2);
+            btnTogglePassword.SetBounds(x + fieldW - toggleBtnW, y + 1, toggleBtnW, inputH - 2);
             y += inputH + gap;
 
             lblConfirm.SetBounds(x, y, fieldW, 16);
             y += 16 + labelGap;
             txtConfirm.SetBounds(x, y, fieldW, inputH);
-            btnToggleConfirm.SetBounds(x + fieldW - 36, y + 1, 36, inputH - 2);
+            btnToggleConfirm.SetBounds(x + fieldW - toggleBtnW, y + 1, toggleBtnW, inputH - 2);
 
             btnRegister.SetBounds(pad, 16, fieldW, 40);
             btnCancel.SetBounds(pad, 64, fieldW, 40);
