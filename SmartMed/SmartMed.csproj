@@ -12,6 +12,7 @@
     <Reference Include="System.Configuration" />
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="PDFsharp" Version="1.50.5147" />
     <PackageReference Include="ReaLTaiizor" Version="3.8.1.8" />
     <PackageReference Include="System.Data.SqlClient" Version="4.8.6" />
   </ItemGroup>

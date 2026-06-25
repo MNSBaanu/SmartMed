@@ -47,5 +47,10 @@ namespace SmartMed.Services
         {
             ExportHelper.ExportDataTableToCsv(table, filePath);
         }
+
+        public void ExportActiveReportToPdf(DataTable table, string filePath, string title, string subtitle = null)
+        {
+            ExportHelper.ExportDataTableToPdf(table, filePath, title, subtitle);
+        }
     }
 }

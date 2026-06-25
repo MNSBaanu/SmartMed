@@ -31,15 +31,23 @@ namespace SmartMed.UI
             if (IsDesignHost())
                 LoadDesignTimePreview();
             else
-                LoadActiveReport();
+                ResetReportPreview();
         }
 
-        public void RefreshReports() => LoadActiveReport();
+        public void RefreshReports()
+        {
+            if (_reportViewed)
+                LoadActiveReport();
+            else
+                ResetReportPreview();
+        }
 
         private ReportService _reports;
         private CustomerService _customers;
         private ReportTab _activeTab = ReportTab.SalesPerformance;
         private ReportPeriod _activePeriod = ReportPeriod.Month;
+        private bool _reportViewed;
+        private DataTable _currentReportTable;
 
         private DataGridView gridReport;
         private ComboBox cmbCustomer;
@@ -51,6 +59,9 @@ namespace SmartMed.UI
         private Button btnSalesTab;
         private Button btnInventoryTab;
         private Button btnHistoryTab;
+        private Button btnViewReport;
+        private Button btnExportCsv;
+        private Button btnExportPdf;
         private Label lblTotalRevenue;
         private Label lblTotalOrders;
         private Label lblLowStock;
@@ -127,25 +138,30 @@ namespace SmartMed.UI
                 WrapContents = false,
                 Padding = new Padding(0, 8, 0, 0)
             };
-            var btnExport = CreateToolbarButton("Export CSV");
-            btnExport.Click += BtnExport_Click;
-            var btnPrint = CreateToolbarButton("Print");
-            btnPrint.Click += BtnPrint_Click;
-            actions.Controls.Add(btnExport);
-            actions.Controls.Add(btnPrint);
+            btnViewReport = CreateToolbarButton("View Report", 110);
+            btnViewReport.Click += BtnViewReport_Click;
+            UiTheme.ApplyFlatButton(btnViewReport, UiButtonStyle.Primary);
+            btnExportCsv = CreateToolbarButton("Export CSV", 100);
+            btnExportCsv.Click += BtnExportCsv_Click;
+            btnExportPdf = CreateToolbarButton("Export PDF", 100);
+            btnExportPdf.Click += BtnExportPdf_Click;
+            actions.Controls.Add(btnViewReport);
+            actions.Controls.Add(btnExportCsv);
+            actions.Controls.Add(btnExportPdf);
+            UpdateExportButtons();
 
             header.Controls.Add(actions);
             header.Controls.Add(titleBlock);
             return header;
         }
 
-        private static Button CreateToolbarButton(string text)
+        private static Button CreateToolbarButton(string text, int width = 120)
         {
             var btn = new Button
             {
                 Text = text,
                 Height = 32,
-                Width = 120,
+                Width = width,
                 Margin = new Padding(4, 0, 0, 0)
             };
             return btn;
@@ -344,7 +360,7 @@ namespace SmartMed.UI
                 Width = 320,
                 Location = new Point(72, 8)
             };
-            cmbCustomer.SelectedIndexChanged += (s, e) => LoadActiveReport();
+            cmbCustomer.SelectedIndexChanged += (s, e) => ResetReportPreview();
 
             panelCustomerFilter.Controls.Add(cmbCustomer);
             panelCustomerFilter.Controls.Add(lbl);
@@ -420,7 +436,7 @@ namespace SmartMed.UI
             UpdatePeriodFilterVisibility();
             UpdateTabStyles();
             if (!IsDesignHost())
-                LoadActiveReport();
+                ResetReportPreview();
         }
 
         private void SwitchPeriod(ReportPeriod period)
@@ -428,7 +444,7 @@ namespace SmartMed.UI
             _activePeriod = period;
             UpdatePeriodStyles();
             if (!IsDesignHost())
-                LoadActiveReport();
+                ResetReportPreview();
         }
 
         private void UpdatePeriodFilterVisibility()
@@ -473,6 +489,41 @@ namespace SmartMed.UI
 
         private static void StyleTab(Button btn, bool active) => UiTheme.StyleTabButton(btn, active);
 
+        private void ResetReportPreview()
+        {
+            _reportViewed = false;
+            _currentReportTable = null;
+            if (gridReport != null)
+                gridReport.DataSource = null;
+            if (lblFooterStatus != null)
+                lblFooterStatus.Text = "Select report type and filters, then click View Report.";
+            ClearSummaryStats();
+            UpdateExportButtons();
+        }
+
+        private void ClearSummaryStats()
+        {
+            if (lblTotalRevenue == null) return;
+            lblTotalRevenue.Text = "—";
+            lblTotalOrders.Text = "—";
+            lblLowStock.Text = "—";
+            lblOutstanding.Text = "—";
+        }
+
+        private void UpdateExportButtons()
+        {
+            if (btnExportCsv == null || btnExportPdf == null) return;
+            var canExport = _reportViewed && _currentReportTable != null && _currentReportTable.Rows.Count > 0;
+            btnExportCsv.Enabled = canExport;
+            btnExportPdf.Enabled = canExport;
+        }
+
+        private void BtnViewReport_Click(object sender, EventArgs e)
+        {
+            if (IsDesignHost() || Reports == null) return;
+            LoadActiveReport();
+        }
+
         private void LoadDesignTimePreview()
         {
             lblTotalRevenue.Text = "LKR 1,245,300";
@@ -502,9 +553,16 @@ namespace SmartMed.UI
                     LoadHistoryReport();
 
                 UpdateSummaryStats();
+                _reportViewed = _currentReportTable != null;
+                UpdateExportButtons();
+
+                if (_reportViewed && _currentReportTable.Rows.Count == 0)
+                    MessageBox.Show("No records found for the selected filters.", "View Report",
+                        MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
             catch (Exception ex)
             {
+                ResetReportPreview();
                 MessageBox.Show(ex.Message, "Report Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
         }
@@ -512,6 +570,7 @@ namespace SmartMed.UI
         private void LoadSalesReport()
         {
             var table = Reports.GetSalesReport(_activePeriod);
+            _currentReportTable = table;
             gridReport.DataSource = table;
             lblFooterStatus.Text =
                 $"Items: {table.Rows.Count} | Sales performance | {GetPeriodStatusText()} | {DateTime.Now:hh:mm tt | MMM dd, yyyy}";
@@ -520,6 +579,7 @@ namespace SmartMed.UI
         private void LoadInventoryReport()
         {
             var table = Reports.GetStockReport();
+            _currentReportTable = table;
             gridReport.DataSource = table;
             lblFooterStatus.Text =
                 $"Items: {table.Rows.Count} | Medicine inventory (current stock) | {DateTime.Now:hh:mm tt | MMM dd, yyyy}";
@@ -542,6 +602,7 @@ namespace SmartMed.UI
 
             if (cmbCustomer.SelectedValue == null)
             {
+                _currentReportTable = null;
                 gridReport.DataSource = null;
                 lblFooterStatus.Text = "No customers available | Server Connected";
                 return;
@@ -549,6 +610,7 @@ namespace SmartMed.UI
 
             var customerId = Convert.ToInt32(cmbCustomer.SelectedValue);
             var table = Reports.GetCustomerOrderHistory(customerId, _activePeriod);
+            _currentReportTable = table;
             gridReport.DataSource = table;
             lblFooterStatus.Text =
                 $"Items: {table.Rows.Count} | Customer order history | {cmbCustomer.Text} | {GetPeriodStatusText()} | {DateTime.Now:hh:mm tt}";
@@ -582,29 +644,56 @@ namespace SmartMed.UI
             lblOutstanding.Text = $"LKR {outstanding:N2}";
         }
 
-        private void BtnExport_Click(object sender, EventArgs e)
+        private void BtnExportCsv_Click(object sender, EventArgs e) => ExportReport(isPdf: false);
+
+        private void BtnExportPdf_Click(object sender, EventArgs e) => ExportReport(isPdf: true);
+
+        private void ExportReport(bool isPdf)
         {
-            if (IsDesignHost() || Reports == null || gridReport.DataSource == null) return;
+            if (IsDesignHost() || Reports == null || !_reportViewed || _currentReportTable == null)
+            {
+                MessageBox.Show("View the report before exporting.", "Export", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return;
+            }
+
+            if (_currentReportTable.Rows.Count == 0)
+            {
+                MessageBox.Show("Nothing to export.", "Export", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return;
+            }
+
             try
             {
-                var table = gridReport.DataSource as DataTable;
-                if (table == null)
-                {
-                    MessageBox.Show("Nothing to export.", "Export", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    return;
-                }
                 var periodSuffix = _activeTab == ReportTab.MedicineInventory
                     ? string.Empty
                     : $"_{ReportPeriodHelper.GetFileSuffix(_activePeriod)}";
-                using (var dialog = new SaveFileDialog
+                var baseName = $"{GetExportBaseName()}{periodSuffix}_{DateTime.Now:yyyyMMdd}";
+
+                if (isPdf)
                 {
-                    Filter = "CSV files (*.csv)|*.csv",
-                    FileName = $"{GetExportBaseName()}{periodSuffix}_{DateTime.Now:yyyyMMdd}.csv"
-                })
+                    using (var dialog = new SaveFileDialog
+                    {
+                        Filter = "PDF files (*.pdf)|*.pdf",
+                        FileName = $"{baseName}.pdf"
+                    })
+                    {
+                        if (dialog.ShowDialog() != DialogResult.OK) return;
+                        Reports.ExportActiveReportToPdf(_currentReportTable, dialog.FileName, GetReportTitle(), GetReportSubtitle());
+                        MessageBox.Show("Report exported as PDF.", "Export", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    }
+                }
+                else
                 {
-                    if (dialog.ShowDialog() != DialogResult.OK) return;
-                    Reports.ExportActiveReportToCsv(table, dialog.FileName);
-                    MessageBox.Show("Report exported.", "Export", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    using (var dialog = new SaveFileDialog
+                    {
+                        Filter = "CSV files (*.csv)|*.csv",
+                        FileName = $"{baseName}.csv"
+                    })
+                    {
+                        if (dialog.ShowDialog() != DialogResult.OK) return;
+                        Reports.ExportActiveReportToCsv(_currentReportTable, dialog.FileName);
+                        MessageBox.Show("Report exported as CSV.", "Export", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    }
                 }
             }
             catch (Exception ex)
@@ -613,21 +702,22 @@ namespace SmartMed.UI
             }
         }
 
-        private void BtnPrint_Click(object sender, EventArgs e)
+        private string GetReportTitle()
         {
-            if (gridReport.Rows.Count == 0)
-            {
-                MessageBox.Show("No report data to print.", "Print", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                return;
-            }
-            try
-            {
-                ExportHelper.PrintGrid(gridReport, "SmartMed Report");
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message, "Print Failed", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-            }
+            if (_activeTab == ReportTab.SalesPerformance) return "Sales Performance Report";
+            if (_activeTab == ReportTab.MedicineInventory) return "Medicine Inventory Report";
+            return "Customer Order History Report";
+        }
+
+        private string GetReportSubtitle()
+        {
+            if (_activeTab == ReportTab.MedicineInventory)
+                return $"Generated {DateTime.Now:MMM dd, yyyy hh:mm tt} | Current stock snapshot";
+
+            if (_activeTab == ReportTab.CustomerOrderHistory)
+                return $"Customer: {cmbCustomer?.Text} | Period: {GetPeriodStatusText()} | Generated {DateTime.Now:MMM dd, yyyy hh:mm tt}";
+
+            return $"Period: {GetPeriodStatusText()} | Generated {DateTime.Now:MMM dd, yyyy hh:mm tt}";
         }
 
         private string GetExportBaseName()
