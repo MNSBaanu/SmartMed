@@ -11,7 +11,7 @@ namespace SmartMed.UI
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             UiTheme.Init();
-            Application.Run(new LoginForm());
+            Application.Run(new SmartMedApplicationContext());
         }
     }
 }

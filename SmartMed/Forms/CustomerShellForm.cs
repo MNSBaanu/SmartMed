@@ -135,10 +135,9 @@ namespace SmartMed.UI
             next.Size = Size;
             next.WindowState = WindowState;
 
-            var login = Application.OpenForms.OfType<LoginForm>().FirstOrDefault();
-            login?.AttachCustomerReturn(next);
-
             next.PrepareForNavigation();
+
+            SmartMedApplicationContext.Current?.HandoffMainForm(next);
 
             SuspendLayout();
             try
@@ -153,16 +152,20 @@ namespace SmartMed.UI
             }
         }
 
-        private void BtnClose_Click(object sender, EventArgs e) => Logout();
+        private void BtnClose_Click(object sender, EventArgs e) => ExitApplication();
 
         private void BtnNavLogout_Click(object sender, EventArgs e) => Logout();
 
-        protected void Logout()
+        protected void ExitApplication()
         {
             CartService.Clear();
             Session.Clear();
             Close();
-            LoginForm.PresentExisting();
+        }
+
+        protected void Logout()
+        {
+            SmartMedApplicationContext.Current?.ShowLoginAfterLogout();
         }
 
         private void BtnNavHome_Click(object sender, EventArgs e)

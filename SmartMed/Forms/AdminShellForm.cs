@@ -442,13 +442,9 @@ namespace SmartMed.UI
 
 
 
-            var login = Application.OpenForms.OfType<LoginForm>().FirstOrDefault();
-
-            login?.AttachAdminReturn(next);
-
-
-
             next.PrepareForNavigation();
+
+            SmartMedApplicationContext.Current?.HandoffMainForm(next);
 
             Hide();
 
@@ -460,11 +456,35 @@ namespace SmartMed.UI
 
 
 
-        private void BtnClose_Click(object sender, EventArgs e) => Logout();
+        private void BtnClose_Click(object sender, EventArgs e) => ExitApplication();
 
 
 
         private void BtnNavLogout_Click(object sender, EventArgs e) => Logout();
+
+
+
+        protected void ExitApplication()
+
+        {
+
+            if (_isEmbeddedPage)
+
+            {
+
+                GetAdminHost()?.ExitApplication();
+
+                return;
+
+            }
+
+
+
+            Session.Clear();
+
+            Close();
+
+        }
 
 
 
@@ -484,11 +504,7 @@ namespace SmartMed.UI
 
 
 
-            Session.Clear();
-
-            Close();
-
-            LoginForm.PresentExisting();
+            SmartMedApplicationContext.Current?.ShowLoginAfterLogout();
 
         }
 

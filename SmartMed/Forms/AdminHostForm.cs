@@ -19,16 +19,6 @@ namespace SmartMed.UI
             Text = "SmartMed - Admin Dashboard";
         }
 
-        protected override void OnFormClosing(FormClosingEventArgs e)
-        {
-            if (e.CloseReason == CloseReason.UserClosing)
-            {
-                Session.Clear();
-                LoginForm.PresentExisting();
-            }
-            base.OnFormClosing(e);
-        }
-
         protected override void NavigateAdmin(AdminNavItem nav)
         {
             if (_embeddedPage != null && _activeNav == nav)
