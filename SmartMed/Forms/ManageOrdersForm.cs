@@ -42,11 +42,9 @@ namespace SmartMed.UI
         private TextBox txtSearch;
 
         private DataGridView gridOrders;
-        private DataGridView gridItems;
         private ComboBox cmbStatus;
         private Label lblStatusCaption;
         private Label lblOrderStatus;
-        private Label lblOrderDetails;
         private Label lblLastUpdated;
         private Label lblTotalOrders;
         private Label lblPendingOrders;
@@ -72,24 +70,22 @@ namespace SmartMed.UI
                 AutoSizeMode = AutoSizeMode.GrowAndShrink,
                 Dock = DockStyle.Top,
                 ColumnCount = 1,
-                RowCount = 6,
-                MinimumSize = new Size(0, 1000),
+                RowCount = 5,
+                MinimumSize = new Size(0, 820),
                 Width = GetScrollContentWidth()
             };
             _scrollRoot.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100f));
             _scrollRoot.RowStyles.Add(new RowStyle(SizeType.AutoSize));
             _scrollRoot.RowStyles.Add(new RowStyle(SizeType.AutoSize));
-            _scrollRoot.RowStyles.Add(new RowStyle(SizeType.Absolute, 220f));
-            _scrollRoot.RowStyles.Add(new RowStyle(SizeType.Absolute, 200f));
+            _scrollRoot.RowStyles.Add(new RowStyle(SizeType.Absolute, 380f));
             _scrollRoot.RowStyles.Add(new RowStyle(SizeType.AutoSize));
             _scrollRoot.RowStyles.Add(new RowStyle(SizeType.AutoSize));
 
             _scrollRoot.Controls.Add(CreatePageHeader(), 0, 0);
             _scrollRoot.Controls.Add(CreateStatsRow(), 0, 1);
             _scrollRoot.Controls.Add(CreateOrdersGridPanel(), 0, 2);
-            _scrollRoot.Controls.Add(CreateItemsGridPanel(), 0, 3);
-            _scrollRoot.Controls.Add(CreatePrescriptionPanel(), 0, 4);
-            _scrollRoot.Controls.Add(CreateStatusPanel(), 0, 5);
+            _scrollRoot.Controls.Add(CreatePrescriptionPanel(), 0, 3);
+            _scrollRoot.Controls.Add(CreateStatusPanel(), 0, 4);
             WireScrollRoot(_scrollRoot);
         }
 
@@ -292,7 +288,7 @@ namespace SmartMed.UI
             };
             header.Controls.Add(new Label
             {
-                Text = "Recent Orders",
+                Text = "Orders & Line Items",
                 Font = UiTheme.UiFont,
                 ForeColor = UiTheme.GridHeaderText,
                 Dock = DockStyle.Left,
@@ -306,41 +302,6 @@ namespace SmartMed.UI
             outer.Controls.Add(gridOrders);
             outer.Controls.Add(CreateSearchPanel());
             outer.Controls.Add(header);
-            return outer;
-        }
-
-        private Panel CreateItemsGridPanel()
-        {
-            var outer = new Panel
-            {
-                Dock = DockStyle.Fill,
-                BackColor = SystemColors.Window,
-                Padding = new Padding(1),
-                Margin = new Padding(0, 0, 0, 16)
-            };
-            outer.Paint += (s, e) =>
-            {
-                var rect = outer.ClientRectangle;
-                rect.Width -= 1;
-                rect.Height -= 1;
-                using (var pen = new Pen(SystemColors.ControlDark))
-                    e.Graphics.DrawRectangle(pen, rect);
-            };
-
-            lblOrderDetails = new Label
-            {
-                Text = "Order Details",
-                Font = UiTheme.UiFont,
-                ForeColor = SystemColors.GrayText,
-                Dock = DockStyle.Top,
-                Height = 36,
-                Padding = new Padding(12, 8, 0, 0),
-                BackColor = SystemColors.Control
-            };
-
-            gridItems = CreateGrid();
-            outer.Controls.Add(gridItems);
-            outer.Controls.Add(lblOrderDetails);
             return outer;
         }
 
@@ -500,21 +461,15 @@ namespace SmartMed.UI
             gridOrders.SelectionChanged -= GridOrders_SelectionChanged;
             gridOrders.DataSource = new[]
             {
-                new { OrderID = 9421, OrderRef = "#ORD-9421", CustomerName = "Margaret Sullivan", OrderDate = "Oct 24, 2023", Status = OrderService.StatusPending, Total = "LKR 124.50", Prescription = "9421_20231024120000_rx.pdf", RxStatus = PrescriptionService.StatusPending },
-                new { OrderID = 9420, OrderRef = "#ORD-9420", CustomerName = "Jonathan Wick", OrderDate = "Oct 24, 2023", Status = OrderService.StatusReadyForPickup, Total = "LKR 45.00", Prescription = "—", RxStatus = "—" },
-                new { OrderID = 9419, OrderRef = "#ORD-9419", CustomerName = "Sarah Connor", OrderDate = "Oct 23, 2023", Status = OrderService.StatusDelivered, Total = "LKR 312.20", Prescription = "—", RxStatus = "—" }
+                new { OrderID = 9421, OrderRef = "#ORD-9421", CustomerName = "Margaret Sullivan", OrderDate = "Oct 24, 2023", Status = OrderService.StatusPending, Total = "LKR 124.50", Prescription = "9421_20231024120000_rx.pdf", RxStatus = PrescriptionService.StatusPending, MedicineName = "Amoxicillin 500mg (30 Caps)", Rx = "Yes", Quantity = 1, UnitPrice = "LKR 15.00", Subtotal = "LKR 15.00" },
+                new { OrderID = 9421, OrderRef = "#ORD-9421", CustomerName = "Margaret Sullivan", OrderDate = "Oct 24, 2023", Status = OrderService.StatusPending, Total = "LKR 124.50", Prescription = "9421_20231024120000_rx.pdf", RxStatus = PrescriptionService.StatusPending, MedicineName = "Lisinopril 10mg (90 Tabs)", Rx = "No", Quantity = 1, UnitPrice = "LKR 30.00", Subtotal = "LKR 30.00" },
+                new { OrderID = 9420, OrderRef = "#ORD-9420", CustomerName = "Jonathan Wick", OrderDate = "Oct 24, 2023", Status = OrderService.StatusReadyForPickup, Total = "LKR 45.00", Prescription = "—", RxStatus = "—", MedicineName = "Paracetamol 500mg", Rx = "No", Quantity = 2, UnitPrice = "LKR 22.50", Subtotal = "LKR 45.00" },
+                new { OrderID = 9419, OrderRef = "#ORD-9419", CustomerName = "Sarah Connor", OrderDate = "Oct 23, 2023", Status = OrderService.StatusDelivered, Total = "LKR 312.20", Prescription = "—", RxStatus = "—", MedicineName = "Atorvastatin 20mg", Rx = "No", Quantity = 1, UnitPrice = "LKR 312.20", Subtotal = "LKR 312.20" }
             };
             HideOrderIdColumn();
             gridOrders.ClearSelection();
             gridOrders.SelectionChanged += GridOrders_SelectionChanged;
 
-            gridItems.DataSource = new[]
-            {
-                new { MedicineName = "Amoxicillin 500mg (30 Caps)", Rx = "Yes", Quantity = 1, UnitPrice = "LKR 15.00", Subtotal = "LKR 15.00" },
-                new { MedicineName = "Lisinopril 10mg (90 Tabs)", Rx = "No", Quantity = 1, UnitPrice = "LKR 30.00", Subtotal = "LKR 30.00" }
-            };
-
-            lblOrderDetails.Text = "Order Details: #ORD-9421";
             UpdatePrescriptionControls(9421, PrescriptionService.StatusPending, "9421_20231024120000_rx.pdf");
             cmbStatus.SelectedItem = OrderService.StatusReadyForPickup;
             lblLastUpdated.Text = "Last Updated: Today, 10:42 AM";
@@ -540,21 +495,68 @@ namespace SmartMed.UI
 
             all = SearchService.SearchOrders(all, txtSearch?.Text);
 
-            UiTheme.SetGridDataSource(gridOrders, all.Select(o => new
-            {
-                o.OrderID,
-                OrderRef = $"#SM-{o.OrderID:D4}",
-                o.CustomerName,
-                OrderDate = o.OrderDate.ToString("MMM dd, yyyy"),
-                o.Status,
-                Total = $"LKR {o.TotalAmount:N2}",
-                Prescription = Orders.GetPrescriptionDisplay(o.OrderID),
-                RxStatus = Orders.GetPrescriptionStatusDisplay(o.OrderID)
-            }).ToList());
+            UiTheme.SetGridDataSource(gridOrders, BuildOrderGridRows(all));
 
             HideOrderIdColumn();
             UpdateStats(all);
             ClearSelection();
+        }
+
+        private List<object> BuildOrderGridRows(List<Order> orders)
+        {
+            var rows = new List<object>();
+            foreach (var order in orders)
+            {
+                var items = Orders.GetItems(order.OrderID);
+                var orderRef = $"#SM-{order.OrderID:D4}";
+                var orderDate = order.OrderDate.ToString("MMM dd, yyyy");
+                var total = $"LKR {order.TotalAmount:N2}";
+                var prescription = Orders.GetPrescriptionDisplay(order.OrderID);
+                var rxStatus = Orders.GetPrescriptionStatusDisplay(order.OrderID);
+
+                if (items.Count == 0)
+                {
+                    rows.Add(new
+                    {
+                        order.OrderID,
+                        OrderRef = orderRef,
+                        order.CustomerName,
+                        OrderDate = orderDate,
+                        order.Status,
+                        Total = total,
+                        Prescription = prescription,
+                        RxStatus = rxStatus,
+                        MedicineName = "—",
+                        Rx = "—",
+                        Quantity = (int?)null,
+                        UnitPrice = "—",
+                        Subtotal = "—"
+                    });
+                    continue;
+                }
+
+                foreach (var item in items)
+                {
+                    rows.Add(new
+                    {
+                        order.OrderID,
+                        OrderRef = orderRef,
+                        order.CustomerName,
+                        OrderDate = orderDate,
+                        order.Status,
+                        Total = total,
+                        Prescription = prescription,
+                        RxStatus = rxStatus,
+                        item.MedicineName,
+                        Rx = item.RequiresPrescription ? "Yes" : "No",
+                        item.Quantity,
+                        UnitPrice = $"LKR {item.UnitPrice:N2}",
+                        Subtotal = $"LKR {item.Subtotal:N2}"
+                    });
+                }
+            }
+
+            return rows;
         }
 
         private void HideOrderIdColumn()
@@ -584,26 +586,11 @@ namespace SmartMed.UI
 
             _selectedOrderId = Convert.ToInt32(idCell.Value);
             var status = gridOrders.CurrentRow.Cells["Status"].Value?.ToString() ?? OrderService.StatusPending;
-            var orderRef = gridOrders.CurrentRow.Cells["OrderRef"].Value?.ToString() ?? string.Empty;
 
-            lblOrderDetails.Text = $"Order Details: {orderRef}";
             PopulateStatusOptions(status);
             UpdateStatusControls(status);
 
             lblLastUpdated.Text = $"Last Updated: {DateTime.Now:MMM dd, yyyy hh:mm tt}";
-
-            if (Orders == null)
-                return;
-
-            var items = Orders.GetItems(_selectedOrderId.Value);
-            gridItems.DataSource = items.Select(i => new
-            {
-                i.MedicineName,
-                Rx = i.RequiresPrescription ? "Yes" : "No",
-                i.Quantity,
-                UnitPrice = $"LKR {i.UnitPrice:N2}",
-                Subtotal = $"LKR {i.Subtotal:N2}"
-            }).ToList();
 
             var prescriptionName = gridOrders.CurrentRow.Cells["Prescription"].Value?.ToString() ?? "—";
             var rxStatus = gridOrders.CurrentRow.Cells["RxStatus"].Value?.ToString() ?? "—";
@@ -747,8 +734,6 @@ namespace SmartMed.UI
         {
             _selectedOrderId = null;
             gridOrders.ClearSelection();
-            gridItems.DataSource = null;
-            lblOrderDetails.Text = "Order Details";
             cmbStatus.Items.Clear();
             cmbStatus.SelectedIndex = -1;
             UpdateStatusControls(null);
