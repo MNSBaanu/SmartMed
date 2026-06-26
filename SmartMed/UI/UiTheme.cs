@@ -38,6 +38,12 @@ namespace SmartMed.UI
         /// <summary>Gap between related controls in a row (buttons, filters).</summary>
         public const int CustomerControlGap = 8;
 
+        /// <summary>Inner inset between page scroll area and text/controls (all customer pages).</summary>
+        public const int CustomerContentPadding = 16;
+
+        /// <summary>Outer inset of the customer content panel from the shell edge.</summary>
+        public static readonly Padding CustomerPageInset = new Padding(32, 24, 32, 24);
+
         public static Padding CustomerSectionMargin => new Padding(0, 0, 0, CustomerSectionGap);
 
         public static Padding CustomerControlMargin => new Padding(0, 0, CustomerControlGap, CustomerControlGap);

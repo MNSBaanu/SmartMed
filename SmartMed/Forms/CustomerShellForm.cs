@@ -125,7 +125,7 @@ namespace SmartMed.UI
             if (host == null || host.IsDisposed)
                 return fallback;
 
-            var w = host.ClientSize.Width - host.Padding.Horizontal;
+            var w = host.DisplayRectangle.Width;
             return w < 200 ? fallback : w;
         }
 
@@ -137,6 +137,11 @@ namespace SmartMed.UI
 
             scrollRoot.Dock = DockStyle.Top;
             scrollRoot.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            scrollRoot.Padding = new Padding(
+                UiTheme.CustomerContentPadding,
+                UiTheme.CustomerContentPadding,
+                UiTheme.CustomerContentPadding,
+                UiTheme.CustomerContentPadding);
 
             if (minHeight > 0)
                 scrollRoot.MinimumSize = new Size(0, minHeight);

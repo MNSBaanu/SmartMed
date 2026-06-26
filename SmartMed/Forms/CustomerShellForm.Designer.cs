@@ -163,7 +163,7 @@ namespace SmartMed.UI
             this.panelContent.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panelContent.Location = new System.Drawing.Point(240, 56);
             this.panelContent.Name = "panelContent";
-            this.panelContent.Padding = new System.Windows.Forms.Padding(24);
+            this.panelContent.Padding = new System.Windows.Forms.Padding(32, 24, 32, 24);
             this.panelContent.Size = new System.Drawing.Size(944, 712);
             this.panelContent.TabIndex = 2;
             // 
