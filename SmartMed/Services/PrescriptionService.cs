@@ -7,6 +7,10 @@ namespace SmartMed.Services
 {
     public class PrescriptionService
     {
+        public const string StatusPending = "Pending";
+        public const string StatusVerified = "Verified";
+        public const string StatusRejected = "Rejected";
+
         private readonly PrescriptionRepository _prescriptions = new PrescriptionRepository();
 
         public void SavePrescription(int customerId, int orderId, string sourcePath)
@@ -40,6 +44,32 @@ namespace SmartMed.Services
         {
             var prescription = GetByOrderId(orderId);
             return prescription?.PrescriptionFile;
+        }
+
+        public bool HasPrescription(int orderId) => GetByOrderId(orderId) != null;
+
+        public string GetStatus(int orderId) => GetByOrderId(orderId)?.Status;
+
+        public string GetStatusDisplay(int orderId)
+        {
+            var status = GetStatus(orderId);
+            return string.IsNullOrWhiteSpace(status) ? "—" : status;
+        }
+
+        public void Verify(int orderId) => SetStatus(orderId, StatusVerified, StatusPending);
+
+        public void Reject(int orderId) => SetStatus(orderId, StatusRejected, StatusPending);
+
+        private void SetStatus(int orderId, string newStatus, string requiredCurrent)
+        {
+            var prescription = GetByOrderId(orderId);
+            if (prescription == null)
+                throw new InvalidOperationException("This order has no prescription to review.");
+
+            if (!string.Equals(prescription.Status, requiredCurrent, StringComparison.OrdinalIgnoreCase))
+                throw new InvalidOperationException($"Prescription is already {prescription.Status}.");
+
+            _prescriptions.UpdateStatus(orderId, newStatus);
         }
 
         private static string CopyPrescriptionFile(int customerId, string sourcePath)

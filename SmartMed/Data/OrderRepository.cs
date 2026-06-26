@@ -49,7 +49,7 @@ namespace SmartMed.Data
             var list = new List<OrderItem>();
             var table = DatabaseHelper.ExecuteQuery(
                 @"SELECT oi.OrderItemID, oi.OrderID, oi.MedicineID, m.MedicineName, oi.Quantity, oi.UnitPrice, oi.Subtotal,
-                         m.Price AS ListPrice, m.DiscountPercent
+                         m.Price AS ListPrice, m.DiscountPercent, m.RequiresPrescription
                   FROM OrderItem oi INNER JOIN Medicine m ON oi.MedicineID = m.MedicineID
                   WHERE oi.OrderID=@oid",
                 new SqlParameter("@oid", orderId));
@@ -214,7 +214,10 @@ namespace SmartMed.Data
                     : 0m,
                 DiscountPercent = row.Table.Columns.Contains("DiscountPercent") && row["DiscountPercent"] != DBNull.Value
                     ? Convert.ToDecimal(row["DiscountPercent"])
-                    : 0m
+                    : 0m,
+                RequiresPrescription = row.Table.Columns.Contains("RequiresPrescription")
+                    && row["RequiresPrescription"] != DBNull.Value
+                    && Convert.ToBoolean(row["RequiresPrescription"])
             };
         }
     }

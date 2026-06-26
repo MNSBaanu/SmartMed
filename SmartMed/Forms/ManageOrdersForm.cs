@@ -53,6 +53,10 @@ namespace SmartMed.UI
         private Label lblDeliveredOrders;
         private Label lblRegisteredCustomers;
         private Button btnUpdateStatus;
+        private Label lblRxStatus;
+        private Button btnViewPrescription;
+        private Button btnVerifyPrescription;
+        private Button btnRejectPrescription;
         private TableLayoutPanel _scrollRoot;
 
         private OrderService Orders => GetRuntimeService(ref _orders);
@@ -68,8 +72,8 @@ namespace SmartMed.UI
                 AutoSizeMode = AutoSizeMode.GrowAndShrink,
                 Dock = DockStyle.Top,
                 ColumnCount = 1,
-                RowCount = 5,
-                MinimumSize = new Size(0, 940),
+                RowCount = 6,
+                MinimumSize = new Size(0, 1000),
                 Width = GetScrollContentWidth()
             };
             _scrollRoot.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100f));
@@ -78,12 +82,14 @@ namespace SmartMed.UI
             _scrollRoot.RowStyles.Add(new RowStyle(SizeType.Absolute, 220f));
             _scrollRoot.RowStyles.Add(new RowStyle(SizeType.Absolute, 200f));
             _scrollRoot.RowStyles.Add(new RowStyle(SizeType.AutoSize));
+            _scrollRoot.RowStyles.Add(new RowStyle(SizeType.AutoSize));
 
             _scrollRoot.Controls.Add(CreatePageHeader(), 0, 0);
             _scrollRoot.Controls.Add(CreateStatsRow(), 0, 1);
             _scrollRoot.Controls.Add(CreateOrdersGridPanel(), 0, 2);
             _scrollRoot.Controls.Add(CreateItemsGridPanel(), 0, 3);
-            _scrollRoot.Controls.Add(CreateStatusPanel(), 0, 4);
+            _scrollRoot.Controls.Add(CreatePrescriptionPanel(), 0, 4);
+            _scrollRoot.Controls.Add(CreateStatusPanel(), 0, 5);
             WireScrollRoot(_scrollRoot);
         }
 
@@ -105,7 +111,7 @@ namespace SmartMed.UI
             var titleBlock = new Panel { Dock = DockStyle.Left, Width = 520 };
             titleBlock.Controls.Add(new Label
             {
-                Text = "Review fulfillment queue and update order status.",
+                Text = "Review fulfillment queue, verify prescriptions, and update order status.",
                 Font = UiTheme.UiFont,
                 ForeColor = SystemColors.GrayText,
                 Dock = DockStyle.Fill
@@ -295,6 +301,7 @@ namespace SmartMed.UI
 
             gridOrders = CreateGrid();
             gridOrders.SelectionChanged += GridOrders_SelectionChanged;
+            gridOrders.CellDoubleClick += GridOrders_CellDoubleClick;
 
             outer.Controls.Add(gridOrders);
             outer.Controls.Add(CreateSearchPanel());
@@ -335,6 +342,63 @@ namespace SmartMed.UI
             outer.Controls.Add(gridItems);
             outer.Controls.Add(lblOrderDetails);
             return outer;
+        }
+
+        private Panel CreatePrescriptionPanel()
+        {
+            var panel = new Panel
+            {
+                Dock = DockStyle.Top,
+                Height = 64,
+                BackColor = SystemColors.Window,
+                Padding = new Padding(16, 12, 16, 12),
+                Margin = new Padding(0, 0, 0, 16)
+            };
+            panel.Paint += (s, e) =>
+            {
+                var rect = panel.ClientRectangle;
+                rect.Width -= 1;
+                rect.Height -= 1;
+                using (var pen = new Pen(SystemColors.ControlDark))
+                    e.Graphics.DrawRectangle(pen, rect);
+            };
+
+            lblRxStatus = new Label
+            {
+                Text = "Prescription verification: select an order.",
+                Font = UiTheme.UiFont,
+                ForeColor = UiTheme.GridHeaderText,
+                AutoSize = true,
+                Location = new Point(16, 20)
+            };
+
+            btnViewPrescription = CreateToolbarButton("View Prescription");
+            btnViewPrescription.Width = 140;
+            btnViewPrescription.Enabled = false;
+            btnViewPrescription.Click += BtnViewPrescription_Click;
+
+            btnVerifyPrescription = CreateToolbarButton("Verify");
+            btnVerifyPrescription.Enabled = false;
+            btnVerifyPrescription.Click += BtnVerifyPrescription_Click;
+
+            btnRejectPrescription = CreateToolbarButton("Reject");
+            btnRejectPrescription.Enabled = false;
+            btnRejectPrescription.Click += BtnRejectPrescription_Click;
+
+            var actions = new FlowLayoutPanel
+            {
+                Dock = DockStyle.Right,
+                FlowDirection = FlowDirection.LeftToRight,
+                AutoSize = true,
+                WrapContents = false
+            };
+            actions.Controls.Add(btnViewPrescription);
+            actions.Controls.Add(btnVerifyPrescription);
+            actions.Controls.Add(btnRejectPrescription);
+
+            panel.Controls.Add(actions);
+            panel.Controls.Add(lblRxStatus);
+            return panel;
         }
 
         private Panel CreateStatusPanel()
@@ -436,9 +500,9 @@ namespace SmartMed.UI
             gridOrders.SelectionChanged -= GridOrders_SelectionChanged;
             gridOrders.DataSource = new[]
             {
-                new { OrderID = 9421, OrderRef = "#ORD-9421", CustomerName = "Margaret Sullivan", OrderDate = "Oct 24, 2023", Status = OrderService.StatusPending, Total = "LKR 124.50" },
-                new { OrderID = 9420, OrderRef = "#ORD-9420", CustomerName = "Jonathan Wick", OrderDate = "Oct 24, 2023", Status = OrderService.StatusReadyForPickup, Total = "LKR 45.00" },
-                new { OrderID = 9419, OrderRef = "#ORD-9419", CustomerName = "Sarah Connor", OrderDate = "Oct 23, 2023", Status = OrderService.StatusDelivered, Total = "LKR 312.20" }
+                new { OrderID = 9421, OrderRef = "#ORD-9421", CustomerName = "Margaret Sullivan", OrderDate = "Oct 24, 2023", Status = OrderService.StatusPending, Total = "LKR 124.50", Prescription = "9421_20231024120000_rx.pdf", RxStatus = PrescriptionService.StatusPending },
+                new { OrderID = 9420, OrderRef = "#ORD-9420", CustomerName = "Jonathan Wick", OrderDate = "Oct 24, 2023", Status = OrderService.StatusReadyForPickup, Total = "LKR 45.00", Prescription = "—", RxStatus = "—" },
+                new { OrderID = 9419, OrderRef = "#ORD-9419", CustomerName = "Sarah Connor", OrderDate = "Oct 23, 2023", Status = OrderService.StatusDelivered, Total = "LKR 312.20", Prescription = "—", RxStatus = "—" }
             };
             HideOrderIdColumn();
             gridOrders.ClearSelection();
@@ -446,11 +510,12 @@ namespace SmartMed.UI
 
             gridItems.DataSource = new[]
             {
-                new { MedicineName = "Amoxicillin 500mg (30 Caps)", Quantity = 1, UnitPrice = "LKR 15.00", Subtotal = "LKR 15.00" },
-                new { MedicineName = "Lisinopril 10mg (90 Tabs)", Quantity = 1, UnitPrice = "LKR 30.00", Subtotal = "LKR 30.00" }
+                new { MedicineName = "Amoxicillin 500mg (30 Caps)", Rx = "Yes", Quantity = 1, UnitPrice = "LKR 15.00", Subtotal = "LKR 15.00" },
+                new { MedicineName = "Lisinopril 10mg (90 Tabs)", Rx = "No", Quantity = 1, UnitPrice = "LKR 30.00", Subtotal = "LKR 30.00" }
             };
 
-            lblOrderDetails.Text = "Order Details: #ORD-9420";
+            lblOrderDetails.Text = "Order Details: #ORD-9421";
+            UpdatePrescriptionControls(9421, PrescriptionService.StatusPending, "9421_20231024120000_rx.pdf");
             cmbStatus.SelectedItem = OrderService.StatusReadyForPickup;
             lblLastUpdated.Text = "Last Updated: Today, 10:42 AM";
             lblTotalOrders.Text = "4";
@@ -482,7 +547,9 @@ namespace SmartMed.UI
                 o.CustomerName,
                 OrderDate = o.OrderDate.ToString("MMM dd, yyyy"),
                 o.Status,
-                Total = $"LKR {o.TotalAmount:N2}"
+                Total = $"LKR {o.TotalAmount:N2}",
+                Prescription = Orders.GetPrescriptionDisplay(o.OrderID),
+                RxStatus = Orders.GetPrescriptionStatusDisplay(o.OrderID)
             }).ToList());
 
             HideOrderIdColumn();
@@ -532,10 +599,148 @@ namespace SmartMed.UI
             gridItems.DataSource = items.Select(i => new
             {
                 i.MedicineName,
+                Rx = i.RequiresPrescription ? "Yes" : "No",
                 i.Quantity,
                 UnitPrice = $"LKR {i.UnitPrice:N2}",
                 Subtotal = $"LKR {i.Subtotal:N2}"
             }).ToList();
+
+            var prescriptionName = gridOrders.CurrentRow.Cells["Prescription"].Value?.ToString() ?? "—";
+            var rxStatus = gridOrders.CurrentRow.Cells["RxStatus"].Value?.ToString() ?? "—";
+            UpdatePrescriptionControls(_selectedOrderId.Value, rxStatus, prescriptionName);
+        }
+
+        private void GridOrders_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
+        {
+            if (IsDesignHost() || Orders == null || e.RowIndex < 0) return;
+            if (!gridOrders.Columns.Contains("Prescription")) return;
+            if (gridOrders.Columns[e.ColumnIndex].Name != "Prescription") return;
+
+            var orderId = Convert.ToInt32(gridOrders.Rows[e.RowIndex].Cells["OrderID"].Value);
+            OpenPrescriptionFile(orderId);
+        }
+
+        private void UpdatePrescriptionControls(int orderId, string rxStatus, string prescriptionName)
+        {
+            if (lblRxStatus == null) return;
+
+            if (orderId <= 0)
+            {
+                lblRxStatus.Text = "Prescription verification: select an order.";
+                lblRxStatus.ForeColor = UiTheme.GridHeaderText;
+                btnViewPrescription.Enabled = false;
+                btnVerifyPrescription.Enabled = false;
+                btnRejectPrescription.Enabled = false;
+                return;
+            }
+
+            var hasPrescription = !string.IsNullOrWhiteSpace(prescriptionName) && prescriptionName != "—";
+            if (!hasPrescription)
+            {
+                lblRxStatus.Text = "Prescription verification: not required for this order.";
+                lblRxStatus.ForeColor = SystemColors.GrayText;
+                btnViewPrescription.Enabled = false;
+                btnVerifyPrescription.Enabled = false;
+                btnRejectPrescription.Enabled = false;
+                return;
+            }
+
+            lblRxStatus.ForeColor = GetRxStatusColor(rxStatus);
+            lblRxStatus.Text = $"Prescription: {prescriptionName}  |  Status: {rxStatus}";
+
+            btnViewPrescription.Enabled = true;
+            var pending = string.Equals(rxStatus, PrescriptionService.StatusPending, StringComparison.OrdinalIgnoreCase);
+            btnVerifyPrescription.Enabled = pending;
+            btnRejectPrescription.Enabled = pending;
+        }
+
+        private static Color GetRxStatusColor(string rxStatus)
+        {
+            if (string.Equals(rxStatus, PrescriptionService.StatusVerified, StringComparison.OrdinalIgnoreCase))
+                return Color.FromArgb(0, 100, 0);
+            if (string.Equals(rxStatus, PrescriptionService.StatusRejected, StringComparison.OrdinalIgnoreCase))
+                return Color.DarkRed;
+            if (string.Equals(rxStatus, PrescriptionService.StatusPending, StringComparison.OrdinalIgnoreCase))
+                return Color.FromArgb(140, 70, 0);
+            return UiTheme.GridHeaderText;
+        }
+
+        private void BtnViewPrescription_Click(object sender, EventArgs e)
+        {
+            if (!_selectedOrderId.HasValue) return;
+            OpenPrescriptionFile(_selectedOrderId.Value);
+        }
+
+        private void OpenPrescriptionFile(int orderId)
+        {
+            if (Orders == null) return;
+
+            var filePath = Orders.GetPrescriptionFilePath(orderId);
+            if (string.IsNullOrWhiteSpace(filePath))
+            {
+                MessageBox.Show("This order has no prescription file.", "Prescription",
+                    MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return;
+            }
+
+            if (!System.IO.File.Exists(filePath))
+            {
+                MessageBox.Show("Prescription file is no longer available on this device.", "Prescription",
+                    MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return;
+            }
+
+            try
+            {
+                System.Diagnostics.Process.Start(filePath);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Could not open prescription file.\n{ex.Message}", "Prescription",
+                    MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
+        }
+
+        private void BtnVerifyPrescription_Click(object sender, EventArgs e)
+        {
+            if (!_selectedOrderId.HasValue || Orders == null) return;
+
+            if (MessageBox.Show("Verify this prescription for the selected order?", "Verify Prescription",
+                    MessageBoxButtons.YesNo, MessageBoxIcon.Question) != DialogResult.Yes)
+                return;
+
+            try
+            {
+                Orders.VerifyPrescription(_selectedOrderId.Value);
+                LoadOrders();
+                MessageBox.Show("Prescription verified.", "SmartMed",
+                    MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Verify Failed", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
+        }
+
+        private void BtnRejectPrescription_Click(object sender, EventArgs e)
+        {
+            if (!_selectedOrderId.HasValue || Orders == null) return;
+
+            if (MessageBox.Show("Reject this prescription? The order cannot move forward until a valid prescription is provided.",
+                    "Reject Prescription", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) != DialogResult.Yes)
+                return;
+
+            try
+            {
+                Orders.RejectPrescription(_selectedOrderId.Value);
+                LoadOrders();
+                MessageBox.Show("Prescription rejected.", "SmartMed",
+                    MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Reject Failed", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
         }
 
         private void ClearSelection()
@@ -547,6 +752,7 @@ namespace SmartMed.UI
             cmbStatus.Items.Clear();
             cmbStatus.SelectedIndex = -1;
             UpdateStatusControls(null);
+            UpdatePrescriptionControls(0, "—", "—");
             lblLastUpdated.Text = "Last Updated: —";
         }
 

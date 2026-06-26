@@ -65,6 +65,15 @@ namespace SmartMed.Services
             if (transitionError != null)
                 throw new InvalidOperationException(transitionError);
 
+            if (status == StatusReadyForPickup && _prescriptions.HasPrescription(orderId))
+            {
+                var rxStatus = _prescriptions.GetStatus(orderId);
+                if (string.Equals(rxStatus, PrescriptionService.StatusPending, StringComparison.OrdinalIgnoreCase))
+                    throw new InvalidOperationException("Verify the prescription before marking the order Ready for Pickup.");
+                if (string.Equals(rxStatus, PrescriptionService.StatusRejected, StringComparison.OrdinalIgnoreCase))
+                    throw new InvalidOperationException("This prescription was rejected. The order cannot proceed until a valid prescription is provided.");
+            }
+
             _orders.UpdateStatus(orderId, status);
         }
 
@@ -216,6 +225,14 @@ namespace SmartMed.Services
         public string GetPrescriptionDisplay(int orderId) => _prescriptions.GetDisplayName(orderId);
 
         public string GetPrescriptionFilePath(int orderId) => _prescriptions.GetFilePath(orderId);
+
+        public string GetPrescriptionStatusDisplay(int orderId) => _prescriptions.GetStatusDisplay(orderId);
+
+        public bool OrderHasPrescription(int orderId) => _prescriptions.HasPrescription(orderId);
+
+        public void VerifyPrescription(int orderId) => _prescriptions.Verify(orderId);
+
+        public void RejectPrescription(int orderId) => _prescriptions.Reject(orderId);
 
         public List<RecentOrderSummary> GetRecentSummaries(int take)
         {

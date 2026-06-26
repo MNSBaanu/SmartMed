@@ -34,6 +34,14 @@ namespace SmartMed.Data
                 new SqlParameter("@oid", orderId));
         }
 
+        public void UpdateStatus(int orderId, string status)
+        {
+            DatabaseHelper.ExecuteNonQuery(
+                "UPDATE Prescription SET Status=@status WHERE OrderID=@oid",
+                new SqlParameter("@status", status),
+                new SqlParameter("@oid", orderId));
+        }
+
         public bool HasRecentUpload(int customerId, int withinHours = 24)
         {
             var result = DatabaseHelper.ExecuteScalar(
