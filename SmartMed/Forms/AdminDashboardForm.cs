@@ -1,6 +1,8 @@
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
+using System.Linq;
 using System.Windows.Forms;
 using SmartMed.Services;
 
@@ -36,6 +38,7 @@ namespace SmartMed.UI
 
         private readonly ReportService _reports = new ReportService();
         private readonly OrderService _orders = new OrderService();
+        private readonly MedicineService _medicines = new MedicineService();
 
         private Label lblWelcome;
         private Label lblStatus;
@@ -44,6 +47,8 @@ namespace SmartMed.UI
         private Label lblSalesValue;
         private Label lblCustomersValue;
         private DataGridView gridRecent;
+        private FlowLayoutPanel panelLowStockAlerts;
+        private FlowLayoutPanel panelExpiryAlerts;
         private TableLayoutPanel _scrollRoot;
 
         private void BuildContent()
@@ -55,6 +60,8 @@ namespace SmartMed.UI
             lblSalesValue = new Label();
             lblCustomersValue = new Label();
             gridRecent = CreateGrid();
+            panelLowStockAlerts = CreateAlertListPanel();
+            panelExpiryAlerts = CreateAlertListPanel();
 
             PagePanel.Controls.Clear();
 
@@ -64,20 +71,22 @@ namespace SmartMed.UI
                 AutoSizeMode = AutoSizeMode.GrowAndShrink,
                 Dock = DockStyle.Top,
                 ColumnCount = 1,
-                RowCount = 4,
-                MinimumSize = new Size(0, 850),
+                RowCount = 5,
+                MinimumSize = new Size(0, 980),
                 Width = GetScrollContentWidth()
             };
             _scrollRoot.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100f));
             _scrollRoot.RowStyles.Add(new RowStyle(SizeType.AutoSize));
             _scrollRoot.RowStyles.Add(new RowStyle(SizeType.AutoSize));
+            _scrollRoot.RowStyles.Add(new RowStyle(SizeType.Absolute, 180f));
             _scrollRoot.RowStyles.Add(new RowStyle(SizeType.Absolute, 280f));
             _scrollRoot.RowStyles.Add(new RowStyle(SizeType.AutoSize));
 
             _scrollRoot.Controls.Add(CreatePageHeader(), 0, 0);
             _scrollRoot.Controls.Add(CreateStatsRow(), 0, 1);
-            _scrollRoot.Controls.Add(CreateMiddleRow(), 0, 2);
-            _scrollRoot.Controls.Add(CreateTrendsSection(), 0, 3);
+            _scrollRoot.Controls.Add(CreateAlertsRow(), 0, 2);
+            _scrollRoot.Controls.Add(CreateMiddleRow(), 0, 3);
+            _scrollRoot.Controls.Add(CreateTrendsSection(), 0, 4);
             WireScrollRoot(_scrollRoot);
         }
 
@@ -155,6 +164,51 @@ namespace SmartMed.UI
                 "Customers signed up in the system", "Users"), 3, 0);
 
             wrap.Controls.Add(statsRow);
+            return wrap;
+        }
+
+        private static FlowLayoutPanel CreateAlertListPanel() =>
+            new FlowLayoutPanel
+            {
+                FlowDirection = FlowDirection.TopDown,
+                WrapContents = false,
+                AutoScroll = true,
+                Dock = DockStyle.Fill
+            };
+
+        private Panel CreateAlertsRow()
+        {
+            var alertsRow = new TableLayoutPanel
+            {
+                Dock = DockStyle.Fill,
+                ColumnCount = 2,
+                RowCount = 1,
+                Margin = new Padding(0, 0, 0, 16)
+            };
+            alertsRow.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50f));
+            alertsRow.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50f));
+
+            var (lowStockOuter, lowStockBody) = CreateSectionPanel(
+                "Low Stock Alert",
+                showViewAll: true,
+                onViewAll: () => GoToAdminSection(AdminNavItem.Medicines),
+                viewAllText: "Manage Medicines");
+            panelLowStockAlerts.Dock = DockStyle.Fill;
+            lowStockBody.Controls.Add(panelLowStockAlerts);
+            alertsRow.Controls.Add(lowStockOuter, 0, 0);
+
+            var (expiryOuter, expiryBody) = CreateSectionPanel(
+                "Medicine Expiry Warning",
+                showViewAll: true,
+                onViewAll: () => GoToAdminSection(AdminNavItem.Medicines),
+                viewAllText: "Manage Medicines");
+            panelExpiryAlerts.Dock = DockStyle.Fill;
+            expiryBody.Controls.Add(panelExpiryAlerts);
+            expiryOuter.Margin = new Padding(8, 0, 0, 0);
+            alertsRow.Controls.Add(expiryOuter, 1, 0);
+
+            var wrap = new Panel { Dock = DockStyle.Fill, Height = 180 };
+            wrap.Controls.Add(alertsRow);
             return wrap;
         }
 
@@ -295,7 +349,12 @@ namespace SmartMed.UI
             return card;
         }
 
-        private (Panel outer, Panel body) CreateSectionPanel(string title, bool showViewAll = false, bool showPeriodTabs = false)
+        private (Panel outer, Panel body) CreateSectionPanel(
+            string title,
+            bool showViewAll = false,
+            bool showPeriodTabs = false,
+            Action onViewAll = null,
+            string viewAllText = "View All")
         {
             var outer = new Panel
             {
@@ -332,12 +391,18 @@ namespace SmartMed.UI
             {
                 var btnViewAll = new LinkLabel
                 {
-                    Text = "View All",
+                    Text = viewAllText,
                     Dock = DockStyle.Right,
                     AutoSize = true,
                     LinkColor = UiTheme.GridHeaderText
                 };
-                btnViewAll.Click += (s, e) => GoToAdminSection(AdminNavItem.Orders);
+                btnViewAll.Click += (s, e) =>
+                {
+                    if (onViewAll != null)
+                        onViewAll();
+                    else
+                        GoToAdminSection(AdminNavItem.Orders);
+                };
                 header.Controls.Add(btnViewAll);
             }
 
@@ -402,6 +467,17 @@ namespace SmartMed.UI
                 new { OrderId = "#SM-9819", Patient = "Wade Warren", Medication = "Metformin 850mg", Status = "On Hold", Time = "08:30 AM" },
                 new { OrderId = "#SM-9818", Patient = "Esther Howard", Medication = "Atorvastatin 20mg", Status = "Shipped", Time = "07:55 AM" }
             };
+
+            BindLowStockAlerts(new[]
+            {
+                ("Insulin Glargine", "CRITICAL: 2 units left", true),
+                ("Gabapentin 300mg", "LOW: 15 units left", false)
+            });
+            BindExpiryAlerts(new[]
+            {
+                ("Amoxicillin 500mg", "EXPIRED: exp. 2024-08-15", true),
+                ("Lisinopril 10mg", "EXPIRING SOON: exp. 2025-07-12", false)
+            });
         }
 
         private void LoadDashboardData()
@@ -413,6 +489,109 @@ namespace SmartMed.UI
             lblCustomersValue.Text = _reports.RegisteredCustomers.ToString("N0");
 
             gridRecent.DataSource = _orders.GetRecentSummaries(8);
+            LoadLowStockAlerts();
+            LoadExpiryAlerts();
+        }
+
+        private void LoadLowStockAlerts()
+        {
+            var alerts = _medicines.GetLowStock(maxCount: 6)
+                .Select(m =>
+                {
+                    var critical = m.StockQuantity <= 5;
+                    return (m.MedicineName,
+                        critical ? $"CRITICAL: {m.StockQuantity} units left" : $"LOW: {m.StockQuantity} units left",
+                        critical);
+                })
+                .ToList();
+            BindLowStockAlerts(alerts);
+        }
+
+        private void LoadExpiryAlerts()
+        {
+            var alerts = new List<(string Name, string Message, bool Critical)>();
+
+            foreach (var med in _medicines.GetExpiredMedicines().Take(4))
+                alerts.Add((med.MedicineName, $"EXPIRED: exp. {med.ExpiryDate:yyyy-MM-dd}", true));
+
+            foreach (var med in _medicines.GetExpiringSoonMedicines().Take(4))
+            {
+                if (alerts.Count >= 6) break;
+                alerts.Add((med.MedicineName, $"EXPIRING SOON: exp. {med.ExpiryDate:yyyy-MM-dd}", false));
+            }
+
+            BindExpiryAlerts(alerts);
+        }
+
+        private void BindLowStockAlerts(IEnumerable<(string Name, string Message, bool Critical)> alerts) =>
+            BindAlerts(panelLowStockAlerts, alerts, "No low stock alerts.");
+
+        private void BindExpiryAlerts(IEnumerable<(string Name, string Message, bool Critical)> alerts) =>
+            BindAlerts(panelExpiryAlerts, alerts, "No expiry warnings.");
+
+        private static void BindAlerts(
+            FlowLayoutPanel panel,
+            IEnumerable<(string Name, string Message, bool Critical)> alerts,
+            string emptyText)
+        {
+            panel.Controls.Clear();
+            var list = alerts.ToList();
+            if (list.Count == 0)
+            {
+                panel.Controls.Add(new Label
+                {
+                    Text = emptyText,
+                    AutoSize = true,
+                    ForeColor = SystemColors.GrayText,
+                    Padding = new Padding(4)
+                });
+                return;
+            }
+
+            foreach (var alert in list)
+                panel.Controls.Add(CreateAlertRow(panel, alert.Name, alert.Message, alert.Critical));
+        }
+
+        private static Panel CreateAlertRow(FlowLayoutPanel host, string name, string message, bool critical)
+        {
+            var row = new Panel
+            {
+                Width = Math.Max(200, host.ClientSize.Width - 24),
+                Height = 52,
+                Margin = new Padding(0, 0, 0, 8),
+                BackColor = critical ? Color.FromArgb(255, 245, 245) : Color.FromArgb(248, 248, 248),
+                Padding = new Padding(12, 8, 8, 8)
+            };
+            row.Paint += (s, e) =>
+            {
+                using (var pen = new Pen(critical ? Color.Red : SystemColors.ControlDark, 3))
+                    e.Graphics.DrawLine(pen, 0, 0, 0, row.Height);
+            };
+            row.Controls.Add(new Label
+            {
+                Text = critical ? "!" : "i",
+                Font = UiTheme.UiFontBold,
+                ForeColor = critical ? Color.Red : SystemColors.ControlDark,
+                Location = new Point(4, 12),
+                AutoSize = true
+            });
+            row.Controls.Add(new Label
+            {
+                Text = name,
+                Font = UiTheme.UiFont,
+                ForeColor = SystemColors.ControlText,
+                Location = new Point(20, 4),
+                AutoSize = true
+            });
+            row.Controls.Add(new Label
+            {
+                Text = message,
+                Font = UiTheme.UiFont,
+                ForeColor = critical ? Color.Red : SystemColors.ControlText,
+                Location = new Point(28, 24),
+                AutoSize = true
+            });
+            return row;
         }
     }
 }

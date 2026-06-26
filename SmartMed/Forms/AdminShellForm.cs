@@ -161,8 +161,13 @@ namespace SmartMed.UI
 
 
         private Panel _contentTarget;
+        private AdminHostForm _adminHost;
 
-        internal void SetContentTarget(Panel host) => _contentTarget = host;
+        internal void SetContentTarget(Panel host)
+        {
+            _contentTarget = host;
+            _adminHost = host?.FindForm() as AdminHostForm;
+        }
 
         /// <summary>Host content panel — uses AdminHostForm.panelContent when embedded.</summary>
         protected Panel PagePanel => _contentTarget ?? panelContent;
@@ -315,21 +320,17 @@ namespace SmartMed.UI
 
 
         protected AdminHostForm GetAdminHost()
-
         {
+            if (_adminHost != null && !_adminHost.IsDisposed)
+                return _adminHost;
 
             for (var parent = Parent; parent != null; parent = parent.Parent)
-
             {
-
                 if (parent is AdminHostForm host)
-
                     return host;
-
             }
 
             return this as AdminHostForm;
-
         }
 
 
