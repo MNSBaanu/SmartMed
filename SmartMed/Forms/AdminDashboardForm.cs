@@ -1,7 +1,6 @@
 using System;
 using System.ComponentModel;
 using System.Drawing;
-using System.Linq;
 using System.Windows.Forms;
 using SmartMed.Services;
 
@@ -37,7 +36,6 @@ namespace SmartMed.UI
 
         private readonly ReportService _reports = new ReportService();
         private readonly OrderService _orders = new OrderService();
-        private readonly MedicineService _medicines = new MedicineService();
 
         private Label lblWelcome;
         private Label lblStatus;
@@ -46,7 +44,6 @@ namespace SmartMed.UI
         private Label lblSalesValue;
         private Label lblCustomersValue;
         private DataGridView gridRecent;
-        private FlowLayoutPanel panelAlerts;
         private TableLayoutPanel _scrollRoot;
 
         private void BuildContent()
@@ -58,13 +55,6 @@ namespace SmartMed.UI
             lblSalesValue = new Label();
             lblCustomersValue = new Label();
             gridRecent = CreateGrid();
-            panelAlerts = new FlowLayoutPanel
-            {
-                FlowDirection = FlowDirection.TopDown,
-                WrapContents = false,
-                AutoScroll = true,
-                Dock = DockStyle.Fill
-            };
 
             PagePanel.Controls.Clear();
 
@@ -170,35 +160,13 @@ namespace SmartMed.UI
 
         private Panel CreateMiddleRow()
         {
-            var middleRow = new TableLayoutPanel
-            {
-                Dock = DockStyle.Fill,
-                ColumnCount = 2,
-                RowCount = 1,
-                Margin = new Padding(0, 0, 0, 16)
-            };
-            middleRow.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 66f));
-            middleRow.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 34f));
-
             var (gridOuter, gridBody) = CreateSectionPanel("Recent Fulfillment Activity", showViewAll: true);
             gridRecent.Dock = DockStyle.Fill;
             gridBody.Controls.Add(gridRecent);
-            middleRow.Controls.Add(gridOuter, 0, 0);
-
-            var rightCol = new Panel { Dock = DockStyle.Fill, Padding = new Padding(8, 0, 0, 0) };
-            var quickPanel = CreateQuickFulfillmentPanel();
-            quickPanel.Dock = DockStyle.Top;
-            quickPanel.Height = 130;
-            var (alertsOuter, alertsBody) = CreateSectionPanel("Stock Alerts");
-            alertsOuter.Dock = DockStyle.Fill;
-            panelAlerts.Dock = DockStyle.Fill;
-            alertsBody.Controls.Add(panelAlerts);
-            rightCol.Controls.Add(alertsOuter);
-            rightCol.Controls.Add(quickPanel);
-            middleRow.Controls.Add(rightCol, 1, 0);
 
             var wrap = new Panel { Dock = DockStyle.Fill, Height = 280 };
-            wrap.Controls.Add(middleRow);
+            gridOuter.Dock = DockStyle.Fill;
+            wrap.Controls.Add(gridOuter);
             return wrap;
         }
 
@@ -419,52 +387,6 @@ namespace SmartMed.UI
             return btn;
         }
 
-        private Panel CreateQuickFulfillmentPanel()
-        {
-            var panel = new Panel
-            {
-                BackColor = UiTheme.Primary,
-                Padding = new Padding(16),
-                Margin = new Padding(0, 0, 0, 8)
-            };
-            panel.Controls.Add(new Label
-            {
-                Text = "Quick Fulfillment",
-                Font = UiTheme.UiFont,
-                ForeColor = Color.White,
-                Dock = DockStyle.Top,
-                Height = 24
-            });
-            panel.Controls.Add(new Label
-            {
-                Text = "Scan RX barcode or enter order ID to start processing.",
-                ForeColor = SystemColors.ControlLightLight,
-                Dock = DockStyle.Top,
-                Height = 32
-            });
-
-            var inputRow = new Panel { Dock = DockStyle.Top, Height = 36 };
-            var txtScan = new TextBox
-            {
-                Text = "",
-                Width = 140,
-                Location = new Point(0, 4)
-            };
-            var btnStart = new Button
-            {
-                Text = "START",
-                Location = new Point(148, 2),
-                Width = 72,
-                Height = 32
-            };
-            btnStart.Click += (s, e) => GoToAdminSection(AdminNavItem.Orders);
-            inputRow.Controls.Add(btnStart);
-            inputRow.Controls.Add(txtScan);
-            panel.Controls.Add(inputRow);
-
-            return panel;
-        }
-
         private void LoadDesignTimePreview()
         {
             lblWelcome.Text = "Welcome, admin";
@@ -480,10 +402,6 @@ namespace SmartMed.UI
                 new { OrderId = "#SM-9819", Patient = "Wade Warren", Medication = "Metformin 850mg", Status = "On Hold", Time = "08:30 AM" },
                 new { OrderId = "#SM-9818", Patient = "Esther Howard", Medication = "Atorvastatin 20mg", Status = "Shipped", Time = "07:55 AM" }
             };
-
-            panelAlerts.Controls.Clear();
-            panelAlerts.Controls.Add(CreateAlertRow("Insulin Glargine", "CRITICAL: 2 units left", critical: true));
-            panelAlerts.Controls.Add(CreateAlertRow("Gabapentin 300mg", "LOW: 15 units left", critical: false));
         }
 
         private void LoadDashboardData()
@@ -495,81 +413,6 @@ namespace SmartMed.UI
             lblCustomersValue.Text = _reports.RegisteredCustomers.ToString("N0");
 
             gridRecent.DataSource = _orders.GetRecentSummaries(8);
-
-            panelAlerts.Controls.Clear();
-            var alerts = new System.Collections.Generic.List<(string Name, string Message, bool Critical)>();
-
-            foreach (var med in _medicines.GetExpiredMedicines().Take(4))
-                alerts.Add((med.MedicineName, $"EXPIRED: exp. {med.ExpiryDate:yyyy-MM-dd}", Critical: true));
-
-            foreach (var med in _medicines.GetExpiringSoonMedicines().Take(3))
-                alerts.Add((med.MedicineName, $"EXPIRING SOON: exp. {med.ExpiryDate:yyyy-MM-dd}", Critical: false));
-
-            foreach (var med in _medicines.GetLowStock())
-            {
-                if (alerts.Count >= 8) break;
-                var critical = med.StockQuantity <= 5;
-                alerts.Add((med.MedicineName,
-                    critical ? $"CRITICAL: {med.StockQuantity} units left" : $"LOW: {med.StockQuantity} units left",
-                    Critical: critical));
-            }
-
-            if (alerts.Count == 0)
-            {
-                panelAlerts.Controls.Add(new Label
-                {
-                    Text = "No expiry or stock alerts.",
-                    AutoSize = true,
-                    ForeColor = SystemColors.GrayText,
-                    Padding = new Padding(4)
-                });
-                return;
-            }
-
-            foreach (var alert in alerts)
-                panelAlerts.Controls.Add(CreateAlertRow(alert.Name, alert.Message, alert.Critical));
-        }
-
-        private Panel CreateAlertRow(string name, string message, bool critical)
-        {
-            var row = new Panel
-            {
-                Width = Math.Max(200, panelAlerts.ClientSize.Width - 24),
-                Height = 52,
-                Margin = new Padding(0, 0, 0, 8),
-                BackColor = critical ? Color.FromArgb(255, 245, 245) : Color.FromArgb(248, 248, 248),
-                Padding = new Padding(12, 8, 8, 8)
-            };
-            row.Paint += (s, e) =>
-            {
-                using (var pen = new Pen(critical ? Color.Red : SystemColors.ControlDark, 3))
-                    e.Graphics.DrawLine(pen, 0, 0, 0, row.Height);
-            };
-            row.Controls.Add(new Label
-            {
-                Text = critical ? "!" : "i",
-                Font = UiTheme.UiFontBold,
-                ForeColor = critical ? Color.Red : SystemColors.ControlDark,
-                Location = new Point(4, 12),
-                AutoSize = true
-            });
-            row.Controls.Add(new Label
-            {
-                Text = name,
-                Font = UiTheme.UiFont,
-                ForeColor = SystemColors.ControlText,
-                Location = new Point(20, 4),
-                AutoSize = true
-            });
-            row.Controls.Add(new Label
-            {
-                Text = message,
-                Font = UiTheme.UiFont,
-                ForeColor = critical ? Color.Red : SystemColors.ControlText,
-                Location = new Point(28, 24),
-                AutoSize = true
-            });
-            return row;
         }
     }
 }
