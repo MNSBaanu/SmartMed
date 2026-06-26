@@ -60,49 +60,68 @@ namespace SmartMed.UI
         private void BuildContent()
         {
             PagePanel.Controls.Clear();
-            var root = new Panel { Dock = DockStyle.Top, AutoSize = true, Width = GetScrollContentWidth() };
-
-            var header = new FlowLayoutPanel { Dock = DockStyle.Top, AutoSize = true, Margin = UiTheme.CustomerSectionMargin };
-            var btnCancel = new Button { Text = "Cancel Pending Order", Width = 160, Height = 32, Margin = UiTheme.CustomerControlMargin };
-            btnCancel.Click += BtnCancel_Click;
-            var btnExport = new Button { Text = "Export CSV", Width = 100, Height = 32, Margin = UiTheme.CustomerControlMargin };
-            btnExport.Click += BtnExport_Click;
-            header.Controls.Add(btnCancel);
-            header.Controls.Add(btnExport);
-
-            var lblItems = UiTheme.CreateSectionHeading("Order Items");
-            gridItems = new DataGridView
+            var root = new TableLayoutPanel
             {
+                AutoSize = true,
                 Dock = DockStyle.Top,
-                Height = 180,
-                ReadOnly = true,
-                AllowUserToAddRows = false,
-                RowHeadersVisible = false,
-                AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill
+                ColumnCount = 1,
+                Width = GetScrollContentWidth()
             };
+            root.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100f));
 
             var lblOrders = UiTheme.CreateSectionHeading("Your Orders");
+            root.Controls.Add(lblOrders, 0, 0);
+            root.RowStyles.Add(new RowStyle(SizeType.AutoSize));
+
             gridOrders = new DataGridView
             {
-                Dock = DockStyle.Top,
+                Dock = DockStyle.Fill,
                 Height = 220,
                 ReadOnly = true,
                 SelectionMode = DataGridViewSelectionMode.FullRowSelect,
                 AllowUserToAddRows = false,
                 RowHeadersVisible = false,
                 AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill,
-                Margin = UiTheme.CustomerSectionMargin
+                Margin = new Padding(0, UiTheme.CustomerControlGap, 0, UiTheme.CustomerSectionGap)
             };
             gridOrders.SelectionChanged += GridOrders_SelectionChanged;
+            root.Controls.Add(gridOrders, 0, 1);
+            root.RowStyles.Add(new RowStyle(SizeType.Absolute, 220f));
 
-            // Dock.Top: last added appears at the top — add bottom sections first.
-            root.Controls.Add(gridItems);
-            root.Controls.Add(lblItems);
-            root.Controls.Add(gridOrders);
-            root.Controls.Add(lblOrders);
-            root.Controls.Add(header);
+            var lblItems = UiTheme.CreateSectionHeading("Order Items");
+            lblItems.Margin = new Padding(0, UiTheme.CustomerSectionGap, 0, UiTheme.CustomerControlGap);
+            root.Controls.Add(lblItems, 0, 2);
+            root.RowStyles.Add(new RowStyle(SizeType.AutoSize));
 
-            WireScrollRoot(root, minHeight: 460);
+            gridItems = new DataGridView
+            {
+                Dock = DockStyle.Fill,
+                Height = 180,
+                ReadOnly = true,
+                AllowUserToAddRows = false,
+                RowHeadersVisible = false,
+                AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill,
+                Margin = new Padding(0, UiTheme.CustomerControlGap, 0, 0)
+            };
+            root.Controls.Add(gridItems, 0, 3);
+            root.RowStyles.Add(new RowStyle(SizeType.Absolute, 180f));
+
+            var actions = new FlowLayoutPanel
+            {
+                AutoSize = true,
+                Dock = DockStyle.Fill,
+                Margin = new Padding(0, UiTheme.CustomerSectionGap, 0, 0)
+            };
+            var btnCancel = new Button { Text = "Cancel Pending Order", Width = 160, Height = 32, Margin = UiTheme.CustomerControlMargin };
+            btnCancel.Click += BtnCancel_Click;
+            var btnExport = new Button { Text = "Export CSV", Width = 100, Height = 32, Margin = UiTheme.CustomerControlMargin };
+            btnExport.Click += BtnExport_Click;
+            actions.Controls.Add(btnCancel);
+            actions.Controls.Add(btnExport);
+            root.Controls.Add(actions, 0, 4);
+            root.RowStyles.Add(new RowStyle(SizeType.AutoSize));
+
+            WireScrollRoot(root, minHeight: 500);
         }
 
         private void GridOrders_SelectionChanged(object sender, EventArgs e)
