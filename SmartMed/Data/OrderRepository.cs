@@ -48,7 +48,8 @@ namespace SmartMed.Data
         {
             var list = new List<OrderItem>();
             var table = DatabaseHelper.ExecuteQuery(
-                @"SELECT oi.OrderItemID, oi.OrderID, oi.MedicineID, m.MedicineName, oi.Quantity, oi.UnitPrice, oi.Subtotal
+                @"SELECT oi.OrderItemID, oi.OrderID, oi.MedicineID, m.MedicineName, oi.Quantity, oi.UnitPrice, oi.Subtotal,
+                         m.Price AS ListPrice, m.DiscountPercent
                   FROM OrderItem oi INNER JOIN Medicine m ON oi.MedicineID = m.MedicineID
                   WHERE oi.OrderID=@oid",
                 new SqlParameter("@oid", orderId));
@@ -208,7 +209,13 @@ namespace SmartMed.Data
                 MedicineName = row["MedicineName"].ToString(),
                 Quantity = Convert.ToInt32(row["Quantity"]),
                 UnitPrice = Convert.ToDecimal(row["UnitPrice"]),
-                Subtotal = Convert.ToDecimal(row["Subtotal"])
+                Subtotal = Convert.ToDecimal(row["Subtotal"]),
+                ListPrice = row.Table.Columns.Contains("ListPrice") && row["ListPrice"] != DBNull.Value
+                    ? Convert.ToDecimal(row["ListPrice"])
+                    : 0m,
+                DiscountPercent = row.Table.Columns.Contains("DiscountPercent") && row["DiscountPercent"] != DBNull.Value
+                    ? Convert.ToDecimal(row["DiscountPercent"])
+                    : 0m
             };
         }
     }

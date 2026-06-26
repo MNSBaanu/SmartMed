@@ -162,6 +162,32 @@ namespace SmartMed.Services
             return m.Price;
         }
 
+        public string GetCustomerDiscountDisplay(Medicine m) =>
+            m != null && m.DiscountPercent > 0 ? $"{m.DiscountPercent:N0}%" : "—";
+
+        public string GetCustomerPromoDisplay(Medicine m)
+        {
+            if (m == null) return "—";
+            if (IsPromotionActive(m)) return "Active";
+            if (m.IsOnPromotion && m.DiscountPercent > 0) return "Scheduled";
+            return "—";
+        }
+
+        public string GetCustomerOfferDisplay(Medicine m) =>
+            m != null && IsPromotionActive(m) ? $"{m.DiscountPercent:N0}% promo applied" : "—";
+
+        public string GetOrderLineOfferDisplay(decimal unitPrice, decimal listPrice, decimal discountPercent)
+        {
+            if (listPrice <= 0 || unitPrice >= listPrice)
+                return "—";
+
+            if (discountPercent > 0)
+                return $"{discountPercent:N0}% promo applied";
+
+            var pct = Math.Round((1 - unitPrice / listPrice) * 100m, 0);
+            return pct > 0 ? $"{pct:N0}% discount applied" : "—";
+        }
+
         public int CountExpired(IEnumerable<Medicine> items) =>
             items.Count(m => CheckExpiry(m) == ExpiryExpired);
 

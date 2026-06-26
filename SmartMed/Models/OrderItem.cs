@@ -9,6 +9,8 @@ namespace SmartMed.Models
         public int Quantity { get; set; }
         public decimal UnitPrice { get; set; }
         public decimal Subtotal { get; set; }
+        public decimal ListPrice { get; set; }
+        public decimal DiscountPercent { get; set; }
 
         public void CalculateSubtotal() { }
     }

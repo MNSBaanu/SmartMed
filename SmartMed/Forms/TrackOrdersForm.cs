@@ -14,6 +14,8 @@ namespace SmartMed.UI
         private DataGridView gridItems;
         private int? _selectedOrderId;
 
+        private MedicineService _medicines;
+
         public TrackOrdersForm()
             : base(CustomerNavItem.Orders, "My Orders")
         {
@@ -26,6 +28,7 @@ namespace SmartMed.UI
         }
 
         private OrderService Orders => GetRuntimeService(ref _orders);
+        private MedicineService Medicines => GetRuntimeService(ref _medicines);
 
         protected override void InitializePageContent()
         {
@@ -136,6 +139,7 @@ namespace SmartMed.UI
                 i.MedicineName,
                 i.Quantity,
                 UnitPrice = $"LKR {i.UnitPrice:N2}",
+                Discount = Medicines?.GetOrderLineOfferDisplay(i.UnitPrice, i.ListPrice, i.DiscountPercent) ?? "—",
                 Subtotal = $"LKR {i.Subtotal:N2}"
             }).ToList();
         }
@@ -217,7 +221,7 @@ namespace SmartMed.UI
             };
             gridItems.DataSource = new[]
             {
-                new { MedicineName = "Vitamin C", Quantity = 1, UnitPrice = "LKR 15.00", Subtotal = "LKR 15.00" }
+                new { MedicineName = "Vitamin C", Quantity = 1, UnitPrice = "LKR 15.00", Discount = "—", Subtotal = "LKR 15.00" }
             };
         }
     }

@@ -103,12 +103,20 @@ namespace SmartMed.UI
                 l.MedicineID,
                 l.MedicineName,
                 l.Quantity,
+                ListPrice = $"LKR {l.ListPrice:N2}",
                 UnitPrice = $"LKR {l.UnitPrice:N2}",
+                l.DiscountDisplay,
+                l.PromoDisplay,
+                Applied = l.OfferDisplay,
                 Subtotal = $"LKR {l.Subtotal:N2}",
                 Rx = l.RequiresPrescription ? "Yes" : "No"
             }).ToList();
             if (gridCart.Columns.Contains("MedicineID"))
                 gridCart.Columns["MedicineID"].Visible = false;
+            if (gridCart.Columns.Contains("DiscountDisplay"))
+                gridCart.Columns["DiscountDisplay"].HeaderText = "Discount";
+            if (gridCart.Columns.Contains("PromoDisplay"))
+                gridCart.Columns["PromoDisplay"].HeaderText = "Promo";
             lblTotal.Text = $"Total: LKR {CartService.Total:N2} ({CartService.ItemCount} items)";
             lblRxNote.Visible = CartService.RequiresPrescription;
         }
@@ -162,7 +170,19 @@ namespace SmartMed.UI
         {
             gridCart.DataSource = new[]
             {
-                new { MedicineID = 1, MedicineName = "Paracetamol", Quantity = 2, UnitPrice = "LKR 5.50", Subtotal = "LKR 11.00", Rx = "No" }
+                new
+                {
+                    MedicineID = 1,
+                    MedicineName = "Paracetamol",
+                    Quantity = 2,
+                    ListPrice = "LKR 5.50",
+                    UnitPrice = "LKR 5.50",
+                    DiscountDisplay = "—",
+                    PromoDisplay = "—",
+                    Applied = "—",
+                    Subtotal = "LKR 11.00",
+                    Rx = "No"
+                }
             };
             lblTotal.Text = "Total: LKR 11.00 (2 items)";
         }

@@ -109,7 +109,8 @@ namespace SmartMed.UI
                     Price = $"LKR {Medicines.GetEffectivePrice(m):N2}",
                     m.StockQuantity,
                     Rx = m.RequiresPrescription ? "Yes" : "No",
-                    Promo = Medicines.IsPromotionActive(m) ? $"{m.DiscountPercent:N0}% off" : "-"
+                    Discount = Medicines.GetCustomerDiscountDisplay(m),
+                    Promo = Medicines.GetCustomerPromoDisplay(m)
                 }).ToList();
             grid.DataSource = results;
             if (grid.Columns.Contains("MedicineID"))
@@ -124,8 +125,9 @@ namespace SmartMed.UI
             var price = grid.CurrentRow.Cells["Price"].Value?.ToString();
             var stock = grid.CurrentRow.Cells["StockQuantity"].Value?.ToString();
             var rx = grid.CurrentRow.Cells["Rx"].Value?.ToString();
+            var discount = grid.CurrentRow.Cells["Discount"].Value?.ToString();
             var promo = grid.CurrentRow.Cells["Promo"].Value?.ToString();
-            lblDetails.Text = $"{name} | {category} | {price} | Stock: {stock} | Rx: {rx} | {promo}";
+            lblDetails.Text = $"{name} | {category} | {price} | Stock: {stock} | Rx: {rx} | Discount: {discount} | Promo: {promo}";
         }
 
         private void BtnAdd_Click(object sender, EventArgs e)
@@ -138,8 +140,12 @@ namespace SmartMed.UI
                 if (medicine == null) return;
                 Medicines.ValidateForCustomerPurchase(medicine);
                 var qty = (int)numQty.Value;
-                CartService.Add(medicine, qty, Medicines.GetEffectivePrice(medicine));
-                MessageBox.Show($"{medicine.MedicineName} added to cart.", "Cart", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                CartService.Add(medicine, qty, Medicines);
+                var offer = Medicines.GetCustomerOfferDisplay(medicine);
+                var message = offer != "—"
+                    ? $"{medicine.MedicineName} added to cart.\n{offer}"
+                    : $"{medicine.MedicineName} added to cart.";
+                MessageBox.Show(message, "Cart", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
             catch (Exception ex)
             {
@@ -151,8 +157,8 @@ namespace SmartMed.UI
         {
             grid.DataSource = new[]
             {
-                new { MedicineID = 1, MedicineName = "Paracetamol", Category = "Pain Relief", Price = "LKR 5.50", StockQuantity = 200, Rx = "No", Promo = "-" },
-                new { MedicineID = 2, MedicineName = "Amoxicillin", Category = "Antibiotic", Price = "LKR 10.80", StockQuantity = 80, Rx = "Yes", Promo = "10% off" }
+                new { MedicineID = 1, MedicineName = "Paracetamol", Category = "Pain Relief", Price = "LKR 5.50", StockQuantity = 200, Rx = "No", Discount = "—", Promo = "—" },
+                new { MedicineID = 2, MedicineName = "Amoxicillin", Category = "Antibiotic", Price = "LKR 10.80", StockQuantity = 80, Rx = "Yes", Discount = "10%", Promo = "Active" }
             };
             lblDetails.Text = "Paracetamol | Pain Relief | LKR 5.50 | Stock: 200";
         }

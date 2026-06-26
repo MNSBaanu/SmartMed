@@ -11,8 +11,15 @@ namespace SmartMed.Services
         public string MedicineName { get; set; }
         public int Quantity { get; set; }
         public decimal UnitPrice { get; set; }
+        public decimal ListPrice { get; set; }
+        public decimal DiscountPercent { get; set; }
+        public bool PromoApplied { get; set; }
         public bool RequiresPrescription { get; set; }
         public decimal Subtotal => UnitPrice * Quantity;
+
+        public string DiscountDisplay => DiscountPercent > 0 ? $"{DiscountPercent:N0}%" : "—";
+        public string PromoDisplay => PromoApplied ? "Active" : "—";
+        public string OfferDisplay => PromoApplied ? $"{DiscountPercent:N0}% promo applied" : "—";
     }
 
     public static class CartService
@@ -29,14 +36,24 @@ namespace SmartMed.Services
 
         public static void Clear() => Lines.Clear();
 
-        public static void Add(Medicine medicine, int quantity, decimal unitPrice)
+        public static void Add(Medicine medicine, int quantity, MedicineService medicines)
         {
+            if (medicines == null)
+                throw new ArgumentNullException(nameof(medicines));
+
             ValidateLine(medicine, quantity);
+
+            var promoApplied = medicines.IsPromotionActive(medicine);
+            var unitPrice = medicines.GetEffectivePrice(medicine);
 
             var existing = Lines.FirstOrDefault(l => l.MedicineID == medicine.MedicineID);
             if (existing != null)
             {
                 existing.Quantity += quantity;
+                existing.UnitPrice = unitPrice;
+                existing.ListPrice = medicine.Price;
+                existing.DiscountPercent = medicine.DiscountPercent;
+                existing.PromoApplied = promoApplied;
                 return;
             }
 
@@ -46,6 +63,9 @@ namespace SmartMed.Services
                 MedicineName = medicine.MedicineName,
                 Quantity = quantity,
                 UnitPrice = unitPrice,
+                ListPrice = medicine.Price,
+                DiscountPercent = medicine.DiscountPercent,
+                PromoApplied = promoApplied,
                 RequiresPrescription = medicine.RequiresPrescription
             });
         }
