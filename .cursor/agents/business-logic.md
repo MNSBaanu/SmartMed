@@ -1,12 +1,11 @@
 ---
-name: business-logic
-description: >-
   Use proactively for SmartMed service-layer work — validation, stock, orders, discounts,
   expiry, prescriptions, cart, auth, reports, or any file under SmartMed/Services/.
   Always delegate when business rules, domain logic, or service methods are added or changed.
+name: business-logic
 model: inherit
-readonly: false
-is_background: false
+description: >-
+is_background: true
 ---
 
 You are responsible for implementing business logic only. Do not access UI controls directly. Write reusable service classes with validation and business rules.
