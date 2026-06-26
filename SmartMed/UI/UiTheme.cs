@@ -32,6 +32,27 @@ namespace SmartMed.UI
         public const string FontFamilyName = "Roboto";
         public const float FontSize = 9F;
 
+        /// <summary>Vertical gap between major page sections on customer portal screens.</summary>
+        public const int CustomerSectionGap = 16;
+
+        /// <summary>Gap between related controls in a row (buttons, filters).</summary>
+        public const int CustomerControlGap = 8;
+
+        public static Padding CustomerSectionMargin => new Padding(0, 0, 0, CustomerSectionGap);
+
+        public static Padding CustomerControlMargin => new Padding(0, 0, CustomerControlGap, CustomerControlGap);
+
+        public static Label CreateSectionHeading(string text)
+        {
+            return new Label
+            {
+                Text = text,
+                AutoSize = true,
+                Font = UiFontBold,
+                Margin = new Padding(0, 0, 0, CustomerControlGap)
+            };
+        }
+
         private static PrivateFontCollection _fontCollection;
         private static Font _uiFont;
         private static Font _uiFontBold;

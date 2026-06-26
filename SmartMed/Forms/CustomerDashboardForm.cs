@@ -69,10 +69,10 @@ namespace SmartMed.UI
             };
             root.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100f));
 
-            lblWelcome = new Label { AutoSize = true, Font = UiTheme.UiFontBold, Margin = new Padding(0, 0, 0, 12) };
+            lblWelcome = new Label { AutoSize = true, Font = UiTheme.UiFontBold, Margin = UiTheme.CustomerSectionMargin };
             root.Controls.Add(lblWelcome);
 
-            var stats = new TableLayoutPanel { Dock = DockStyle.Top, ColumnCount = 3, Height = 90, Margin = new Padding(0, 0, 0, 16) };
+            var stats = new TableLayoutPanel { Dock = DockStyle.Top, ColumnCount = 3, Height = 90, Margin = UiTheme.CustomerSectionMargin };
             stats.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 33.33f));
             stats.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 33.33f));
             stats.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 33.34f));
@@ -84,7 +84,7 @@ namespace SmartMed.UI
             stats.Controls.Add(CreateStatCard("Promotions", lblPromotions), 2, 0);
             root.Controls.Add(stats);
 
-            root.Controls.Add(new Label { Text = "Recent Orders", AutoSize = true, Margin = new Padding(0, 8, 0, 8) });
+            root.Controls.Add(UiTheme.CreateSectionHeading("Recent Orders"));
             gridRecent = new DataGridView
             {
                 Dock = DockStyle.Top,
@@ -92,11 +92,12 @@ namespace SmartMed.UI
                 ReadOnly = true,
                 AllowUserToAddRows = false,
                 RowHeadersVisible = false,
-                AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill
+                AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill,
+                Margin = UiTheme.CustomerSectionMargin
             };
             root.Controls.Add(gridRecent);
 
-            var actions = new FlowLayoutPanel { AutoSize = true, Margin = new Padding(0, 16, 0, 0) };
+            var actions = new FlowLayoutPanel { AutoSize = true, Margin = new Padding(0, UiTheme.CustomerSectionGap, 0, 0) };
             actions.Controls.Add(CreateNavButton("Browse Medicines", () => GoToCustomerSection(CustomerNavItem.Browse)));
             actions.Controls.Add(CreateNavButton("View Cart", () => GoToCustomerSection(CustomerNavItem.Cart)));
             actions.Controls.Add(CreateNavButton("Change Password", () =>
@@ -111,7 +112,7 @@ namespace SmartMed.UI
 
         private static Panel CreateStatCard(string title, Label valueLabel)
         {
-            var card = new Panel { Dock = DockStyle.Fill, Height = 80, Padding = new Padding(12), Margin = new Padding(0, 0, 8, 0) };
+            var card = new Panel { Dock = DockStyle.Fill, Height = 80, Padding = new Padding(16), Margin = new Padding(0, 0, UiTheme.CustomerControlGap, 0) };
             card.Controls.Add(new Label { Text = title, Dock = DockStyle.Top, Height = 20, ForeColor = SystemColors.GrayText });
             valueLabel.Text = "0";
             valueLabel.Dock = DockStyle.Fill;
@@ -122,7 +123,7 @@ namespace SmartMed.UI
 
         private Button CreateNavButton(string text, Action onClick)
         {
-            var btn = new Button { Text = text, Width = 160, Height = 36, Margin = new Padding(0, 0, 8, 8) };
+            var btn = new Button { Text = text, Width = 160, Height = 36, Margin = UiTheme.CustomerControlMargin };
             btn.Click += (s, e) => onClick();
             return btn;
         }

@@ -62,28 +62,15 @@ namespace SmartMed.UI
             PagePanel.Controls.Clear();
             var root = new Panel { Dock = DockStyle.Top, AutoSize = true, Width = GetScrollContentWidth() };
 
-            var header = new FlowLayoutPanel { Dock = DockStyle.Top, AutoSize = true, Margin = new Padding(0, 0, 0, 8) };
-            var btnCancel = new Button { Text = "Cancel Pending Order", Width = 160, Height = 32 };
+            var header = new FlowLayoutPanel { Dock = DockStyle.Top, AutoSize = true, Margin = UiTheme.CustomerSectionMargin };
+            var btnCancel = new Button { Text = "Cancel Pending Order", Width = 160, Height = 32, Margin = UiTheme.CustomerControlMargin };
             btnCancel.Click += BtnCancel_Click;
-            var btnExport = new Button { Text = "Export CSV", Width = 100, Height = 32 };
+            var btnExport = new Button { Text = "Export CSV", Width = 100, Height = 32, Margin = UiTheme.CustomerControlMargin };
             btnExport.Click += BtnExport_Click;
             header.Controls.Add(btnCancel);
             header.Controls.Add(btnExport);
-            root.Controls.Add(header);
 
-            gridOrders = new DataGridView
-            {
-                Dock = DockStyle.Top,
-                Height = 220,
-                ReadOnly = true,
-                SelectionMode = DataGridViewSelectionMode.FullRowSelect,
-                AllowUserToAddRows = false,
-                RowHeadersVisible = false,
-                AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill
-            };
-            gridOrders.SelectionChanged += GridOrders_SelectionChanged;
-            root.Controls.Add(gridOrders);
-
+            var lblItems = UiTheme.CreateSectionHeading("Order Items");
             gridItems = new DataGridView
             {
                 Dock = DockStyle.Top,
@@ -93,7 +80,27 @@ namespace SmartMed.UI
                 RowHeadersVisible = false,
                 AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill
             };
+
+            var lblOrders = UiTheme.CreateSectionHeading("Your Orders");
+            gridOrders = new DataGridView
+            {
+                Dock = DockStyle.Top,
+                Height = 220,
+                ReadOnly = true,
+                SelectionMode = DataGridViewSelectionMode.FullRowSelect,
+                AllowUserToAddRows = false,
+                RowHeadersVisible = false,
+                AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill,
+                Margin = UiTheme.CustomerSectionMargin
+            };
+            gridOrders.SelectionChanged += GridOrders_SelectionChanged;
+
+            // Dock.Top: last added appears at the top — add bottom sections first.
             root.Controls.Add(gridItems);
+            root.Controls.Add(lblItems);
+            root.Controls.Add(gridOrders);
+            root.Controls.Add(lblOrders);
+            root.Controls.Add(header);
 
             WireScrollRoot(root, minHeight: 460);
         }

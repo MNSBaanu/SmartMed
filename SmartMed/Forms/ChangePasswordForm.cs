@@ -1,4 +1,5 @@
 using System;
+using System.Drawing;
 using System.Windows.Forms;
 using SmartMed.Services;
 
@@ -19,25 +20,43 @@ namespace SmartMed.UI
             MaximizeBox = false;
             MinimizeBox = false;
             StartPosition = FormStartPosition.CenterParent;
-            ClientSize = new System.Drawing.Size(360, 220);
+            ClientSize = new Size(392, 252);
+            Padding = new Padding(24);
 
-            var lblCurrent = new Label { Text = "Current Password:", Left = 16, Top = 20, AutoSize = true };
-            txtCurrent = new TextBox { Left = 16, Top = 40, Width = 320 };
+            var body = new Panel { Dock = DockStyle.Fill, AutoSize = true };
 
-            var lblNew = new Label { Text = "New Password:", Left = 16, Top = 72, AutoSize = true };
-            txtNew = new TextBox { Left = 16, Top = 92, Width = 320 };
+            var lblCurrent = new Label { Text = "Current Password:", Dock = DockStyle.Top, AutoSize = true, Margin = new Padding(0, 0, 0, 4) };
+            txtCurrent = new TextBox { Dock = DockStyle.Top, Margin = UiTheme.CustomerSectionMargin };
 
-            var lblConfirm = new Label { Text = "Confirm Password:", Left = 16, Top = 124, AutoSize = true };
-            txtConfirm = new TextBox { Left = 16, Top = 144, Width = 320 };
+            var lblNew = new Label { Text = "New Password:", Dock = DockStyle.Top, AutoSize = true, Margin = new Padding(0, 0, 0, 4) };
+            txtNew = new TextBox { Dock = DockStyle.Top, Margin = UiTheme.CustomerSectionMargin };
 
-            var btnSave = new Button { Text = "Save", Left = 168, Top = 176, Width = 80, DialogResult = DialogResult.None };
-            var btnCancel = new Button { Text = "Cancel", Left = 256, Top = 176, Width = 80, DialogResult = DialogResult.Cancel };
-            btnSave.Click += BtnSave_Click;
+            var lblConfirm = new Label { Text = "Confirm Password:", Dock = DockStyle.Top, AutoSize = true, Margin = new Padding(0, 0, 0, 4) };
+            txtConfirm = new TextBox { Dock = DockStyle.Top, Margin = UiTheme.CustomerSectionMargin };
 
-            Controls.AddRange(new Control[]
+            var buttons = new FlowLayoutPanel
             {
-                lblCurrent, txtCurrent, lblNew, txtNew, lblConfirm, txtConfirm, btnSave, btnCancel
-            });
+                Dock = DockStyle.Bottom,
+                AutoSize = true,
+                FlowDirection = FlowDirection.RightToLeft,
+                Margin = new Padding(0, UiTheme.CustomerSectionGap, 0, 0)
+            };
+            var btnSave = new Button { Text = "Save", Width = 80, DialogResult = DialogResult.None, Margin = UiTheme.CustomerControlMargin };
+            var btnCancel = new Button { Text = "Cancel", Width = 80, DialogResult = DialogResult.Cancel, Margin = UiTheme.CustomerControlMargin };
+            btnSave.Click += BtnSave_Click;
+            buttons.Controls.Add(btnCancel);
+            buttons.Controls.Add(btnSave);
+
+            // Dock.Top stacks bottom-up — add in reverse visual order.
+            body.Controls.Add(txtConfirm);
+            body.Controls.Add(lblConfirm);
+            body.Controls.Add(txtNew);
+            body.Controls.Add(lblNew);
+            body.Controls.Add(txtCurrent);
+            body.Controls.Add(lblCurrent);
+
+            Controls.Add(buttons);
+            Controls.Add(body);
             AcceptButton = btnSave;
             CancelButton = btnCancel;
 

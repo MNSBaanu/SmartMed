@@ -47,19 +47,19 @@ namespace SmartMed.UI
             PagePanel.Controls.Clear();
             var root = new Panel { Dock = DockStyle.Top, AutoSize = true, Width = GetScrollContentWidth() };
 
-            var filter = new FlowLayoutPanel { Dock = DockStyle.Top, AutoSize = true, WrapContents = true, Margin = new Padding(0, 0, 0, 8) };
-            txtName = new TextBox { Width = 140 };
-            txtCategory = new TextBox { Width = 120 };
-            txtMinPrice = new TextBox { Width = 80 };
-            txtMaxPrice = new TextBox { Width = 80 };
-            var btnSearch = new Button { Text = "Search", Width = 80, Height = 28 };
+            var filter = new FlowLayoutPanel { Dock = DockStyle.Top, AutoSize = true, WrapContents = true, Margin = UiTheme.CustomerSectionMargin };
+            txtName = new TextBox { Width = 140, Margin = UiTheme.CustomerControlMargin };
+            txtCategory = new TextBox { Width = 120, Margin = UiTheme.CustomerControlMargin };
+            txtMinPrice = new TextBox { Width = 80, Margin = UiTheme.CustomerControlMargin };
+            txtMaxPrice = new TextBox { Width = 80, Margin = UiTheme.CustomerControlMargin };
+            var btnSearch = new Button { Text = "Search", Width = 80, Height = 28, Margin = UiTheme.CustomerControlMargin };
             btnSearch.Click += (s, e) => Search();
             filter.Controls.AddRange(new Control[]
             {
-                new Label { Text = "Name:", AutoSize = true, Padding = new Padding(0, 6, 0, 0) }, txtName,
-                new Label { Text = "Category:", AutoSize = true, Padding = new Padding(8, 6, 0, 0) }, txtCategory,
-                new Label { Text = "Min:", AutoSize = true, Padding = new Padding(8, 6, 0, 0) }, txtMinPrice,
-                new Label { Text = "Max:", AutoSize = true, Padding = new Padding(8, 6, 0, 0) }, txtMaxPrice,
+                new Label { Text = "Name:", AutoSize = true, Padding = new Padding(0, 6, 0, 0), Margin = UiTheme.CustomerControlMargin }, txtName,
+                new Label { Text = "Category:", AutoSize = true, Padding = new Padding(0, 6, 0, 0), Margin = UiTheme.CustomerControlMargin }, txtCategory,
+                new Label { Text = "Min:", AutoSize = true, Padding = new Padding(0, 6, 0, 0), Margin = UiTheme.CustomerControlMargin }, txtMinPrice,
+                new Label { Text = "Max:", AutoSize = true, Padding = new Padding(0, 6, 0, 0), Margin = UiTheme.CustomerControlMargin }, txtMaxPrice,
                 btnSearch
             });
 
@@ -72,16 +72,16 @@ namespace SmartMed.UI
                 AllowUserToAddRows = false,
                 RowHeadersVisible = false,
                 AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill,
-                Margin = new Padding(0, 0, 0, 8)
+                Margin = UiTheme.CustomerSectionMargin
             };
             grid.SelectionChanged += Grid_SelectionChanged;
 
-            lblDetails = new Label { Dock = DockStyle.Top, Height = 60, AutoSize = false, ForeColor = SystemColors.GrayText, Margin = new Padding(0, 0, 0, 8) };
+            lblDetails = new Label { Dock = DockStyle.Top, Height = 60, AutoSize = false, ForeColor = SystemColors.GrayText, Margin = UiTheme.CustomerSectionMargin };
 
-            var cartRow = new FlowLayoutPanel { Dock = DockStyle.Top, AutoSize = true, Margin = new Padding(0, 0, 0, 0) };
-            cartRow.Controls.Add(new Label { Text = "Qty:", AutoSize = true, Padding = new Padding(0, 6, 0, 0) });
-            numQty = new NumericUpDown { Minimum = 1, Maximum = 99, Value = 1, Width = 60 };
-            var btnAdd = new Button { Text = "Add to Cart", Width = 120, Height = 32 };
+            var cartRow = new FlowLayoutPanel { Dock = DockStyle.Top, AutoSize = true, Margin = new Padding(0, UiTheme.CustomerControlGap, 0, 0) };
+            cartRow.Controls.Add(new Label { Text = "Qty:", AutoSize = true, Padding = new Padding(0, 6, 0, 0), Margin = UiTheme.CustomerControlMargin });
+            numQty = new NumericUpDown { Minimum = 1, Maximum = 99, Value = 1, Width = 60, Margin = UiTheme.CustomerControlMargin };
+            var btnAdd = new Button { Text = "Add to Cart", Width = 120, Height = 32, Margin = UiTheme.CustomerControlMargin };
             btnAdd.Click += BtnAdd_Click;
             cartRow.Controls.Add(numQty);
             cartRow.Controls.Add(btnAdd);

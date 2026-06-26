@@ -42,18 +42,12 @@ namespace SmartMed.UI
         private void BuildContent()
         {
             PagePanel.Controls.Clear();
-            var root = new Panel { Dock = DockStyle.Top, AutoSize = true, Width = GetScrollContentWidth(), Padding = new Padding(0, 0, 0, 16) };
+            var root = new Panel { Dock = DockStyle.Top, AutoSize = true, Width = GetScrollContentWidth() };
 
-            txtName = CreateField(root, ValidationService.RequiredLabel("Full Name"), 0);
-            txtEmail = CreateField(root, ValidationService.RequiredLabel("Email"), 40);
-            txtPhone = CreateField(root, ValidationService.RequiredLabel("Phone"), 80);
-            txtPhone.MaxLength = 14;
-            txtAddress = CreateField(root, ValidationService.RequiredLabel("Address"), 120);
-
-            var actions = new FlowLayoutPanel { Location = new Point(0, 170), AutoSize = true };
-            var btnSave = new Button { Text = "Save Profile", Width = 120, Height = 32 };
+            var actions = new FlowLayoutPanel { Dock = DockStyle.Top, AutoSize = true, Margin = new Padding(0, UiTheme.CustomerSectionGap, 0, 0) };
+            var btnSave = new Button { Text = "Save Profile", Width = 120, Height = 32, Margin = UiTheme.CustomerControlMargin };
             btnSave.Click += BtnSave_Click;
-            var btnPassword = new Button { Text = "Change Password", Width = 140, Height = 32 };
+            var btnPassword = new Button { Text = "Change Password", Width = 140, Height = 32, Margin = UiTheme.CustomerControlMargin };
             btnPassword.Click += (s, e) =>
             {
                 using (var dlg = new ChangePasswordForm(isAdmin: false))
@@ -61,17 +55,37 @@ namespace SmartMed.UI
             };
             actions.Controls.Add(btnSave);
             actions.Controls.Add(btnPassword);
-            root.Controls.Add(actions);
 
-            WireScrollRoot(root, minHeight: 220);
+            var fieldAddress = CreateFieldGroup(ValidationService.RequiredLabel("Address"), out txtAddress);
+            var fieldPhone = CreateFieldGroup(ValidationService.RequiredLabel("Phone"), out txtPhone);
+            txtPhone.MaxLength = 14;
+            var fieldEmail = CreateFieldGroup(ValidationService.RequiredLabel("Email"), out txtEmail);
+            var fieldName = CreateFieldGroup(ValidationService.RequiredLabel("Full Name"), out txtName);
+
+            // Dock.Top: last added appears at the top — add bottom sections first.
+            root.Controls.Add(actions);
+            root.Controls.Add(fieldAddress);
+            root.Controls.Add(fieldPhone);
+            root.Controls.Add(fieldEmail);
+            root.Controls.Add(fieldName);
+
+            WireScrollRoot(root, minHeight: 320);
         }
 
-        private static TextBox CreateField(Panel parent, string label, int top)
+        private static Panel CreateFieldGroup(string labelText, out TextBox textBox)
         {
-            parent.Controls.Add(new Label { Text = label, Location = new Point(0, top), AutoSize = true });
-            var box = new TextBox { Location = new Point(0, top + 20), Width = 400 };
-            parent.Controls.Add(box);
-            return box;
+            var group = new Panel { Dock = DockStyle.Top, AutoSize = true, Margin = UiTheme.CustomerSectionMargin };
+            textBox = new TextBox { Dock = DockStyle.Top, Width = 400 };
+            var label = new Label
+            {
+                Text = labelText,
+                Dock = DockStyle.Top,
+                AutoSize = true,
+                Margin = new Padding(0, 0, 0, 4)
+            };
+            group.Controls.Add(textBox);
+            group.Controls.Add(label);
+            return group;
         }
 
         public void RefreshProfile() => LoadProfile();

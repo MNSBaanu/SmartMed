@@ -119,9 +119,10 @@ namespace SmartMed.UI
 
         protected int GetScrollContentWidth(int fallback = 800)
         {
-            var w = PagePanel.ClientSize.Width;
+            var host = PagePanel;
+            var w = host.ClientSize.Width - host.Padding.Horizontal;
             if (w < 200 && Parent != null)
-                w = Parent.ClientSize.Width - 48;
+                w = Parent.ClientSize.Width - host.Padding.Horizontal - 48;
             return w < 200 ? fallback : w;
         }
 

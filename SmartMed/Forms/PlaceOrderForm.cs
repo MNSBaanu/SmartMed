@@ -45,20 +45,20 @@ namespace SmartMed.UI
             PagePanel.Controls.Clear();
             var root = new Panel { Dock = DockStyle.Top, AutoSize = true, Width = GetScrollContentWidth() };
 
-            var actions = new FlowLayoutPanel { Dock = DockStyle.Top, AutoSize = true, Margin = new Padding(0, 8, 0, 0) };
-            var btnRemove = new Button { Text = "Remove Selected", Width = 130, Height = 32 };
+            var actions = new FlowLayoutPanel { Dock = DockStyle.Top, AutoSize = true, Margin = new Padding(0, UiTheme.CustomerSectionGap, 0, 0) };
+            var btnRemove = new Button { Text = "Remove Selected", Width = 130, Height = 32, Margin = UiTheme.CustomerControlMargin };
             btnRemove.Click += BtnRemove_Click;
-            var btnClear = new Button { Text = "Clear Cart", Width = 100, Height = 32 };
+            var btnClear = new Button { Text = "Clear Cart", Width = 100, Height = 32, Margin = UiTheme.CustomerControlMargin };
             btnClear.Click += (s, e) => { CartService.Clear(); RefreshCart(); };
-            var btnPlace = new Button { Text = "Place Order", Width = 120, Height = 32 };
+            var btnPlace = new Button { Text = "Place Order", Width = 120, Height = 32, Margin = UiTheme.CustomerControlMargin };
             btnPlace.Click += BtnPlace_Click;
             actions.Controls.Add(btnRemove);
             actions.Controls.Add(btnClear);
             actions.Controls.Add(btnPlace);
 
-            var rxRow = new FlowLayoutPanel { Dock = DockStyle.Top, AutoSize = true, Margin = new Padding(0, 8, 0, 8) };
-            txtPrescriptionPath = new TextBox { Width = 360, ReadOnly = true };
-            var btnBrowse = new Button { Text = "Upload Prescription", Width = 150, Height = 28 };
+            var rxRow = new FlowLayoutPanel { Dock = DockStyle.Top, AutoSize = true, Margin = UiTheme.CustomerSectionMargin };
+            txtPrescriptionPath = new TextBox { Width = 360, ReadOnly = true, Margin = UiTheme.CustomerControlMargin };
+            var btnBrowse = new Button { Text = "Upload Prescription", Width = 150, Height = 28, Margin = UiTheme.CustomerControlMargin };
             btnBrowse.Click += BtnBrowse_Click;
             rxRow.Controls.Add(txtPrescriptionPath);
             rxRow.Controls.Add(btnBrowse);
@@ -68,10 +68,11 @@ namespace SmartMed.UI
                 Dock = DockStyle.Top,
                 Height = 24,
                 ForeColor = Color.DarkRed,
-                Text = "Rx medicines require a prescription upload."
+                Text = "Rx medicines require a prescription upload.",
+                Margin = UiTheme.CustomerSectionMargin
             };
 
-            lblTotal = new Label { Dock = DockStyle.Top, Height = 28, Font = UiTheme.UiFontBold, Margin = new Padding(0, 8, 0, 0) };
+            lblTotal = new Label { Dock = DockStyle.Top, Height = 28, Font = UiTheme.UiFontBold, Margin = UiTheme.CustomerSectionMargin };
 
             gridCart = new DataGridView
             {
@@ -81,7 +82,7 @@ namespace SmartMed.UI
                 AllowUserToAddRows = false,
                 RowHeadersVisible = false,
                 AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill,
-                Margin = new Padding(0, 0, 0, 8)
+                Margin = UiTheme.CustomerSectionMargin
             };
 
             // Dock.Top: last added appears at the top — add bottom sections first.
