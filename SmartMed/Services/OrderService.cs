@@ -43,6 +43,8 @@ namespace SmartMed.Services
 
         public List<Order> GetByCustomer(int customerId) => _orders.GetByCustomer(customerId);
 
+        public Order GetById(int orderId) => _orders.GetById(orderId);
+
         public List<OrderItem> GetItems(int orderId) => _orders.GetItems(orderId);
 
         public void UpdateStatus(int orderId, string status)
@@ -119,10 +121,11 @@ namespace SmartMed.Services
             if (requiresRx && ValidationService.IsNullOrWhiteSpace(prescriptionSourcePath))
                 throw new InvalidOperationException("Upload a prescription for Rx medicines before placing the order.");
 
+            string savedPrescriptionPath = null;
             if (requiresRx)
-                _prescriptions.SavePrescription(customerId, prescriptionSourcePath);
+                savedPrescriptionPath = _prescriptions.SavePrescription(customerId, prescriptionSourcePath);
 
-            var orderId = _orders.CreateOrder(customerId, orderItems);
+            var orderId = _orders.CreateOrder(customerId, orderItems, savedPrescriptionPath);
             foreach (var item in orderItems)
                 _medicines.UpdateStock(item.MedicineID, -item.Quantity);
 
@@ -164,6 +167,14 @@ namespace SmartMed.Services
         {
             pending = all.Count(o => o.Status == StatusPending);
             delivered = all.Count(o => o.Status == StatusDelivered);
+        }
+
+        public static string GetPrescriptionDisplay(Order order)
+        {
+            if (order == null || ValidationService.IsNullOrWhiteSpace(order.PrescriptionFile))
+                return "—";
+
+            return Path.GetFileName(order.PrescriptionFile);
         }
 
         public List<RecentOrderSummary> GetRecentSummaries(int take)

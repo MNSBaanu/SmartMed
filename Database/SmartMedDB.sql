@@ -44,11 +44,12 @@ CREATE TABLE Medicine (
 );
 
 CREATE TABLE [Order] (
-    OrderID      INT IDENTITY(1,1) PRIMARY KEY,
-    CustomerID   INT NOT NULL,
-    OrderDate    DATETIME NOT NULL DEFAULT GETDATE(),
-    Status       NVARCHAR(30) NOT NULL,
-    TotalAmount  DECIMAL(10,2) NOT NULL CHECK (TotalAmount >= 0),
+    OrderID           INT IDENTITY(1,1) PRIMARY KEY,
+    CustomerID        INT NOT NULL,
+    OrderDate         DATETIME NOT NULL DEFAULT GETDATE(),
+    Status            NVARCHAR(30) NOT NULL,
+    TotalAmount       DECIMAL(10,2) NOT NULL CHECK (TotalAmount >= 0),
+    PrescriptionFile  NVARCHAR(255) NULL,
     CONSTRAINT FK_Order_Customer FOREIGN KEY (CustomerID) REFERENCES Customer(CustomerID),
     CONSTRAINT CK_Order_Status CHECK (Status IN ('Pending', 'Ready for Pickup', 'Delivered'))
 );

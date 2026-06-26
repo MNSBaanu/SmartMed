@@ -49,7 +49,8 @@ namespace SmartMed.UI
                 OrderRef = $"#SM-{o.OrderID:D4}",
                 OrderDate = o.OrderDate.ToString("MMM dd, yyyy hh:mm tt"),
                 o.Status,
-                Total = $"LKR {o.TotalAmount:N2}"
+                Total = $"LKR {o.TotalAmount:N2}",
+                Prescription = OrderService.GetPrescriptionDisplay(o)
             }).ToList();
             if (gridOrders.Columns.Contains("OrderID"))
                 gridOrders.Columns["OrderID"].Visible = false;
@@ -85,6 +86,7 @@ namespace SmartMed.UI
                 Margin = new Padding(0, UiTheme.CustomerControlGap, 0, UiTheme.CustomerSectionGap)
             };
             gridOrders.SelectionChanged += GridOrders_SelectionChanged;
+            gridOrders.CellDoubleClick += GridOrders_CellDoubleClick;
             root.Controls.Add(gridOrders, 0, 1);
             root.RowStyles.Add(new RowStyle(SizeType.Absolute, 220f));
 
@@ -138,6 +140,35 @@ namespace SmartMed.UI
             }).ToList();
         }
 
+        private void GridOrders_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
+        {
+            if (IsDesignHost() || Orders == null || e.RowIndex < 0) return;
+            if (!gridOrders.Columns.Contains("Prescription")) return;
+            if (gridOrders.Columns[e.ColumnIndex].Name != "Prescription") return;
+
+            var orderId = Convert.ToInt32(gridOrders.Rows[e.RowIndex].Cells["OrderID"].Value);
+            var order = Orders.GetById(orderId);
+            if (order == null || string.IsNullOrWhiteSpace(order.PrescriptionFile))
+                return;
+
+            if (!System.IO.File.Exists(order.PrescriptionFile))
+            {
+                MessageBox.Show("Prescription file is no longer available on this device.", "Prescription",
+                    MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return;
+            }
+
+            try
+            {
+                System.Diagnostics.Process.Start(order.PrescriptionFile);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Could not open prescription file.\n{ex.Message}", "Prescription",
+                    MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
+        }
+
         private void BtnCancel_Click(object sender, EventArgs e)
         {
             if (!_selectedOrderId.HasValue)
@@ -182,7 +213,7 @@ namespace SmartMed.UI
         {
             gridOrders.DataSource = new[]
             {
-                new { OrderID = 2, OrderRef = "#SM-0002", OrderDate = "Jun 22, 2026 10:00 AM", Status = "Pending", Total = "LKR 15.00" }
+                new { OrderID = 2, OrderRef = "#SM-0002", OrderDate = "Jun 22, 2026 10:00 AM", Status = "Pending", Total = "LKR 15.00", Prescription = "2_20260622100000_rx.pdf" }
             };
             gridItems.DataSource = new[]
             {
