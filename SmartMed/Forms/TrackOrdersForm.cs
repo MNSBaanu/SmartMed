@@ -53,7 +53,7 @@ namespace SmartMed.UI
                 OrderDate = o.OrderDate.ToString("MMM dd, yyyy hh:mm tt"),
                 o.Status,
                 Total = $"LKR {o.TotalAmount:N2}",
-                Prescription = OrderService.GetPrescriptionDisplay(o)
+                Prescription = Orders.GetPrescriptionDisplay(o.OrderID)
             }).ToList();
             if (gridOrders.Columns.Contains("OrderID"))
                 gridOrders.Columns["OrderID"].Visible = false;
@@ -151,11 +151,11 @@ namespace SmartMed.UI
             if (gridOrders.Columns[e.ColumnIndex].Name != "Prescription") return;
 
             var orderId = Convert.ToInt32(gridOrders.Rows[e.RowIndex].Cells["OrderID"].Value);
-            var order = Orders.GetById(orderId);
-            if (order == null || string.IsNullOrWhiteSpace(order.PrescriptionFile))
+            var filePath = Orders.GetPrescriptionFilePath(orderId);
+            if (string.IsNullOrWhiteSpace(filePath))
                 return;
 
-            if (!System.IO.File.Exists(order.PrescriptionFile))
+            if (!System.IO.File.Exists(filePath))
             {
                 MessageBox.Show("Prescription file is no longer available on this device.", "Prescription",
                     MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -164,7 +164,7 @@ namespace SmartMed.UI
 
             try
             {
-                System.Diagnostics.Process.Start(order.PrescriptionFile);
+                System.Diagnostics.Process.Start(filePath);
             }
             catch (Exception ex)
             {

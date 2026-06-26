@@ -6,9 +6,9 @@ namespace SmartMed.Models
     {
         public int PrescriptionID { get; set; }
         public int CustomerID { get; set; }
-        public string FilePath { get; set; }
+        public int OrderID { get; set; }
+        public string PrescriptionFile { get; set; }
         public DateTime UploadDate { get; set; }
-
-        public void UploadPrescription() { }
+        public string Status { get; set; }
     }
 }

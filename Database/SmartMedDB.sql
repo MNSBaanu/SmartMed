@@ -44,12 +44,11 @@ CREATE TABLE Medicine (
 );
 
 CREATE TABLE [Order] (
-    OrderID           INT IDENTITY(1,1) PRIMARY KEY,
-    CustomerID        INT NOT NULL,
-    OrderDate         DATETIME NOT NULL DEFAULT GETDATE(),
-    Status            NVARCHAR(30) NOT NULL,
-    TotalAmount       DECIMAL(10,2) NOT NULL CHECK (TotalAmount >= 0),
-    PrescriptionFile  NVARCHAR(255) NULL,
+    OrderID      INT IDENTITY(1,1) PRIMARY KEY,
+    CustomerID   INT NOT NULL,
+    OrderDate    DATETIME NOT NULL DEFAULT GETDATE(),
+    Status       NVARCHAR(30) NOT NULL,
+    TotalAmount  DECIMAL(10,2) NOT NULL CHECK (TotalAmount >= 0),
     CONSTRAINT FK_Order_Customer FOREIGN KEY (CustomerID) REFERENCES Customer(CustomerID),
     CONSTRAINT CK_Order_Status CHECK (Status IN ('Pending', 'Ready for Pickup', 'Delivered'))
 );
@@ -68,10 +67,12 @@ CREATE TABLE OrderItem (
 CREATE TABLE Prescription (
     PrescriptionID   INT IDENTITY(1,1) PRIMARY KEY,
     CustomerID       INT NOT NULL,
+    OrderID          INT NOT NULL,
     PrescriptionFile NVARCHAR(255) NOT NULL,
     UploadDate       DATETIME NOT NULL DEFAULT GETDATE(),
     Status           NVARCHAR(30) NOT NULL DEFAULT 'Pending',
-    CONSTRAINT FK_Prescription_Customer FOREIGN KEY (CustomerID) REFERENCES Customer(CustomerID)
+    CONSTRAINT FK_Prescription_Customer FOREIGN KEY (CustomerID) REFERENCES Customer(CustomerID),
+    CONSTRAINT FK_Prescription_Order FOREIGN KEY (OrderID) REFERENCES [Order](OrderID)
 );
 
 -- Seed data
