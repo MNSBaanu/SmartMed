@@ -42,9 +42,32 @@ namespace SmartMed.UI
         private void BuildContent()
         {
             PagePanel.Controls.Clear();
-            var root = new Panel { Dock = DockStyle.Top, AutoSize = true, Width = GetScrollContentWidth() };
+            var root = new TableLayoutPanel
+            {
+                AutoSize = true,
+                Dock = DockStyle.Top,
+                ColumnCount = 1,
+                Width = GetScrollContentWidth()
+            };
+            root.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100f));
 
-            var actions = new FlowLayoutPanel { Dock = DockStyle.Top, AutoSize = true, Margin = new Padding(0, UiTheme.CustomerSectionGap, 0, 0) };
+            var row = 0;
+            var heading = UiTheme.CreateSectionHeading("Personal Details");
+            root.Controls.Add(heading, 0, row++);
+            root.RowStyles.Add(new RowStyle(SizeType.AutoSize));
+
+            AddFieldRow(root, ref row, ValidationService.RequiredLabel("Full Name"), out txtName, first: true);
+            AddFieldRow(root, ref row, ValidationService.RequiredLabel("Email"), out txtEmail);
+            AddFieldRow(root, ref row, ValidationService.RequiredLabel("Phone"), out txtPhone);
+            txtPhone.MaxLength = 14;
+            AddFieldRow(root, ref row, ValidationService.RequiredLabel("Address"), out txtAddress, multiline: true);
+
+            var actions = new FlowLayoutPanel
+            {
+                AutoSize = true,
+                Dock = DockStyle.Fill,
+                Margin = new Padding(0, UiTheme.CustomerSectionGap, 0, 0)
+            };
             var btnSave = new Button { Text = "Save Profile", Width = 120, Height = 32, Margin = UiTheme.CustomerControlMargin };
             btnSave.Click += BtnSave_Click;
             var btnPassword = new Button { Text = "Change Password", Width = 140, Height = 32, Margin = UiTheme.CustomerControlMargin };
@@ -55,37 +78,38 @@ namespace SmartMed.UI
             };
             actions.Controls.Add(btnSave);
             actions.Controls.Add(btnPassword);
+            root.Controls.Add(actions, 0, row++);
+            root.RowStyles.Add(new RowStyle(SizeType.AutoSize));
 
-            var fieldAddress = CreateFieldGroup(ValidationService.RequiredLabel("Address"), out txtAddress);
-            var fieldPhone = CreateFieldGroup(ValidationService.RequiredLabel("Phone"), out txtPhone);
-            txtPhone.MaxLength = 14;
-            var fieldEmail = CreateFieldGroup(ValidationService.RequiredLabel("Email"), out txtEmail);
-            var fieldName = CreateFieldGroup(ValidationService.RequiredLabel("Full Name"), out txtName);
-
-            // Dock.Top: last added appears at the top — add bottom sections first.
-            root.Controls.Add(actions);
-            root.Controls.Add(fieldAddress);
-            root.Controls.Add(fieldPhone);
-            root.Controls.Add(fieldEmail);
-            root.Controls.Add(fieldName);
-
-            WireScrollRoot(root, minHeight: 320);
+            WireScrollRoot(root, minHeight: 420);
         }
 
-        private static Panel CreateFieldGroup(string labelText, out TextBox textBox)
+        private static void AddFieldRow(TableLayoutPanel root, ref int row, string labelText, out TextBox textBox,
+            bool first = false, bool multiline = false)
         {
-            var group = new Panel { Dock = DockStyle.Top, AutoSize = true, Margin = UiTheme.CustomerSectionMargin };
-            textBox = new TextBox { Dock = DockStyle.Top, Width = 400 };
             var label = new Label
             {
                 Text = labelText,
-                Dock = DockStyle.Top,
                 AutoSize = true,
-                Margin = new Padding(0, 0, 0, 4)
+                Margin = new Padding(
+                    0,
+                    first ? UiTheme.CustomerControlGap : UiTheme.CustomerSectionGap,
+                    0,
+                    4)
             };
-            group.Controls.Add(textBox);
-            group.Controls.Add(label);
-            return group;
+            root.Controls.Add(label, 0, row++);
+            root.RowStyles.Add(new RowStyle(SizeType.AutoSize));
+
+            textBox = new TextBox
+            {
+                Dock = DockStyle.Top,
+                Height = multiline ? 52 : 32,
+                Multiline = multiline,
+                ScrollBars = multiline ? ScrollBars.Vertical : ScrollBars.None,
+                Margin = new Padding(0, 0, 0, 0)
+            };
+            root.Controls.Add(textBox, 0, row++);
+            root.RowStyles.Add(new RowStyle(SizeType.AutoSize));
         }
 
         public void RefreshProfile() => LoadProfile();
