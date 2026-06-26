@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Windows.Forms;
 
 namespace SmartMed.UI
@@ -8,6 +9,8 @@ namespace SmartMed.UI
     {
         private CustomerShellForm _embeddedPage;
         private CustomerNavItem _activeNav;
+        private readonly Dictionary<CustomerNavItem, CustomerShellForm> _pageCache =
+            new Dictionary<CustomerNavItem, CustomerShellForm>();
 
         public CustomerHostForm()
             : base(CustomerNavItem.Home, "Customer Home")
@@ -15,6 +18,13 @@ namespace SmartMed.UI
             InitializeComponent();
             HideTopChrome();
             Text = "SmartMed - Customer Home";
+            panelContent.Resize += PanelContent_Resize;
+            FormClosed += (s, e) => DisposePageCache();
+        }
+
+        private void PanelContent_Resize(object sender, EventArgs e)
+        {
+            _embeddedPage?.SyncScrollRootWidth();
         }
 
         protected override void NavigateCustomer(CustomerNavItem nav)
@@ -32,17 +42,20 @@ namespace SmartMed.UI
 
             using (UiTheme.BatchUpdate(this, panelSidebar, panelContent))
             {
-                DisposeEmbeddedPage();
-                panelContent.Controls.Clear();
+                if (_embeddedPage != null)
+                    _embeddedPage.DetachPageContent();
 
-                _embeddedPage = CreateEmbeddedPage(nav);
+                panelContent.Controls.Clear();
+                panelContent.AutoScrollPosition = new System.Drawing.Point(0, 0);
+
+                _embeddedPage = GetOrCreatePage(nav);
                 _embeddedPage.SetContentTarget(panelContent);
-                _embeddedPage.PrepareForNavigation();
+                _embeddedPage.PrepareForHostDisplay();
                 UiTheme.ApplyFontTree(panelContent);
-                RelayoutPageContent();
             }
 
             _activeNav = nav;
+            RefreshEmbeddedPage(nav);
         }
 
         protected override void InitializePageContent()
@@ -71,11 +84,26 @@ namespace SmartMed.UI
             throw new ArgumentException("Unknown customer section.");
         }
 
-        private void DisposeEmbeddedPage()
+        private CustomerShellForm GetOrCreatePage(CustomerNavItem nav)
         {
-            if (_embeddedPage == null) return;
-            _embeddedPage.SetContentTarget(null);
-            _embeddedPage.Dispose();
+            if (_pageCache.TryGetValue(nav, out var page) && page != null && !page.IsDisposed)
+                return page;
+
+            page = CreateEmbeddedPage(nav);
+            _pageCache[nav] = page;
+            return page;
+        }
+
+        private void DisposePageCache()
+        {
+            foreach (var page in _pageCache.Values)
+            {
+                if (page == null || page.IsDisposed) continue;
+                page.DetachPageContent();
+                page.SetContentTarget(null);
+                page.Dispose();
+            }
+            _pageCache.Clear();
             _embeddedPage = null;
         }
 
@@ -89,27 +117,6 @@ namespace SmartMed.UI
                 orders.RefreshOrders();
             else if (nav == CustomerNavItem.Profile && _embeddedPage is ProfileManagementForm profile)
                 profile.RefreshProfile();
-        }
-
-        private void RelayoutPageContent()
-        {
-            if (panelContent.Controls.Count == 0) return;
-
-            panelContent.SuspendLayout();
-            try
-            {
-                var width = Math.Max(200, panelContent.ClientSize.Width - panelContent.Padding.Horizontal);
-                foreach (Control child in panelContent.Controls)
-                {
-                    child.Width = width;
-                    child.PerformLayout();
-                }
-                panelContent.PerformLayout();
-            }
-            finally
-            {
-                panelContent.ResumeLayout(true);
-            }
         }
     }
 }

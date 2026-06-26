@@ -108,6 +108,8 @@ namespace SmartMed.UI
 
         private Panel _contentTarget;
         private CustomerHostForm _customerHost;
+        private Control _scrollRoot;
+        private int _scrollWidthFallback = 800;
 
         internal void SetContentTarget(Panel host)
         {
@@ -120,29 +122,76 @@ namespace SmartMed.UI
         protected int GetScrollContentWidth(int fallback = 800)
         {
             var host = PagePanel;
+            if (host == null || host.IsDisposed)
+                return fallback;
+
             var w = host.ClientSize.Width - host.Padding.Horizontal;
-            if (w < 200 && Parent != null)
-                w = Parent.ClientSize.Width - host.Padding.Horizontal - 48;
             return w < 200 ? fallback : w;
         }
 
         protected void WireScrollRoot(Control scrollRoot, int fallback = 800, int minHeight = 0)
         {
+            _scrollRoot = scrollRoot;
+            _scrollWidthFallback = fallback;
             UiTheme.EnableDoubleBuffer(scrollRoot);
-            if (scrollRoot is Panel panel)
-            {
-                panel.AutoSize = true;
-                panel.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            }
 
-            var host = PagePanel;
-            scrollRoot.Width = GetScrollContentWidth(fallback);
+            scrollRoot.Dock = DockStyle.Top;
+            scrollRoot.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+
             if (minHeight > 0)
                 scrollRoot.MinimumSize = new Size(0, minHeight);
 
-            host.Controls.Add(scrollRoot);
-            host.Resize += (s, e) => scrollRoot.Width = GetScrollContentWidth(fallback);
-            scrollRoot.PerformLayout();
+            SyncScrollRootWidth(fallback);
+            AttachPageContent();
+        }
+
+        internal void SyncScrollRootWidth()
+        {
+            SyncScrollRootWidth(_scrollWidthFallback);
+        }
+
+        internal void SyncScrollRootWidth(int fallback)
+        {
+            if (_scrollRoot == null || _scrollRoot.IsDisposed)
+                return;
+
+            var width = GetScrollContentWidth(fallback);
+            if (_scrollRoot.Width != width)
+                _scrollRoot.Width = width;
+            _scrollRoot.PerformLayout();
+        }
+
+        internal void DetachPageContent()
+        {
+            if (_scrollRoot == null || _scrollRoot.IsDisposed)
+                return;
+
+            var host = PagePanel;
+            if (host != null && !host.IsDisposed && _scrollRoot.Parent == host)
+                host.Controls.Remove(_scrollRoot);
+        }
+
+        internal void AttachPageContent()
+        {
+            if (_scrollRoot == null || _scrollRoot.IsDisposed)
+                return;
+
+            var host = PagePanel;
+            if (host == null || host.IsDisposed)
+                return;
+
+            if (_scrollRoot.Parent != host)
+                host.Controls.Add(_scrollRoot);
+
+            SyncScrollRootWidth(_scrollWidthFallback);
+        }
+
+        internal void PrepareForHostDisplay()
+        {
+            if (!IsHandleCreated)
+                CreateControl();
+            EnsurePageContent();
+            AttachPageContent();
         }
 
         protected T GetRuntimeService<T>(ref T service) where T : class, new()
