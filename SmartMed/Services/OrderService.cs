@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Text;
 using System.IO;
@@ -148,8 +149,52 @@ namespace SmartMed.Services
             _orders.DeleteOrder(orderId);
         }
 
+        public DataTable BuildCustomerOrderExportTable(int customerId)
+        {
+            var table = new DataTable();
+            table.Columns.Add("Order Ref");
+            table.Columns.Add("Order Date");
+            table.Columns.Add("Status");
+            table.Columns.Add("Total (LKR)");
+            table.Columns.Add("Prescription");
+
+            foreach (var order in GetByCustomer(customerId))
+            {
+                table.Rows.Add(
+                    $"#SM-{order.OrderID:D4}",
+                    order.OrderDate.ToString("MMM dd, yyyy hh:mm tt"),
+                    order.Status,
+                    order.TotalAmount.ToString("N2"),
+                    GetPrescriptionDisplay(order.OrderID));
+            }
+
+            return table;
+        }
+
+        public void ExportCustomerOrderHistoryToCsv(int customerId, string filePath)
+        {
+            ExportHelper.ExportDataTableToCsv(BuildCustomerOrderExportTable(customerId), filePath);
+        }
+
+        public void ExportCustomerOrderHistoryToPdf(int customerId, string filePath, string customerName)
+        {
+            var subtitle = $"Customer: {customerName}  |  Generated: {DateTime.Now:MMM dd, yyyy HH:mm}";
+            ExportHelper.ExportDataTableToPdf(
+                BuildCustomerOrderExportTable(customerId),
+                filePath,
+                "My Order History",
+                subtitle);
+        }
+
         public void ExportOrdersToCsv(IEnumerable<Order> orders, string filePath)
         {
+            var customerId = orders.FirstOrDefault()?.CustomerID ?? 0;
+            if (customerId > 0)
+            {
+                ExportCustomerOrderHistoryToCsv(customerId, filePath);
+                return;
+            }
+
             var sb = new StringBuilder();
             sb.AppendLine("OrderID,OrderDate,Status,TotalAmount");
             foreach (var order in orders)

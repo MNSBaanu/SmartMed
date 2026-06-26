@@ -66,7 +66,7 @@ Last reviewed: June 2026 · Reference: `Document.md`
 - [x] Prescription file column (from `Prescription` table)
 - [x] Cancel pending order
 - [x] Export order history CSV
-- [ ] Export order history PDF (spec mentions PDF or Excel)
+- [x] Export order history PDF
 
 **Profile**
 - [x] Update name, phone, address
@@ -109,5 +109,4 @@ Last reviewed: June 2026 · Reference: `Document.md`
 1. **Payments** — document pay-on-pickup in report, or add `PaymentStatus` / `PaymentMethod` on order (optional enhancement)
 2. Browse Medicines live search
 3. Finalize report PDF & test plan
-4. Customer order export PDF (optional)
-5. Binary search + interfaces (optional marks polish)
+4. Binary search + interfaces (optional marks polish)

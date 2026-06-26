@@ -9,6 +9,8 @@ namespace SmartMed.UI
     public partial class TrackOrdersForm : CustomerShellForm
     {
         private bool _pageBuilt;
+        private int _layoutVersion;
+        private const int LayoutVersion = 2;
         private OrderService _orders;
         private DataGridView gridOrders;
         private DataGridView gridItems;
@@ -32,8 +34,9 @@ namespace SmartMed.UI
 
         protected override void InitializePageContent()
         {
-            if (_pageBuilt) return;
+            if (_pageBuilt && _layoutVersion == LayoutVersion) return;
             _pageBuilt = true;
+            _layoutVersion = LayoutVersion;
             BuildContent();
             if (IsDesignHost())
                 LoadDesignTimePreview();
@@ -77,6 +80,10 @@ namespace SmartMed.UI
             root.Controls.Add(lblOrders, 0, 0);
             root.RowStyles.Add(new RowStyle(SizeType.AutoSize));
 
+            var actions = CreateActionsPanel();
+            root.Controls.Add(actions, 0, 1);
+            root.RowStyles.Add(new RowStyle(SizeType.AutoSize));
+
             gridOrders = new DataGridView
             {
                 Dock = DockStyle.Fill,
@@ -90,12 +97,12 @@ namespace SmartMed.UI
             };
             gridOrders.SelectionChanged += GridOrders_SelectionChanged;
             gridOrders.CellDoubleClick += GridOrders_CellDoubleClick;
-            root.Controls.Add(gridOrders, 0, 1);
+            root.Controls.Add(gridOrders, 0, 2);
             root.RowStyles.Add(new RowStyle(SizeType.Absolute, 220f));
 
             var lblItems = UiTheme.CreateSectionHeading("Order Items");
             lblItems.Margin = new Padding(0, UiTheme.CustomerSectionGap, 0, UiTheme.CustomerControlGap);
-            root.Controls.Add(lblItems, 0, 2);
+            root.Controls.Add(lblItems, 0, 3);
             root.RowStyles.Add(new RowStyle(SizeType.AutoSize));
 
             gridItems = new DataGridView
@@ -108,25 +115,31 @@ namespace SmartMed.UI
                 AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill,
                 Margin = new Padding(0, UiTheme.CustomerControlGap, 0, 0)
             };
-            root.Controls.Add(gridItems, 0, 3);
+            root.Controls.Add(gridItems, 0, 4);
             root.RowStyles.Add(new RowStyle(SizeType.Absolute, 180f));
 
+            WireScrollRoot(root, minHeight: 520);
+        }
+
+        private FlowLayoutPanel CreateActionsPanel()
+        {
             var actions = new FlowLayoutPanel
             {
                 AutoSize = true,
                 Dock = DockStyle.Fill,
-                Margin = new Padding(0, UiTheme.CustomerSectionGap, 0, 0)
+                WrapContents = true,
+                Margin = new Padding(0, UiTheme.CustomerControlGap, 0, UiTheme.CustomerSectionGap)
             };
             var btnCancel = new Button { Text = "Cancel Pending Order", Width = 160, Height = 32, Margin = UiTheme.CustomerControlMargin };
             btnCancel.Click += BtnCancel_Click;
-            var btnExport = new Button { Text = "Export CSV", Width = 100, Height = 32, Margin = UiTheme.CustomerControlMargin };
-            btnExport.Click += BtnExport_Click;
+            var btnExportCsv = new Button { Text = "Export CSV", Width = 110, Height = 32, Margin = UiTheme.CustomerControlMargin };
+            btnExportCsv.Click += BtnExportCsv_Click;
+            var btnExportPdf = new Button { Text = "Export PDF", Width = 110, Height = 32, Margin = UiTheme.CustomerControlMargin };
+            btnExportPdf.Click += BtnExportPdf_Click;
             actions.Controls.Add(btnCancel);
-            actions.Controls.Add(btnExport);
-            root.Controls.Add(actions, 0, 4);
-            root.RowStyles.Add(new RowStyle(SizeType.AutoSize));
-
-            WireScrollRoot(root, minHeight: 500);
+            actions.Controls.Add(btnExportCsv);
+            actions.Controls.Add(btnExportPdf);
+            return actions;
         }
 
         private void GridOrders_SelectionChanged(object sender, EventArgs e)
@@ -197,9 +210,12 @@ namespace SmartMed.UI
             }
         }
 
-        private void BtnExport_Click(object sender, EventArgs e)
+        private void BtnExportCsv_Click(object sender, EventArgs e)
         {
             if (IsDesignHost() || Orders == null) return;
+            var customer = Session.CurrentCustomer;
+            if (customer == null) return;
+
             using (var dialog = new SaveFileDialog
             {
                 Filter = "CSV files (*.csv)|*.csv",
@@ -207,9 +223,40 @@ namespace SmartMed.UI
             })
             {
                 if (dialog.ShowDialog(this) != DialogResult.OK) return;
-                var orders = Orders.GetByCustomer(Session.CurrentCustomer.CustomerID);
-                Orders.ExportOrdersToCsv(orders, dialog.FileName);
-                MessageBox.Show("Order history exported.", "Export", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                try
+                {
+                    Orders.ExportCustomerOrderHistoryToCsv(customer.CustomerID, dialog.FileName);
+                    MessageBox.Show("Order history exported to CSV.", "Export", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message, "Export Failed", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                }
+            }
+        }
+
+        private void BtnExportPdf_Click(object sender, EventArgs e)
+        {
+            if (IsDesignHost() || Orders == null) return;
+            var customer = Session.CurrentCustomer;
+            if (customer == null) return;
+
+            using (var dialog = new SaveFileDialog
+            {
+                Filter = "PDF files (*.pdf)|*.pdf",
+                FileName = "my_orders.pdf"
+            })
+            {
+                if (dialog.ShowDialog(this) != DialogResult.OK) return;
+                try
+                {
+                    Orders.ExportCustomerOrderHistoryToPdf(customer.CustomerID, dialog.FileName, customer.Name);
+                    MessageBox.Show("Order history exported to PDF.", "Export", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message, "Export Failed", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                }
             }
         }
 
