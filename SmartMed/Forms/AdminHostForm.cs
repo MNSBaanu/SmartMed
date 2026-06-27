@@ -1,7 +1,6 @@
 using System;
-using System.Linq;
+using System.Collections.Generic;
 using System.Windows.Forms;
-using SmartMed.Services;
 
 namespace SmartMed.UI
 {
@@ -10,6 +9,8 @@ namespace SmartMed.UI
     {
         private AdminShellForm _embeddedPage;
         private AdminNavItem _activeNav;
+        private readonly Dictionary<AdminNavItem, AdminShellForm> _pageCache =
+            new Dictionary<AdminNavItem, AdminShellForm>();
 
         public AdminHostForm()
             : base(AdminNavItem.Overview, "Operational Dashboard")
@@ -19,6 +20,13 @@ namespace SmartMed.UI
             Text = "SmartMed — Pharmacy Management";
             if (!IsDesignHost())
                 UiTheme.ApplyAdminClinicalShell(this, panelTop, panelSidebar, panelContent);
+            panelContent.Resize += PanelContent_Resize;
+            FormClosed += (s, e) => DisposePageCache();
+        }
+
+        private void PanelContent_Resize(object sender, EventArgs e)
+        {
+            _embeddedPage?.SyncScrollRootWidth();
         }
 
         protected override void NavigateAdmin(AdminNavItem nav)
@@ -35,18 +43,20 @@ namespace SmartMed.UI
 
             using (UiTheme.BatchUpdate(this, panelSidebar, panelContent))
             {
-                panelContent.Visible = false;
-                DisposeEmbeddedPage();
-                panelContent.Controls.Clear();
+                if (_embeddedPage != null)
+                    _embeddedPage.DetachPageContent();
 
-                _embeddedPage = CreateEmbeddedPage(nav);
+                panelContent.Controls.Clear();
+                panelContent.AutoScrollPosition = new System.Drawing.Point(0, 0);
+
+                _embeddedPage = GetOrCreatePage(nav);
                 _embeddedPage.SetContentTarget(panelContent);
-                _embeddedPage.PrepareForNavigation();
+                _embeddedPage.PrepareForHostDisplay();
                 UiTheme.ApplyFontTree(panelContent);
-                panelContent.Visible = true;
             }
 
             _activeNav = nav;
+            RefreshEmbeddedPage(nav);
         }
 
         protected override void InitializePageContent()
@@ -75,11 +85,26 @@ namespace SmartMed.UI
             throw new ArgumentException("Unknown admin section.");
         }
 
-        private void DisposeEmbeddedPage()
+        private AdminShellForm GetOrCreatePage(AdminNavItem nav)
         {
-            if (_embeddedPage == null) return;
-            _embeddedPage.SetContentTarget(null);
-            _embeddedPage.Dispose();
+            if (_pageCache.TryGetValue(nav, out var page) && page != null && !page.IsDisposed)
+                return page;
+
+            page = CreateEmbeddedPage(nav);
+            _pageCache[nav] = page;
+            return page;
+        }
+
+        private void DisposePageCache()
+        {
+            foreach (var page in _pageCache.Values)
+            {
+                if (page == null || page.IsDisposed) continue;
+                page.DetachPageContent();
+                page.SetContentTarget(null);
+                page.Dispose();
+            }
+            _pageCache.Clear();
             _embeddedPage = null;
         }
 

@@ -13,11 +13,13 @@ namespace SmartMed.UI
             new Dictionary<CustomerNavItem, CustomerShellForm>();
 
         public CustomerHostForm()
-            : base(CustomerNavItem.Home, "Customer Home")
+            : base(CustomerNavItem.Home, "Home")
         {
             InitializeComponent();
             HideTopChrome();
-            Text = "SmartMed - Customer Home";
+            Text = "SmartMed — Customer Portal";
+            if (!IsDesignHost())
+                UiTheme.ApplyAdminClinicalShell(this, panelTop, panelSidebar, panelContent);
             panelContent.Resize += PanelContent_Resize;
             FormClosed += (s, e) => DisposePageCache();
         }
@@ -66,9 +68,9 @@ namespace SmartMed.UI
 
         private static string GetPageSubtitle(CustomerNavItem nav)
         {
-            if (nav == CustomerNavItem.Home) return "Customer Home";
+            if (nav == CustomerNavItem.Home) return "Home";
             if (nav == CustomerNavItem.Browse) return "Browse Medicines";
-            if (nav == CustomerNavItem.Cart) return "My Cart & Checkout";
+            if (nav == CustomerNavItem.Cart) return "My Cart";
             if (nav == CustomerNavItem.Orders) return "My Orders";
             if (nav == CustomerNavItem.Profile) return "My Profile";
             return "Customer Portal";

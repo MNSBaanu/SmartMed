@@ -59,6 +59,7 @@ namespace SmartMed.UI
         private void BuildContent()
         {
             PagePanel.Controls.Clear();
+            ClinicalUi.StylePagePanel(PagePanel);
 
             _scrollRoot = new TableLayoutPanel
             {
@@ -85,58 +86,18 @@ namespace SmartMed.UI
 
         private Panel CreatePageHeader()
         {
-            var header = new Panel
-            {
-                Dock = DockStyle.Top,
-                Height = 44,
-                Padding = new Padding(0, 0, 0, 8),
-                Margin = new Padding(0, 0, 0, 16)
-            };
-            header.Paint += (s, e) =>
-            {
-                using (var pen = new Pen(SystemColors.ControlDark))
-                    e.Graphics.DrawLine(pen, 0, header.Height - 1, header.Width, header.Height - 1);
-            };
-
-            var titleBlock = new Panel { Dock = DockStyle.Left, Width = 480 };
-            titleBlock.Controls.Add(new Label
-            {
-                Text = "View and update registered customer contact details.",
-                Font = UiTheme.UiFont,
-                ForeColor = SystemColors.GrayText,
-                Dock = DockStyle.Fill
-            });
-
-            var actions = new FlowLayoutPanel
-            {
-                Dock = DockStyle.Right,
-                FlowDirection = FlowDirection.LeftToRight,
-                AutoSize = true,
-                WrapContents = false,
-                Padding = new Padding(0, 8, 0, 0)
-            };
-            var btnExport = CreateToolbarButton("Export");
-            btnExport.Click += BtnExport_Click;
-            var btnPrint = CreateToolbarButton("Print");
-            btnPrint.Click += BtnPrint_Click;
-            actions.Controls.Add(btnExport);
-            actions.Controls.Add(btnPrint);
-
-            header.Controls.Add(actions);
-            header.Controls.Add(titleBlock);
-            return header;
-        }
-
-        private static Button CreateToolbarButton(string text)
-        {
-            var btn = new Button
-            {
-                Text = text,
-                Height = 32,
-                Width = 100,
-                Margin = new Padding(4, 0, 0, 0)
-            };
-            return btn;
+            return ClinicalUi.CreatePageHeader(
+                "Manage Customers",
+                "View and update registered customer contact details.",
+                actions =>
+                {
+                    var btnExport = ClinicalUi.CreateWinButton("Export", primary: false, width: 96);
+                    btnExport.Click += BtnExport_Click;
+                    var btnPrint = ClinicalUi.CreateWinButton("Print", primary: false, width: 96);
+                    btnPrint.Click += BtnPrint_Click;
+                    actions.Controls.Add(btnExport);
+                    actions.Controls.Add(btnPrint);
+                });
         }
 
         private Panel CreateSearchPanel()
@@ -147,7 +108,7 @@ namespace SmartMed.UI
                 Height = 44,
                 Padding = new Padding(8, 8, 8, 4),
                 Margin = new Padding(0),
-                BackColor = Color.FromArgb(248, 248, 248)
+                BackColor = UiTheme.AdminSidebar
             };
             txtSearch = new TextBox { Width = 320 };
             var btnClearSearch = new Button { Text = "Clear", Width = 70, Height = 28 };
@@ -184,41 +145,22 @@ namespace SmartMed.UI
 
         private Panel CreateGridPanel()
         {
-            var outer = new Panel
-            {
-                Dock = DockStyle.Fill,
-                BackColor = SystemColors.Window,
-                Padding = new Padding(1),
-                Margin = new Padding(0, 0, 0, 16)
-            };
-            outer.Paint += (s, e) =>
-            {
-                var rect = outer.ClientRectangle;
-                rect.Width -= 1;
-                rect.Height -= 1;
-                using (var pen = new Pen(SystemColors.ControlDark))
-                    e.Graphics.DrawRectangle(pen, rect);
-            };
-
             gridCustomers = new DataGridView
             {
-                Dock = DockStyle.Fill,
                 ReadOnly = true,
                 AllowUserToAddRows = false,
                 AllowUserToDeleteRows = false,
                 RowHeadersVisible = false,
                 SelectionMode = DataGridViewSelectionMode.FullRowSelect,
                 AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill,
-                BackgroundColor = SystemColors.Window,
-                BorderStyle = BorderStyle.None,
-                EnableHeadersVisualStyles = false,
                 MultiSelect = false,
                 ScrollBars = ScrollBars.Vertical
             };
-            UiTheme.ApplyGrid(gridCustomers);
+            UiTheme.ApplyClinicalGrid(gridCustomers);
             gridCustomers.SelectionChanged += GridCustomers_SelectionChanged;
 
-            outer.Controls.Add(gridCustomers);
+            var outer = ClinicalUi.CreateSectionPanel("Customer Directory", gridCustomers);
+            outer.Margin = new Padding(0, 0, 0, 16);
             outer.Controls.Add(CreateSearchPanel());
             return outer;
         }
@@ -230,7 +172,7 @@ namespace SmartMed.UI
                 Dock = DockStyle.Fill,
                 AutoSize = true,
                 AutoSizeMode = AutoSizeMode.GrowAndShrink,
-                BackColor = SystemColors.Control,
+                BackColor = Color.White,
                 Padding = new Padding(24),
                 Margin = new Padding(0, 0, 0, 16)
             };
@@ -239,7 +181,7 @@ namespace SmartMed.UI
                 var rect = outer.ClientRectangle;
                 rect.Width -= 1;
                 rect.Height -= 1;
-                using (var pen = new Pen(SystemColors.ControlDark))
+                using (var pen = new Pen(UiTheme.AdminOutline))
                     e.Graphics.DrawRectangle(pen, rect);
             };
 
@@ -350,64 +292,24 @@ namespace SmartMed.UI
 
         private Panel CreateStatsRow()
         {
-            var wrap = new Panel
+            var statsRow = new TableLayoutPanel
             {
-                Dock = DockStyle.Fill,
-                Height = 88,
-                Margin = new Padding(0, 0, 0, 16)
+                Dock = DockStyle.Top,
+                Height = 108,
+                ColumnCount = 3,
+                RowCount = 1,
+                Margin = new Padding(0, 0, 0, 24)
             };
-
-            var row = new TableLayoutPanel { Dock = DockStyle.Fill, ColumnCount = 3, RowCount = 1 };
-            row.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 33.33f));
-            row.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 33.33f));
-            row.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 33.34f));
+            for (var i = 0; i < 3; i++)
+                statsRow.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 33.33f));
 
             lblTotalCustomers = new Label();
             lblWithOrders = new Label();
             lblWithoutOrders = new Label();
-
-            row.Controls.Add(CreateStatTile("Total Customers", lblTotalCustomers, UiTheme.GridHeaderText), 0, 0);
-            row.Controls.Add(CreateStatTile("With Orders", lblWithOrders, SystemColors.ControlText), 1, 0);
-            row.Controls.Add(CreateStatTile("Without Orders", lblWithoutOrders, Color.Red), 2, 0);
-
-            wrap.Controls.Add(row);
-            return wrap;
-        }
-
-        private Panel CreateStatTile(string title, Label valueLabel, Color accent)
-        {
-            var card = new Panel
-            {
-                Dock = DockStyle.Fill,
-                BackColor = SystemColors.Window,
-                Padding = new Padding(16),
-                Margin = new Padding(0, 0, 8, 0)
-            };
-            card.Paint += (s, e) =>
-            {
-                var rect = card.ClientRectangle;
-                rect.Width -= 1;
-                rect.Height -= 1;
-                using (var pen = new Pen(SystemColors.ControlDark))
-                    e.Graphics.DrawRectangle(pen, rect);
-            };
-
-            valueLabel.Text = "0";
-            valueLabel.Font = UiTheme.UiFont;
-            valueLabel.ForeColor = accent;
-            valueLabel.Location = new Point(16, 36);
-            valueLabel.AutoSize = true;
-
-            card.Controls.Add(new Label
-            {
-                Text = title.ToUpperInvariant(),
-                Font = UiTheme.UiFont,
-                ForeColor = SystemColors.GrayText,
-                Location = new Point(16, 16),
-                AutoSize = true
-            });
-            card.Controls.Add(valueLabel);
-            return card;
+            statsRow.Controls.Add(ClinicalUi.CreateStatCard("Total Customers", lblTotalCustomers, UiTheme.AdminTeal), 0, 0);
+            statsRow.Controls.Add(ClinicalUi.CreateStatCard("With Orders", lblWithOrders, Color.FromArgb(59, 130, 246)), 1, 0);
+            statsRow.Controls.Add(ClinicalUi.CreateStatCard("Without Orders", lblWithoutOrders, UiTheme.Danger), 2, 0);
+            return statsRow;
         }
 
         private void LoadDesignTimePreview()
@@ -462,6 +364,7 @@ namespace SmartMed.UI
                 c.Address
             }).ToList();
             HideCustomerIdColumn();
+            UiTheme.BeautifyGridHeaders(gridCustomers);
         }
 
         private List<Customer> GetFilteredCustomers()

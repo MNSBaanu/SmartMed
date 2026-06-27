@@ -41,18 +41,25 @@ namespace SmartMed.UI
 
         private void BuildContent()
         {
+            ClinicalUi.PreparePagePanel(PagePanel);
             PagePanel.Controls.Clear();
+
             var root = new TableLayoutPanel
             {
                 AutoSize = true,
                 Dock = DockStyle.Top,
                 ColumnCount = 1,
-                Width = GetScrollContentWidth()
+                Width = GetScrollContentWidth(),
+                BackColor = UiTheme.AdminSurface
             };
             root.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100f));
 
             var row = 0;
-            var heading = UiTheme.CreateSectionHeading("Personal Details");
+            root.Controls.Add(ClinicalUi.CreatePageHeader("My Profile",
+                "Update your contact details and password."), 0, row++);
+            root.RowStyles.Add(new RowStyle(SizeType.AutoSize));
+
+            var heading = ClinicalUi.CreateSectionHeading("Personal Details");
             root.Controls.Add(heading, 0, row++);
             root.RowStyles.Add(new RowStyle(SizeType.AutoSize));
 
@@ -66,11 +73,12 @@ namespace SmartMed.UI
             {
                 AutoSize = true,
                 Dock = DockStyle.Fill,
-                Margin = new Padding(0, UiTheme.CustomerSectionGap, 0, 0)
+                Margin = new Padding(0, UiTheme.CustomerSectionGap, 0, 0),
+                BackColor = UiTheme.AdminSurface
             };
-            var btnSave = new Button { Text = "Save Profile", Width = 120, Height = 32, Margin = UiTheme.CustomerControlMargin };
+            var btnSave = ClinicalUi.CreateButton("Save Profile", primary: true, width: 120, height: 32);
             btnSave.Click += BtnSave_Click;
-            var btnPassword = new Button { Text = "Change Password", Width = 140, Height = 32, Margin = UiTheme.CustomerControlMargin };
+            var btnPassword = ClinicalUi.CreateButton("Change Password", width: 140, height: 32);
             btnPassword.Click += (s, e) =>
             {
                 using (var dlg = new ChangePasswordForm(isAdmin: false))
@@ -97,6 +105,7 @@ namespace SmartMed.UI
                     0,
                     4)
             };
+            ClinicalUi.StyleFieldLabel(label);
             root.Controls.Add(label, 0, row++);
             root.RowStyles.Add(new RowStyle(SizeType.AutoSize));
 
@@ -108,6 +117,7 @@ namespace SmartMed.UI
                 ScrollBars = multiline ? ScrollBars.Vertical : ScrollBars.None,
                 Margin = new Padding(0, 0, 0, 0)
             };
+            UiTheme.StyleTextBox(textBox);
             root.Controls.Add(textBox, 0, row++);
             root.RowStyles.Add(new RowStyle(SizeType.AutoSize));
         }

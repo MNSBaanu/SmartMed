@@ -10,7 +10,7 @@ namespace SmartMed.UI
     {
         private bool _pageBuilt;
         private int _layoutVersion;
-        private const int LayoutVersion = 2;
+        private const int LayoutVersion = 3;
         private OrderService _orders;
         private DataGridView gridOrders;
         private DataGridView gridItems;
@@ -49,7 +49,7 @@ namespace SmartMed.UI
             if (IsDesignHost() || Orders == null || gridOrders == null) return;
             var customerId = Session.CurrentCustomer?.CustomerID ?? 0;
             var orders = Orders.GetByCustomer(customerId);
-            gridOrders.DataSource = orders.Select(o => new
+            ClinicalUi.BindGrid(gridOrders, orders.Select(o => new
             {
                 o.OrderID,
                 OrderRef = $"#SM-{o.OrderID:D4}",
@@ -57,64 +57,55 @@ namespace SmartMed.UI
                 o.Status,
                 Total = $"LKR {o.TotalAmount:N2}",
                 Prescription = Orders.GetPrescriptionDisplay(o.OrderID)
-            }).ToList();
+            }).ToList());
             if (gridOrders.Columns.Contains("OrderID"))
                 gridOrders.Columns["OrderID"].Visible = false;
             gridItems.DataSource = null;
+            UiTheme.BeautifyGridHeaders(gridItems);
             _selectedOrderId = null;
         }
 
         private void BuildContent()
         {
+            ClinicalUi.PreparePagePanel(PagePanel);
             PagePanel.Controls.Clear();
+
             var root = new TableLayoutPanel
             {
                 AutoSize = true,
                 Dock = DockStyle.Top,
                 ColumnCount = 1,
-                Width = GetScrollContentWidth()
+                Width = GetScrollContentWidth(),
+                BackColor = UiTheme.AdminSurface
             };
             root.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100f));
 
-            var lblOrders = UiTheme.CreateSectionHeading("Your Orders");
-            root.Controls.Add(lblOrders, 0, 0);
+            root.Controls.Add(ClinicalUi.CreatePageHeader("My Orders",
+                "View order history, cancel pending orders, and export receipts."), 0, 0);
             root.RowStyles.Add(new RowStyle(SizeType.AutoSize));
 
             var actions = CreateActionsPanel();
             root.Controls.Add(actions, 0, 1);
             root.RowStyles.Add(new RowStyle(SizeType.AutoSize));
 
-            gridOrders = new DataGridView
-            {
-                Dock = DockStyle.Fill,
-                Height = 220,
-                ReadOnly = true,
-                SelectionMode = DataGridViewSelectionMode.FullRowSelect,
-                AllowUserToAddRows = false,
-                RowHeadersVisible = false,
-                AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill,
-                Margin = new Padding(0, UiTheme.CustomerControlGap, 0, UiTheme.CustomerSectionGap)
-            };
+            gridOrders = ClinicalUi.CreateGrid();
+            gridOrders.Dock = DockStyle.Fill;
+            gridOrders.Height = 220;
+            gridOrders.Margin = new Padding(0, UiTheme.CustomerControlGap, 0, UiTheme.CustomerSectionGap);
             gridOrders.SelectionChanged += GridOrders_SelectionChanged;
             gridOrders.CellDoubleClick += GridOrders_CellDoubleClick;
             root.Controls.Add(gridOrders, 0, 2);
             root.RowStyles.Add(new RowStyle(SizeType.Absolute, 220f));
 
-            var lblItems = UiTheme.CreateSectionHeading("Order Items");
+            var lblItems = ClinicalUi.CreateSectionHeading("Order Items");
             lblItems.Margin = new Padding(0, UiTheme.CustomerSectionGap, 0, UiTheme.CustomerControlGap);
             root.Controls.Add(lblItems, 0, 3);
             root.RowStyles.Add(new RowStyle(SizeType.AutoSize));
 
-            gridItems = new DataGridView
-            {
-                Dock = DockStyle.Fill,
-                Height = 180,
-                ReadOnly = true,
-                AllowUserToAddRows = false,
-                RowHeadersVisible = false,
-                AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill,
-                Margin = new Padding(0, UiTheme.CustomerControlGap, 0, 0)
-            };
+            gridItems = ClinicalUi.CreateGrid();
+            gridItems.Dock = DockStyle.Fill;
+            gridItems.Height = 180;
+            gridItems.Margin = new Padding(0, UiTheme.CustomerControlGap, 0, 0);
             root.Controls.Add(gridItems, 0, 4);
             root.RowStyles.Add(new RowStyle(SizeType.Absolute, 180f));
 
@@ -128,13 +119,14 @@ namespace SmartMed.UI
                 AutoSize = true,
                 Dock = DockStyle.Fill,
                 WrapContents = true,
-                Margin = new Padding(0, UiTheme.CustomerControlGap, 0, UiTheme.CustomerSectionGap)
+                Margin = new Padding(0, UiTheme.CustomerControlGap, 0, UiTheme.CustomerSectionGap),
+                BackColor = UiTheme.AdminSurface
             };
-            var btnCancel = new Button { Text = "Cancel Pending Order", Width = 160, Height = 32, Margin = UiTheme.CustomerControlMargin };
+            var btnCancel = ClinicalUi.CreateButton("Cancel Pending Order", width: 160, height: 32);
             btnCancel.Click += BtnCancel_Click;
-            var btnExportCsv = new Button { Text = "Export CSV", Width = 110, Height = 32, Margin = UiTheme.CustomerControlMargin };
+            var btnExportCsv = ClinicalUi.CreateButton("Export CSV", width: 110, height: 32);
             btnExportCsv.Click += BtnExportCsv_Click;
-            var btnExportPdf = new Button { Text = "Export PDF", Width = 110, Height = 32, Margin = UiTheme.CustomerControlMargin };
+            var btnExportPdf = ClinicalUi.CreateButton("Export PDF", width: 110, height: 32);
             btnExportPdf.Click += BtnExportPdf_Click;
             actions.Controls.Add(btnCancel);
             actions.Controls.Add(btnExportCsv);
@@ -147,14 +139,14 @@ namespace SmartMed.UI
             if (IsDesignHost() || Orders == null || gridOrders.CurrentRow == null) return;
             _selectedOrderId = Convert.ToInt32(gridOrders.CurrentRow.Cells["OrderID"].Value);
             var items = Orders.GetItems(_selectedOrderId.Value);
-            gridItems.DataSource = items.Select(i => new
+            ClinicalUi.BindGrid(gridItems, items.Select(i => new
             {
                 i.MedicineName,
                 i.Quantity,
                 UnitPrice = $"LKR {i.UnitPrice:N2}",
                 Discount = Medicines?.GetOrderLineOfferDisplay(i.UnitPrice, i.ListPrice, i.DiscountPercent) ?? "—",
                 Subtotal = $"LKR {i.Subtotal:N2}"
-            }).ToList();
+            }).ToList());
         }
 
         private void GridOrders_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
@@ -262,14 +254,14 @@ namespace SmartMed.UI
 
         private void LoadDesignTimePreview()
         {
-            gridOrders.DataSource = new[]
+            ClinicalUi.BindGrid(gridOrders, new[]
             {
                 new { OrderID = 2, OrderRef = "#SM-0002", OrderDate = "Jun 22, 2026 10:00 AM", Status = "Pending", Total = "LKR 15.00", Prescription = "2_20260622100000_rx.pdf" }
-            };
-            gridItems.DataSource = new[]
+            });
+            ClinicalUi.BindGrid(gridItems, new[]
             {
                 new { MedicineName = "Vitamin C", Quantity = 1, UnitPrice = "LKR 15.00", Discount = "—", Subtotal = "LKR 15.00" }
-            };
+            });
         }
     }
 }

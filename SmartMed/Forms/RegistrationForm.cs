@@ -16,15 +16,26 @@ namespace SmartMed.UI
             InitializeComponent();
             DoubleBuffered = true;
             if (Site?.DesignMode != true)
-            {
-                UiTheme.ApplyFlatButton(btnRegister, UiButtonStyle.Success);
-                UiTheme.ApplyFlatButton(btnCancel, UiButtonStyle.Secondary);
-                UiTheme.ApplyFlatButton(btnReturnLogin, UiButtonStyle.Primary);
-                UiTheme.ApplyHeaderPanel(panelHeader);
-                UiTheme.ApplyFontTree(panelCard);
-                SetPasswordVisible(false);
-            }
+                ApplyChrome();
             LayoutForm();
+        }
+
+        private void ApplyChrome()
+        {
+            UiTheme.ApplyRegistrationForm(this, panelCard, panelHeader, lblHeaderTitle, btnClose, panelBody, panelFooter, panelSuccess);
+            UiTheme.ApplyClinicalAuthButton(btnRegister, primary: true);
+            UiTheme.ApplyClinicalAuthButton(btnCancel, primary: false);
+            UiTheme.ApplyClinicalAuthButton(btnReturnLogin, primary: true);
+            btnTogglePassword.BackColor = Color.White;
+            btnTogglePassword.ForeColor = UiTheme.AdminMuted;
+            btnTogglePassword.FlatAppearance.BorderColor = UiTheme.AdminOutline;
+            btnToggleConfirm.BackColor = Color.White;
+            btnToggleConfirm.ForeColor = UiTheme.AdminMuted;
+            btnToggleConfirm.FlatAppearance.BorderColor = UiTheme.AdminOutline;
+            lblSuccessIcon.ForeColor = UiTheme.AdminTeal;
+            lblSuccessTitle.ForeColor = UiTheme.AdminOnSurface;
+            lblSuccessMessage.ForeColor = UiTheme.AdminMuted;
+            SetPasswordVisible(false);
         }
 
         protected override void OnResize(EventArgs e)

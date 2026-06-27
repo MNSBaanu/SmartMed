@@ -16,7 +16,7 @@ namespace SmartMed.UI
             this.panelTop.SuspendLayout();
             this.panelSidebar.SuspendLayout();
             this.SuspendLayout();
-            this.lblTopSubtitle.Text = "My Cart & Checkout";
+            this.lblTopSubtitle.Text = "My Cart";
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1184, 768);

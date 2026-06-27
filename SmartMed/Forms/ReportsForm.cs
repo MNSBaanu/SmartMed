@@ -81,6 +81,7 @@ namespace SmartMed.UI
         private void BuildContent()
         {
             PagePanel.Controls.Clear();
+            ClinicalUi.StylePagePanel(PagePanel);
 
             _scrollRoot = new TableLayoutPanel
             {
@@ -113,129 +114,69 @@ namespace SmartMed.UI
 
         private Panel CreatePageHeader()
         {
-            var header = new Panel
-            {
-                Dock = DockStyle.Top,
-                Height = 44,
-                Padding = new Padding(0, 0, 0, 8),
-                Margin = new Padding(0, 0, 0, 16)
-            };
-            header.Paint += (s, e) =>
-            {
-                using (var pen = new Pen(SystemColors.ControlDark))
-                    e.Graphics.DrawLine(pen, 0, header.Height - 1, header.Width, header.Height - 1);
-            };
-
-            var titleBlock = new Panel { Dock = DockStyle.Left, Width = 520 };
-            titleBlock.Controls.Add(new Label
-            {
-                Text = "Completed sales, stock alerts, and customer order history for quick decisions.",
-                Font = UiTheme.UiFont,
-                ForeColor = SystemColors.GrayText,
-                Dock = DockStyle.Fill
-            });
-
-            var actions = new FlowLayoutPanel
-            {
-                Dock = DockStyle.Right,
-                FlowDirection = FlowDirection.LeftToRight,
-                AutoSize = true,
-                WrapContents = false,
-                Padding = new Padding(0, 8, 0, 0)
-            };
-            btnViewReport = CreateToolbarButton("View Report", 110);
-            btnViewReport.Click += BtnViewReport_Click;
-            UiTheme.ApplyFlatButton(btnViewReport, UiButtonStyle.Primary);
-            btnExportCsv = CreateToolbarButton("Export CSV", 100);
-            btnExportCsv.Click += BtnExportCsv_Click;
-            btnExportPdf = CreateToolbarButton("Export PDF", 100);
-            btnExportPdf.Click += BtnExportPdf_Click;
-            actions.Controls.Add(btnViewReport);
-            actions.Controls.Add(btnExportCsv);
-            actions.Controls.Add(btnExportPdf);
-            UpdateExportButtons();
-
-            header.Controls.Add(actions);
-            header.Controls.Add(titleBlock);
-            return header;
-        }
-
-        private static Button CreateToolbarButton(string text, int width = 120)
-        {
-            var btn = new Button
-            {
-                Text = text,
-                Height = 32,
-                Width = width,
-                Margin = new Padding(4, 0, 0, 0)
-            };
-            return btn;
+            return ClinicalUi.CreatePageHeader(
+                "Generate Reports",
+                "Completed sales, stock alerts, and customer order history for quick decisions.",
+                actions =>
+                {
+                    btnViewReport = ClinicalUi.CreateWinButton("View Report", primary: true, width: 110);
+                    btnViewReport.Click += BtnViewReport_Click;
+                    btnExportCsv = ClinicalUi.CreateWinButton("Export CSV", primary: false, width: 100);
+                    btnExportCsv.Click += BtnExportCsv_Click;
+                    btnExportPdf = ClinicalUi.CreateWinButton("Export PDF", primary: false, width: 100);
+                    btnExportPdf.Click += BtnExportPdf_Click;
+                    actions.Controls.Add(btnViewReport);
+                    actions.Controls.Add(btnExportCsv);
+                    actions.Controls.Add(btnExportPdf);
+                    UpdateExportButtons();
+                });
         }
 
         private Panel CreateStatsRow()
         {
-            var wrap = new Panel
+            var statsRow = new TableLayoutPanel
             {
-                Dock = DockStyle.Fill,
-                Height = 88,
-                Margin = new Padding(0, 0, 0, 16)
+                Dock = DockStyle.Top,
+                Height = 108,
+                ColumnCount = 4,
+                RowCount = 1,
+                Margin = new Padding(0, 0, 0, 24)
             };
-
-            var row = new TableLayoutPanel { Dock = DockStyle.Fill, ColumnCount = 4, RowCount = 1 };
-            row.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 25f));
-            row.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 25f));
-            row.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 25f));
-            row.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 25f));
+            for (var i = 0; i < 4; i++)
+                statsRow.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 25f));
 
             lblTotalRevenue = new Label();
             lblTotalOrders = new Label();
             lblLowStock = new Label();
             lblOutstanding = new Label();
 
-            row.Controls.Add(CreateStatTile("Completed Revenue", lblTotalRevenue, UiTheme.GridHeaderText, out lblStatTitleRevenue), 0, 0);
-            row.Controls.Add(CreateStatTile("Completed Orders", lblTotalOrders, SystemColors.ControlText, out lblStatTitleOrders), 1, 0);
-            row.Controls.Add(CreateStatTile("Low Stock Items", lblLowStock, Color.Red, out lblStatTitleLowStock), 2, 0);
-            row.Controls.Add(CreateStatTile("Outstanding", lblOutstanding, SystemColors.ControlText, out lblStatTitleOutstanding), 3, 0);
+            var card0 = ClinicalUi.CreateStatCard("Completed Revenue", lblTotalRevenue, UiTheme.AdminTeal);
+            lblStatTitleRevenue = GetStatTitleLabel(card0, lblTotalRevenue);
+            statsRow.Controls.Add(card0, 0, 0);
 
-            wrap.Controls.Add(row);
-            return wrap;
+            var card1 = ClinicalUi.CreateStatCard("Completed Orders", lblTotalOrders, Color.FromArgb(59, 130, 246));
+            lblStatTitleOrders = GetStatTitleLabel(card1, lblTotalOrders);
+            statsRow.Controls.Add(card1, 1, 0);
+
+            var card2 = ClinicalUi.CreateStatCard("Low Stock Items", lblLowStock, UiTheme.Danger);
+            lblStatTitleLowStock = GetStatTitleLabel(card2, lblLowStock);
+            statsRow.Controls.Add(card2, 2, 0);
+
+            var card3 = ClinicalUi.CreateStatCard("Outstanding", lblOutstanding, Color.FromArgb(16, 185, 129));
+            lblStatTitleOutstanding = GetStatTitleLabel(card3, lblOutstanding);
+            statsRow.Controls.Add(card3, 3, 0);
+
+            return statsRow;
         }
 
-        private Panel CreateStatTile(string title, Label valueLabel, Color accent, out Label titleLabel)
+        private static Label GetStatTitleLabel(Panel card, Label valueLabel)
         {
-            var card = new Panel
+            foreach (Control control in card.Controls)
             {
-                Dock = DockStyle.Fill,
-                BackColor = SystemColors.Window,
-                Padding = new Padding(12),
-                Margin = new Padding(0, 0, 8, 0)
-            };
-            card.Paint += (s, e) =>
-            {
-                var rect = card.ClientRectangle;
-                rect.Width -= 1;
-                rect.Height -= 1;
-                using (var pen = new Pen(SystemColors.ControlDark))
-                    e.Graphics.DrawRectangle(pen, rect);
-            };
-
-            valueLabel.Text = "0";
-            valueLabel.Font = UiTheme.UiFont;
-            valueLabel.ForeColor = accent;
-            valueLabel.Location = new Point(12, 34);
-            valueLabel.AutoSize = true;
-
-            titleLabel = new Label
-            {
-                Text = title.ToUpperInvariant(),
-                Font = UiTheme.UiFont,
-                ForeColor = SystemColors.GrayText,
-                Location = new Point(12, 14),
-                AutoSize = true
-            };
-            card.Controls.Add(titleLabel);
-            card.Controls.Add(valueLabel);
-            return card;
+                if (control is Label lbl && !ReferenceEquals(lbl, valueLabel))
+                    return lbl;
+            }
+            return null;
         }
 
         private Panel CreateTabBar()
@@ -244,7 +185,7 @@ namespace SmartMed.UI
             {
                 Dock = DockStyle.Top,
                 Height = 48,
-                BackColor = SystemColors.Control,
+                BackColor = UiTheme.AdminSidebar,
                 Padding = new Padding(8, 8, 8, 0),
                 Margin = new Padding(0, 0, 0, 8)
             };
@@ -375,40 +316,22 @@ namespace SmartMed.UI
 
         private Panel CreateReportGridPanel()
         {
-            var outer = new Panel
-            {
-                Dock = DockStyle.Fill,
-                BackColor = SystemColors.Window,
-                Padding = new Padding(1),
-                Margin = new Padding(0, 0, 0, 8)
-            };
-            outer.Paint += (s, e) =>
-            {
-                var rect = outer.ClientRectangle;
-                rect.Width -= 1;
-                rect.Height -= 1;
-                using (var pen = new Pen(SystemColors.ControlDark))
-                    e.Graphics.DrawRectangle(pen, rect);
-            };
-
             gridReport = new DataGridView
             {
-                Dock = DockStyle.Fill,
                 ReadOnly = true,
                 AllowUserToAddRows = false,
                 AllowUserToDeleteRows = false,
                 RowHeadersVisible = false,
                 SelectionMode = DataGridViewSelectionMode.FullRowSelect,
                 AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill,
-                BackgroundColor = SystemColors.Window,
-                BorderStyle = BorderStyle.None,
-                EnableHeadersVisualStyles = false,
                 ScrollBars = ScrollBars.Both
             };
 
-            UiTheme.ApplyGrid(gridReport);
+            UiTheme.ApplyClinicalGrid(gridReport);
             gridReport.CellFormatting += GridReport_CellFormatting;
-            outer.Controls.Add(gridReport);
+
+            var outer = ClinicalUi.CreateSectionPanel("Report Preview", gridReport);
+            outer.Margin = new Padding(0, 0, 0, 8);
             return outer;
         }
 
@@ -420,14 +343,14 @@ namespace SmartMed.UI
                 Height = 28,
                 TextAlign = ContentAlignment.MiddleLeft,
                 Padding = new Padding(12, 0, 0, 0),
-                BackColor = SystemColors.ControlLight,
-                ForeColor = SystemColors.GrayText,
+                BackColor = UiTheme.AdminSidebar,
+                ForeColor = UiTheme.AdminMuted,
                 Font = UiTheme.UiFont,
                 Text = "Items: 0 | Server Connected"
             };
             lblFooterStatus.Paint += (s, e) =>
             {
-                using (var pen = new Pen(SystemColors.ControlDark))
+                using (var pen = new Pen(UiTheme.AdminOutline))
                     e.Graphics.DrawLine(pen, 0, 0, lblFooterStatus.Width, 0);
             };
 
@@ -501,15 +424,17 @@ namespace SmartMed.UI
             if (btn == null) return;
             if (active)
             {
-                btn.BackColor = UiTheme.Primary;
+                btn.BackColor = UiTheme.AdminTeal;
                 btn.ForeColor = Color.White;
                 btn.Font = UiTheme.UiFontBold;
             }
             else
             {
-                btn.BackColor = SystemColors.Control;
-                btn.ForeColor = SystemColors.ControlText;
+                btn.BackColor = Color.White;
+                btn.ForeColor = UiTheme.AdminOnSurface;
                 btn.Font = UiTheme.UiFont;
+                btn.FlatAppearance.BorderColor = UiTheme.AdminOutline;
+                btn.FlatAppearance.BorderSize = 1;
             }
         }
 
@@ -573,6 +498,7 @@ namespace SmartMed.UI
                 new { MedicineName = "Amoxicillin", Category = "Antibiotic", StockQuantity = 12, Price = 10.80m, Supplier = "MediSupply", ExpiryDate = DateTime.Today.AddDays(14), StockStatus = "Low Stock", ExpiryStatus = "Near Expiry", InventoryStatus = "Near Expiry" }
             };
             lblFooterStatus.Text = "Items: 2 | Server Connected | " + DateTime.Now.ToString("hh:mm tt | MMM dd, yyyy");
+            UiTheme.BeautifyGridHeaders(gridReport);
         }
 
         private void LoadActiveReport()
@@ -608,6 +534,7 @@ namespace SmartMed.UI
             var table = Reports.GetSalesReport(_activePeriod);
             _currentReportTable = table;
             gridReport.DataSource = table;
+            UiTheme.BeautifyGridHeaders(gridReport);
             lblFooterStatus.Text =
                 $"Items: {table.Rows.Count} | Completed sales only | {GetPeriodStatusText()} | {DateTime.Now:hh:mm tt | MMM dd, yyyy}";
         }
@@ -617,6 +544,7 @@ namespace SmartMed.UI
             var table = Reports.GetStockReport();
             _currentReportTable = table;
             gridReport.DataSource = table;
+            UiTheme.BeautifyGridHeaders(gridReport);
 
             var current = CountColumnValue(table, "InventoryStatus", "Current");
             var lowStock = CountColumnValue(table, "StockStatus", "Low Stock");
@@ -654,6 +582,7 @@ namespace SmartMed.UI
             var table = Reports.GetCustomerOrderHistory(customerId, _activePeriod);
             _currentReportTable = table;
             gridReport.DataSource = table;
+            UiTheme.BeautifyGridHeaders(gridReport);
             lblFooterStatus.Text =
                 $"Items: {table.Rows.Count} | Customer order history | {cmbCustomer.Text} | {GetPeriodStatusText()} | {DateTime.Now:hh:mm tt}";
         }

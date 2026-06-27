@@ -72,6 +72,7 @@ namespace SmartMed.UI
         private void BuildContent()
         {
             PagePanel.Controls.Clear();
+            ClinicalUi.StylePagePanel(PagePanel);
             _scrollRoot = new TableLayoutPanel
             {
                 AutoSize = true,
@@ -97,43 +98,18 @@ namespace SmartMed.UI
         }
         private Panel CreatePageHeader()
         {
-            var header = new Panel
-            {
-                Dock = DockStyle.Top,
-                Height = 44,
-                Padding = new Padding(0, 0, 0, 8),
-                Margin = new Padding(0, 0, 0, 16)
-            };
-            header.Paint += (s, e) =>
-            {
-                using (var pen = new Pen(SystemColors.ControlDark))
-                    e.Graphics.DrawLine(pen, 0, header.Height - 1, header.Width, header.Height - 1);
-            };
-            var titleBlock = new Panel { Dock = DockStyle.Left, Width = 480 };
-            titleBlock.Controls.Add(new Label
-            {
-                Text = "Update and monitor pharmaceutical inventory levels.",
-                Font = UiTheme.UiFont,
-                ForeColor = SystemColors.GrayText,
-                Dock = DockStyle.Fill
-            });
-            var actions = new FlowLayoutPanel
-            {
-                Dock = DockStyle.Right,
-                FlowDirection = FlowDirection.LeftToRight,
-                AutoSize = true,
-                WrapContents = false,
-                Padding = new Padding(0, 8, 0, 0)
-            };
-            var btnExport = CreateToolbarButton("Export");
-            btnExport.Click += BtnExport_Click;
-            var btnPrint = CreateToolbarButton("Print");
-            btnPrint.Click += BtnPrint_Click;
-            actions.Controls.Add(btnExport);
-            actions.Controls.Add(btnPrint);
-            header.Controls.Add(actions);
-            header.Controls.Add(titleBlock);
-            return header;
+            return ClinicalUi.CreatePageHeader(
+                "Manage Medicines",
+                "Update and monitor pharmaceutical inventory levels.",
+                actions =>
+                {
+                    var btnExport = ClinicalUi.CreateWinButton("Export", primary: false, width: 96);
+                    btnExport.Click += BtnExport_Click;
+                    var btnPrint = ClinicalUi.CreateWinButton("Print", primary: false, width: 96);
+                    btnPrint.Click += BtnPrint_Click;
+                    actions.Controls.Add(btnExport);
+                    actions.Controls.Add(btnPrint);
+                });
         }
         private Panel CreateSearchPanel()
         {
@@ -143,7 +119,7 @@ namespace SmartMed.UI
                 Height = 44,
                 Padding = new Padding(8, 8, 8, 4),
                 Margin = new Padding(0),
-                BackColor = Color.FromArgb(248, 248, 248)
+                BackColor = UiTheme.AdminSidebar
             };
             txtSearch = new TextBox { Width = 220 };
             cmbSearchCategory = new ComboBox { Width = 140, DropDownStyle = ComboBoxStyle.DropDownList };
@@ -252,68 +228,26 @@ namespace SmartMed.UI
                 dlg.ShowDialog(FindForm());
             }
         }
-        private static Button CreateToolbarButton(string text)
-        {
-            return new Button
-            {
-                Text = text,
-                Height = 32,
-                Width = 100,
-                Margin = new Padding(4, 0, 0, 0)
-            };
-        }
         private Panel CreateGridPanel()
         {
-            var outer = new Panel
-            {
-                Dock = DockStyle.Fill,
-                BackColor = SystemColors.Window,
-                Padding = new Padding(1),
-                Margin = new Padding(0, 0, 0, 16)
-            };
-            outer.Paint += (s, e) =>
-            {
-                var rect = outer.ClientRectangle;
-                rect.Width -= 1;
-                rect.Height -= 1;
-                using (var pen = new Pen(SystemColors.ControlDark))
-                    e.Graphics.DrawRectangle(pen, rect);
-            };
             gridMedicines = new DataGridView
             {
-                Dock = DockStyle.Fill,
                 ReadOnly = true,
                 AllowUserToAddRows = false,
                 AllowUserToDeleteRows = false,
                 RowHeadersVisible = false,
                 SelectionMode = DataGridViewSelectionMode.FullRowSelect,
                 AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.None,
-                BackgroundColor = SystemColors.Window,
-                BorderStyle = BorderStyle.None,
-                EnableHeadersVisualStyles = false,
                 MultiSelect = false,
-                ScrollBars = ScrollBars.Both,
-                ColumnHeadersDefaultCellStyle = new DataGridViewCellStyle
-                {
-                    BackColor = Color.FromArgb(232, 232, 232),
-                    ForeColor = UiTheme.GridHeaderText,
-                    Font = UiTheme.UiFontBold
-                },
-                DefaultCellStyle = new DataGridViewCellStyle
-                {
-                    SelectionBackColor = Color.FromArgb(225, 225, 225),
-                    SelectionForeColor = SystemColors.ControlText
-                },
-                AlternatingRowsDefaultCellStyle = new DataGridViewCellStyle
-                {
-                    BackColor = Color.FromArgb(250, 250, 250)
-                }
+                ScrollBars = ScrollBars.Both
             };
             gridMedicines.SelectionChanged += GridMedicines_SelectionChanged;
             gridMedicines.CellFormatting += GridMedicines_CellFormatting;
             gridMedicines.RowPrePaint += GridMedicines_RowPrePaint;
-            UiTheme.ApplyGrid(gridMedicines);
-            outer.Controls.Add(gridMedicines);
+            UiTheme.ApplyClinicalGrid(gridMedicines);
+
+            var outer = ClinicalUi.CreateSectionPanel("Medicine Inventory", gridMedicines);
+            outer.Margin = new Padding(0, 0, 0, 16);
             outer.Controls.Add(CreateSearchPanel());
             return outer;
         }
@@ -324,7 +258,7 @@ namespace SmartMed.UI
                 Dock = DockStyle.Fill,
                 AutoSize = true,
                 AutoSizeMode = AutoSizeMode.GrowAndShrink,
-                BackColor = SystemColors.Control,
+                BackColor = Color.White,
                 Padding = new Padding(24),
                 Margin = new Padding(0, 0, 0, 16)
             };
@@ -333,7 +267,7 @@ namespace SmartMed.UI
                 var rect = outer.ClientRectangle;
                 rect.Width -= 1;
                 rect.Height -= 1;
-                using (var pen = new Pen(SystemColors.ControlDark))
+                using (var pen = new Pen(UiTheme.AdminOutline))
                     e.Graphics.DrawRectangle(pen, rect);
             };
             var columns = new TableLayoutPanel
@@ -454,65 +388,24 @@ namespace SmartMed.UI
         }
         private Panel CreateStatsRow()
         {
-            var wrap = new Panel
+            var statsRow = new TableLayoutPanel
             {
-                Dock = DockStyle.Fill,
-                Height = 88,
-                Margin = new Padding(0, 0, 0, 16)
+                Dock = DockStyle.Top,
+                Height = 108,
+                ColumnCount = 3,
+                RowCount = 1,
+                Margin = new Padding(0, 0, 0, 24)
             };
-            var row = new TableLayoutPanel { Dock = DockStyle.Fill, ColumnCount = 3, RowCount = 1 };
-            row.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 33.33f));
-            row.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 33.33f));
-            row.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 33.34f));
+            for (var i = 0; i < 3; i++)
+                statsRow.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 33.33f));
+
             lblTotalItems = new Label();
             lblLowStock = new Label();
             lblCompliance = new Label();
-            row.Controls.Add(CreateStatTile("\uD83D\uDCE6", "Total Items", lblTotalItems, UiTheme.GridHeaderText), 0, 0);
-            row.Controls.Add(CreateStatTile("\u26A0", "Low Stock Alert", lblLowStock, Color.Red), 1, 0);
-            row.Controls.Add(CreateStatTile("\u2713", "Compliance", lblCompliance, UiTheme.GridHeaderText), 2, 0);
-            wrap.Controls.Add(row);
-            return wrap;
-        }
-        private Panel CreateStatTile(string icon, string title, Label valueLabel, Color accent)
-        {
-            var card = new Panel
-            {
-                Dock = DockStyle.Fill,
-                BackColor = SystemColors.Window,
-                Padding = new Padding(16),
-                Margin = new Padding(0, 0, 8, 0)
-            };
-            card.Paint += (s, e) =>
-            {
-                var rect = card.ClientRectangle;
-                rect.Width -= 1;
-                rect.Height -= 1;
-                using (var pen = new Pen(SystemColors.ControlDark))
-                    e.Graphics.DrawRectangle(pen, rect);
-            };
-            var iconLabel = new Label
-            {
-                Text = icon,
-                Font = UiTheme.UiFont,
-                Location = new Point(16, 16),
-                AutoSize = true
-            };
-            valueLabel.Text = "0";
-            valueLabel.Font = UiTheme.UiFontBold;
-            valueLabel.ForeColor = accent;
-            valueLabel.Location = new Point(52, 34);
-            valueLabel.AutoSize = true;
-            card.Controls.Add(new Label
-            {
-                Text = title.ToUpperInvariant(),
-                Font = UiTheme.UiFont,
-                ForeColor = SystemColors.GrayText,
-                Location = new Point(52, 16),
-                AutoSize = true
-            });
-            card.Controls.Add(valueLabel);
-            card.Controls.Add(iconLabel);
-            return card;
+            statsRow.Controls.Add(ClinicalUi.CreateStatCard("Total Items", lblTotalItems, UiTheme.AdminTeal), 0, 0);
+            statsRow.Controls.Add(ClinicalUi.CreateStatCard("Low Stock Alert", lblLowStock, UiTheme.Danger), 1, 0);
+            statsRow.Controls.Add(ClinicalUi.CreateStatCard("Compliance", lblCompliance, Color.FromArgb(16, 185, 129)), 2, 0);
+            return statsRow;
         }
         private void LoadDesignTimePreview()
         {
@@ -658,6 +551,7 @@ namespace SmartMed.UI
             }).ToList();
             HideMedicineIdColumn();
             ApplyGridColumnWidths();
+            UiTheme.BeautifyGridHeaders(gridMedicines);
             if (keepId.HasValue)
                 SelectGridRowById(keepId.Value);
         }

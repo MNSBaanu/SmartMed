@@ -1,11 +1,11 @@
 using System;
+using System.Drawing;
 using System.Windows.Forms;
-using ReaLTaiizor.Forms;
 using SmartMed.Services;
 
 namespace SmartMed.UI
 {
-    public partial class LoginForm : MaterialForm
+    public partial class LoginForm : Form
     {
         private const string DemoAdminUsername = "admin";
         private const string DemoAdminPassword = "admin123";
@@ -20,6 +20,7 @@ namespace SmartMed.UI
         public LoginForm()
         {
             InitializeComponent();
+            DoubleBuffered = true;
             if (Site?.DesignMode != true)
                 ApplyChrome();
         }
@@ -36,12 +37,22 @@ namespace SmartMed.UI
         {
             UiTheme.ApplyLoginForm(this, panelBody, panelLoginCard, lnkForgot);
             CenterLoginCard();
-            UiTheme.ApplyFlatButton(btnLogin, UiButtonStyle.Primary);
-            UiTheme.ApplyFlatButton(btnRegister, UiButtonStyle.Success);
-            UiTheme.ApplyFlatButton(btnQuickAdmin, UiButtonStyle.Primary);
-            UiTheme.ApplyFlatButton(btnQuickCustomer, UiButtonStyle.Success);
+            UiTheme.StyleClinicalFieldLabel(lblUsername);
+            UiTheme.StyleClinicalFieldLabel(lblPassword);
+            lblBrand.ForeColor = UiTheme.AdminTeal;
+            lblBrand.Font = UiTheme.UiFontBold;
+            lblBrand.BackColor = Color.White;
+            lblSubtitle.ForeColor = UiTheme.AdminMuted;
+            lblSubtitle.BackColor = Color.White;
+            UiTheme.ApplyClinicalAuthButton(btnLogin, primary: true);
+            UiTheme.ApplyClinicalAuthButton(btnRegister, primary: false);
+            UiTheme.ApplyClinicalAuthButton(btnQuickAdmin, primary: true);
+            UiTheme.ApplyClinicalAuthButton(btnQuickCustomer, primary: false);
             UiTheme.StyleTextBox(txtUsername);
             UiTheme.StylePasswordBox(txtPassword, masked: !_passwordVisible);
+            btnTogglePassword.BackColor = Color.White;
+            btnTogglePassword.ForeColor = UiTheme.AdminMuted;
+            btnTogglePassword.FlatAppearance.BorderColor = UiTheme.AdminOutline;
             SetPasswordVisible(_passwordVisible);
         }
 

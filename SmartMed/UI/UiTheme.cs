@@ -185,6 +185,14 @@ namespace SmartMed.UI
             MaterialSkinManager.Instance.AddFormToManage(form);
         }
 
+        public static void RegisterForm(Form form)
+        {
+            if (form == null || form.Site?.DesignMode == true) return;
+            Init();
+            form.Font = UiFont;
+            EnableDoubleBuffer(form);
+        }
+
         public static void EnableDoubleBuffer(Control control)
         {
             if (control == null) return;
@@ -465,32 +473,129 @@ namespace SmartMed.UI
             return result.ToString();
         }
 
-        public static void ApplyLoginForm(MaterialForm form, Panel body, Panel card = null, LinkLabel forgotLink = null)
+        public static void ApplyLoginForm(Form form, Panel body, Panel card = null, LinkLabel forgotLink = null)
         {
             RegisterForm(form);
-            form.BackColor = PageBackground;
+            form.BackColor = AdminSurface;
             form.Font = UiFont;
-            form.Padding = new Padding(0, 64, 0, 0);
+            form.Padding = Padding.Empty;
 
             if (body != null)
             {
-                body.BackColor = PageBackground;
+                body.BackColor = AdminSurface;
                 ApplyFontTree(body);
             }
 
-            if (card != null)
-            {
-                card.BackColor = CardBackground;
-                ApplyFontTree(card);
-            }
+            ApplyClinicalAuthCard(card);
 
             if (forgotLink != null)
             {
                 forgotLink.Font = UiFont;
-                forgotLink.BackColor = CardBackground;
-                forgotLink.LinkColor = GridHeaderText;
-                forgotLink.ActiveLinkColor = PrimaryDark;
-                forgotLink.VisitedLinkColor = Primary;
+                forgotLink.BackColor = Color.White;
+                forgotLink.LinkColor = AdminTeal;
+                forgotLink.ActiveLinkColor = AdminTealDark;
+                forgotLink.VisitedLinkColor = AdminTeal;
+            }
+        }
+
+        /// <summary>Clinical card shell for login / registration dialogs.</summary>
+        public static void ApplyClinicalAuthCard(Panel card)
+        {
+            if (card == null) return;
+            card.BackColor = Color.White;
+            ApplyFontTree(card);
+            if (card.Tag as string == "clinical-auth-card") return;
+            card.Tag = "clinical-auth-card";
+            card.Paint += (s, e) =>
+            {
+                var rect = card.ClientRectangle;
+                rect.Width -= 1;
+                rect.Height -= 1;
+                using (var pen = new Pen(AdminOutline))
+                    e.Graphics.DrawRectangle(pen, rect);
+            };
+        }
+
+        public static void ApplyClinicalAuthHeader(Panel header, Label titleLabel, Button closeButton = null)
+        {
+            if (header == null) return;
+            EnableDoubleBuffer(header);
+            header.BackColor = AdminTeal;
+            if (titleLabel != null)
+            {
+                titleLabel.BackColor = AdminTeal;
+                titleLabel.ForeColor = Color.White;
+                titleLabel.Font = UiFontBold;
+            }
+            if (closeButton != null)
+            {
+                closeButton.FlatStyle = FlatStyle.Flat;
+                closeButton.FlatAppearance.BorderSize = 0;
+                closeButton.BackColor = AdminTeal;
+                closeButton.ForeColor = Color.FromArgb(220, 255, 255, 255);
+                closeButton.Font = UiFontBold;
+                closeButton.Cursor = Cursors.Hand;
+                closeButton.UseVisualStyleBackColor = false;
+                closeButton.FlatAppearance.MouseOverBackColor = AdminTealDark;
+            }
+        }
+
+        public static void StyleClinicalFieldLabel(Label label)
+        {
+            if (label == null) return;
+            label.Font = UiFont;
+            label.ForeColor = AdminMuted;
+            label.BackColor = Color.White;
+        }
+
+        public static void ApplyClinicalAuthButton(Button button, bool primary)
+        {
+            if (button == null) return;
+            button.FlatStyle = FlatStyle.Flat;
+            button.Font = UiFont;
+            button.Cursor = Cursors.Hand;
+            button.FlatAppearance.BorderSize = 1;
+            if (primary)
+            {
+                button.BackColor = AdminTeal;
+                button.ForeColor = Color.White;
+                button.FlatAppearance.BorderColor = AdminTealDark;
+                button.FlatAppearance.MouseOverBackColor = Color.FromArgb(59, 109, 100);
+            }
+            else
+            {
+                button.BackColor = Color.White;
+                button.ForeColor = AdminOnSurface;
+                button.FlatAppearance.BorderColor = AdminOutline;
+                button.FlatAppearance.MouseOverBackColor = Color.FromArgb(245, 250, 249);
+            }
+            button.UseVisualStyleBackColor = false;
+        }
+
+        public static void ApplyRegistrationForm(Form form, Panel card, Panel header, Label titleLabel, Button closeButton, params Control[] fieldRoots)
+        {
+            RegisterForm(form);
+            form.BackColor = AdminSurface;
+            form.Font = UiFont;
+            ApplyClinicalAuthCard(card);
+            ApplyClinicalAuthHeader(header, titleLabel, closeButton);
+            foreach (var root in fieldRoots)
+            {
+                if (root == null) continue;
+                ApplyFontTree(root);
+                StyleClinicalControls(root);
+            }
+        }
+
+        private static void StyleClinicalControls(Control root)
+        {
+            foreach (Control c in root.Controls)
+            {
+                if (c is Label lbl && !(c is LinkLabel))
+                    StyleClinicalFieldLabel(lbl);
+                else if (c is TextBox tb)
+                    StyleTextBox(tb);
+                StyleClinicalControls(c);
             }
         }
 

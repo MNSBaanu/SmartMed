@@ -33,8 +33,6 @@ namespace SmartMed.UI
                 LoadDashboardData();
         }
 
-        public void RefreshData() => LoadDashboardData();
-
         private readonly ReportService _reports = new ReportService();
         private readonly OrderService _orders = new OrderService();
         private readonly MedicineService _medicines = new MedicineService();
@@ -49,7 +47,27 @@ namespace SmartMed.UI
         private DataGridView gridExpiry;
         private DataGridView gridRecent;
         private Panel _pageRoot;
+        private Panel _scrollHost;
+        private TableLayoutPanel _contentPanel;
         private List<object> _recentRows = new List<object>();
+
+        internal override void SyncScrollRootWidth(int fallback = 850)
+        {
+            base.SyncScrollRootWidth(fallback);
+            if (_scrollHost == null || _contentPanel == null || _scrollHost.IsDisposed)
+                return;
+
+            var width = Math.Max(600, _scrollHost.ClientSize.Width - 4);
+            if (_contentPanel.Width != width)
+                _contentPanel.Width = width;
+            _pageRoot?.PerformLayout();
+        }
+
+        public void RefreshData()
+        {
+            SyncScrollRootWidth();
+            LoadDashboardData();
+        }
 
         private void BuildContent()
         {
@@ -69,22 +87,21 @@ namespace SmartMed.UI
             PagePanel.BackColor = UiTheme.AdminSurface;
 
             _pageRoot = new Panel { Dock = DockStyle.Fill, BackColor = UiTheme.AdminSurface };
-            PagePanel.Controls.Add(_pageRoot);
 
             var footer = CreateStatusBar();
             footer.Dock = DockStyle.Bottom;
             _pageRoot.Controls.Add(footer);
 
-            var scrollHost = new Panel
+            _scrollHost = new Panel
             {
                 Dock = DockStyle.Fill,
                 AutoScroll = true,
                 BackColor = UiTheme.AdminSurface,
                 Padding = new Padding(0, 0, 0, 8)
             };
-            _pageRoot.Controls.Add(scrollHost);
+            _pageRoot.Controls.Add(_scrollHost);
 
-            var content = new TableLayoutPanel
+            _contentPanel = new TableLayoutPanel
             {
                 AutoSize = true,
                 AutoSizeMode = AutoSizeMode.GrowAndShrink,
@@ -94,20 +111,22 @@ namespace SmartMed.UI
                 Width = Math.Max(600, GetScrollContentWidth()),
                 BackColor = UiTheme.AdminSurface
             };
-            content.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100f));
-            content.RowStyles.Add(new RowStyle(SizeType.AutoSize));
-            content.RowStyles.Add(new RowStyle(SizeType.AutoSize));
-            content.RowStyles.Add(new RowStyle(SizeType.Absolute, 210f));
-            content.RowStyles.Add(new RowStyle(SizeType.Absolute, 320f));
+            _contentPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100f));
+            _contentPanel.RowStyles.Add(new RowStyle(SizeType.AutoSize));
+            _contentPanel.RowStyles.Add(new RowStyle(SizeType.AutoSize));
+            _contentPanel.RowStyles.Add(new RowStyle(SizeType.Absolute, 210f));
+            _contentPanel.RowStyles.Add(new RowStyle(SizeType.Absolute, 320f));
 
-            content.Controls.Add(CreatePageHeader(), 0, 0);
-            content.Controls.Add(CreateStatsRow(), 0, 1);
-            content.Controls.Add(CreateAlertsRow(), 0, 2);
-            content.Controls.Add(CreateRecentActivityPanel(), 0, 3);
+            _contentPanel.Controls.Add(CreatePageHeader(), 0, 0);
+            _contentPanel.Controls.Add(CreateStatsRow(), 0, 1);
+            _contentPanel.Controls.Add(CreateAlertsRow(), 0, 2);
+            _contentPanel.Controls.Add(CreateRecentActivityPanel(), 0, 3);
 
-            scrollHost.Controls.Add(content);
-            UiTheme.EnableDoubleBuffer(scrollHost);
-            scrollHost.Resize += (s, e) => content.Width = Math.Max(600, scrollHost.ClientSize.Width - 4);
+            _scrollHost.Controls.Add(_contentPanel);
+            UiTheme.EnableDoubleBuffer(_scrollHost);
+            _scrollHost.Resize += (s, e) => SyncScrollRootWidth();
+
+            RegisterPageRoot(_pageRoot);
         }
 
         private Panel CreatePageHeader()

@@ -57,6 +57,7 @@ namespace SmartMed.UI
             this.panelCard.Controls.Add(this.panelFooter);
             this.panelCard.Controls.Add(this.panelBody);
             this.panelCard.Controls.Add(this.panelSuccess);
+            this.panelCard.BackColor = System.Drawing.Color.White;
             this.panelCard.Location = new System.Drawing.Point(15, 15);
             this.panelCard.Name = "panelCard";
             this.panelCard.Size = new System.Drawing.Size(450, 620);
@@ -70,7 +71,7 @@ namespace SmartMed.UI
             this.panelHeader.Controls.Add(this.btnClose);
             this.panelHeader.Location = new System.Drawing.Point(0, 0);
             this.panelHeader.Name = "panelHeader";
-            this.panelHeader.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(24)))), ((int)(((byte)(24)))), ((int)(((byte)(24)))));
+            this.panelHeader.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(53)))), ((int)(((byte)(103)))), ((int)(((byte)(94)))));
             this.panelHeader.Size = new System.Drawing.Size(450, 56);
             this.panelHeader.TabIndex = 0;
             // 
@@ -91,11 +92,11 @@ namespace SmartMed.UI
             this.lblHeaderTitle.AutoSize = true;
             this.lblHeaderTitle.Font = new System.Drawing.Font("Roboto", 9F, System.Drawing.FontStyle.Bold);
             this.lblHeaderTitle.ForeColor = System.Drawing.Color.White;
-            this.lblHeaderTitle.Location = new System.Drawing.Point(48, 16);
+            this.lblHeaderTitle.Location = new System.Drawing.Point(24, 18);
             this.lblHeaderTitle.Name = "lblHeaderTitle";
             this.lblHeaderTitle.Size = new System.Drawing.Size(250, 20);
             this.lblHeaderTitle.TabIndex = 1;
-            this.lblHeaderTitle.Text = "SmartMed Pharmacy - Registration";
+            this.lblHeaderTitle.Text = "Customer Registration";
             // 
             // lblLockIcon
             // 
@@ -113,13 +114,13 @@ namespace SmartMed.UI
             // btnClose
             // 
             this.btnClose.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnClose.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(24)))), ((int)(((byte)(24)))), ((int)(((byte)(24)))));
+            this.btnClose.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(53)))), ((int)(((byte)(103)))), ((int)(((byte)(94)))));
             this.btnClose.Cursor = System.Windows.Forms.Cursors.Hand;
             this.btnClose.FlatAppearance.BorderSize = 0;
-            this.btnClose.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(40)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
+            this.btnClose.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(27)))), ((int)(((byte)(79)))), ((int)(((byte)(71)))));
             this.btnClose.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnClose.Font = new System.Drawing.Font("Roboto", 9F, System.Drawing.FontStyle.Bold);
-            this.btnClose.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(180)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
+            this.btnClose.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
             this.btnClose.Location = new System.Drawing.Point(390, 12);
             this.btnClose.Name = "btnClose";
             this.btnClose.Size = new System.Drawing.Size(36, 32);
@@ -144,6 +145,7 @@ namespace SmartMed.UI
             this.panelBody.Controls.Add(this.lblEmail);
             this.panelBody.Controls.Add(this.txtFullName);
             this.panelBody.Controls.Add(this.lblFullName);
+            this.panelBody.BackColor = System.Drawing.Color.White;
             this.panelBody.Location = new System.Drawing.Point(0, 56);
             this.panelBody.Name = "panelBody";
             this.panelBody.Size = new System.Drawing.Size(450, 440);
@@ -230,7 +232,7 @@ namespace SmartMed.UI
             this.txtPassword.Location = new System.Drawing.Point(24, 236);
             this.txtPassword.Name = "txtPassword";
             this.txtPassword.Size = new System.Drawing.Size(402, 23);
-            this.            txtPassword.TabIndex = 9;
+            this.txtPassword.TabIndex = 9;
             // 
             // btnTogglePassword
             // 
@@ -284,6 +286,7 @@ namespace SmartMed.UI
             // 
             this.panelFooter.Controls.Add(this.btnCancel);
             this.panelFooter.Controls.Add(this.btnRegister);
+            this.panelFooter.BackColor = System.Drawing.Color.White;
             this.panelFooter.Location = new System.Drawing.Point(0, 496);
             this.panelFooter.Name = "panelFooter";
             this.panelFooter.Size = new System.Drawing.Size(450, 124);
@@ -315,6 +318,7 @@ namespace SmartMed.UI
             this.panelSuccess.Controls.Add(this.lblSuccessMessage);
             this.panelSuccess.Controls.Add(this.lblSuccessTitle);
             this.panelSuccess.Controls.Add(this.lblSuccessIcon);
+            this.panelSuccess.BackColor = System.Drawing.Color.White;
             this.panelSuccess.Location = new System.Drawing.Point(0, 56);
             this.panelSuccess.Name = "panelSuccess";
             this.panelSuccess.Size = new System.Drawing.Size(450, 440);
@@ -365,7 +369,7 @@ namespace SmartMed.UI
             this.AcceptButton = this.btnRegister;
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(249)))), ((int)(((byte)(249)))), ((int)(((byte)(249)))));
+            this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(244)))), ((int)(((byte)(251)))), ((int)(((byte)(250)))));
             this.ClientSize = new System.Drawing.Size(500, 660);
             this.Controls.Add(this.panelCard);
             this.Font = new System.Drawing.Font("Roboto", 9F);
@@ -375,7 +379,7 @@ namespace SmartMed.UI
             this.Name = "RegistrationForm";
             this.ShowInTaskbar = true;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "SmartMed Pharmacy - Customer Registration";
+            this.Text = "SmartMed — Customer Registration";
             this.panelCard.ResumeLayout(false);
             this.panelSuccess.ResumeLayout(false);
             this.panelFooter.ResumeLayout(false);

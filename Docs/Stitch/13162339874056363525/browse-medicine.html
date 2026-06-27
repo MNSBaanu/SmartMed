@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>SmartMed Inventory - Clinical Clarity Edition</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@500&amp;family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "on-background": "#161d1d",
+                    "secondary-container": "#b8ede2",
+                    "surface-container": "#e8efee",
+                    "on-secondary-container": "#3b6d64",
+                    "surface-dim": "#d4dbdb",
+                    "secondary": "#35675e",
+                    "on-secondary-fixed": "#00201c",
+                    "on-surface-variant": "#414847",
+                    "surface-container-low": "#eef5f4",
+                    "error-container": "#ffdad6",
+                    "on-primary-fixed": "#00201d",
+                    "on-tertiary-fixed-variant": "#68393d",
+                    "primary-fixed": "#c7eae4",
+                    "on-primary": "#ffffff",
+                    "on-tertiary": "#ffffff",
+                    "inverse-on-surface": "#ebf2f1",
+                    "on-secondary-fixed-variant": "#1b4f47",
+                    "secondary-fixed": "#b8ede2",
+                    "on-primary-fixed-variant": "#2d4c49",
+                    "on-secondary": "#ffffff",
+                    "outline": "#717977",
+                    "on-primary-container": "#759792",
+                    "on-tertiary-fixed": "#340f13",
+                    "on-error-container": "#93000a",
+                    "surface-tint": "#446460",
+                    "on-tertiary-container": "#bb8184",
+                    "surface-variant": "#dde4e3",
+                    "surface-bright": "#f4fbfa",
+                    "surface-container-highest": "#dde4e3",
+                    "on-surface": "#161d1d",
+                    "primary": "#001816",
+                    "surface-container-high": "#e3eae9",
+                    "background": "#f4fbfa",
+                    "primary-fixed-dim": "#abcdc8",
+                    "inverse-primary": "#abcdc8",
+                    "on-error": "#ffffff",
+                    "surface-container-lowest": "#ffffff",
+                    "tertiary-container": "#441c20",
+                    "secondary-fixed-dim": "#9dd1c6",
+                    "tertiary-fixed-dim": "#f7b6b9",
+                    "inverse-surface": "#2b3231",
+                    "tertiary": "#2b080d",
+                    "error": "#ba1a1a",
+                    "surface": "#f4fbfa",
+                    "primary-container": "#0c2e2b",
+                    "outline-variant": "#c1c8c6",
+                    "tertiary-fixed": "#ffdadb"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.5rem",
+                    "lg": "0.75rem",
+                    "xl": "1rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "element-gap": "16px",
+                    "base": "8px",
+                    "container-padding": "24px",
+                    "gutter": "20px",
+                    "sidebar-width": "260px"
+            },
+            "fontFamily": {
+                    "display-lg": ["Hanken Grotesk"],
+                    "headline-md": ["Hanken Grotesk"],
+                    "body-lg": ["Hanken Grotesk"],
+                    "headline-sm": ["Hanken Grotesk"],
+                    "body-md": ["Hanken Grotesk"],
+                    "label-md": ["Hanken Grotesk"],
+                    "headline-md-mobile": ["Hanken Grotesk"]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        body { 
+            font-family: 'Hanken Grotesk', sans-serif; 
+            background-color: #f4fbfa;
+            color: #161d1d;
+            overflow: hidden;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 20;
+            font-size: 18px;
+            vertical-align: middle;
+        }
+        .group-box {
+            border: 1px solid #c1c8c6;
+            padding: 16px 12px 12px 12px;
+            margin-top: 10px;
+            position: relative;
+            background: #ffffff;
+            border-radius: 0.5rem;
+        }
+        .group-box-title {
+            position: absolute;
+            top: -10px;
+            left: 10px;
+            background: #f4fbfa;
+            padding: 0 5px;
+            font-size: 11px;
+            color: #35675e;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        .win-button {
+            background-color: #e3eae9;
+            border: 1px solid #717977;
+            color: #161d1d;
+            padding: 4px 12px;
+            font-size: 12px;
+            border-radius: 0.5rem;
+            transition: all 0.2s ease;
+        }
+        .win-button:hover {
+            background-color: #c7eae4;
+            border-color: #446460;
+        }
+        .win-button-primary {
+            background-color: #0c2e2b;
+            border: 1px solid #001816;
+            color: #ffffff;
+            border-radius: 0.5rem;
+        }
+        .win-button-primary:hover {
+            background-color: #35675e;
+        }
+        .win-input {
+            border: 1px solid #717977;
+            padding: 4px 12px;
+            font-size: 13px;
+            outline: none;
+            background: #ffffff;
+            border-radius: 0.5rem;
+        }
+        .win-input:focus {
+            border-color: #35675e;
+            box-shadow: 0 0 0 2px rgba(53, 103, 94, 0.2);
+        }
+        .menu-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 16px;
+            font-size: 14px;
+            cursor: pointer;
+            color: #414847;
+            transition: all 0.2s;
+            border-radius: 0.5rem;
+            margin: 0 8px;
+        }
+        .menu-item:hover {
+            background-color: #e8efee;
+            color: #001816;
+        }
+        .menu-item.active {
+            background-color: #b8ede2;
+            color: #0c2e2b;
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #c1c8c6;
+            border-radius: 10px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: #717977;
+        }
+    </style>
+</head>
+<body class="flex flex-col h-screen">
+<!-- Windows Title Bar -->
+<header class="bg-white border-b border-surface-variant h-8 flex items-center justify-between px-3 select-none flex-shrink-0">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-secondary" style="font-size: 16px;">medical_services</span>
+<span class="text-[11px] font-semibold text-on-surface">SmartMed Clinical Management - Inventory Explorer</span>
+</div>
+<div class="flex items-center h-full">
+<div class="px-4 py-1 hover:bg-surface-container-low transition-colors cursor-default"><span class="material-symbols-outlined !text-sm">minimize</span></div>
+<div class="px-4 py-1 hover:bg-surface-container-low transition-colors cursor-default"><span class="material-symbols-outlined !text-sm">check_box_outline_blank</span></div>
+<div class="px-4 py-1 hover:bg-error hover:text-white transition-colors cursor-default"><span class="material-symbols-outlined !text-sm">close</span></div>
+</div>
+</header>
+<!-- Main Menu Bar -->
+<nav class="bg-surface-container-lowest border-b border-outline-variant px-4 flex gap-6 text-[11px] py-1.5 flex-shrink-0 font-medium">
+<span class="cursor-pointer hover:text-secondary">File</span>
+<span class="cursor-pointer hover:text-secondary">Edit</span>
+<span class="cursor-pointer hover:text-secondary">View</span>
+<span class="cursor-pointer hover:text-secondary">Tools</span>
+<span class="cursor-pointer hover:text-secondary">Reports</span>
+<span class="cursor-pointer hover:text-secondary">Help</span>
+</nav>
+<div class="flex-1 flex overflow-hidden">
+<!-- Navigation Sidebar -->
+<aside class="w-[260px] bg-surface-container-high border-r border-outline-variant flex flex-col flex-shrink-0">
+<div class="p-6 border-b border-outline-variant bg-surface-container-high">
+<h1 class="text-xl font-bold text-primary font-headline-md">SmartMed <span class="text-[10px] font-normal text-on-surface-variant opacity-80 font-label-md">v4.2.0</span></h1>
+<p class="text-[9px] text-secondary font-bold uppercase tracking-[0.2em] mt-1">Pharmacy Admin Console</p>
+</div>
+<div class="flex-1 overflow-y-auto py-4 space-y-1 custom-scrollbar">
+<div class="menu-item">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="font-medium">Dashboard</span>
+</div>
+<div class="menu-item active">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">inventory_2</span>
+<span class="font-bold">Inventory Manager</span>
+</div>
+<div class="menu-item">
+<span class="material-symbols-outlined">group</span>
+<span>Customer Database</span>
+</div>
+<div class="menu-item">
+<span class="material-symbols-outlined">receipt_long</span>
+<span>Order Processing</span>
+</div>
+<div class="menu-item">
+<span class="material-symbols-outlined">bar_chart</span>
+<span>Financial Reports</span>
+</div>
+<div class="my-4 mx-6 border-t border-outline-variant"></div>
+<div class="menu-item">
+<span class="material-symbols-outlined">settings</span>
+<span>System Settings</span>
+</div>
+<div class="menu-item">
+<span class="material-symbols-outlined">account_circle</span>
+<span>User Account</span>
+</div>
+</div>
+<div class="p-4 bg-surface-container-highest border-t border-outline-variant">
+<div class="flex items-center gap-3">
+<div class="w-9 h-9 bg-secondary text-white flex items-center justify-center text-xs font-bold rounded-lg shadow-sm">JD</div>
+<div class="overflow-hidden">
+<p class="text-xs font-bold truncate text-on-surface">Dr. John Doe</p>
+<p class="text-[10px] text-on-surface-variant opacity-70 font-medium">Administrator</p>
+</div>
+</div>
+</div>
+</aside>
+<!-- Main Workspace -->
+<main class="flex-1 flex flex-col bg-background overflow-hidden p-6 gap-6">
+<!-- Status Banner -->
+<div class="bg-white border border-outline-variant p-4 flex items-center justify-between shadow-sm flex-shrink-0 rounded-lg">
+<div>
+<span class="bg-secondary-container text-on-secondary-container px-3 py-1 text-[10px] font-bold uppercase tracking-wider mb-2 inline-block rounded-full">Active Promotion</span>
+<h2 class="text-base font-bold text-primary font-headline-md">Senior Citizen Wellness Days (15% Off Chronic Medication)</h2>
+<p class="text-xs text-on-surface-variant">Program active until 31-Oct-2023. Apply discount at checkout.</p>
+</div>
+<button class="win-button-primary px-6 py-2.5 font-bold uppercase tracking-wide text-[11px]">View Eligible Patients</button>
+</div>
+<div class="flex-1 flex gap-6 overflow-hidden">
+<!-- Left Panel: Filters -->
+<aside class="w-64 flex-shrink-0 flex flex-col gap-4">
+<div class="group-box">
+<span class="group-box-title">Search &amp; Filter</span>
+<div class="mb-5 mt-2">
+<label class="text-[11px] font-bold text-on-surface-variant block mb-1.5 px-1">Product Search</label>
+<div class="flex gap-1">
+<input class="win-input flex-1" placeholder="SKU, Name..." type="text"/>
+<button class="win-button px-2 flex items-center justify-center">
+<span class="material-symbols-outlined !text-sm">search</span>
+</button>
+</div>
+</div>
+<div class="mb-5">
+<label class="text-[11px] font-bold text-on-surface-variant block mb-1.5 px-1">Drug Categories</label>
+<div class="space-y-1 h-40 overflow-y-auto border border-outline-variant p-2 rounded-lg bg-surface-container-lowest text-[12px] custom-scrollbar">
+<label class="flex items-center gap-2.5 p-1 rounded hover:bg-surface-container-low cursor-pointer transition-colors">
+<input class="w-3.5 h-3.5 text-secondary focus:ring-secondary/30 border-outline rounded" type="checkbox"/>
+<span class="text-on-surface-variant">Antibiotics</span>
+</label>
+<label class="flex items-center gap-2.5 p-1 rounded hover:bg-surface-container-low cursor-pointer transition-colors">
+<input checked="" class="w-3.5 h-3.5 text-secondary focus:ring-secondary/30 border-outline rounded" type="checkbox"/>
+<span class="text-on-surface-variant">Wellness</span>
+</label>
+<label class="flex items-center gap-2.5 p-1 rounded hover:bg-surface-container-low cursor-pointer transition-colors">
+<input class="w-3.5 h-3.5 text-secondary focus:ring-secondary/30 border-outline rounded" type="checkbox"/>
+<span class="text-on-surface-variant">Pain Relief</span>
+</label>
+<label class="flex items-center gap-2.5 p-1 rounded hover:bg-surface-container-low cursor-pointer transition-colors">
+<input class="w-3.5 h-3.5 text-secondary focus:ring-secondary/30 border-outline rounded" type="checkbox"/>
+<span class="text-on-surface-variant">Cardiovascular</span>
+</label>
+<label class="flex items-center gap-2.5 p-1 rounded hover:bg-surface-container-low cursor-pointer transition-colors">
+<input class="w-3.5 h-3.5 text-secondary focus:ring-secondary/30 border-outline rounded" type="checkbox"/>
+<span class="text-on-surface-variant">Pediatric Care</span>
+</label>
+</div>
+</div>
+<div class="mb-5">
+<label class="text-[11px] font-bold text-on-surface-variant block mb-1.5 px-1">Price Range (USD)</label>
+<div class="flex justify-between text-[10px] mb-2 font-medium">
+<span class="text-on-surface-variant">$0.00</span>
+<span class="font-bold text-secondary">$500.00</span>
+</div>
+<input class="w-full h-1.5 bg-surface-container-high rounded-full appearance-none cursor-pointer accent-secondary" max="1000" min="0" step="10" type="range" value="500"/>
+</div>
+<button class="win-button w-full font-bold uppercase tracking-wider text-[10px] py-2 mt-2">Clear Parameters</button>
+</div>
+<div class="group-box mt-auto bg-surface-container-low border-outline-variant/30">
+<span class="group-box-title">Inventory Health</span>
+<div class="text-[11px] space-y-3 mt-2">
+<div class="flex justify-between text-on-surface">
+<span class="font-medium">Total Stock Value:</span>
+<span class="font-bold text-secondary">$24,500.00</span>
+</div>
+<div class="w-full h-2 bg-surface-container-high rounded-full overflow-hidden">
+<div class="w-3/4 h-full bg-secondary"></div>
+</div>
+<div class="flex justify-between text-error font-bold">
+<span>Pending Orders:</span>
+<span>12 items</span>
+</div>
+</div>
+</div>
+</aside>
+<!-- Center Content -->
+<div class="flex-1 flex flex-col bg-white border border-outline-variant rounded-lg shadow-sm overflow-hidden">
+<div class="bg-surface-container-low px-4 py-3 flex items-center justify-between border-b border-outline-variant">
+<div class="flex items-center gap-4">
+<h3 class="text-sm font-bold uppercase tracking-wider text-primary font-headline-md">Product Catalog Explorer</h3>
+<span class="bg-white px-2 py-0.5 rounded border border-outline-variant text-[10px] font-bold text-on-surface-variant">248 Results</span>
+</div>
+<div class="flex items-center gap-3 text-[12px]">
+<label class="text-on-surface-variant font-medium">Sort by:</label>
+<select class="win-input !py-0.5 h-7 border-outline-variant text-[11px] font-medium pr-8">
+<option>Relevance</option>
+<option>Price (Low to High)</option>
+<option>Stock Level</option>
+</select>
+</div>
+</div>
+<div class="flex-1 overflow-y-auto p-6 bg-surface-bright custom-scrollbar">
+<div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+<!-- Product Card 1 -->
+<div class="bg-white border border-outline-variant flex flex-col rounded-lg hover:border-secondary hover:shadow-md transition-all group p-4">
+<div class="h-36 bg-surface-container-low flex items-center justify-center rounded-lg border border-outline-variant mb-4 relative overflow-hidden">
+<img alt="Amoxicillin" class="h-full object-contain p-4 group-hover:scale-105 transition-transform" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBpsSZe5xRXiP4TdnVZKFjAEg6cpbWkbE8mEGmtkNPM7_Jo5P30UQxBSLChBiwGPeGKjSX6popIMoUAHpzynJ_UoeomYUT99WQ-5IrZXEciNjzZOoAZ9z7E067xfp0_jZgyRyjQyuuKl2HIxf_59dQhhh4VcD6P-PIbWuE6dSKGooRy36Q_HhV2M1nLredv6bgIRNw4OXgB5pEdNlXYLtnJgV8t0LiZ2da9zJd59eOHahWBODOptioQp3lDw5gAF0qUb1Z_-s6q9ykb"/>
+<span class="absolute top-2 right-2 bg-primary-fixed/80 backdrop-blur-sm text-[9px] px-2 py-0.5 font-bold rounded text-primary uppercase">ANTIBIOTICS</span>
+</div>
+<div class="flex justify-between items-start mb-2">
+<h4 class="text-xs font-bold text-primary uppercase tracking-tight">Amoxicillin 500mg</h4>
+<span class="text-sm font-bold text-on-surface">$12.50</span>
+</div>
+<p class="text-[11px] text-on-surface-variant mb-4 leading-relaxed line-clamp-2">Broad-spectrum antibiotic for bacterial infections. SKU: AMX-500-21</p>
+<div class="mt-auto pt-4 flex items-center justify-between border-t border-surface-container">
+<span class="text-[10px] text-secondary flex items-center gap-1.5 font-bold"><span class="w-2 h-2 rounded-full bg-secondary"></span> IN STOCK</span>
+<button class="win-button !py-1.5 !px-3 flex items-center gap-1.5 font-bold bg-secondary-container text-on-secondary-container border-none hover:bg-secondary hover:text-white">
+<span class="material-symbols-outlined !text-[14px]">add_shopping_cart</span>
+<span>Add</span>
+</button>
+</div>
+</div>
+<!-- Product Card 2 -->
+<div class="bg-white border border-outline-variant flex flex-col rounded-lg hover:border-secondary hover:shadow-md transition-all group p-4">
+<div class="h-36 bg-surface-container-low flex items-center justify-center rounded-lg border border-outline-variant mb-4 relative overflow-hidden">
+<img alt="Ibuprofen" class="h-full object-contain p-4 group-hover:scale-105 transition-transform" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAnCYDE3o2lsMvG5Aa7OweILR14TqgXu5zs0xhLSYEMYb8Rh8fhLal3sWb6MkPUy_rqxaR945K9HZne-LsmV_WiIYtMyar4A-sfUipxHfqH_7z9AZVa-ARNLvPrI0H5A8Rm63bGc4e_VwB-zorBJwqWVhCN1SzGBt1shzqSftA0MDUUsURZ42TWFEPGRfHcKJo4xNJvZ2H8ITI7tsn4fEcx66M4U1r1Umoc75YfIOhi3HiEjJQw-QKPjvwcQ4XSH9pC9cKWsK0cG1ch"/>
+<span class="absolute top-2 right-2 bg-tertiary-fixed/80 backdrop-blur-sm text-[9px] px-2 py-0.5 font-bold rounded text-on-tertiary-fixed-variant uppercase">PAIN RELIEF</span>
+</div>
+<div class="flex justify-between items-start mb-2">
+<h4 class="text-xs font-bold text-primary uppercase tracking-tight">Ibuprofen 400mg</h4>
+<span class="text-sm font-bold text-on-surface">$8.99</span>
+</div>
+<p class="text-[11px] text-on-surface-variant mb-4 leading-relaxed line-clamp-2">Nonsteroidal anti-inflammatory drug (NSAID) for fast pain relief. 50 count.</p>
+<div class="mt-auto pt-4 flex items-center justify-between border-t border-surface-container">
+<span class="text-[10px] text-error flex items-center gap-1.5 font-bold"><span class="w-2 h-2 rounded-full bg-error animate-pulse"></span> LOW STOCK</span>
+<button class="win-button !py-1.5 !px-3 flex items-center gap-1.5 font-bold bg-secondary-container text-on-secondary-container border-none hover:bg-secondary hover:text-white">
+<span class="material-symbols-outlined !text-[14px]">add_shopping_cart</span>
+<span>Add</span>
+</button>
+</div>
+</div>
+<!-- Product Card 3 -->
+<div class="bg-white border border-outline-variant flex flex-col rounded-lg hover:border-secondary hover:shadow-md transition-all group p-4">
+<div class="h-36 bg-surface-container-low flex items-center justify-center rounded-lg border border-outline-variant mb-4 relative overflow-hidden">
+<img alt="Multi-Vit" class="h-full object-contain p-4 group-hover:scale-105 transition-transform" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC6kQyD7fUCSQx9PPZQbta4qUAPxiK6ouf07IQFxck0uLX9KhZhE4toTyd6-nRnyC0kGfMwc1NyAj8-_KHW9HfwK5hGPte9HQmX_mkzVoY1gdkz4IjmU0HjWmYJWoolv28do7zVJ1EEk3VD1skKTsqxGjoFuIVqO0_c1PSOg3rcPsAqVY03KH-LqpouGA-Ug8-viAilkOBZp_T_yQQa9A2gtv3uHlwCHMn0fPE319xJGQRkboNDe63Ja6DNtO0FCDFwbuDpyVMYXOCt"/>
+<span class="absolute top-2 right-2 bg-primary-fixed/80 backdrop-blur-sm text-[9px] px-2 py-0.5 font-bold rounded text-primary uppercase">VITAMINS</span>
+</div>
+<div class="flex justify-between items-start mb-2">
+<h4 class="text-xs font-bold text-primary uppercase tracking-tight">Daily Multi-Vit</h4>
+<span class="text-sm font-bold text-on-surface">$24.00</span>
+</div>
+<p class="text-[11px] text-on-surface-variant mb-4 leading-relaxed line-clamp-2">Complete daily vitamin and mineral supplement for optimal immune system support.</p>
+<div class="mt-auto pt-4 flex items-center justify-between border-t border-surface-container">
+<span class="text-[10px] text-secondary flex items-center gap-1.5 font-bold"><span class="w-2 h-2 rounded-full bg-secondary"></span> IN STOCK</span>
+<button class="win-button !py-1.5 !px-3 flex items-center gap-1.5 font-bold bg-secondary-container text-on-secondary-container border-none hover:bg-secondary hover:text-white">
+<span class="material-symbols-outlined !text-[14px]">add_shopping_cart</span>
+<span>Add</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+<!-- Footer / Pagination -->
+<div class="bg-surface-container px-6 py-3 flex items-center justify-between border-t border-outline-variant">
+<div class="flex gap-2">
+<button class="win-button p-1.5 min-w-[36px] bg-white"><span class="material-symbols-outlined !text-sm">first_page</span></button>
+<button class="win-button p-1.5 min-w-[36px] bg-white"><span class="material-symbols-outlined !text-sm">chevron_left</span></button>
+<div class="flex items-center px-4 text-xs font-bold text-primary bg-white border border-outline-variant rounded-lg">Page 1 of 21</div>
+<button class="win-button p-1.5 min-w-[36px] bg-white"><span class="material-symbols-outlined !text-sm">chevron_right</span></button>
+<button class="win-button p-1.5 min-w-[36px] bg-white"><span class="material-symbols-outlined !text-sm">last_page</span></button>
+</div>
+<div class="text-[10px] text-on-surface-variant font-bold uppercase tracking-widest opacity-60">
+                    Session: CLINICAL_ADMIN_S001 | 10/24/2023
+                </div>
+</div>
+</div>
+</div>
+</main>
+</div>
+<!-- Windows Status Bar -->
+<footer class="bg-surface-container-highest border-t border-outline-variant h-7 flex items-center justify-between px-4 text-[10px] text-on-surface-variant flex-shrink-0 font-semibold">
+<div class="flex items-center gap-6">
+<div class="flex items-center gap-2 text-secondary"><span class="w-2 h-2 rounded-full bg-secondary"></span> System Ready</div>
+<div class="border-l border-outline-variant pl-6 flex items-center gap-2">
+<span class="material-symbols-outlined !text-[12px]">lock</span>
+            SSL/TLS Encrypted Connection
+        </div>
+</div>
+<div class="flex items-center gap-6">
+<div>Pharmacy Database v2.0.4-LTS</div>
+<div class="border-l border-outline-variant pl-6 flex items-center gap-2">
+<span class="material-symbols-outlined !text-[12px]">schedule</span>
+            10/24/2023 10:15:32 AM
+        </div>
+</div>
+</footer>
+</body></html>

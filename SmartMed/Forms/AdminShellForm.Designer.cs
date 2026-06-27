@@ -35,7 +35,7 @@ namespace SmartMed.UI
             this.panelTop.Controls.Add(this.lblTopSubtitle);
             this.panelTop.Controls.Add(this.lblTopBrand);
             this.panelTop.Dock = System.Windows.Forms.DockStyle.Top;
-            this.panelTop.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(24)))), ((int)(((byte)(24)))), ((int)(((byte)(24)))));
+            this.panelTop.BackColor = System.Drawing.Color.White;
             this.panelTop.Location = new System.Drawing.Point(0, 0);
             this.panelTop.Name = "panelTop";
             this.panelTop.Size = new System.Drawing.Size(1184, 56);
@@ -44,9 +44,9 @@ namespace SmartMed.UI
             // lblTopBrand
             // 
             this.lblTopBrand.AutoSize = true;
-            this.lblTopBrand.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(24)))), ((int)(((byte)(24)))), ((int)(((byte)(24)))));
+            this.lblTopBrand.BackColor = System.Drawing.Color.White;
             this.lblTopBrand.Font = new System.Drawing.Font("Roboto", 9F, System.Drawing.FontStyle.Bold);
-            this.lblTopBrand.ForeColor = System.Drawing.Color.White;
+            this.lblTopBrand.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(22)))), ((int)(((byte)(29)))), ((int)(((byte)(29)))));
             this.lblTopBrand.Location = new System.Drawing.Point(16, 10);
             this.lblTopBrand.Name = "lblTopBrand";
             this.lblTopBrand.Size = new System.Drawing.Size(74, 20);
@@ -56,13 +56,13 @@ namespace SmartMed.UI
             // lblTopSubtitle
             // 
             this.lblTopSubtitle.AutoSize = true;
-            this.lblTopSubtitle.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(24)))), ((int)(((byte)(24)))), ((int)(((byte)(24)))));
-            this.lblTopSubtitle.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(190)))), ((int)(((byte)(190)))), ((int)(((byte)(190)))));
+            this.lblTopSubtitle.BackColor = System.Drawing.Color.White;
+            this.lblTopSubtitle.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(65)))), ((int)(((byte)(72)))), ((int)(((byte)(71)))));
             this.lblTopSubtitle.Location = new System.Drawing.Point(16, 34);
             this.lblTopSubtitle.Name = "lblTopSubtitle";
             this.lblTopSubtitle.Size = new System.Drawing.Size(104, 15);
             this.lblTopSubtitle.TabIndex = 1;
-            this.lblTopSubtitle.Text = "Admin Dashboard";
+            this.lblTopSubtitle.Text = "Operational Dashboard";
             // 
             // btnClose
             // 
@@ -158,6 +158,7 @@ namespace SmartMed.UI
             this.panelContent.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panelContent.Location = new System.Drawing.Point(280, 56);
             this.panelContent.Name = "panelContent";
+            this.panelContent.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(244)))), ((int)(((byte)(251)))), ((int)(((byte)(250)))));
             this.panelContent.Padding = new System.Windows.Forms.Padding(28, 24, 28, 0);
             this.panelContent.Size = new System.Drawing.Size(904, 712);
             this.panelContent.TabIndex = 2;

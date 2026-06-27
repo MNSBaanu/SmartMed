@@ -31,11 +31,11 @@ namespace SmartMed.UI
             // 
             // panelTop
             // 
+            this.panelTop.BackColor = System.Drawing.Color.White;
             this.panelTop.Controls.Add(this.btnClose);
             this.panelTop.Controls.Add(this.lblTopSubtitle);
             this.panelTop.Controls.Add(this.lblTopBrand);
             this.panelTop.Dock = System.Windows.Forms.DockStyle.Top;
-            this.panelTop.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(24)))), ((int)(((byte)(24)))), ((int)(((byte)(24)))));
             this.panelTop.Location = new System.Drawing.Point(0, 0);
             this.panelTop.Name = "panelTop";
             this.panelTop.Size = new System.Drawing.Size(1184, 56);
@@ -44,20 +44,20 @@ namespace SmartMed.UI
             // lblTopBrand
             // 
             this.lblTopBrand.AutoSize = true;
-            this.lblTopBrand.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(24)))), ((int)(((byte)(24)))), ((int)(((byte)(24)))));
+            this.lblTopBrand.BackColor = System.Drawing.Color.White;
             this.lblTopBrand.Font = new System.Drawing.Font("Roboto", 9F, System.Drawing.FontStyle.Bold);
-            this.lblTopBrand.ForeColor = System.Drawing.Color.White;
+            this.lblTopBrand.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(22)))), ((int)(((byte)(29)))), ((int)(((byte)(29)))));
             this.lblTopBrand.Location = new System.Drawing.Point(16, 10);
             this.lblTopBrand.Name = "lblTopBrand";
             this.lblTopBrand.Size = new System.Drawing.Size(74, 20);
-            this.lblTopBrand.TabIndex = 0;
+            this.lblTopSubtitle.TabIndex = 0;
             this.lblTopBrand.Text = "SmartMed";
             // 
             // lblTopSubtitle
             // 
             this.lblTopSubtitle.AutoSize = true;
-            this.lblTopSubtitle.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(24)))), ((int)(((byte)(24)))), ((int)(((byte)(24)))));
-            this.lblTopSubtitle.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(190)))), ((int)(((byte)(190)))), ((int)(((byte)(190)))));
+            this.lblTopSubtitle.BackColor = System.Drawing.Color.White;
+            this.lblTopSubtitle.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(65)))), ((int)(((byte)(72)))), ((int)(((byte)(71)))));
             this.lblTopSubtitle.Location = new System.Drawing.Point(16, 34);
             this.lblTopSubtitle.Name = "lblTopSubtitle";
             this.lblTopSubtitle.Size = new System.Drawing.Size(108, 15);
@@ -72,11 +72,12 @@ namespace SmartMed.UI
             this.btnClose.Size = new System.Drawing.Size(36, 32);
             this.btnClose.TabIndex = 2;
             this.btnClose.Text = "X";
-            this.btnClose.UseVisualStyleBackColor = true;
+            this.btnClose.UseVisualStyleBackColor = false;
             this.btnClose.Click += new System.EventHandler(this.BtnClose_Click);
             // 
             // panelSidebar
             // 
+            this.panelSidebar.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(232)))), ((int)(((byte)(239)))), ((int)(((byte)(238)))));
             this.panelSidebar.Controls.Add(this.btnNavLogout);
             this.panelSidebar.Controls.Add(this.btnNavProfile);
             this.panelSidebar.Controls.Add(this.btnNavOrders);
@@ -86,15 +87,15 @@ namespace SmartMed.UI
             this.panelSidebar.Dock = System.Windows.Forms.DockStyle.Left;
             this.panelSidebar.Location = new System.Drawing.Point(0, 56);
             this.panelSidebar.Name = "panelSidebar";
-            this.panelSidebar.Padding = new System.Windows.Forms.Padding(0, 8, 0, 16);
-            this.panelSidebar.Size = new System.Drawing.Size(240, 712);
+            this.panelSidebar.Padding = new System.Windows.Forms.Padding(0);
+            this.panelSidebar.Size = new System.Drawing.Size(260, 712);
             this.panelSidebar.TabIndex = 1;
             // 
             // btnNavHome
             // 
-            this.btnNavHome.Location = new System.Drawing.Point(0, 8);
+            this.btnNavHome.Dock = System.Windows.Forms.DockStyle.Top;
             this.btnNavHome.Name = "btnNavHome";
-            this.btnNavHome.Size = new System.Drawing.Size(240, 40);
+            this.btnNavHome.Size = new System.Drawing.Size(260, 44);
             this.btnNavHome.TabIndex = 0;
             this.btnNavHome.Text = "Home";
             this.btnNavHome.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -103,20 +104,20 @@ namespace SmartMed.UI
             // 
             // btnNavBrowse
             // 
-            this.btnNavBrowse.Location = new System.Drawing.Point(0, 50);
+            this.btnNavBrowse.Dock = System.Windows.Forms.DockStyle.Top;
             this.btnNavBrowse.Name = "btnNavBrowse";
-            this.btnNavBrowse.Size = new System.Drawing.Size(240, 40);
+            this.btnNavBrowse.Size = new System.Drawing.Size(260, 44);
             this.btnNavBrowse.TabIndex = 1;
-            this.btnNavBrowse.Text = "Browse Medicines";
+            this.btnNavBrowse.Text = "Browse";
             this.btnNavBrowse.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.btnNavBrowse.UseVisualStyleBackColor = false;
             this.btnNavBrowse.Click += new System.EventHandler(this.BtnNavBrowse_Click);
             // 
             // btnNavCart
             // 
-            this.btnNavCart.Location = new System.Drawing.Point(0, 92);
+            this.btnNavCart.Dock = System.Windows.Forms.DockStyle.Top;
             this.btnNavCart.Name = "btnNavCart";
-            this.btnNavCart.Size = new System.Drawing.Size(240, 40);
+            this.btnNavCart.Size = new System.Drawing.Size(260, 44);
             this.btnNavCart.TabIndex = 2;
             this.btnNavCart.Text = "My Cart";
             this.btnNavCart.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -125,9 +126,9 @@ namespace SmartMed.UI
             // 
             // btnNavOrders
             // 
-            this.btnNavOrders.Location = new System.Drawing.Point(0, 134);
+            this.btnNavOrders.Dock = System.Windows.Forms.DockStyle.Top;
             this.btnNavOrders.Name = "btnNavOrders";
-            this.btnNavOrders.Size = new System.Drawing.Size(240, 40);
+            this.btnNavOrders.Size = new System.Drawing.Size(260, 44);
             this.btnNavOrders.TabIndex = 3;
             this.btnNavOrders.Text = "My Orders";
             this.btnNavOrders.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -136,9 +137,9 @@ namespace SmartMed.UI
             // 
             // btnNavProfile
             // 
-            this.btnNavProfile.Location = new System.Drawing.Point(0, 176);
+            this.btnNavProfile.Dock = System.Windows.Forms.DockStyle.Top;
             this.btnNavProfile.Name = "btnNavProfile";
-            this.btnNavProfile.Size = new System.Drawing.Size(240, 40);
+            this.btnNavProfile.Size = new System.Drawing.Size(260, 44);
             this.btnNavProfile.TabIndex = 4;
             this.btnNavProfile.Text = "My Profile";
             this.btnNavProfile.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -147,12 +148,11 @@ namespace SmartMed.UI
             // 
             // btnNavLogout
             // 
-            this.btnNavLogout.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.btnNavLogout.Location = new System.Drawing.Point(0, 656);
+            this.btnNavLogout.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.btnNavLogout.Name = "btnNavLogout";
-            this.btnNavLogout.Size = new System.Drawing.Size(240, 40);
+            this.btnNavLogout.Size = new System.Drawing.Size(260, 44);
             this.btnNavLogout.TabIndex = 5;
-            this.btnNavLogout.Text = "Logout";
+            this.btnNavLogout.Text = "Sign Out";
             this.btnNavLogout.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.btnNavLogout.UseVisualStyleBackColor = false;
             this.btnNavLogout.Click += new System.EventHandler(this.BtnNavLogout_Click);
@@ -160,17 +160,19 @@ namespace SmartMed.UI
             // panelContent
             // 
             this.panelContent.AutoScroll = true;
+            this.panelContent.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(244)))), ((int)(((byte)(251)))), ((int)(((byte)(250)))));
             this.panelContent.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panelContent.Location = new System.Drawing.Point(240, 56);
+            this.panelContent.Location = new System.Drawing.Point(260, 56);
             this.panelContent.Name = "panelContent";
-            this.panelContent.Padding = new System.Windows.Forms.Padding(32, 24, 32, 24);
-            this.panelContent.Size = new System.Drawing.Size(944, 712);
+            this.panelContent.Padding = new System.Windows.Forms.Padding(28, 24, 28, 0);
+            this.panelContent.Size = new System.Drawing.Size(924, 712);
             this.panelContent.TabIndex = 2;
             // 
             // CustomerShellForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(244)))), ((int)(((byte)(251)))), ((int)(((byte)(250)))));
             this.ClientSize = new System.Drawing.Size(1184, 768);
             this.Controls.Add(this.panelContent);
             this.Controls.Add(this.panelSidebar);

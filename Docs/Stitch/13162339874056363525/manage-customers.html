@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>SmartMed | Customer Management</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&amp;family=Hanken+Grotesk:wght@600;700&amp;family=JetBrains+Mono:wght@500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 20;
+            vertical-align: middle;
+            font-size: 18px;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #d4dbdb;
+            user-select: none;
+        }
+        /* Theme Overrides for WinForms elements */
+        .datagrid-header {
+            background-color: #e2e9ea;
+            border-bottom: 1px solid #717878;
+        }
+        .datagrid-row:nth-child(even) {
+            background-color: #f4fbfb;
+        }
+        .datagrid-row:hover {
+            background-color: #aff0d8;
+        }
+        .datagrid-cell {
+            border-right: 1px solid #c1c8c7;
+            border-bottom: 1px solid #c1c8c7;
+        }
+        /* WinForms Button Style - Themed */
+        .win-btn {
+            background: #ffffff;
+            border: 1px solid #717878;
+            color: #161d1d;
+        }
+        .win-btn:hover {
+            background: #eef5f5;
+            border-color: #456464;
+        }
+        .win-btn:active {
+            background: #e2e9ea;
+        }
+        .win-btn-primary {
+            background: #001819;
+            border: 1px solid #000000;
+            color: #ffffff;
+        }
+        .win-btn-primary:hover {
+            background: #0d2e2e;
+        }
+        .win-btn-action {
+            background: #07513f;
+            border: 1px solid #002118;
+            color: #ffffff;
+        }
+        .win-btn-action:hover {
+            background: #296956;
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-dim": "#d4dbdb",
+                        "on-secondary-fixed-variant": "#07513f",
+                        "on-tertiary-fixed-variant": "#703536",
+                        "inverse-primary": "#accdcc",
+                        "on-secondary": "#ffffff",
+                        "inverse-surface": "#2b3232",
+                        "on-primary-container": "#769696",
+                        "on-secondary-container": "#306f5c",
+                        "secondary": "#296956",
+                        "background": "#f4fbfb",
+                        "secondary-fixed-dim": "#94d3bd",
+                        "on-primary": "#ffffff",
+                        "on-background": "#161d1d",
+                        "tertiary-fixed": "#ffdad9",
+                        "surface-container-high": "#e2e9ea",
+                        "on-error": "#ffffff",
+                        "surface": "#f4fbfb",
+                        "surface-variant": "#dde4e4",
+                        "on-primary-fixed": "#002020",
+                        "primary": "#001819",
+                        "primary-fixed-dim": "#accdcc",
+                        "surface-container-lowest": "#ffffff",
+                        "surface-bright": "#f4fbfb",
+                        "primary-container": "#0d2e2e",
+                        "tertiary": "#300408",
+                        "surface-container-low": "#eef5f5",
+                        "on-tertiary-container": "#c67c7c",
+                        "on-tertiary-fixed": "#390a0e",
+                        "surface-tint": "#456464",
+                        "primary-fixed": "#c7e9e8",
+                        "tertiary-fixed-dim": "#ffb3b3",
+                        "on-error-container": "#93000a",
+                        "outline-variant": "#c1c8c7",
+                        "secondary-fixed": "#aff0d8",
+                        "on-surface": "#161d1d",
+                        "on-surface-variant": "#414848",
+                        "on-secondary-fixed": "#002118",
+                        "tertiary-container": "#4b181b",
+                        "on-primary-fixed-variant": "#2d4c4c",
+                        "surface-container-highest": "#dde4e4",
+                        "secondary-container": "#aff0d8",
+                        "on-tertiary": "#ffffff",
+                        "error-container": "#ffdad6",
+                        "outline": "#717878",
+                        "inverse-on-surface": "#ebf2f2",
+                        "error": "#ba1a1a",
+                        "surface-container": "#e8efef"
+                    },
+                    "fontFamily": {
+                        "body-md": ["Inter"],
+                        "headline-md": ["Hanken Grotesk"],
+                        "display-lg": ["Hanken Grotesk"]
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="h-screen flex items-center justify-center p-4">
+<!-- WINFORMS WINDOW WRAPPER -->
+<div class="w-full h-full max-w-6xl max-h-[800px] flex flex-col bg-surface border border-outline shadow-2xl rounded-sm overflow-hidden">
+<!-- TITLE BAR -->
+<div class="h-8 flex justify-between items-center bg-surface-container-high px-2 border-b border-outline-variant">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-on-secondary-fixed-variant scale-90" data-icon="medical_services">medical_services</span>
+<span class="text-xs font-semibold text-on-surface font-headline-md">SmartMed - Manage Customers</span>
+</div>
+<div class="flex h-full">
+<button class="w-10 h-full flex items-center justify-center hover:bg-surface-variant transition-colors">
+<span class="material-symbols-outlined text-sm" style="font-size: 16px;">minimize</span>
+</button>
+<button class="w-10 h-full flex items-center justify-center hover:bg-surface-variant transition-colors">
+<span class="material-symbols-outlined text-sm" style="font-size: 16px;">check_box_outline_blank</span>
+</button>
+<button class="w-12 h-full flex items-center justify-center hover:bg-error hover:text-on-error transition-colors">
+<span class="material-symbols-outlined text-sm" style="font-size: 16px;">close</span>
+</button>
+</div>
+</div>
+<!-- MENU BAR -->
+<div class="h-6 flex items-center px-2 bg-surface text-[11px] text-on-surface-variant gap-4 border-b border-surface-container">
+<span class="hover:bg-secondary-container px-2 cursor-default">File</span>
+<span class="hover:bg-secondary-container px-2 cursor-default">Edit</span>
+<span class="hover:bg-secondary-container px-2 cursor-default">View</span>
+<span class="hover:bg-secondary-container px-2 cursor-default">Tools</span>
+<span class="hover:bg-secondary-container px-2 cursor-default">Help</span>
+</div>
+<div class="flex-1 flex overflow-hidden">
+<!-- SIDEBAR NAVIGATION -->
+<aside class="w-48 bg-primary-container border-r border-outline flex flex-col" style="background-color: #f4fbfb;">
+<div class="flex-1 overflow-y-auto py-2">
+<div class="px-3 mb-2">
+<span class="text-[10px] font-bold uppercase tracking-wider text-on-secondary-fixed-variant">Navigation</span>
+</div>
+<nav class="space-y-0.5">
+<a class="flex items-center gap-2 px-4 py-1.5 text-xs transition-colors text-on-secondary-fixed-variant hover:bg-secondary-container" href="#">
+<span class="material-symbols-outlined" style="font-size:16px;">dashboard</span>
+                            Dashboard
+                        </a>
+<a class="flex items-center gap-2 px-4 py-1.5 text-xs transition-colors text-on-secondary-fixed-variant hover:bg-secondary-container" href="#">
+<span class="material-symbols-outlined" style="font-size:16px;">inventory_2</span>
+                            Inventory
+                        </a>
+<a class="flex items-center gap-2 px-4 py-1.5 text-xs bg-secondary text-on-secondary" href="#">
+<span class="material-symbols-outlined" style="font-size:16px;">group</span>
+                            Customers
+                        </a>
+<a class="flex items-center gap-2 px-4 py-1.5 text-xs transition-colors text-on-secondary-fixed-variant hover:bg-secondary-container" href="#">
+<span class="material-symbols-outlined" style="font-size:16px;">receipt_long</span>
+                            Orders
+                        </a>
+<a class="flex items-center gap-2 px-4 py-1.5 text-xs transition-colors text-on-secondary-fixed-variant hover:bg-secondary-container" href="#">
+<span class="material-symbols-outlined" style="font-size:16px;">bar_chart</span>
+                            Reports
+                        </a>
+<div class="border-t border-outline-variant my-2 mx-2"></div>
+<a class="flex items-center gap-2 px-4 py-1.5 text-xs transition-colors text-on-secondary-fixed-variant hover:bg-secondary-container" href="#">
+<span class="material-symbols-outlined" style="font-size:16px;">settings</span>
+                            Settings
+                        </a>
+</nav>
+</div>
+<!-- User Profile Info -->
+<div class="p-3 bg-primary-container border-t border-on-primary-fixed-variant" style="background-color: #eef5f5;">
+<div class="flex items-center gap-2">
+<div class="w-8 h-8 rounded border border-on-primary-fixed-variant bg-surface overflow-hidden">
+<img alt="User" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAxj90W_AljDDwomm9cC3Lgt-jZP3xonZU-HS7SkbEXwynSXWc-SeAFkK-9tc1joMKQwWS0hx1P9Gx5xydVMvNVFn14v0bU2PZcWmCYlgCRnlA0FtgmOvgVgXxRe9bFWjaQ5JJEh8_aN2ZOLPbhqV55naqzeieRrR1niUUbuVDp2XlhUvmKTM3WrLgs-BiR_WVNFmg6MO6qHKwE9nP-7x9QBQJKz84XRUGXFU7IEzQo7q8GPodQW2ZYRDFHEmMWUx2-ciLiaOZMXJri"/>
+</div>
+<div class="overflow-hidden">
+<p class="text-[10px] font-bold truncate text-on-secondary-fixed-variant">Dr. Sarah Chen</p>
+<p class="text-[9px] text-on-surface-variant">Admin</p>
+</div>
+</div>
+</div>
+</aside>
+<!-- MAIN CONTENT AREA -->
+<main class="flex-1 flex flex-col bg-surface-container-low overflow-hidden p-3 gap-3" style="background-color: rgb(238, 245, 244);">
+<!-- TOOLBAR AREA -->
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2">
+<button class="win-btn-action px-4 py-1 text-xs flex items-center gap-1 rounded-sm shadow-sm" style="background-color: rgb(53, 103, 94); border-color: rgb(0, 32, 28);">
+<span class="material-symbols-outlined" style="font-size:14px;">add</span>
+                            Add New Customer
+                        </button>
+<button class="win-btn px-4 py-1 text-xs flex items-center gap-1 rounded-sm shadow-sm">
+<span class="material-symbols-outlined" style="font-size:14px;">edit</span>
+                            Edit
+                        </button>
+<button class="win-btn px-4 py-1 text-xs flex items-center gap-1 rounded-sm shadow-sm">
+<span class="material-symbols-outlined" style="font-size:14px;">delete</span>
+                            Remove
+                        </button>
+<div class="h-6 w-px bg-outline-variant mx-1"></div>
+<button class="win-btn px-4 py-1 text-xs flex items-center gap-1 rounded-sm shadow-sm">
+<span class="material-symbols-outlined" style="font-size:14px;">refresh</span>
+                            Reload
+                        </button>
+</div>
+<div class="flex items-center gap-2">
+<label class="text-[11px] text-on-surface-variant font-medium">Search:</label>
+<input class="border border-outline px-2 py-0.5 text-xs w-48 focus:ring-1 focus:ring-secondary focus:border-secondary outline-none bg-white" placeholder="Enter patient name..." type="text"/>
+</div>
+</div>
+<!-- DATA GRID VIEW -->
+<div class="flex-1 border border-outline overflow-hidden flex flex-col bg-white">
+<!-- Column Headers -->
+<div class="datagrid-header flex text-[11px] font-semibold text-on-surface">
+<div class="datagrid-cell w-24 px-2 py-2 flex items-center">ID</div>
+<div class="datagrid-cell flex-1 px-2 py-2 flex items-center">Name</div>
+<div class="datagrid-cell flex-1 px-2 py-2 flex items-center">Contact Info</div>
+<div class="datagrid-cell w-32 px-2 py-2 flex items-center">Last Order</div>
+<div class="datagrid-cell w-24 px-2 py-2 flex items-center justify-center text-center">Orders</div>
+<div class="datagrid-cell w-28 px-2 py-2 flex items-center">Status</div>
+</div>
+<!-- Grid Body -->
+<div class="flex-1 overflow-y-auto text-[11px] text-on-surface">
+<!-- Row 1 -->
+<div class="datagrid-row flex">
+<div class="datagrid-cell w-24 px-2 py-2.5">#SM-10482</div>
+<div class="datagrid-cell flex-1 px-2 py-2.5 font-semibold">Jameson Miller</div>
+<div class="datagrid-cell flex-1 px-2 py-2.5 text-on-surface-variant">j.miller@email.com / +1-555-234-8901</div>
+<div class="datagrid-cell w-32 px-2 py-2.5">2024-10-24</div>
+<div class="datagrid-cell w-24 px-2 py-2.5 text-center">24</div>
+<div class="datagrid-cell w-28 px-2 py-2.5">
+<span class="bg-secondary-container text-on-secondary-container border border-secondary px-1.5 py-0.5 rounded-sm text-[10px] font-semibold">ACTIVE</span>
+</div>
+</div>
+<!-- Row 2 -->
+<div class="datagrid-row flex">
+<div class="datagrid-cell w-24 px-2 py-2.5">#SM-10399</div>
+<div class="datagrid-cell flex-1 px-2 py-2.5 font-semibold">Alice Wentworth</div>
+<div class="datagrid-cell flex-1 px-2 py-2.5 text-on-surface-variant">alice.w@provider.net</div>
+<div class="datagrid-cell w-32 px-2 py-2.5">2024-10-22</div>
+<div class="datagrid-cell w-24 px-2 py-2.5 text-center">8</div>
+<div class="datagrid-cell w-28 px-2 py-2.5">
+<span class="bg-secondary-container text-on-secondary-container border border-secondary px-1.5 py-0.5 rounded-sm text-[10px] font-semibold">ACTIVE</span>
+</div>
+</div>
+<!-- Row 3 -->
+<div class="datagrid-row flex">
+<div class="datagrid-cell w-24 px-2 py-2.5">#SM-09821</div>
+<div class="datagrid-cell flex-1 px-2 py-2.5 font-semibold">Robert Kincaid</div>
+<div class="datagrid-cell flex-1 px-2 py-2.5 text-on-surface-variant">rob.k@cloud.com</div>
+<div class="datagrid-cell w-32 px-2 py-2.5">2024-08-12</div>
+<div class="datagrid-cell w-24 px-2 py-2.5 text-center">3</div>
+<div class="datagrid-cell w-28 px-2 py-2.5">
+<span class="bg-surface-variant text-on-surface-variant border border-outline px-1.5 py-0.5 rounded-sm text-[10px] font-semibold">INACTIVE</span>
+</div>
+</div>
+<!-- Row 4 -->
+<div class="datagrid-row flex">
+<div class="datagrid-cell w-24 px-2 py-2.5">#SM-10499</div>
+<div class="datagrid-cell flex-1 px-2 py-2.5 font-semibold">Linda Davenport</div>
+<div class="datagrid-cell flex-1 px-2 py-2.5 text-on-surface-variant">linda.d@mail.com</div>
+<div class="datagrid-cell w-32 px-2 py-2.5">2024-10-25</div>
+<div class="datagrid-cell w-24 px-2 py-2.5 text-center">15</div>
+<div class="datagrid-cell w-28 px-2 py-2.5">
+<span class="bg-secondary-container text-on-secondary-container border border-secondary px-1.5 py-0.5 rounded-sm text-[10px] font-semibold">ACTIVE</span>
+</div>
+</div>
+<!-- Row 5 -->
+<div class="datagrid-row flex">
+<div class="datagrid-cell w-24 px-2 py-2.5">#SM-10512</div>
+<div class="datagrid-cell flex-1 px-2 py-2.5 font-semibold">Thomas Henderson</div>
+<div class="datagrid-cell flex-1 px-2 py-2.5 text-on-surface-variant">t.henderson@clinical.org</div>
+<div class="datagrid-cell w-32 px-2 py-2.5">2024-10-26</div>
+<div class="datagrid-cell w-24 px-2 py-2.5 text-center">42</div>
+<div class="datagrid-cell w-28 px-2 py-2.5">
+<span class="bg-secondary-container text-on-secondary-container border border-secondary px-1.5 py-0.5 rounded-sm text-[10px] font-semibold">ACTIVE</span>
+</div>
+</div>
+</div>
+</div>
+<!-- STATUS BAR AREA -->
+<div class="flex items-center justify-between text-[11px] text-on-surface-variant">
+<div class="flex gap-4">
+<span class="">Items: 1,240</span>
+<span class="">Selected: 0</span>
+</div>
+<div class="flex items-center gap-1">
+<button class="win-btn w-6 h-6 flex items-center justify-center rounded-sm"><span class="material-symbols-outlined text-sm">chevron_left</span></button>
+<span class="px-2 font-medium">Page 1 of 248</span>
+<button class="win-btn w-6 h-6 flex items-center justify-center rounded-sm"><span class="material-symbols-outlined text-sm">chevron_right</span></button>
+</div>
+</div>
+</main>
+</div>
+<!-- FOOTER / DIALOG BUTTONS -->
+<div class="h-12 bg-surface-container-low border-t border-outline flex items-center justify-end px-4 gap-2" style="background-color: rgb(238, 245, 244);">
+<button class="win-btn-primary px-8 py-1.5 text-xs rounded-sm shadow-sm" style="background-color: rgb(53, 103, 94); border-color: rgb(0, 32, 28);">OK</button>
+<button class="win-btn px-8 py-1.5 text-xs rounded-sm shadow-sm">Cancel</button>
+<button class="win-btn px-8 py-1.5 text-xs rounded-sm shadow-sm">Apply</button>
+</div>
+</div>
+</body></html>

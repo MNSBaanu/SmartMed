@@ -42,23 +42,47 @@ namespace SmartMed.UI
 
         private void BuildContent()
         {
+            ClinicalUi.PreparePagePanel(PagePanel);
             PagePanel.Controls.Clear();
-            var root = new Panel { Dock = DockStyle.Top, AutoSize = true, Width = GetScrollContentWidth() };
 
-            var actions = new FlowLayoutPanel { Dock = DockStyle.Top, AutoSize = true, Margin = new Padding(0, UiTheme.CustomerSectionGap, 0, 0) };
-            var btnRemove = new Button { Text = "Remove Selected", Width = 130, Height = 32, Margin = UiTheme.CustomerControlMargin };
+            var root = new Panel
+            {
+                Dock = DockStyle.Top,
+                AutoSize = true,
+                Width = GetScrollContentWidth(),
+                BackColor = UiTheme.AdminSurface
+            };
+
+            root.Controls.Add(ClinicalUi.CreatePageHeader("My Cart & Checkout",
+                "Review items, upload prescriptions, and place your order."));
+
+            var actions = new FlowLayoutPanel
+            {
+                Dock = DockStyle.Top,
+                AutoSize = true,
+                Margin = new Padding(0, UiTheme.CustomerSectionGap, 0, 0),
+                BackColor = UiTheme.AdminSurface
+            };
+            var btnRemove = ClinicalUi.CreateButton("Remove Selected", width: 130, height: 32);
             btnRemove.Click += BtnRemove_Click;
-            var btnClear = new Button { Text = "Clear Cart", Width = 100, Height = 32, Margin = UiTheme.CustomerControlMargin };
+            var btnClear = ClinicalUi.CreateButton("Clear Cart", width: 100, height: 32);
             btnClear.Click += (s, e) => { CartService.Clear(); RefreshCart(); };
-            var btnPlace = new Button { Text = "Place Order", Width = 120, Height = 32, Margin = UiTheme.CustomerControlMargin };
+            var btnPlace = ClinicalUi.CreateButton("Place Order", primary: true, width: 120, height: 32);
             btnPlace.Click += BtnPlace_Click;
             actions.Controls.Add(btnRemove);
             actions.Controls.Add(btnClear);
             actions.Controls.Add(btnPlace);
 
-            var rxRow = new FlowLayoutPanel { Dock = DockStyle.Top, AutoSize = true, Margin = UiTheme.CustomerSectionMargin };
+            var rxRow = new FlowLayoutPanel
+            {
+                Dock = DockStyle.Top,
+                AutoSize = true,
+                Margin = UiTheme.CustomerSectionMargin,
+                BackColor = UiTheme.AdminSurface
+            };
             txtPrescriptionPath = new TextBox { Width = 360, ReadOnly = true, Margin = UiTheme.CustomerControlMargin };
-            var btnBrowse = new Button { Text = "Upload Prescription", Width = 150, Height = 28, Margin = UiTheme.CustomerControlMargin };
+            UiTheme.StyleTextBox(txtPrescriptionPath);
+            var btnBrowse = ClinicalUi.CreateButton("Upload Prescription", width: 150, height: 32);
             btnBrowse.Click += BtnBrowse_Click;
             rxRow.Controls.Add(txtPrescriptionPath);
             rxRow.Controls.Add(btnBrowse);
@@ -67,25 +91,27 @@ namespace SmartMed.UI
             {
                 Dock = DockStyle.Top,
                 Height = 24,
-                ForeColor = Color.DarkRed,
+                ForeColor = UiTheme.Danger,
+                BackColor = UiTheme.AdminSurface,
                 Text = "Rx medicines require a prescription upload.",
                 Margin = UiTheme.CustomerSectionMargin
             };
 
-            lblTotal = new Label { Dock = DockStyle.Top, Height = 28, Font = UiTheme.UiFontBold, Margin = UiTheme.CustomerSectionMargin };
-
-            gridCart = new DataGridView
+            lblTotal = new Label
             {
                 Dock = DockStyle.Top,
-                Height = 260,
-                ReadOnly = true,
-                AllowUserToAddRows = false,
-                RowHeadersVisible = false,
-                AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill,
+                Height = 28,
+                Font = UiTheme.UiFontBold,
+                ForeColor = UiTheme.AdminOnSurface,
+                BackColor = UiTheme.AdminSurface,
                 Margin = UiTheme.CustomerSectionMargin
             };
 
-            // Dock.Top: last added appears at the top — add bottom sections first.
+            gridCart = ClinicalUi.CreateGrid();
+            gridCart.Dock = DockStyle.Top;
+            gridCart.Height = 260;
+            gridCart.Margin = UiTheme.CustomerSectionMargin;
+
             root.Controls.Add(rxRow);
             root.Controls.Add(lblRxNote);
             root.Controls.Add(lblTotal);
@@ -98,7 +124,7 @@ namespace SmartMed.UI
         public void RefreshCart()
         {
             if (IsDesignHost() || gridCart == null) return;
-            gridCart.DataSource = CartService.Items.Select(l => new
+            ClinicalUi.BindGrid(gridCart, CartService.Items.Select(l => new
             {
                 l.MedicineID,
                 l.MedicineName,
@@ -110,7 +136,7 @@ namespace SmartMed.UI
                 Applied = l.OfferDisplay,
                 Subtotal = $"LKR {l.Subtotal:N2}",
                 Rx = l.RequiresPrescription ? "Yes" : "No"
-            }).ToList();
+            }).ToList());
             if (gridCart.Columns.Contains("MedicineID"))
                 gridCart.Columns["MedicineID"].Visible = false;
             if (gridCart.Columns.Contains("DiscountDisplay"))
@@ -168,7 +194,7 @@ namespace SmartMed.UI
 
         private void LoadDesignTimePreview()
         {
-            gridCart.DataSource = new[]
+            ClinicalUi.BindGrid(gridCart, new[]
             {
                 new
                 {
@@ -183,7 +209,7 @@ namespace SmartMed.UI
                     Subtotal = "LKR 11.00",
                     Rx = "No"
                 }
-            };
+            });
             lblTotal.Text = "Total: LKR 11.00 (2 items)";
         }
     }

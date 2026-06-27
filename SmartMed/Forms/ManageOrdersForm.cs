@@ -63,6 +63,7 @@ namespace SmartMed.UI
         private void BuildContent()
         {
             PagePanel.Controls.Clear();
+            ClinicalUi.StylePagePanel(PagePanel);
 
             _scrollRoot = new TableLayoutPanel
             {
@@ -91,60 +92,41 @@ namespace SmartMed.UI
 
         private Panel CreatePageHeader()
         {
-            var header = new Panel
-            {
-                Dock = DockStyle.Top,
-                Height = 44,
-                Padding = new Padding(0, 0, 0, 8),
-                Margin = new Padding(0, 0, 0, 16)
-            };
-            header.Paint += (s, e) =>
-            {
-                using (var pen = new Pen(SystemColors.ControlDark))
-                    e.Graphics.DrawLine(pen, 0, header.Height - 1, header.Width, header.Height - 1);
-            };
-
-            var titleBlock = new Panel { Dock = DockStyle.Left, Width = 520 };
-            titleBlock.Controls.Add(new Label
-            {
-                Text = "Review fulfillment queue, verify prescriptions, and update order status.",
-                Font = UiTheme.UiFont,
-                ForeColor = SystemColors.GrayText,
-                Dock = DockStyle.Fill
-            });
-
-            var actions = new FlowLayoutPanel
-            {
-                Dock = DockStyle.Right,
-                FlowDirection = FlowDirection.LeftToRight,
-                AutoSize = true,
-                WrapContents = false,
-                Padding = new Padding(0, 8, 0, 0)
-            };
-            actions.Controls.Add(new Label { Text = "Status:", AutoSize = true, Padding = new Padding(0, 8, 0, 0) });
-            cmbStatusFilter = new ComboBox
-            {
-                DropDownStyle = ComboBoxStyle.DropDownList,
-                Width = 150
-            };
-            cmbStatusFilter.Items.AddRange(new object[]
-            {
-                "All",
-                OrderService.StatusPending,
-                OrderService.StatusReadyForPickup,
-                OrderService.StatusDelivered
-            });
-            cmbStatusFilter.SelectedIndex = 0;
-            cmbStatusFilter.SelectedIndexChanged += (s, e) =>
-            {
-                _statusFilter = cmbStatusFilter.SelectedItem?.ToString() ?? "All";
-                if (!IsDesignHost()) ApplySearchFilter();
-            };
-            actions.Controls.Add(cmbStatusFilter);
-
-            header.Controls.Add(actions);
-            header.Controls.Add(titleBlock);
-            return header;
+            return ClinicalUi.CreatePageHeader(
+                "Manage Orders",
+                "Review fulfillment queue, verify prescriptions, and update order status.",
+                actions =>
+                {
+                    actions.Controls.Add(new Label
+                    {
+                        Text = "Status:",
+                        AutoSize = true,
+                        ForeColor = UiTheme.AdminMuted,
+                        Font = UiTheme.UiFont,
+                        Margin = new Padding(0, 8, 8, 0)
+                    });
+                    cmbStatusFilter = new ComboBox
+                    {
+                        DropDownStyle = ComboBoxStyle.DropDownList,
+                        Width = 150,
+                        Margin = new Padding(0, 0, 10, 0)
+                    };
+                    UiTheme.StyleComboBox(cmbStatusFilter);
+                    cmbStatusFilter.Items.AddRange(new object[]
+                    {
+                        "All",
+                        OrderService.StatusPending,
+                        OrderService.StatusReadyForPickup,
+                        OrderService.StatusDelivered
+                    });
+                    cmbStatusFilter.SelectedIndex = 0;
+                    cmbStatusFilter.SelectedIndexChanged += (s, e) =>
+                    {
+                        _statusFilter = cmbStatusFilter.SelectedItem?.ToString() ?? "All";
+                        if (!IsDesignHost()) ApplySearchFilter();
+                    };
+                    actions.Controls.Add(cmbStatusFilter);
+                });
         }
 
         private Panel CreateSearchPanel()
@@ -155,7 +137,7 @@ namespace SmartMed.UI
                 Height = 44,
                 Padding = new Padding(8, 8, 8, 4),
                 Margin = new Padding(0),
-                BackColor = Color.FromArgb(248, 248, 248)
+                BackColor = UiTheme.AdminSidebar
             };
 
             txtSearch = new TextBox { Width = 280 };
@@ -184,124 +166,57 @@ namespace SmartMed.UI
             return panel;
         }
 
-        private static Button CreateToolbarButton(string text)
+        private static DataGridView CreateGrid()
         {
-            var btn = new Button
+            var grid = new DataGridView
             {
-                Text = text,
-                Height = 32,
-                Width = 110,
-                Margin = new Padding(4, 0, 0, 0)
+                ReadOnly = true,
+                AllowUserToAddRows = false,
+                AllowUserToDeleteRows = false,
+                RowHeadersVisible = false,
+                SelectionMode = DataGridViewSelectionMode.FullRowSelect,
+                AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill,
+                MultiSelect = false,
+                ScrollBars = ScrollBars.Vertical
             };
-            return btn;
+            UiTheme.ApplyClinicalGrid(grid);
+            return grid;
         }
 
         private Panel CreateStatsRow()
         {
-            var wrap = new Panel
+            var statsRow = new TableLayoutPanel
             {
-                Dock = DockStyle.Fill,
-                Height = 88,
-                Margin = new Padding(0, 0, 0, 16)
+                Dock = DockStyle.Top,
+                Height = 108,
+                ColumnCount = 4,
+                RowCount = 1,
+                Margin = new Padding(0, 0, 0, 24)
             };
-
-            var row = new TableLayoutPanel { Dock = DockStyle.Fill, ColumnCount = 4, RowCount = 1 };
-            row.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 25f));
-            row.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 25f));
-            row.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 25f));
-            row.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 25f));
+            for (var i = 0; i < 4; i++)
+                statsRow.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 25f));
 
             lblTotalOrders = new Label();
             lblPendingOrders = new Label();
             lblDeliveredOrders = new Label();
             lblRegisteredCustomers = new Label();
 
-            row.Controls.Add(CreateStatTile("Total Orders", lblTotalOrders, UiTheme.GridHeaderText), 0, 0);
-            row.Controls.Add(CreateStatTile("Pending", lblPendingOrders, SystemColors.ControlText), 1, 0);
-            row.Controls.Add(CreateStatTile("Delivered", lblDeliveredOrders, Color.Green), 2, 0);
-            row.Controls.Add(CreateStatTile("Registered Customers", lblRegisteredCustomers, UiTheme.GridHeaderText), 3, 0);
-
-            wrap.Controls.Add(row);
-            return wrap;
-        }
-
-        private Panel CreateStatTile(string title, Label valueLabel, Color accent)
-        {
-            var card = new Panel
-            {
-                Dock = DockStyle.Fill,
-                BackColor = SystemColors.Window,
-                Padding = new Padding(16),
-                Margin = new Padding(0, 0, 8, 0)
-            };
-            card.Paint += (s, e) =>
-            {
-                var rect = card.ClientRectangle;
-                rect.Width -= 1;
-                rect.Height -= 1;
-                using (var pen = new Pen(SystemColors.ControlDark))
-                    e.Graphics.DrawRectangle(pen, rect);
-            };
-
-            valueLabel.Text = "0";
-            valueLabel.Font = UiTheme.UiFont;
-            valueLabel.ForeColor = accent;
-            valueLabel.Location = new Point(16, 36);
-            valueLabel.AutoSize = true;
-
-            card.Controls.Add(new Label
-            {
-                Text = title.ToUpperInvariant(),
-                Font = UiTheme.UiFont,
-                ForeColor = SystemColors.GrayText,
-                Location = new Point(16, 16),
-                AutoSize = true
-            });
-            card.Controls.Add(valueLabel);
-            return card;
+            statsRow.Controls.Add(ClinicalUi.CreateStatCard("Total Orders", lblTotalOrders, UiTheme.AdminTeal), 0, 0);
+            statsRow.Controls.Add(ClinicalUi.CreateStatCard("Pending", lblPendingOrders, Color.FromArgb(180, 83, 9)), 1, 0);
+            statsRow.Controls.Add(ClinicalUi.CreateStatCard("Delivered", lblDeliveredOrders, Color.FromArgb(16, 185, 129)), 2, 0);
+            statsRow.Controls.Add(ClinicalUi.CreateStatCard("Registered Customers", lblRegisteredCustomers, Color.FromArgb(59, 130, 246)), 3, 0);
+            return statsRow;
         }
 
         private Panel CreateOrdersGridPanel()
         {
-            var outer = new Panel
-            {
-                Dock = DockStyle.Fill,
-                BackColor = SystemColors.Window,
-                Padding = new Padding(1),
-                Margin = new Padding(0, 0, 0, 16)
-            };
-            outer.Paint += (s, e) =>
-            {
-                var rect = outer.ClientRectangle;
-                rect.Width -= 1;
-                rect.Height -= 1;
-                using (var pen = new Pen(SystemColors.ControlDark))
-                    e.Graphics.DrawRectangle(pen, rect);
-            };
-
-            var header = new Panel
-            {
-                Dock = DockStyle.Top,
-                Height = 40,
-                BackColor = SystemColors.Control,
-                Padding = new Padding(12, 10, 12, 8)
-            };
-            header.Controls.Add(new Label
-            {
-                Text = "Orders & Line Items",
-                Font = UiTheme.UiFont,
-                ForeColor = UiTheme.GridHeaderText,
-                Dock = DockStyle.Left,
-                AutoSize = true
-            });
-
             gridOrders = CreateGrid();
             gridOrders.SelectionChanged += GridOrders_SelectionChanged;
             gridOrders.CellDoubleClick += GridOrders_CellDoubleClick;
 
-            outer.Controls.Add(gridOrders);
+            var outer = ClinicalUi.CreateSectionPanel("Orders & Line Items", gridOrders);
+            outer.Margin = new Padding(0, 0, 0, 16);
             outer.Controls.Add(CreateSearchPanel());
-            outer.Controls.Add(header);
             return outer;
         }
 
@@ -311,7 +226,7 @@ namespace SmartMed.UI
             {
                 Dock = DockStyle.Top,
                 Height = 64,
-                BackColor = SystemColors.Window,
+                BackColor = Color.White,
                 Padding = new Padding(16, 12, 16, 12),
                 Margin = new Padding(0, 0, 0, 16)
             };
@@ -320,7 +235,7 @@ namespace SmartMed.UI
                 var rect = panel.ClientRectangle;
                 rect.Width -= 1;
                 rect.Height -= 1;
-                using (var pen = new Pen(SystemColors.ControlDark))
+                using (var pen = new Pen(UiTheme.AdminOutline))
                     e.Graphics.DrawRectangle(pen, rect);
             };
 
@@ -328,21 +243,20 @@ namespace SmartMed.UI
             {
                 Text = "Prescription verification: select an order.",
                 Font = UiTheme.UiFont,
-                ForeColor = UiTheme.GridHeaderText,
+                ForeColor = UiTheme.AdminOnSurface,
                 AutoSize = true,
                 Location = new Point(16, 20)
             };
 
-            btnViewPrescription = CreateToolbarButton("View Prescription");
-            btnViewPrescription.Width = 140;
+            btnViewPrescription = ClinicalUi.CreateWinButton("View Prescription", primary: false, width: 140);
             btnViewPrescription.Enabled = false;
             btnViewPrescription.Click += BtnViewPrescription_Click;
 
-            btnVerifyPrescription = CreateToolbarButton("Verify");
+            btnVerifyPrescription = ClinicalUi.CreateWinButton("Verify", primary: true, width: 88);
             btnVerifyPrescription.Enabled = false;
             btnVerifyPrescription.Click += BtnVerifyPrescription_Click;
 
-            btnRejectPrescription = CreateToolbarButton("Reject");
+            btnRejectPrescription = ClinicalUi.CreateWinButton("Reject", primary: false, width: 88);
             btnRejectPrescription.Enabled = false;
             btnRejectPrescription.Click += BtnRejectPrescription_Click;
 
@@ -368,7 +282,7 @@ namespace SmartMed.UI
             {
                 Dock = DockStyle.Top,
                 Height = 72,
-                BackColor = UiTheme.Primary,
+                BackColor = UiTheme.AdminTeal,
                 Padding = new Padding(16, 12, 16, 12),
                 Margin = new Padding(0, 0, 0, 16)
             };
@@ -435,27 +349,6 @@ namespace SmartMed.UI
             return panel;
         }
 
-        private static DataGridView CreateGrid()
-        {
-            var grid = new DataGridView
-            {
-                Dock = DockStyle.Fill,
-                ReadOnly = true,
-                AllowUserToAddRows = false,
-                AllowUserToDeleteRows = false,
-                RowHeadersVisible = false,
-                SelectionMode = DataGridViewSelectionMode.FullRowSelect,
-                AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill,
-                BackgroundColor = SystemColors.Window,
-                BorderStyle = BorderStyle.None,
-                EnableHeadersVisualStyles = false,
-                MultiSelect = false,
-                ScrollBars = ScrollBars.Vertical
-            };
-            UiTheme.ApplyGrid(grid);
-            return grid;
-        }
-
         private void LoadDesignTimePreview()
         {
             gridOrders.SelectionChanged -= GridOrders_SelectionChanged;
@@ -467,6 +360,7 @@ namespace SmartMed.UI
                 new { OrderID = 9419, OrderRef = "#ORD-9419", CustomerName = "Sarah Connor", OrderDate = "Oct 23, 2023", Status = OrderService.StatusDelivered, Total = "LKR 312.20", Prescription = "—", RxStatus = "—", MedicineName = "Atorvastatin 20mg", Rx = "No", Quantity = 1, UnitPrice = "LKR 312.20", Subtotal = "LKR 312.20" }
             };
             HideOrderIdColumn();
+            UiTheme.BeautifyGridHeaders(gridOrders);
             gridOrders.ClearSelection();
             gridOrders.SelectionChanged += GridOrders_SelectionChanged;
 
@@ -498,6 +392,7 @@ namespace SmartMed.UI
             UiTheme.SetGridDataSource(gridOrders, BuildOrderGridRows(all));
 
             HideOrderIdColumn();
+            UiTheme.BeautifyGridHeaders(gridOrders);
             UpdateStats(all);
             ClearSelection();
         }

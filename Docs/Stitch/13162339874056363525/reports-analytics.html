@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>SmartMed | Generate Reports (Clinical Pastel Edition)</title>
+<!-- Google Fonts: Inter & Hanken Grotesk -->
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Hanken+Grotesk:wght@600;700&amp;family=JetBrains+Mono:wght@500&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols Outlined -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "surface-dim": "#d4dbdb",
+                    "on-secondary-fixed-variant": "#07513f",
+                    "on-tertiary-fixed-variant": "#703536",
+                    "inverse-primary": "#accdcc",
+                    "on-secondary": "#ffffff",
+                    "inverse-surface": "#2b3232",
+                    "on-primary-container": "#769696",
+                    "on-secondary-container": "#306f5c",
+                    "secondary": "#296956",
+                    "background": "#f4fbfb",
+                    "secondary-fixed-dim": "#94d3bd",
+                    "on-primary": "#ffffff",
+                    "on-background": "#161d1d",
+                    "tertiary-fixed": "#ffdad9",
+                    "surface-container-high": "#e2e9ea",
+                    "on-error": "#ffffff",
+                    "surface": "#f4fbfb",
+                    "surface-variant": "#dde4e4",
+                    "on-primary-fixed": "#002020",
+                    "primary": "#001819",
+                    "primary-fixed-dim": "#accdcc",
+                    "surface-container-lowest": "#ffffff",
+                    "surface-bright": "#f4fbfb",
+                    "primary-container": "#0d2e2e",
+                    "tertiary": "#300408",
+                    "surface-container-low": "#eef5f5",
+                    "on-tertiary-container": "#c67c7c",
+                    "on-tertiary-fixed": "#390a0e",
+                    "surface-tint": "#456464",
+                    "primary-fixed": "#c7e9e8",
+                    "tertiary-fixed-dim": "#ffb3b3",
+                    "on-error-container": "#93000a",
+                    "outline-variant": "#c1c8c7",
+                    "secondary-fixed": "#aff0d8",
+                    "on-surface": "#161d1d",
+                    "on-surface-variant": "#414848",
+                    "on-secondary-fixed": "#002118",
+                    "tertiary-container": "#4b181b",
+                    "on-primary-fixed-variant": "#2d4c4c",
+                    "surface-container-highest": "#dde4e4",
+                    "secondary-container": "#aff0d8",
+                    "on-tertiary": "#ffffff",
+                    "error-container": "#ffdad6",
+                    "outline": "#717878",
+                    "inverse-on-surface": "#ebf2f2",
+                    "error": "#ba1a1a",
+                    "surface-container": "#e8efef"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0px",
+                    "lg": "2px",
+                    "xl": "4px",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "unit": "4px",
+                    "stack-sm": "8px",
+                    "stack-lg": "24px",
+                    "gutter": "24px",
+                    "sidebar-width": "200px",
+                    "stack-md": "16px",
+                    "container-padding": "12px"
+            },
+            "fontFamily": {
+                "body": ["Inter", "sans-serif"],
+                "display": ["Hanken Grotesk", "sans-serif"]
+            }
+          }
+        }
+      }
+    </script>
+<style>
+        body { font-family: 'Inter', 'Segoe UI', Tahoma, sans-serif; background-color: #f4fbfb; color: #161d1d; }
+        .winforms-border { border: 1px solid #717878; background-color: #ffffff; }
+        .winforms-button { 
+            border: 1px solid #717878; 
+            background: linear-gradient(180deg, #ffffff 0%, #eef5f5 100%); 
+            color: #161d1d;
+            transition: all 0.1s;
+        }
+        .winforms-button:hover { background: #aff0d8; border-color: #296956; }
+        .winforms-button:active { background: #94d3bd; border-color: #07513f; }
+        
+        .group-box {
+            border: 1px solid #c1c8c7;
+            margin-top: 10px;
+            padding: 12px;
+            position: relative;
+            background-color: #ffffff;
+        }
+        .group-box-label {
+            position: absolute;
+            top: -10px;
+            left: 10px;
+            background: #ffffff;
+            padding: 0 5px;
+            font-size: 11px;
+            color: #296956;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .chart-grid {
+            background-image: linear-gradient(#eef5f5 1px, transparent 1px), linear-gradient(90deg, #eef5f5 1px, transparent 1px);
+            background-size: 40px 40px;
+        }
+        
+        .title-bar {
+            background: linear-gradient(90deg, #ffffff 0%, #eef5f5 100%);
+            border-bottom: 1px solid #c1c8c7;
+        }
+
+        .winforms-sidebar {
+            background-color: #eef5f5;
+            border-right: 1px solid #c1c8c7;
+        }
+        .winforms-sidebar-item {
+            padding: 8px 16px;
+            font-size: 13px;
+            color: #414848;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .winforms-sidebar-item:hover { background-color: #aff0d8; color: #002118; }
+        .winforms-sidebar-item.active { background-color: #296956; color: #ffffff; border: 1px solid #07513f; margin: 0 4px; border-radius: 2px; }
+
+        .form-container {
+            border: 1px solid #717878;
+            box-shadow: 4px 4px 0px rgba(41, 105, 86, 0.1);
+        }
+    </style>
+</head>
+<body class="flex items-center justify-center min-h-screen p-4">
+<div class="form-container w-full max-w-[1280px] h-[850px] flex flex-col bg-white overflow-hidden">
+<!-- WinForms Title Bar -->
+<div class="title-bar h-8 flex items-center justify-between px-3 flex-shrink-0">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[16px] text-secondary">clinical_notes</span>
+<span class="text-xs font-bold text-on-surface-variant font-display">SmartMed Clinical Reports - v2.4.0</span>
+</div>
+<div class="flex h-full">
+<button class="w-10 h-full hover:bg-surface-variant flex items-center justify-center"><span class="material-symbols-outlined text-[14px]">remove</span></button>
+<button class="w-10 h-full hover:bg-surface-variant flex items-center justify-center"><span class="material-symbols-outlined text-[14px]">check_box_outline_blank</span></button>
+<button class="w-10 h-full hover:bg-error hover:text-on-error flex items-center justify-center"><span class="material-symbols-outlined text-[14px]">close</span></button>
+</div>
+</div>
+<!-- WinForms Menu Bar -->
+<div class="h-6 border-b border-outline-variant bg-surface-container-low flex items-center px-2 gap-4 text-[11px] text-on-surface-variant">
+<button class="hover:bg-secondary-container px-1">File</button>
+<button class="hover:bg-secondary-container px-1">Edit</button>
+<button class="hover:bg-secondary-container px-1">View</button>
+<button class="hover:bg-secondary-container px-1">Reports</button>
+<button class="hover:bg-secondary-container px-1">Tools</button>
+<button class="hover:bg-secondary-container px-1">Help</button>
+</div>
+<div class="flex flex-1 overflow-hidden">
+<!-- Sidebar Navigation -->
+<aside class="winforms-sidebar w-sidebar-width flex flex-col bg-surface-container-low"><div class="p-3 border-b border-outline-variant mb-2">
+<p class="text-[10px] font-bold text-on-surface-variant uppercase tracking-widest font-display">Navigation</p>
+</div>
+<nav class="flex-1 space-y-0.5">
+<a class="winforms-sidebar-item text-secondary" href="#"><span class="material-symbols-outlined text-[18px]">dashboard</span> Dashboard</a>
+<a class="winforms-sidebar-item text-secondary" href="#"><span class="material-symbols-outlined text-[18px]">inventory_2</span> Inventory</a>
+<a class="winforms-sidebar-item text-secondary" href="#"><span class="material-symbols-outlined text-[18px]">group</span> Patients</a>
+<a class="winforms-sidebar-item text-secondary" href="#"><span class="material-symbols-outlined text-[18px]">receipt_long</span> Orders</a>
+<a class="winforms-sidebar-item active font-semibold text-on-secondary" href="#"><span class="material-symbols-outlined text-[18px]">bar_chart</span> Reports</a>
+<a class="winforms-sidebar-item text-secondary" href="#"><span class="material-symbols-outlined text-[18px]">search</span> Search</a>
+</nav>
+<div class="mt-auto p-4 border-t border-outline-variant bg-surface-container-low">
+<div class="flex items-center gap-2">
+<div class="w-8 h-8 bg-secondary text-on-secondary flex items-center justify-center text-xs font-bold rounded-sm shadow-sm">AD</div>
+<div class="overflow-hidden">
+<p class="text-[11px] font-bold text-on-surface truncate">Admin User</p>
+<p class="text-[9px] text-on-surface-variant">Pharmacy Lead</p>
+</div>
+</div>
+</div></aside>
+<!-- Main Workspace -->
+<main class="flex-1 flex flex-col overflow-y-auto bg-background p-4">
+<!-- Toolbar -->
+<div class="flex items-center justify-between mb-4 pb-2 border-b border-outline-variant">
+<div>
+<h2 class="text-xl font-bold text-primary font-display leading-none">Generate Reports</h2>
+<p class="text-[11px] text-on-surface-variant mt-1">Real-time clinical insights and financial analytics engine.</p>
+</div>
+<div class="flex gap-2">
+<div class="flex items-center border border-outline-variant px-2 py-1 bg-white text-[11px] text-on-surface shadow-sm">
+<span class="material-symbols-outlined text-[14px] mr-1 text-secondary">calendar_today</span>
+<span class="">10/01/2024 - 10/31/2024</span>
+</div>
+<button class="winforms-button px-3 py-1 text-[11px] flex items-center gap-1 shadow-sm">
+<span class="material-symbols-outlined text-[14px]">filter_alt</span> Filters...
+                    </button>
+<button class="winforms-button px-3 py-1 text-[11px] flex items-center gap-1 shadow-sm">
+<span class="material-symbols-outlined text-[14px]">print</span> Print
+                    </button>
+</div>
+</div>
+<!-- Bento Layout using GroupBoxes -->
+<div class="grid grid-cols-12 gap-4 mb-4">
+<!-- Sales GroupBox -->
+<div class="col-span-8 group-box">
+<span class="group-box-label">Performance Analytics</span>
+<div class="flex justify-between items-center mb-4">
+<div class="flex gap-4">
+<div class="text-center px-4 border-r border-surface-variant">
+<p class="text-[10px] text-on-surface-variant uppercase font-medium">Revenue</p>
+<p class="text-lg font-bold text-primary font-display">$142,850.20</p>
+<p class="text-[9px] text-secondary font-bold text-on-secondary-container">▲ 12.4%</p>
+</div>
+<div class="text-center px-4 border-r border-surface-variant">
+<p class="text-[10px] text-on-surface-variant uppercase font-medium">Avg. Order</p>
+<p class="text-lg font-bold text-primary font-display">$84.30</p>
+<p class="text-[9px] text-secondary font-bold">▲ 3.1%</p>
+</div>
+<div class="text-center px-4">
+<p class="text-[10px] text-on-surface-variant uppercase font-medium">Fills</p>
+<p class="text-lg font-bold text-primary font-display">1,842</p>
+<p class="text-[9px] text-error font-bold">▼ 0.8%</p>
+</div>
+</div>
+<div class="flex gap-1">
+<button class="winforms-button p-1"><span class="material-symbols-outlined text-[16px]">picture_as_pdf</span></button>
+<button class="winforms-button p-1"><span class="material-symbols-outlined text-[16px]">table_chart</span></button>
+</div>
+</div>
+<!-- Modern Pastel Styled Chart -->
+<div class="h-[200px] border border-outline-variant chart-grid relative overflow-hidden bg-surface-container-lowest">
+<div class="absolute inset-0 flex items-end justify-between px-10 pb-4"><div class="w-8 bg-secondary-fixed-dim border border-secondary-container h-[60%]"></div><div class="w-8 bg-primary-fixed-dim border border-primary-container h-[75%]"></div><div class="w-8 bg-secondary border border-on-secondary-container h-[95%] shadow-md"></div><div class="w-8 bg-tertiary-fixed-dim border border-tertiary-fixed-variant h-[50%]"></div><div class="w-8 bg-secondary-fixed border border-secondary-container h-[65%]"></div><div class="w-8 bg-primary-fixed border border-primary-container h-[80%]"></div></div>
+<div class="absolute left-2 top-0 bottom-0 flex flex-col justify-between text-[9px] font-medium text-outline py-2">
+<span class="">$200k</span><span class="">$150k</span><span class="">$100k</span><span class="">$50k</span><span class="">$0</span>
+</div>
+</div>
+<div class="flex justify-between px-10 text-[10px] text-on-surface-variant mt-1 font-medium">
+<span class="">Week 1</span><span class="">Week 2</span><span class="">Week 3</span><span class="">Week 4</span><span class="">Week 5</span><span class="">Week 6</span>
+</div>
+</div>
+<!-- Inventory GroupBox -->
+<div class="col-span-4 group-box">
+<span class="group-box-label">Inventory Status</span>
+<div class="space-y-4">
+<div class="grid grid-cols-2 gap-2 text-[11px]">
+<div class="bg-secondary-container border border-secondary-fixed-dim p-2">
+<p class="text-on-secondary-container uppercase text-[9px] font-bold">Total Valuation</p>
+<p class="text-base font-bold text-on-secondary-fixed">$2.4M</p>
+</div>
+<div class="bg-surface-container border border-outline-variant p-2">
+<p class="text-on-surface-variant uppercase text-[9px] font-bold">Active SKUs</p>
+<p class="text-base font-bold text-on-surface">14,205</p>
+</div>
+</div>
+<div class="space-y-2">
+<p class="text-[10px] font-bold text-secondary uppercase border-b border-surface-variant pb-1">Critical Movement</p>
+<div class="flex items-center justify-between text-[11px] p-1 border border-transparent hover:border-secondary hover:bg-secondary-container cursor-pointer">
+<span class="truncate w-32">Amoxicillin 500mg</span>
+<span class="bg-secondary-fixed text-on-secondary-fixed border border-secondary-fixed-dim px-1 text-[9px] font-bold">IN STOCK</span>
+</div>
+<div class="flex items-center justify-between text-[11px] p-1 border border-transparent hover:border-secondary hover:bg-secondary-container cursor-pointer">
+<span class="truncate w-32">Lisinopril 10mg</span>
+<span class="bg-tertiary-fixed text-on-tertiary-fixed border border-tertiary-fixed-dim px-1 text-[9px] font-bold">LOW STOCK</span>
+</div>
+<div class="flex items-center justify-between text-[11px] p-1 border border-transparent hover:border-secondary hover:bg-secondary-container cursor-pointer">
+<span class="truncate w-32">Flu Vaccine (Quad)</span>
+<span class="bg-secondary-fixed text-on-secondary-fixed border border-secondary-fixed-dim px-1 text-[9px] font-bold">IN STOCK</span>
+</div>
+</div>
+<button class="winforms-button w-full py-1 text-[11px] font-medium">View Full Inventory Report</button>
+</div>
+</div>
+</div>
+<!-- Order History GroupBox -->
+<div class="group-box flex-1 flex flex-col min-h-0">
+<span class="group-box-label">Patient Order History (DataGrid)</span>
+<div class="flex justify-between mb-2">
+<div class="flex items-center gap-2">
+<input class="border border-outline-variant px-2 py-1 text-[11px] w-48 focus:outline-none focus:border-secondary bg-white" placeholder="Search orders..." type="text"/>
+<button class="winforms-button px-2 py-1 text-[11px]">Search</button>
+</div>
+<button class="winforms-button px-3 py-1 text-[11px] flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">download</span> Export CSV
+                    </button>
+</div>
+<div class="border border-outline-variant overflow-hidden flex flex-col flex-1 bg-white">
+<table class="w-full text-left text-[11px] border-collapse">
+<thead class="bg-surface-container-high border-b border-outline-variant text-on-surface">
+<tr>
+<th class="p-2 border-r border-outline-variant font-bold">Order ID</th>
+<th class="p-2 border-r border-outline-variant font-bold">Patient Name</th>
+<th class="p-2 border-r border-outline-variant font-bold">Items</th>
+<th class="p-2 border-r border-outline-variant font-bold">Date/Time</th>
+<th class="p-2 border-r border-outline-variant text-right font-bold">Total</th>
+<th class="p-2 font-bold">Status</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-outline-variant">
+<tr class="hover:bg-secondary-container cursor-default transition-colors">
+<td class="p-2 border-r border-outline-variant text-secondary font-bold">#ORD-90210</td>
+<td class="p-2 border-r border-outline-variant">Jonathan Smithers</td>
+<td class="p-2 border-r border-outline-variant">Lisinopril, Metformin (x2)</td>
+<td class="p-2 border-r border-outline-variant">10/24/24 14:30</td>
+<td class="p-2 border-r border-outline-variant text-right font-bold">$124.50</td>
+<td class="p-2"><span class="bg-surface-variant border border-outline px-2 text-[9px] font-bold">COMPLETED</span></td>
+</tr>
+<tr class="bg-secondary-container cursor-default border-y border-secondary-fixed-dim">
+<td class="p-2 border-r border-outline-variant text-secondary font-bold">#ORD-90211</td>
+<td class="p-2 border-r border-outline-variant">Maria Lopez</td>
+<td class="p-2 border-r border-outline-variant font-medium">Insulin Glargine, Syringes</td>
+<td class="p-2 border-r border-outline-variant">10/24/24 15:15</td>
+<td class="p-2 border-r border-outline-variant text-right font-bold">$342.00</td>
+<td class="p-2"><span class="bg-secondary text-on-secondary border border-on-secondary-container px-2 text-[9px] font-bold">PROCESSING</span></td>
+</tr>
+<tr class="hover:bg-secondary-container cursor-default transition-colors">
+<td class="p-2 border-r border-outline-variant text-secondary font-bold">#ORD-90212</td>
+<td class="p-2 border-r border-outline-variant">Robert H.</td>
+<td class="p-2 border-r border-outline-variant">Vitamins C, D3, Zinc</td>
+<td class="p-2 border-r border-outline-variant">10/24/24 16:45</td>
+<td class="p-2 border-r border-outline-variant text-right font-bold">$45.15</td>
+<td class="p-2"><span class="bg-surface-variant border border-outline px-2 text-[9px] font-bold">COMPLETED</span></td>
+</tr>
+</tbody>
+</table>
+<div class="mt-auto bg-surface-container-low border-t border-outline-variant p-1 flex justify-between items-center text-[10px] text-on-surface-variant">
+<span class="font-medium">Items: 3 total records</span>
+<div class="flex gap-1">
+<button class="winforms-button px-1"><span class="material-symbols-outlined text-[12px]">first_page</span></button>
+<button class="winforms-button px-1"><span class="material-symbols-outlined text-[12px]">chevron_left</span></button>
+<span class="px-2 font-mono">Page 1 of 42</span>
+<button class="winforms-button px-1"><span class="material-symbols-outlined text-[12px]">chevron_right</span></button>
+<button class="winforms-button px-1"><span class="material-symbols-outlined text-[12px]">last_page</span></button>
+</div>
+</div>
+</div>
+</div>
+</main>
+</div>
+<!-- WinForms Status Bar -->
+<div class="h-6 border-t border-outline-variant bg-surface-container-high flex items-center px-2 text-[10px] text-on-surface-variant gap-4 flex-shrink-0">
+<div class="flex items-center gap-1 border-r border-outline-variant pr-4">
+<div class="w-2 h-2 bg-secondary rounded-full animate-pulse"></div>
+<span class="font-medium">Connected to Clinical Database: PHARM_SVR_01</span>
+</div>
+<div class="border-r border-outline-variant pr-4">
+            Last Sync: 10/24/2024 17:02:44
+        </div>
+<div class="ml-auto font-medium">
+            Authorized User: Admin (Level 5)
+        </div>
+<div class="w-16 text-right border-l border-outline-variant pl-2 font-mono">
+            NUM
+        </div>
+</div>
+</div>
+</body></html>

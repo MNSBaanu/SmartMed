@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>My Cart | SmartMed - Form View</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Segoe+UI:wght@400;600;700&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+  tailwind.config = {
+    darkMode: "class",
+    theme: {
+      extend: {
+        "colors": {
+                "surface-dim": "#d4dbdb",
+                "on-secondary-fixed-variant": "#07513f",
+                "on-tertiary-fixed-variant": "#703536",
+                "inverse-primary": "#accdcc",
+                "on-secondary": "#ffffff",
+                "inverse-surface": "#2b3232",
+                "on-primary-container": "#769696",
+                "on-secondary-container": "#306f5c",
+                "secondary": "#296956",
+                "background": "#f4fbfb",
+                "secondary-fixed-dim": "#94d3bd",
+                "on-primary": "#ffffff",
+                "on-background": "#161d1d",
+                "tertiary-fixed": "#ffdad9",
+                "surface-container-high": "#e2e9ea",
+                "on-error": "#ffffff",
+                "surface": "#f4fbfb",
+                "surface-variant": "#dde4e4",
+                "on-primary-fixed": "#002020",
+                "primary": "#001819",
+                "primary-fixed-dim": "#accdcc",
+                "surface-container-lowest": "#ffffff",
+                "surface-bright": "#f4fbfb",
+                "primary-container": "#0d2e2e",
+                "tertiary": "#300408",
+                "surface-container-low": "#eef5f5",
+                "on-tertiary-container": "#c67c7c",
+                "on-tertiary-fixed": "#390a0e",
+                "surface-tint": "#456464",
+                "primary-fixed": "#c7e9e8",
+                "tertiary-fixed-dim": "#ffb3b3",
+                "on-error-container": "#93000a",
+                "outline-variant": "#c1c8c7",
+                "secondary-fixed": "#aff0d8",
+                "on-surface": "#161d1d",
+                "on-surface-variant": "#414848",
+                "on-secondary-fixed": "#002118",
+                "tertiary-container": "#4b181b",
+                "on-primary-fixed-variant": "#2d4c4c",
+                "surface-container-highest": "#dde4e4",
+                "secondary-container": "#aff0d8",
+                "on-tertiary": "#ffffff",
+                "error-container": "#ffdad6",
+                "outline": "#717878",
+                "inverse-on-surface": "#ebf2f2",
+                "error": "#ba1a1a",
+                "surface-container": "#e8efef"
+        },
+        "borderRadius": {
+                "DEFAULT": "0.25rem",
+                "lg": "0.5rem",
+                "xl": "0.75rem",
+                "full": "9999px"
+        },
+        "spacing": {
+                "container-padding": "32px",
+                "base": "8px",
+                "card-gap": "20px",
+                "gutter": "24px",
+                "sidebar-width": "260px"
+        },
+        "fontFamily": {
+                "body-md": [
+                        "Inter"
+                ],
+                "headline-md": [
+                        "Hanken Grotesk"
+                ],
+                "body-lg": [
+                        "Inter"
+                ],
+                "display-lg": [
+                        "Hanken Grotesk"
+                ],
+                "label-sm": [
+                        "JetBrains Mono"
+                ],
+                "display-lg-mobile": [
+                        "Hanken Grotesk"
+                ]
+        },
+        "fontSize": {
+                "body-md": [
+                        "16px",
+                        {
+                                "lineHeight": "24px",
+                                "fontWeight": "400"
+                        }
+                ],
+                "headline-md": [
+                        "24px",
+                        {
+                                "lineHeight": "32px",
+                                "fontWeight": "600"
+                        }
+                ],
+                "body-lg": [
+                        "18px",
+                        {
+                                "lineHeight": "28px",
+                                "fontWeight": "400"
+                        }
+                ],
+                "display-lg": [
+                        "32px",
+                        {
+                                "lineHeight": "40px",
+                                "letterSpacing": "-0.02em",
+                                "fontWeight": "700"
+                        }
+                ],
+                "label-sm": [
+                        "12px",
+                        {
+                                "lineHeight": "16px",
+                                "letterSpacing": "0.05em",
+                                "fontWeight": "500"
+                        }
+                ],
+                "display-lg-mobile": [
+                        "24px",
+                        {
+                                "lineHeight": "32px",
+                                "fontWeight": "700"
+                        }
+                ]
+        }
+    },
+    },
+  }
+</script>
+<style>
+        :root {
+            --win-bg: #f0f0f0;
+            --win-border: #999999;
+            --win-active-border: #0078d7;
+            --win-control-bg: #ffffff;
+            --win-hover: #e5e5e5;
+            --win-press: #cccccc;
+            --win-text: #000000;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 20;
+            display: inline-block;
+            line-height: 1;
+            font-size: 18px;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, sans-serif;
+            background-color: var(--win-bg);
+            color: var(--win-text);
+        }
+        /* WinForm Container Style */
+        .win-form {
+            background-color: var(--win-bg);
+            border: 1px solid var(--win-border);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .win-title-bar {
+            background: #ffffff;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 10px;
+            font-size: 12px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        .win-btn {
+            background-color: #e1e1e1;
+            border: 1px solid #adadad;
+            color: #333;
+            font-size: 12px;
+            padding: 4px 12px;
+            transition: all 0.1s;
+        }
+        .win-btn:hover {
+            background-color: #e5f1fb;
+            border-color: #0078d7;
+        }
+        .win-btn:active {
+            background-color: #cce4f7;
+            border-color: #005499;
+        }
+        .win-btn-primary {
+            background-color: #0d2e2e; /* primary-container from theme */
+            color: white;
+            border: 1px solid #001819;
+        }
+        .win-btn-primary:hover {
+            background-color: #296956; /* secondary from theme */
+            color: white;
+        }
+        /* GroupBox Style */
+        .win-group-box {
+            border: 1px solid #d0d0d0;
+            margin-top: 10px;
+            padding: 15px;
+            position: relative;
+        }
+        .win-group-box-label {
+            position: absolute;
+            top: -10px;
+            left: 10px;
+            background: inherit;
+            padding: 0 5px;
+            font-size: 12px;
+            font-weight: 600;
+            color: #444;
+        }
+        /* Panel Style for Items */
+        .win-panel {
+            background: #ffffff;
+            border: 1px solid #dcdcdc;
+            padding: 10px;
+            margin-bottom: 4px;
+        }
+        .win-panel:hover {
+            border-color: #0078d7;
+        }
+        .win-input {
+            border: 1px solid #adadad;
+            padding: 2px 8px;
+            font-size: 12px;
+        }
+        .win-input:focus {
+            border-color: #0078d7;
+            outline: none;
+            box-shadow: inset 0 0 0 1px #0078d7;
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 14px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #f0f0f0;
+            border-left: 1px solid #dcdcdc;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #cdcdcd;
+            border: 3px solid #f0f0f0;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: #a6a6a6;
+        }
+    </style>
+</head>
+<body class="p-lg flex items-center justify-center min-h-screen">
+<div class="win-form w-full max-w-6xl flex flex-col h-[90vh]">
+<!-- WinForm Title Bar -->
+<div class="win-title-bar">
+<div class="flex items-center gap-sm">
+<span class="material-symbols-outlined text-[16px] text-secondary">medical_services</span>
+<span class="font-semibold">SmartMed Clinical Management - My Cart</span>
+</div>
+<div class="flex items-center">
+<button class="w-10 h-[29px] hover:bg-gray-200 flex items-center justify-center">—</button>
+<button class="w-10 h-[29px] hover:bg-gray-200 flex items-center justify-center">▢</button>
+<button class="w-12 h-[29px] hover:bg-red-500 hover:text-white flex items-center justify-center">✕</button>
+</div>
+</div>
+<!-- WinForm Menu Bar -->
+<div class="bg-white border-b border-[#e0e0e0] px-sm py-1 flex gap-md text-[12px] text-gray-700">
+<button class="hover:bg-[#e5f1fb] px-2 rounded">File</button>
+<button class="hover:bg-[#e5f1fb] px-2 rounded">Inventory</button>
+<button class="hover:bg-[#e5f1fb] px-2 rounded">Patients</button>
+<button class="hover:bg-[#e5f1fb] px-2 rounded">Orders</button>
+<button class="hover:bg-[#e5f1fb] px-2 rounded">Help</button>
+</div>
+<!-- Main Content Area (Form Body) -->
+<div class="flex-1 overflow-hidden flex flex-col md:flex-row">
+<!-- Left Sidebar (Nav) -->
+<div class="w-[180px] bg-background border-r border-[#dcdcdc] p-sm hidden md:flex flex-col gap-1" style="background-color: #f0f0f0;">
+<div class="text-[11px] font-bold text-on-surface-variant px-2 py-1 uppercase mb-1 text-secondary">Navigation</div>
+<button class="text-left px-2 py-1.5 text-[12px] hover:bg-secondary-container flex items-center gap-2 text-on-surface text-secondary">
+<span class="material-symbols-outlined text-[18px]">dashboard</span> Dashboard
+            </button>
+<button class="text-left px-2 py-1.5 text-[12px] hover:bg-secondary-container flex items-center gap-2 text-on-surface text-secondary">
+<span class="material-symbols-outlined text-[18px]">inventory_2</span> Inventory
+            </button>
+<button class="text-left px-2 py-1.5 text-[12px] bg-secondary text-white flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px]">shopping_cart</span> Cart
+            </button>
+<button class="text-left px-2 py-1.5 text-[12px] hover:bg-secondary-container flex items-center gap-2 text-on-surface text-secondary">
+<span class="material-symbols-outlined text-[18px]">receipt_long</span> Orders
+            </button>
+<div class="mt-auto text-white">
+<button class="text-left w-full px-2 py-1.5 text-[12px] hover:bg-secondary-container flex items-center gap-2 text-on-surface text-secondary">
+<span class="material-symbols-outlined text-[18px]">settings</span> System Settings
+                </button>
+</div>
+</div>
+<!-- Form Workspace -->
+<div class="flex-1 bg-surface-container-lowest p-lg overflow-y-auto custom-scrollbar" style="background-color: rgb(244, 251, 250);">
+<div class="max-w-4xl mx-auto space-y-lg">
+<div class="flex justify-between items-end border-b border-secondary-fixed pb-sm">
+<div>
+<h1 class="text-[24px] font-normal text-on-background">Shopping Cart (Clinical)</h1>
+<p class="text-[12px] text-on-surface-variant">Transaction ID: TX-8829-01</p>
+</div>
+<div class="text-[12px] text-on-primary-container italic">3 active items in buffer</div>
+</div>
+<!-- Prescription Area GroupBox -->
+<div class="win-group-box bg-secondary-container/20" style="background-color: rgb(184, 237, 226);">
+<span class="win-group-box-label !bg-background">Prescription Verification</span>
+<div class="flex flex-col md:flex-row gap-lg items-center">
+<div class="w-16 h-16 bg-surface-dim flex items-center justify-center border border-outline-variant">
+<span class="material-symbols-outlined text-[32px] text-on-surface-variant">file_upload</span>
+</div>
+<div class="flex-1">
+<p class="text-[12px] font-bold mb-1 text-on-surface">Upload required clinical documentation</p>
+<p class="text-[11px] text-on-surface-variant">Standard file picker (PDF, JPG, PNG). Verification required for controlled substances.</p>
+</div>
+<div class="flex gap-sm">
+<button class="win-btn font-semibold !bg-secondary-fixed/50 hover:!bg-secondary-fixed">Browse...</button>
+<button class="win-btn">View History</button>
+</div>
+</div>
+</div>
+<!-- Items Container Panel -->
+<div class="space-y-1">
+<div class="text-[11px] font-bold text-on-surface-variant mb-1 px-1">ITEM LIST (PANEL_CONTAINER)</div>
+<!-- Item 1 Panel -->
+<div class="win-panel flex gap-md items-center !bg-surface-container-low border-secondary-fixed-dim/30" style="background-color: rgb(238, 245, 244);">
+<div class="w-16 h-16 bg-white border border-outline-variant flex-shrink-0">
+<img class="w-full h-full object-cover grayscale opacity-80" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCR_RFyjSieN4D5mtsmVybtTHLK7ty0bcK_YytHIHzA3h5_B1CujEOcUMmiwuTkQLBVVmvALsvj4e23BXe3KplrCbieWKbXNH7lhLDiFE5Byi2TB1fQbk4ppXVMF4Bp_K2VwkPOYi8yCyoD13cUaD28GZdTtE_s1xxBrpFWA5yzjBWLxm01QHxMCvGP1e3APC94gZcYEffPomfyM9uySHZ8UEN0G15glsrCYn_oJz8RX69KYG0iXLFPmAzKtbTgFP85c87-CwzgnD2P"/>
+</div>
+<div class="flex-1">
+<div class="text-[13px] font-bold text-on-surface">Amoxicillin 500mg</div>
+<div class="text-[11px] text-on-surface-variant uppercase tracking-tighter">PHARM-CLASS: ANTIBIOTIC • RX REQ</div>
+</div>
+<div class="flex items-center gap-md">
+<div class="flex flex-col items-end">
+<span class="text-[14px] font-semibold text-on-surface">$24.00</span>
+<div class="flex items-center gap-xs mt-1">
+<label class="text-[11px] text-on-surface-variant">Qty:</label>
+<input class="win-input w-12 text-center !bg-white" type="number" value="1"/>
+</div>
+</div>
+<button class="win-btn text-error p-1 hover:bg-error-container">
+<span class="material-symbols-outlined">delete</span>
+</button>
+</div>
+</div>
+<!-- Item 2 Panel -->
+<div class="win-panel flex gap-md items-center !bg-surface-container-low border-secondary-fixed-dim/30" style="background-color: rgb(238, 245, 244);">
+<div class="w-16 h-16 bg-white border border-outline-variant flex-shrink-0">
+<img class="w-full h-full object-cover grayscale opacity-80" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD9GcW0tOL5RyIc-2X9dTKCJPXR_CyqjHvJK8qIRGc73IXdBNwb0PoTus-lZlkf82TTccIC5V8E-2QR3U7zDSKwHDp6RjrPpIiJrEx2SiOeZzLYnt8akiMnCBtzpnNXvSekFevmQ0IEEwpD65cQcLe6aSo0xqRPnW5KJdcSb03belDSqXTGOrNU1tNNYkQg9zGpOPuW2CcVMqmlmMM3YM2vz4JoN6spfY_fyAeOvgr7C-EVBULjztNm0yJcpoz4ViJM39aMIJjbTCgM"/>
+</div>
+<div class="flex-1">
+<div class="text-[13px] font-bold text-on-surface">Lisinopril 10mg</div>
+<div class="text-[11px] text-on-surface-variant uppercase tracking-tighter">PHARM-CLASS: ACE INHIBITOR • REFILL_OK</div>
+</div>
+<div class="flex items-center gap-md">
+<div class="flex flex-col items-end">
+<span class="text-[14px] font-semibold text-on-surface">$12.50</span>
+<div class="flex items-center gap-xs mt-1">
+<label class="text-[11px] text-on-surface-variant">Qty:</label>
+<input class="win-input w-12 text-center !bg-white" type="number" value="1"/>
+</div>
+</div>
+<button class="win-btn text-error p-1 hover:bg-error-container">
+<span class="material-symbols-outlined">delete</span>
+</button>
+</div>
+</div>
+<!-- Item 3 Panel -->
+<div class="win-panel flex gap-md items-center !bg-surface-container-low border-secondary-fixed-dim/30" style="background-color: rgb(238, 245, 244);">
+<div class="w-16 h-16 bg-white border border-outline-variant flex-shrink-0">
+<img class="w-full h-full object-cover grayscale opacity-80" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDNerRIirMTBwoQKyq7FIt72DeK2-2U2ybT6XNyKfdNSbA971fLCiBbp7j3blt5_8kFupyhOJmazP4oAxU9qM8JgYDehv8J8-Ja4ux2ZaQ2PdtyrAoieFDSXaxkOg-xzFcxPXs6G1GVWFibStEuZgoWRD2ngmPNXJZvxsUtSnZFLijC2F6-2e2Mi-UHeogRY9lu3E6G_7HfEL5PjnxhPdmAQmif4OYykL78IowiQgSTrwGzxIOTlWhUd769-WCjlp2afIJvNizAreOr"/>
+</div>
+<div class="flex-1">
+<div class="text-[13px] font-bold text-on-surface">Generic Ibuprofen 200mg</div>
+<div class="text-[11px] text-on-surface-variant uppercase tracking-tighter">PHARM-CLASS: NSAID • OTC</div>
+</div>
+<div class="flex items-center gap-md">
+<div class="flex flex-col items-end">
+<span class="text-[14px] font-semibold text-on-surface">$8.99</span>
+<div class="flex items-center gap-xs mt-1">
+<label class="text-[11px] text-on-surface-variant">Qty:</label>
+<input class="win-input w-12 text-center !bg-white" type="number" value="2"/>
+</div>
+</div>
+<button class="win-btn text-error p-1 hover:bg-error-container">
+<span class="material-symbols-outlined">delete</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Summary GroupBox -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-lg">
+<div class="win-group-box !bg-tertiary-fixed/30 border-tertiary-fixed-dim/40" style="background-color: rgb(255, 218, 214); border-color: rgb(186, 26, 26);">
+<span class="win-group-box-label !bg-background text-on-tertiary-fixed-variant">Order Summary</span>
+<div class="space-y-1 text-[12px] text-on-surface">
+<div class="flex justify-between">
+<span class="">Subtotal:</span>
+<span class="font-semibold">$54.48</span>
+</div>
+<div class="flex justify-between">
+<span class="">Discount (Clinical):</span>
+<span class="text-on-secondary-container">-$5.45</span>
+</div>
+<div class="flex justify-between border-b border-outline-variant pb-1 mb-1">
+<span class="">Sales Tax (8%):</span>
+<span class="">$2.10</span>
+</div>
+<div class="flex justify-between text-[16px] pt-1">
+<span class="font-bold">Total Payable:</span>
+<span class="font-bold text-secondary">$51.13</span>
+</div>
+</div>
+</div>
+<div class="flex flex-col justify-end gap-sm py-2">
+<button class="win-btn win-btn-primary h-12 flex items-center justify-center gap-2 text-[14px] font-bold uppercase shadow-sm">
+<span class="material-symbols-outlined">shopping_cart_checkout</span>
+                            Commit Transaction
+                        </button>
+<button class="win-btn h-10 uppercase tracking-tight !bg-surface-variant text-on-surface-variant">Clear All Buffers</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- WinForm Status Bar -->
+<div class="h-6 bg-surface-container border-t border-[#dcdcdc] flex items-center px-sm gap-lg text-[11px] text-on-surface-variant">
+<div class="flex items-center gap-1 border-r border-[#dcdcdc] pr-lg">
+<span class="w-2 h-2 rounded-full bg-secondary"></span> System Ready
+        </div>
+<div class="flex items-center gap-1 border-r border-[#dcdcdc] pr-lg">
+            User: clinical_admin_01
+        </div>
+<div class="flex items-center gap-1 border-r border-[#dcdcdc] pr-lg">
+            SSL: 256-bit Encrypted
+        </div>
+<div class="ml-auto">
+            CAPS | NUM | SCRL
+        </div>
+</div>
+</div>
+<script>
+    // Visual feedback for win-buttons
+    document.querySelectorAll('.win-btn').forEach(btn => {
+        btn.addEventListener('mousedown', () => {
+            btn.style.transform = 'translateY(1px)';
+        });
+        btn.addEventListener('mouseup', () => {
+            btn.style.transform = 'translateY(0)';
+        });
+    });
+</script>
+</body></html>
