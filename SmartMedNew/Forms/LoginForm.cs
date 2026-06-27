@@ -39,7 +39,7 @@ namespace SmartMedNew.UI
             lblVersion.ForeColor = UiTheme.AdminMuted;
             lblVersion.BackColor = Color.White;
             lblAuthTitle.ForeColor = UiTheme.AdminOnSurface;
-            lblAuthTitle.Font = UiTheme.UiFontSemibold;
+            lblAuthTitle.Font = UiTheme.UiFontAuthTitle;
             lblAuthTitle.BackColor = Color.White;
             lblAuthSubtitle.ForeColor = UiTheme.AdminMuted;
             lblAuthSubtitle.BackColor = Color.White;

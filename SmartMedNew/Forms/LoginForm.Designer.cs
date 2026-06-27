@@ -84,7 +84,7 @@ namespace SmartMedNew.UI
             // lblTitleIcon
             // 
             this.lblTitleIcon.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lblTitleIcon.Font = new System.Drawing.Font("Segoe UI", 8F, System.Drawing.FontStyle.Bold);
+            this.lblTitleIcon.Font = new System.Drawing.Font("Hanken Grotesk", 8F, System.Drawing.FontStyle.Bold);
             this.lblTitleIcon.ForeColor = System.Drawing.Color.White;
             this.lblTitleIcon.Location = new System.Drawing.Point(0, 0);
             this.lblTitleIcon.Name = "lblTitleIcon";
@@ -141,7 +141,7 @@ namespace SmartMedNew.UI
             // lblError
             // 
             this.lblError.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lblError.Font = new System.Drawing.Font("Segoe UI", 8.25F);
+            this.lblError.Font = new System.Drawing.Font("Hanken Grotesk", 8.25F);
             this.lblError.Location = new System.Drawing.Point(12, 8);
             this.lblError.Name = "lblError";
             this.lblError.Size = new System.Drawing.Size(352, 32);
@@ -246,7 +246,7 @@ namespace SmartMedNew.UI
             // lblAuthTitle
             // 
             this.lblAuthTitle.AutoSize = true;
-            this.lblAuthTitle.Font = new System.Drawing.Font("Segoe UI", 14F, System.Drawing.FontStyle.Bold);
+            this.lblAuthTitle.Font = new System.Drawing.Font("Hanken Grotesk", 14F, System.Drawing.FontStyle.Bold);
             this.lblAuthTitle.Location = new System.Drawing.Point(32, 182);
             this.lblAuthTitle.Name = "lblAuthTitle";
             this.lblAuthTitle.Size = new System.Drawing.Size(188, 25);
@@ -256,7 +256,7 @@ namespace SmartMedNew.UI
             // lblVersion
             // 
             this.lblVersion.AutoSize = true;
-            this.lblVersion.Font = new System.Drawing.Font("Segoe UI", 8.25F);
+            this.lblVersion.Font = new System.Drawing.Font("Hanken Grotesk", 8.25F);
             this.lblVersion.Location = new System.Drawing.Point(32, 152);
             this.lblVersion.Name = "lblVersion";
             this.lblVersion.Size = new System.Drawing.Size(156, 13);
@@ -266,7 +266,7 @@ namespace SmartMedNew.UI
             // lblBrand
             // 
             this.lblBrand.AutoSize = true;
-            this.lblBrand.Font = new System.Drawing.Font("Segoe UI", 16F, System.Drawing.FontStyle.Bold);
+            this.lblBrand.Font = new System.Drawing.Font("Hanken Grotesk", 16F, System.Drawing.FontStyle.Bold);
             this.lblBrand.Location = new System.Drawing.Point(32, 124);
             this.lblBrand.Name = "lblBrand";
             this.lblBrand.Size = new System.Drawing.Size(156, 30);
@@ -285,7 +285,7 @@ namespace SmartMedNew.UI
             // lblBrandIcon
             // 
             this.lblBrandIcon.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lblBrandIcon.Font = new System.Drawing.Font("Segoe UI", 24F, System.Drawing.FontStyle.Bold);
+            this.lblBrandIcon.Font = new System.Drawing.Font("Hanken Grotesk", 24F, System.Drawing.FontStyle.Bold);
             this.lblBrandIcon.ForeColor = System.Drawing.Color.White;
             this.lblBrandIcon.Location = new System.Drawing.Point(0, 0);
             this.lblBrandIcon.Name = "lblBrandIcon";
@@ -309,7 +309,7 @@ namespace SmartMedNew.UI
             // lblCopyright
             // 
             this.lblCopyright.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.lblCopyright.Font = new System.Drawing.Font("Segoe UI", 8.25F);
+            this.lblCopyright.Font = new System.Drawing.Font("Hanken Grotesk", 8.25F);
             this.lblCopyright.Location = new System.Drawing.Point(0, 36);
             this.lblCopyright.Name = "lblCopyright";
             this.lblCopyright.Size = new System.Drawing.Size(984, 16);
@@ -320,7 +320,7 @@ namespace SmartMedNew.UI
             // lblSecurityLine
             // 
             this.lblSecurityLine.Dock = System.Windows.Forms.DockStyle.Top;
-            this.lblSecurityLine.Font = new System.Drawing.Font("Segoe UI", 8.25F);
+            this.lblSecurityLine.Font = new System.Drawing.Font("Hanken Grotesk", 8.25F);
             this.lblSecurityLine.Location = new System.Drawing.Point(0, 8);
             this.lblSecurityLine.Name = "lblSecurityLine";
             this.lblSecurityLine.Size = new System.Drawing.Size(984, 16);
@@ -338,7 +338,7 @@ namespace SmartMedNew.UI
             this.Controls.Add(this.panelMain);
             this.Controls.Add(this.panelFooter);
             this.Controls.Add(this.panelTitleBar);
-            this.Font = new System.Drawing.Font("Segoe UI", 9F);
+            this.Font = new System.Drawing.Font("Hanken Grotesk", 9F);
             this.MinimumSize = new System.Drawing.Size(900, 640);
             this.Name = "LoginForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;

@@ -21,6 +21,15 @@
     <Exec Command="powershell -NoProfile -ExecutionPolicy Bypass -Command &quot;Get-Process -Name SmartMedNew -ErrorAction SilentlyContinue | Stop-Process -Force -ErrorAction SilentlyContinue&quot;" IgnoreExitCode="true" />
   </Target>
   <ItemGroup>
+    <None Include="Assets\Fonts\HankenGrotesk-Regular.ttf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Assets\Fonts\HankenGrotesk-SemiBold.ttf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Assets\Fonts\HankenGrotesk-Bold.ttf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="App.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
