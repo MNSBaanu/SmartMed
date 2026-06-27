@@ -18,10 +18,11 @@ namespace SmartMed.UI
             InitializeComponent();
             HideTopChrome();
             Text = "SmartMed — Customer Portal";
-            if (!IsDesignHost())
-                UiTheme.ApplyAdminClinicalShell(this, panelTop, panelSidebar, panelContent);
+            UiTheme.ApplyAdminClinicalShell(this, panelTop, panelSidebar, panelContent);
+            CompleteDesignInitialization();
             panelContent.Resize += PanelContent_Resize;
-            FormClosed += (s, e) => DisposePageCache();
+            if (!IsDesignHost())
+                FormClosed += (s, e) => DisposePageCache();
         }
 
         private void PanelContent_Resize(object sender, EventArgs e)

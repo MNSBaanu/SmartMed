@@ -73,9 +73,7 @@
     <EmbeddedResource Update="Forms\ReportsForm.resx">
       <DependentUpon>ReportsForm.cs</DependentUpon>
     </EmbeddedResource>
-    <Compile Update="Forms\AdminHostForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
+    <Compile Update="Forms\AdminHostForm.cs" />
     <Compile Update="Forms\AdminHostForm.Designer.cs">
       <DependentUpon>AdminHostForm.cs</DependentUpon>
     </Compile>
@@ -98,9 +96,7 @@
     <Compile Update="Forms\RegistrationForm.Designer.cs">
       <DependentUpon>RegistrationForm.cs</DependentUpon>
     </Compile>
-    <Compile Update="Forms\CustomerHostForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
+    <Compile Update="Forms\CustomerHostForm.cs" />
     <Compile Update="Forms\CustomerHostForm.Designer.cs">
       <DependentUpon>CustomerHostForm.cs</DependentUpon>
     </Compile>

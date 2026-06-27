@@ -19,8 +19,9 @@ namespace SmartMed.UI
         {
             var name = Process.GetCurrentProcess().ProcessName;
             return name.IndexOf("devenv", StringComparison.OrdinalIgnoreCase) >= 0
-                || name.IndexOf("DesignToolsServer", StringComparison.OrdinalIgnoreCase) >= 0
-                || name.IndexOf("XDesProc", StringComparison.OrdinalIgnoreCase) >= 0;
+                || name.IndexOf("DesignTools", StringComparison.OrdinalIgnoreCase) >= 0
+                || name.IndexOf("XDesProc", StringComparison.OrdinalIgnoreCase) >= 0
+                || name.IndexOf("WinFormsSurface", StringComparison.OrdinalIgnoreCase) >= 0;
         });
 
         public CustomerShellForm()
@@ -28,7 +29,9 @@ namespace SmartMed.UI
             InitializeComponent();
             if (IsDesignHost())
             {
+                UiTheme.ApplyAdminClinicalShell(this, panelTop, panelSidebar, panelContent);
                 SetActiveNav(CustomerNavItem.Home);
+                EnsureCustomerSidebarProfile();
                 SyncShellChrome();
             }
         }
@@ -41,14 +44,27 @@ namespace SmartMed.UI
             Text = "SmartMed Customer Portal";
             lblTopSubtitle.Text = subtitle;
             SetActiveNav(activeNav);
-            if (!IsDesignHost() && !embeddedPage)
+            if (IsDesignHost())
+            {
+                if (!embeddedPage)
+                    UiTheme.ApplyAdminClinicalShell(this, panelTop, panelSidebar, panelContent);
+                EnsureCustomerSidebarProfile();
+                SyncShellChrome();
+                return;
+            }
+
+            if (!embeddedPage)
                 UiTheme.ApplyAdminClinicalShell(this, panelTop, panelSidebar, panelContent);
 
             EnsureCustomerSidebarProfile();
 
             SyncShellChrome();
-            if (IsDesignHost())
-                EnsurePageContent();
+        }
+
+        protected override void OnHandleCreated(EventArgs e)
+        {
+            base.OnHandleCreated(e);
+            TryLoadDesignPageContent();
         }
 
         protected override void OnLoad(EventArgs e)
@@ -66,6 +82,11 @@ namespace SmartMed.UI
             if (IsDesignHost())
             {
                 InitializePageContent();
+                if (PagePanel != null)
+                {
+                    PagePanel.Visible = true;
+                    PagePanel.PerformLayout();
+                }
                 SyncShellChrome();
                 return;
             }
@@ -98,6 +119,29 @@ namespace SmartMed.UI
 
         protected virtual void InitializePageContent()
         {
+        }
+
+        public override ISite Site
+        {
+            get => base.Site;
+            set
+            {
+                base.Site = value;
+                TryLoadDesignPageContent();
+            }
+        }
+
+        protected void CompleteDesignInitialization()
+        {
+            if (_isEmbeddedPage) return;
+            TryLoadDesignPageContent();
+        }
+
+        protected void TryLoadDesignPageContent()
+        {
+            if (_pageContentInitialized || _isEmbeddedPage) return;
+            if (!IsDesignHost()) return;
+            EnsurePageContent();
         }
 
         protected bool IsDesignHost()
@@ -223,8 +267,12 @@ namespace SmartMed.UI
 
         private void EnsureCustomerSidebarProfile()
         {
-            if (_sidebarProfileBuilt || panelSidebar == null || IsDesignHost() || _isEmbeddedPage) return;
+            if (_sidebarProfileBuilt || panelSidebar == null || _isEmbeddedPage) return;
             _sidebarProfileBuilt = true;
+
+            var displayName = IsDesignHost()
+                ? "Customer"
+                : (Session.CurrentCustomer?.Name ?? "Customer");
 
             _sidebarProfile = new Panel
             {
@@ -245,7 +293,7 @@ namespace SmartMed.UI
                 e.Graphics.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
                 using (var brush = new SolidBrush(UiTheme.AdminTeal))
                     e.Graphics.FillEllipse(brush, 0, 0, avatar.Width - 1, avatar.Height - 1);
-                var name = Session.CurrentCustomer?.Name ?? "Customer";
+                var name = displayName;
                 var initial = name.Length > 0 ? name.Substring(0, 1).ToUpperInvariant() : "C";
                 TextRenderer.DrawText(e.Graphics, initial, UiTheme.UiFontBold, avatar.ClientRectangle,
                     Color.White, TextFormatFlags.HorizontalCenter | TextFormatFlags.VerticalCenter);
@@ -257,7 +305,7 @@ namespace SmartMed.UI
                 Size = new Size(170, 20),
                 Font = UiTheme.UiFontBold,
                 ForeColor = UiTheme.AdminOnSurface,
-                Text = Session.CurrentCustomer?.Name ?? "Customer"
+                Text = displayName
             };
             var lblRole = new Label
             {

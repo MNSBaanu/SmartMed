@@ -19,6 +19,7 @@ namespace SmartMed.UI
             : base(CustomerNavItem.Profile, "My Profile")
         {
             InitializeComponent();
+            CompleteDesignInitialization();
         }
 
         internal ProfileManagementForm(bool embedded)

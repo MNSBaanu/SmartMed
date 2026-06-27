@@ -20,6 +20,7 @@ namespace SmartMed.UI
             : base(CustomerNavItem.Cart, "My Cart & Checkout")
         {
             InitializeComponent();
+            CompleteDesignInitialization();
         }
 
         internal PlaceOrderForm(bool embedded)

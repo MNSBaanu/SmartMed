@@ -16,15 +16,15 @@ namespace SmartMed.UI
             this.panelTop.SuspendLayout();
             this.panelSidebar.SuspendLayout();
             this.SuspendLayout();
-            this.lblTopSubtitle.Text = "My Cart";
+            this.lblTopSubtitle.Text = "My Cart & Checkout";
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1184, 768);
             this.Name = "PlaceOrderForm";
             this.Text = "SmartMed Customer Portal";
             this.panelTop.ResumeLayout(false);
             this.panelTop.PerformLayout();
             this.panelSidebar.ResumeLayout(false);
+            this.panelSidebar.PerformLayout();
             this.ResumeLayout(false);
         }
     }

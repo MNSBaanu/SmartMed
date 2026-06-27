@@ -17,6 +17,7 @@ namespace SmartMed.UI
             : base(AdminNavItem.Customers, "Manage Customers")
         {
             InitializeComponent();
+            CompleteDesignInitialization();
         }
 
         internal ManageCustomersForm(bool embedded)

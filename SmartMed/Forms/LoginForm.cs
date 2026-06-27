@@ -21,8 +21,7 @@ namespace SmartMed.UI
         {
             InitializeComponent();
             DoubleBuffered = true;
-            if (Site?.DesignMode != true)
-                ApplyChrome();
+            ApplyChrome();
         }
 
         internal void ResetAfterLogout()

@@ -1,4 +1,5 @@
 using System;
+using System.ComponentModel;
 using System.Drawing;
 using System.Drawing.Text;
 using System.IO;
@@ -180,14 +181,16 @@ namespace SmartMed.UI
 
         public static void RegisterForm(MaterialForm form)
         {
-            if (form == null || form.Site?.DesignMode == true) return;
+            if (form == null || LicenseManager.UsageMode == LicenseUsageMode.Designtime) return;
+            if (form.Site?.DesignMode == true) return;
             Init();
             MaterialSkinManager.Instance.AddFormToManage(form);
         }
 
         public static void RegisterForm(Form form)
         {
-            if (form == null || form.Site?.DesignMode == true) return;
+            if (form == null || LicenseManager.UsageMode == LicenseUsageMode.Designtime) return;
+            if (form.Site?.DesignMode == true) return;
             Init();
             form.Font = UiFont;
             EnableDoubleBuffer(form);

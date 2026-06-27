@@ -19,12 +19,12 @@ namespace SmartMed.UI
             this.lblTopSubtitle.Text = "My Orders";
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1184, 768);
             this.Name = "TrackOrdersForm";
             this.Text = "SmartMed Customer Portal";
             this.panelTop.ResumeLayout(false);
             this.panelTop.PerformLayout();
             this.panelSidebar.ResumeLayout(false);
+            this.panelSidebar.PerformLayout();
             this.ResumeLayout(false);
         }
     }

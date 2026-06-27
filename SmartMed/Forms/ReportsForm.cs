@@ -15,6 +15,7 @@ namespace SmartMed.UI
             : base(AdminNavItem.Reports, "Generate Reports")
         {
             InitializeComponent();
+            CompleteDesignInitialization();
         }
 
         internal ReportsForm(bool embedded)

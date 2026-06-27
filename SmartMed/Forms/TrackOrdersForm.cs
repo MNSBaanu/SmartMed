@@ -22,6 +22,7 @@ namespace SmartMed.UI
             : base(CustomerNavItem.Orders, "My Orders")
         {
             InitializeComponent();
+            CompleteDesignInitialization();
         }
 
         internal TrackOrdersForm(bool embedded)

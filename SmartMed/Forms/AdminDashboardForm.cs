@@ -15,6 +15,7 @@ namespace SmartMed.UI
             : base(AdminNavItem.Overview, "Operational Dashboard")
         {
             InitializeComponent();
+            CompleteDesignInitialization();
         }
 
         internal AdminDashboardForm(bool embedded)

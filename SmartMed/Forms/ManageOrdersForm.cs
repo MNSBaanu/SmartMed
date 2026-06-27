@@ -16,6 +16,7 @@ namespace SmartMed.UI
             : base(AdminNavItem.Orders, "Manage Orders")
         {
             InitializeComponent();
+            CompleteDesignInitialization();
         }
 
         internal ManageOrdersForm(bool embedded)

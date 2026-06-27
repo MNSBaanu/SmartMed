@@ -46,6 +46,8 @@ namespace SmartMed.UI
 
             InitializeComponent();
 
+            CompleteDesignInitialization();
+
         }
 
 

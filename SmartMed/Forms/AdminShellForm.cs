@@ -17,15 +17,11 @@ namespace SmartMed.UI
 
         private static readonly Lazy<bool> IsDesignToolsProcess = new Lazy<bool>(() =>
         {
-
             var name = Process.GetCurrentProcess().ProcessName;
-
             return name.IndexOf("devenv", StringComparison.OrdinalIgnoreCase) >= 0
-
-                || name.IndexOf("DesignToolsServer", StringComparison.OrdinalIgnoreCase) >= 0
-
-                || name.IndexOf("XDesProc", StringComparison.OrdinalIgnoreCase) >= 0;
-
+                || name.IndexOf("DesignTools", StringComparison.OrdinalIgnoreCase) >= 0
+                || name.IndexOf("XDesProc", StringComparison.OrdinalIgnoreCase) >= 0
+                || name.IndexOf("WinFormsSurface", StringComparison.OrdinalIgnoreCase) >= 0;
         });
 
 
@@ -36,7 +32,13 @@ namespace SmartMed.UI
 
             InitializeComponent();
 
-            if (IsDesignHost()) { SetActiveNav(AdminNavItem.Overview); SyncShellChrome(); }
+            if (IsDesignHost())
+            {
+                UiTheme.ApplyAdminClinicalShell(this, panelTop, panelSidebar, panelContent);
+                SetActiveNav(AdminNavItem.Overview);
+                EnsureAdminSidebarProfile();
+                SyncShellChrome();
+            }
 
         }
 
@@ -58,21 +60,32 @@ namespace SmartMed.UI
 
             SetActiveNav(activeNav);
 
-            if (!IsDesignHost() && !embeddedPage)
+            if (IsDesignHost())
+            {
+                if (!embeddedPage)
+                    UiTheme.ApplyAdminClinicalShell(this, panelTop, panelSidebar, panelContent);
+                SetActiveNav(activeNav);
+                EnsureAdminSidebarProfile();
+                SyncShellChrome();
+                return;
+            }
 
+            if (!embeddedPage)
                 UiTheme.ApplyAdminClinicalShell(this, panelTop, panelSidebar, panelContent);
 
             EnsureAdminSidebarProfile();
 
             SyncShellChrome();
 
-            if (IsDesignHost())
-
-                EnsurePageContent();
-
         }
 
 
+
+        protected override void OnHandleCreated(EventArgs e)
+        {
+            base.OnHandleCreated(e);
+            TryLoadDesignPageContent();
+        }
 
         protected override void OnLoad(EventArgs e)
 
@@ -99,15 +112,15 @@ namespace SmartMed.UI
 
 
             if (IsDesignHost())
-
             {
-
                 InitializePageContent();
-
+                if (PagePanel != null)
+                {
+                    PagePanel.Visible = true;
+                    PagePanel.PerformLayout();
+                }
                 SyncShellChrome();
-
                 return;
-
             }
 
 
@@ -144,20 +157,37 @@ namespace SmartMed.UI
 
 
 
-        protected bool IsDesignHost()
-
+        public override ISite Site
         {
+            get => base.Site;
+            set
+            {
+                base.Site = value;
+                TryLoadDesignPageContent();
+            }
+        }
 
+        /// <summary>Call from derived ctor after InitializeComponent so VS designer builds page content.</summary>
+        protected void CompleteDesignInitialization()
+        {
+            if (_isEmbeddedPage) return;
+            TryLoadDesignPageContent();
+        }
+
+        protected void TryLoadDesignPageContent()
+        {
+            if (_pageContentInitialized || _isEmbeddedPage) return;
+            if (!IsDesignHost()) return;
+            EnsurePageContent();
+        }
+
+        protected bool IsDesignHost()
+        {
             if (LicenseManager.UsageMode == LicenseUsageMode.Designtime)
-
                 return true;
-
             if (Site?.DesignMode == true)
-
                 return true;
-
             return IsDesignToolsProcess.Value;
-
         }
 
 
@@ -302,8 +332,12 @@ namespace SmartMed.UI
 
         private void EnsureAdminSidebarProfile()
         {
-            if (_sidebarProfileBuilt || panelSidebar == null || IsDesignHost() || _isEmbeddedPage) return;
+            if (_sidebarProfileBuilt || panelSidebar == null || _isEmbeddedPage) return;
             _sidebarProfileBuilt = true;
+
+            var displayName = IsDesignHost()
+                ? "admin"
+                : (Session.CurrentAdmin?.Username ?? "Administrator");
 
             _sidebarProfile = new Panel
             {
@@ -329,7 +363,7 @@ namespace SmartMed.UI
                 e.Graphics.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
                 using (var brush = new SolidBrush(UiTheme.AdminTeal))
                     e.Graphics.FillEllipse(brush, 0, 0, avatar.Width - 1, avatar.Height - 1);
-                var initial = (Session.CurrentAdmin?.Username ?? "A").Substring(0, 1).ToUpperInvariant();
+                var initial = displayName.Substring(0, 1).ToUpperInvariant();
                 TextRenderer.DrawText(e.Graphics, initial, UiTheme.UiFontBold, avatar.ClientRectangle,
                     Color.White, TextFormatFlags.HorizontalCenter | TextFormatFlags.VerticalCenter);
             };
@@ -341,7 +375,7 @@ namespace SmartMed.UI
                 Size = new Size(170, 20),
                 Font = UiTheme.UiFontBold,
                 ForeColor = UiTheme.AdminOnSurface,
-                Text = Session.CurrentAdmin?.Username ?? "Administrator"
+                Text = displayName
             };
             var lblRole = new Label
             {
@@ -363,10 +397,13 @@ namespace SmartMed.UI
         protected void RefreshSidebarProfile()
         {
             if (_sidebarProfile == null) return;
+            var displayName = IsDesignHost()
+                ? "admin"
+                : (Session.CurrentAdmin?.Username ?? "Administrator");
             foreach (Control c in _sidebarProfile.Controls)
             {
                 if (c is Label lbl && lbl.Font.Bold)
-                    lbl.Text = Session.CurrentAdmin?.Username ?? "Administrator";
+                    lbl.Text = displayName;
             }
             _sidebarProfile.Invalidate(true);
         }

@@ -19,6 +19,7 @@ namespace SmartMed.UI
             : base(CustomerNavItem.Home, "Customer Home")
         {
             InitializeComponent();
+            CompleteDesignInitialization();
         }
 
         internal CustomerDashboardForm(bool embedded)
