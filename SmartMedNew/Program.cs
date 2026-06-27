@@ -11,8 +11,8 @@ namespace SmartMedNew.UI
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
+            UiTheme.Init();
 
-            // Forms will be added one by one. Verify database connectivity at startup.
             try
             {
                 using (var conn = DatabaseHelper.GetConnection())
@@ -29,11 +29,7 @@ namespace SmartMedNew.UI
                     MessageBoxIcon.Warning);
             }
 
-            MessageBox.Show(
-                "SmartMedNew scaffold is ready.\n\nAdd forms to the Forms folder when you are ready.",
-                "SmartMedNew",
-                MessageBoxButtons.OK,
-                MessageBoxIcon.Information);
+            Application.Run(new SmartMedApplicationContext());
         }
     }
 }
