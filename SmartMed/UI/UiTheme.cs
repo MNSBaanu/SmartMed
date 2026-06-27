@@ -29,6 +29,16 @@ namespace SmartMed.UI
         public static readonly Color Muted = Color.FromArgb(127, 140, 141);
         public static readonly Color GridHeader = Color.FromArgb(236, 240, 241);
         public static readonly Color GridHeaderText = Color.FromArgb(44, 62, 80);
+
+        // Clinical admin shell (Stitch / SmartMed v4)
+        public static readonly Color AdminTeal = Color.FromArgb(53, 103, 94);
+        public static readonly Color AdminTealDark = Color.FromArgb(27, 79, 71);
+        public static readonly Color AdminSidebar = Color.FromArgb(232, 239, 238);
+        public static readonly Color AdminSurface = Color.FromArgb(244, 251, 250);
+        public static readonly Color AdminOutline = Color.FromArgb(193, 200, 198);
+        public static readonly Color AdminOnSurface = Color.FromArgb(22, 29, 29);
+        public static readonly Color AdminMuted = Color.FromArgb(65, 72, 71);
+
         public const string FontFamilyName = "Roboto";
         public const float FontSize = 9F;
 
@@ -325,6 +335,134 @@ namespace SmartMed.UI
                 content.BackColor = PageBackground;
                 content.Font = UiFont;
             }
+        }
+
+        /// <summary>Light clinical admin chrome — sidebar, content, optional header.</summary>
+        public static void ApplyAdminClinicalShell(MaterialForm form, Panel header, Panel sidebar, Panel content)
+        {
+            RegisterForm(form);
+            form.BackColor = AdminSurface;
+            form.Font = UiFont;
+            EnableDoubleBuffer(form);
+            if (header != null) EnableDoubleBuffer(header);
+            EnableDoubleBuffer(sidebar);
+            EnableDoubleBuffer(content);
+
+            if (header != null && header.Visible)
+            {
+                header.BackColor = Color.White;
+                header.Height = Math.Max(header.Height, 48);
+                foreach (Control c in header.Controls)
+                {
+                    if (c is Label lbl)
+                    {
+                        lbl.BackColor = Color.White;
+                        lbl.ForeColor = lbl.Font.Bold ? AdminOnSurface : AdminMuted;
+                    }
+                    else if (c is Button btn)
+                    {
+                        btn.FlatStyle = FlatStyle.Flat;
+                        btn.BackColor = Color.White;
+                        btn.ForeColor = AdminMuted;
+                        btn.FlatAppearance.BorderColor = AdminOutline;
+                        btn.FlatAppearance.BorderSize = 1;
+                    }
+                }
+            }
+
+            if (sidebar != null)
+            {
+                sidebar.BackColor = AdminSidebar;
+                sidebar.Padding = new Padding(0);
+                sidebar.Width = Math.Max(sidebar.Width, 260);
+                foreach (Control c in sidebar.Controls)
+                {
+                    if (c is Button nav)
+                        StyleAdminNavButton(nav, active: false);
+                }
+            }
+
+            if (content != null)
+            {
+                content.BackColor = AdminSurface;
+                content.Padding = new Padding(28, 24, 28, 0);
+                content.Font = UiFont;
+            }
+        }
+
+        public static void StyleAdminNavButton(Button button, bool active)
+        {
+            if (button == null) return;
+            button.FlatStyle = FlatStyle.Flat;
+            button.FlatAppearance.BorderSize = 0;
+            button.Height = Math.Max(button.Height, 44);
+            button.TextAlign = ContentAlignment.MiddleLeft;
+            button.Padding = new Padding(20, 0, 12, 0);
+            button.Cursor = Cursors.Hand;
+            button.UseVisualStyleBackColor = false;
+            button.Font = active ? UiFontBold : UiFont;
+
+            if (active)
+            {
+                button.BackColor = Color.White;
+                button.ForeColor = AdminTeal;
+                button.FlatAppearance.MouseOverBackColor = Color.White;
+            }
+            else
+            {
+                button.BackColor = AdminSidebar;
+                button.ForeColor = AdminMuted;
+                button.FlatAppearance.MouseOverBackColor = Color.FromArgb(220, 232, 230);
+                button.FlatAppearance.MouseDownBackColor = Color.FromArgb(210, 224, 222);
+            }
+        }
+
+        public static void ApplyClinicalGrid(DataGridView grid)
+        {
+            if (grid == null) return;
+            EnableDoubleBuffer(grid);
+            grid.EnableHeadersVisualStyles = false;
+            grid.BackgroundColor = Color.White;
+            grid.BorderStyle = BorderStyle.None;
+            grid.GridColor = Color.FromArgb(238, 245, 244);
+            grid.ColumnHeadersHeight = 36;
+            grid.RowTemplate.Height = 36;
+            grid.DefaultCellStyle.BackColor = Color.White;
+            grid.DefaultCellStyle.ForeColor = AdminOnSurface;
+            grid.DefaultCellStyle.SelectionBackColor = Color.FromArgb(220, 240, 236);
+            grid.DefaultCellStyle.SelectionForeColor = AdminOnSurface;
+            grid.DefaultCellStyle.Font = UiFont;
+            grid.DefaultCellStyle.Padding = new Padding(8, 4, 8, 4);
+            grid.AlternatingRowsDefaultCellStyle.BackColor = Color.FromArgb(250, 252, 252);
+            grid.ColumnHeadersDefaultCellStyle.BackColor = Color.FromArgb(232, 239, 238);
+            grid.ColumnHeadersDefaultCellStyle.ForeColor = AdminMuted;
+            grid.ColumnHeadersDefaultCellStyle.Font = UiFontBold;
+            grid.ColumnHeadersDefaultCellStyle.Padding = new Padding(10, 0, 10, 0);
+            grid.ColumnHeadersDefaultCellStyle.SelectionBackColor = grid.ColumnHeadersDefaultCellStyle.BackColor;
+            grid.CellBorderStyle = DataGridViewCellBorderStyle.SingleHorizontal;
+        }
+
+        public static void BeautifyGridHeaders(DataGridView grid)
+        {
+            if (grid?.Columns == null) return;
+            foreach (DataGridViewColumn col in grid.Columns)
+            {
+                if (col.Name == "Actions") continue;
+                col.HeaderText = SplitCamelCase(col.Name);
+            }
+        }
+
+        private static string SplitCamelCase(string name)
+        {
+            if (string.IsNullOrEmpty(name)) return name;
+            var result = new System.Text.StringBuilder();
+            for (var i = 0; i < name.Length; i++)
+            {
+                if (i > 0 && char.IsUpper(name[i]))
+                    result.Append(' ');
+                result.Append(name[i]);
+            }
+            return result.ToString();
         }
 
         public static void ApplyLoginForm(MaterialForm form, Panel body, Panel card = null, LinkLabel forgotLink = null)

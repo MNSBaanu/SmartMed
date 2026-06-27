@@ -60,7 +60,9 @@ namespace SmartMed.UI
 
             if (!IsDesignHost() && !embeddedPage)
 
-                UiTheme.ApplyShell(this, panelTop, panelSidebar, panelContent);
+                UiTheme.ApplyAdminClinicalShell(this, panelTop, panelSidebar, panelContent);
+
+            EnsureAdminSidebarProfile();
 
             SyncShellChrome();
 
@@ -222,32 +224,102 @@ namespace SmartMed.UI
 
 
 
-        private void StyleNavButton(Button button, bool active)
+        private Panel _sidebarProfile;
+        private bool _sidebarProfileBuilt;
 
+        private void EnsureAdminSidebarProfile()
         {
+            if (_sidebarProfileBuilt || panelSidebar == null || IsDesignHost() || _isEmbeddedPage) return;
+            _sidebarProfileBuilt = true;
 
+            _sidebarProfile = new Panel
+            {
+                Dock = DockStyle.Top,
+                Height = 88,
+                BackColor = Color.FromArgb(255, 255, 255),
+                Padding = new Padding(16, 14, 16, 14)
+            };
+            _sidebarProfile.Paint += (s, e) =>
+            {
+                using (var pen = new Pen(UiTheme.AdminOutline))
+                    e.Graphics.DrawLine(pen, 0, _sidebarProfile.Height - 1, _sidebarProfile.Width, _sidebarProfile.Height - 1);
+            };
+
+            var avatar = new Panel
+            {
+                Size = new Size(44, 44),
+                Location = new Point(16, 14),
+                BackColor = UiTheme.AdminTeal
+            };
+            avatar.Paint += (s, e) =>
+            {
+                e.Graphics.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
+                using (var brush = new SolidBrush(UiTheme.AdminTeal))
+                    e.Graphics.FillEllipse(brush, 0, 0, avatar.Width - 1, avatar.Height - 1);
+                var initial = (Session.CurrentAdmin?.Username ?? "A").Substring(0, 1).ToUpperInvariant();
+                TextRenderer.DrawText(e.Graphics, initial, UiTheme.UiFontBold, avatar.ClientRectangle,
+                    Color.White, TextFormatFlags.HorizontalCenter | TextFormatFlags.VerticalCenter);
+            };
+
+            var lblName = new Label
+            {
+                AutoSize = false,
+                Location = new Point(68, 18),
+                Size = new Size(170, 20),
+                Font = UiTheme.UiFontBold,
+                ForeColor = UiTheme.AdminOnSurface,
+                Text = Session.CurrentAdmin?.Username ?? "Administrator"
+            };
+            var lblRole = new Label
+            {
+                AutoSize = false,
+                Location = new Point(68, 40),
+                Size = new Size(170, 18),
+                Font = UiTheme.UiFont,
+                ForeColor = UiTheme.AdminMuted,
+                Text = "Administrator"
+            };
+
+            _sidebarProfile.Controls.Add(lblRole);
+            _sidebarProfile.Controls.Add(lblName);
+            _sidebarProfile.Controls.Add(avatar);
+            panelSidebar.Controls.Add(_sidebarProfile);
+            panelSidebar.Controls.SetChildIndex(_sidebarProfile, 0);
+        }
+
+        protected void RefreshSidebarProfile()
+        {
+            if (_sidebarProfile == null) return;
+            foreach (Control c in _sidebarProfile.Controls)
+            {
+                if (c is Label lbl && lbl.Font.Bold)
+                    lbl.Text = Session.CurrentAdmin?.Username ?? "Administrator";
+            }
+            _sidebarProfile.Invalidate(true);
+        }
+
+
+
+        private void StyleNavButton(Button button, bool active)
+        {
             if (button == null) return;
-
-            if (active)
-
+            if (button == btnNavLogout)
             {
-
-                button.BackColor = UiTheme.PrimaryDark;
-
-                button.ForeColor = Color.White;
-
-                button.Font = UiTheme.UiFontBold;
-
+                button.FlatStyle = FlatStyle.Flat;
+                button.FlatAppearance.BorderSize = 0;
+                button.BackColor = UiTheme.AdminSidebar;
+                button.ForeColor = UiTheme.AdminMuted;
+                button.Font = UiTheme.UiFont;
+                button.TextAlign = ContentAlignment.MiddleLeft;
+                button.Padding = new Padding(20, 0, 12, 0);
+                button.Cursor = Cursors.Hand;
+                button.UseVisualStyleBackColor = false;
+                button.FlatAppearance.MouseOverBackColor = Color.FromArgb(255, 230, 230);
+                button.FlatAppearance.MouseDownBackColor = Color.FromArgb(255, 210, 210);
+                return;
             }
 
-            else
-
-            {
-
-                UiTheme.StyleNavButton(button);
-
-            }
-
+            UiTheme.StyleAdminNavButton(button, active);
         }
 
 

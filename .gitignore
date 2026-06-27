@@ -9,3 +9,7 @@
 
 # NuGet
 packages/
+
+# Node (Stitch asset fetch — not part of the WinForms app)
+node_modules/
+package-lock.json

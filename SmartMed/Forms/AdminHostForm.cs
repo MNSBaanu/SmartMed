@@ -12,11 +12,13 @@ namespace SmartMed.UI
         private AdminNavItem _activeNav;
 
         public AdminHostForm()
-            : base(AdminNavItem.Overview, "Admin Dashboard")
+            : base(AdminNavItem.Overview, "Operational Dashboard")
         {
             InitializeComponent();
             HideTopChrome();
-            Text = "SmartMed - Admin Dashboard";
+            Text = "SmartMed — Pharmacy Management";
+            if (!IsDesignHost())
+                UiTheme.ApplyAdminClinicalShell(this, panelTop, panelSidebar, panelContent);
         }
 
         protected override void NavigateAdmin(AdminNavItem nav)
@@ -55,7 +57,7 @@ namespace SmartMed.UI
 
         private static string GetPageSubtitle(AdminNavItem nav)
         {
-            if (nav == AdminNavItem.Overview) return "Admin Dashboard";
+            if (nav == AdminNavItem.Overview) return "Operational Dashboard";
             if (nav == AdminNavItem.Medicines) return "Manage Medicines";
             if (nav == AdminNavItem.Customers) return "Manage Customers";
             if (nav == AdminNavItem.Orders) return "Manage Orders";
