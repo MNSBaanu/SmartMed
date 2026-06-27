@@ -7,6 +7,8 @@
     <AssemblyName>SmartMed</AssemblyName>
     <StartupObject>SmartMed.UI.Program</StartupObject>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System.Configuration" />
@@ -45,42 +47,57 @@
     <EmbeddedResource Update="Forms\AdminShellForm.resx">
       <DependentUpon>AdminShellForm.cs</DependentUpon>
     </EmbeddedResource>
-    <Compile Update="Forms\ManageCustomersForm.cs" />
+    <Compile Update="Forms\ManageCustomersForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Update="Forms\ManageCustomersForm.Designer.cs">
       <DependentUpon>ManageCustomersForm.cs</DependentUpon>
     </Compile>
     <EmbeddedResource Update="Forms\ManageCustomersForm.resx">
       <DependentUpon>ManageCustomersForm.cs</DependentUpon>
     </EmbeddedResource>
-    <Compile Update="Forms\ManageMedicinesForm.cs" />
+    <Compile Update="Forms\ManageMedicinesForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Update="Forms\ManageMedicinesForm.Designer.cs">
       <DependentUpon>ManageMedicinesForm.cs</DependentUpon>
     </Compile>
     <EmbeddedResource Update="Forms\ManageMedicinesForm.resx">
       <DependentUpon>ManageMedicinesForm.cs</DependentUpon>
     </EmbeddedResource>
-    <Compile Update="Forms\ManageOrdersForm.cs" />
+    <Compile Update="Forms\ManageOrdersForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Update="Forms\ManageOrdersForm.Designer.cs">
       <DependentUpon>ManageOrdersForm.cs</DependentUpon>
     </Compile>
     <EmbeddedResource Update="Forms\ManageOrdersForm.resx">
       <DependentUpon>ManageOrdersForm.cs</DependentUpon>
     </EmbeddedResource>
-    <Compile Update="Forms\ReportsForm.cs" />
+    <Compile Update="Forms\ReportsForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Update="Forms\ReportsForm.Designer.cs">
       <DependentUpon>ReportsForm.cs</DependentUpon>
     </Compile>
     <EmbeddedResource Update="Forms\ReportsForm.resx">
       <DependentUpon>ReportsForm.cs</DependentUpon>
     </EmbeddedResource>
-    <Compile Update="Forms\AdminHostForm.cs" />
+    <Compile Update="Forms\AdminHostForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Update="Forms\AdminHostForm.Designer.cs">
       <DependentUpon>AdminHostForm.cs</DependentUpon>
     </Compile>
-    <Compile Update="Forms\AdminDashboardForm.cs" />
+    <Compile Update="Forms\AdminDashboardForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Update="Forms\AdminDashboardForm.Designer.cs">
       <DependentUpon>AdminDashboardForm.cs</DependentUpon>
     </Compile>
+    <EmbeddedResource Update="Forms\AdminDashboardForm.resx">
+      <DependentUpon>AdminDashboardForm.cs</DependentUpon>
+    </EmbeddedResource>
     <Compile Update="Forms\LoginForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -96,7 +113,9 @@
     <Compile Update="Forms\RegistrationForm.Designer.cs">
       <DependentUpon>RegistrationForm.cs</DependentUpon>
     </Compile>
-    <Compile Update="Forms\CustomerHostForm.cs" />
+    <Compile Update="Forms\CustomerHostForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Update="Forms\CustomerHostForm.Designer.cs">
       <DependentUpon>CustomerHostForm.cs</DependentUpon>
     </Compile>
@@ -109,23 +128,36 @@
     <EmbeddedResource Update="Forms\CustomerShellForm.resx">
       <DependentUpon>CustomerShellForm.cs</DependentUpon>
     </EmbeddedResource>
-    <Compile Update="Forms\CustomerDashboardForm.cs" />
+    <Compile Update="Forms\CustomerDashboardForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Update="Forms\CustomerDashboardForm.Designer.cs">
       <DependentUpon>CustomerDashboardForm.cs</DependentUpon>
     </Compile>
-    <Compile Update="Forms\SearchMedicinesForm.cs" />
+    <EmbeddedResource Update="Forms\CustomerDashboardForm.resx">
+      <DependentUpon>CustomerDashboardForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <Compile Update="Forms\SearchMedicinesForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Update="Forms\SearchMedicinesForm.Designer.cs">
       <DependentUpon>SearchMedicinesForm.cs</DependentUpon>
     </Compile>
-    <Compile Update="Forms\PlaceOrderForm.cs" />
+    <Compile Update="Forms\PlaceOrderForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Update="Forms\PlaceOrderForm.Designer.cs">
       <DependentUpon>PlaceOrderForm.cs</DependentUpon>
     </Compile>
-    <Compile Update="Forms\TrackOrdersForm.cs" />
+    <Compile Update="Forms\TrackOrdersForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Update="Forms\TrackOrdersForm.Designer.cs">
       <DependentUpon>TrackOrdersForm.cs</DependentUpon>
     </Compile>
-    <Compile Update="Forms\ProfileManagementForm.cs" />
+    <Compile Update="Forms\ProfileManagementForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Update="Forms\ProfileManagementForm.Designer.cs">
       <DependentUpon>ProfileManagementForm.cs</DependentUpon>
     </Compile>

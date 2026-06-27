@@ -10,6 +10,7 @@ using SmartMed.Services;
 namespace SmartMed.UI
 {
     [DesignerCategory("Form")]
+    [ToolboxItem(false)]
     public partial class CustomerShellForm : MaterialForm
     {
         private bool _pageContentInitialized;

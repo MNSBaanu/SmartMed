@@ -127,13 +127,14 @@ namespace SmartMed.UI
             // 
             // CustomerDashboardForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 18F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1286, 768);
             this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.MinimumSize = new System.Drawing.Size(1286, 768);
             this.Name = "CustomerDashboardForm";
             this.Padding = new System.Windows.Forms.Padding(3, 78, 4, 4);
+            this.Text = "SmartMed Customer Portal";
             this.panelTop.ResumeLayout(false);
             this.panelTop.PerformLayout();
             this.panelSidebar.ResumeLayout(false);
