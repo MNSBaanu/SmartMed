@@ -8,10 +8,13 @@ namespace SmartMedNew.UI
 {
     public partial class LoginForm : Form
     {
+        private const string DemoAdminUsername = "admin";
+        private const string DemoAdminPassword = "admin123";
+        private const string DemoCustomerEmail = "customer@gmail.com";
+        private const string DemoCustomerPassword = "Customer123";
+
         private readonly AuthService _auth = new AuthService();
         private bool _passwordVisible;
-        private const string LoginButtonText = "Login";
-        private const string LoginBusyText = "Signing in\u2026";
 
         public event EventHandler LoginSucceeded;
 
@@ -22,9 +25,18 @@ namespace SmartMedNew.UI
             ApplyChrome();
         }
 
+        internal void ResetAfterLogout()
+        {
+            txtUsername.Clear();
+            txtPassword.Clear();
+            _passwordVisible = false;
+            panelError.Visible = false;
+            RestoreLoginAppearance();
+        }
+
         private void ApplyChrome()
         {
-            UiTheme.ApplyLoginForm(this, panelMain, panelLoginCard, lnkTerminalHelp);
+            UiTheme.ApplyLoginForm(this, panelMain, panelLoginCard, lnkForgot);
             LayoutLoginContent();
 
             panelTitleBar.BackColor = UiTheme.TitleBar;
@@ -35,7 +47,7 @@ namespace SmartMedNew.UI
             lblTitleIcon.ForeColor = Color.White;
             lblTitleIcon.BackColor = UiTheme.PrimaryContainer;
 
-            lblBrand.ForeColor = UiTheme.PrimaryDark;
+            lblBrand.ForeColor = UiTheme.AdminTealDark;
             lblBrand.Font = UiTheme.UiFontTitle;
             lblBrand.BackColor = Color.White;
             lblVersion.ForeColor = UiTheme.FooterText;
@@ -50,16 +62,16 @@ namespace SmartMedNew.UI
             lblBrandIcon.ForeColor = Color.White;
             lblBrandIcon.BackColor = UiTheme.PrimaryContainer;
 
-            UiTheme.StyleClinicalFieldLabel(lblClinicalId);
+            UiTheme.StyleClinicalFieldLabel(lblUsername);
             UiTheme.StyleClinicalFieldLabel(lblPassword);
-            UiTheme.StyleClinicalTextBox(txtClinicalId, "Enter Clinical ID");
+            UiTheme.StyleClinicalTextBox(txtUsername, "Enter email or username");
             UiTheme.StyleClinicalPasswordBox(txtPassword, "Enter your password");
             txtPassword.GotFocus += (s, e) => SetPasswordVisible(_passwordVisible);
             UiTheme.ApplyLoginButton(btnLogin);
-            UiTheme.StylePasswordToggleButton(btnTogglePassword);
-            chkStayLoggedIn.Font = UiTheme.UiFont;
-            chkStayLoggedIn.ForeColor = UiTheme.AdminLabelText;
-            chkStayLoggedIn.BackColor = Color.White;
+            UiTheme.ApplySecondaryButton(btnRegister);
+            UiTheme.ApplySecondaryButton(btnQuickAdmin);
+            UiTheme.ApplySecondaryButton(btnQuickCustomer);
+            UiTheme.StyleLinkButton(lnkForgot);
 
             panelFooter.BackColor = UiTheme.AdminSurface;
             lblSecurityLine.ForeColor = UiTheme.FooterText;
@@ -75,6 +87,15 @@ namespace SmartMedNew.UI
             SetPasswordVisible(_passwordVisible);
         }
 
+        internal void RestoreLoginAppearance()
+        {
+            ApplyChrome();
+            Show();
+            WindowState = FormWindowState.Normal;
+            BringToFront();
+            Activate();
+        }
+
         private void SetPasswordVisible(bool visible)
         {
             _passwordVisible = visible;
@@ -84,9 +105,7 @@ namespace SmartMedNew.UI
                 txtPassword.PasswordChar = visible ? '\0' : UiTheme.PasswordMaskChar;
             }
 
-            btnTogglePassword.Text = string.Empty;
-            btnTogglePassword.AccessibleName = visible ? "Hide password" : "Show password";
-            UiTheme.SetPasswordToggleIcon(btnTogglePassword, visible);
+            btnTogglePassword.Text = visible ? "Hide" : "Show";
         }
 
         private void PanelMain_Paint(object sender, PaintEventArgs e)
@@ -100,7 +119,7 @@ namespace SmartMedNew.UI
         private void BtnTogglePassword_Click(object sender, EventArgs e) =>
             SetPasswordVisible(!_passwordVisible);
 
-        private void TxtClinicalId_KeyDown(object sender, KeyEventArgs e)
+        private void TxtUsername_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode != Keys.Enter) return;
             e.SuppressKeyPress = true;
@@ -133,16 +152,51 @@ namespace SmartMedNew.UI
             panelFooter.Top = panelLoginCard.Bottom + gap;
         }
 
-        private void LnkTerminalHelp_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        private void LnkForgot_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             MessageBox.Show(
-                "Contact your pharmacy IT administrator for terminal access assistance.",
-                "Terminal Help",
+                "Please contact your pharmacy administrator to reset your password.",
+                "Forgot Password",
                 MessageBoxButtons.OK,
                 MessageBoxIcon.Information);
         }
 
+        private void BtnRegister_Click(object sender, EventArgs e)
+        {
+            Hide();
+            try
+            {
+                MessageBox.Show(
+                    "Customer registration will be added as a separate form in SmartMedNew.",
+                    "Register",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Information);
+            }
+            finally
+            {
+                RestoreLoginAppearance();
+            }
+        }
+
         private void BtnLogin_Click(object sender, EventArgs e) => PerformLogin();
+
+        private void BtnQuickAdmin_Click(object sender, EventArgs e) =>
+            PerformLoginWith(DemoAdminUsername, DemoAdminPassword);
+
+        private void BtnQuickCustomer_Click(object sender, EventArgs e) =>
+            PerformLoginWith(DemoCustomerEmail, DemoCustomerPassword);
+
+        private void PerformLoginWith(string identity, string password)
+        {
+            txtUsername.Text = identity;
+            txtUsername.ForeColor = UiTheme.AdminOnSurface;
+            txtUsername.Tag = "clinical-input";
+            txtPassword.Text = password;
+            txtPassword.ForeColor = UiTheme.AdminOnSurface;
+            txtPassword.Tag = "clinical-input";
+            SetPasswordVisible(_passwordVisible);
+            PerformLogin();
+        }
 
         private void PerformLogin()
         {
@@ -150,16 +204,15 @@ namespace SmartMedNew.UI
 
             try
             {
-                SetLoginBusy(true);
-
                 Session.Clear();
 
-                var identity = UiTheme.ReadTextBoxValue(txtClinicalId);
+                var identity = UiTheme.ReadTextBoxValue(txtUsername);
                 var password = UiTheme.ReadTextBoxValue(txtPassword);
 
                 if (ValidationService.IsNullOrWhiteSpace(identity) || ValidationService.IsNullOrWhiteSpace(password))
                 {
-                    ShowAuthError("Clinical ID and password are required.");
+                    MessageBox.Show("Email/username and password are required.", "Login",
+                        MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     return;
                 }
 
@@ -184,37 +237,14 @@ namespace SmartMedNew.UI
                     }
                 }
 
-                ShowAuthError("Authentication failed. Please verify your Clinical ID and try again.");
+                MessageBox.Show("Invalid credentials.", "Login", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message, "Login Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
-            finally
-            {
-                if (!IsDisposed)
-                    SetLoginBusy(false);
-            }
         }
 
-        private void SetLoginBusy(bool busy)
-        {
-            btnLogin.Enabled = !busy;
-            txtClinicalId.Enabled = !busy;
-            txtPassword.Enabled = !busy;
-            btnTogglePassword.Enabled = !busy;
-            chkStayLoggedIn.Enabled = !busy;
-            lnkTerminalHelp.Enabled = !busy;
-            btnLogin.Text = busy ? LoginBusyText : LoginButtonText;
-            UseWaitCursor = busy;
-        }
-
-        private void ShowAuthError(string message)
-        {
-            lblError.Text = message;
-            panelError.Visible = true;
-        }
-
-        private void LoginForm_Load(object sender, EventArgs e) => txtClinicalId.Focus();
+        private void LoginForm_Load(object sender, EventArgs e) => txtUsername.Focus();
     }
 }

@@ -312,6 +312,30 @@ namespace SmartMedNew.UI
             button.UseVisualStyleBackColor = false;
         }
 
+        public static void ApplySecondaryButton(Button button)
+        {
+            if (button == null) return;
+            button.FlatStyle = FlatStyle.Flat;
+            button.Font = UiFontSemibold;
+            button.Cursor = Cursors.Hand;
+            button.BackColor = Color.White;
+            button.ForeColor = AdminOnSurface;
+            button.FlatAppearance.BorderSize = 1;
+            button.FlatAppearance.BorderColor = AdminOutline;
+            button.FlatAppearance.MouseOverBackColor = Color.FromArgb(245, 250, 249);
+            button.UseVisualStyleBackColor = false;
+        }
+
+        public static void StyleLinkButton(LinkLabel link)
+        {
+            if (link == null) return;
+            link.Font = UiFontSemibold;
+            link.BackColor = Color.White;
+            link.LinkColor = LinkTeal;
+            link.ActiveLinkColor = PrimaryContainer;
+            link.VisitedLinkColor = LinkTeal;
+        }
+
         public static void StyleTextBox(TextBox textBox)
         {
             if (textBox == null) return;
