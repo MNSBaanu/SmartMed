@@ -17,6 +17,7 @@ Project: **SmartMed Pharmacy Management System** (`13162339874056363525`)
 | `my-orders` | `97fc709c2569442aa203bb02a1340d9c` | `TrackOrdersForm` |
 | `my-profile` | `d707d5003a8745ecbc5edf8be7d86af6` | `ProfileManagementForm` |
 | `login` | `df3064256ad24a729d3b0f3a100fc51f` | `LoginForm` (SmartMedNew) |
+| `registration` | `719984e1cd6e4c5cb8b3f16793014c49` | `RegistrationForm` (SmartMedNew) |
 
 Assets live in `13162339874056363525/` (`.html`, `.png`, `screens-index.json`).
 

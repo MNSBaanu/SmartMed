@@ -166,11 +166,12 @@ namespace SmartMedNew.UI
             Hide();
             try
             {
-                MessageBox.Show(
-                    "Customer registration will be added as a separate form in SmartMedNew.",
-                    "Register",
-                    MessageBoxButtons.OK,
-                    MessageBoxIcon.Information);
+                using (var registration = new RegistrationForm())
+                {
+                    registration.StartPosition = FormStartPosition.CenterScreen;
+                    registration.ShowInTaskbar = true;
+                    registration.ShowDialog();
+                }
             }
             finally
             {

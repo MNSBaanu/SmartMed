@@ -17,6 +17,8 @@ const screens = [
   { id: "7cf550b09037449a809c015b1f1c96cd", slug: "browse-medicine" },
   { id: "d707d5003a8745ecbc5edf8be7d86af6", slug: "my-profile" },
   { id: "f7007caf4e6a48d1962ce2e95ddee7b8", slug: "home" },
+  { id: "df3064256ad24a729d3b0f3a100fc51f", slug: "login" },
+  { id: "719984e1cd6e4c5cb8b3f16793014c49", slug: "registration" },
 ];
 
 const outDir = path.join(__dirname, projectId);

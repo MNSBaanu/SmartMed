@@ -336,6 +336,87 @@ namespace SmartMedNew.UI
             link.VisitedLinkColor = LinkTeal;
         }
 
+        public static void ApplyRegistrationForm(Form form, Panel body, Panel card)
+        {
+            form.BackColor = AdminSurface;
+            form.Font = UiFont;
+            if (body != null)
+                body.BackColor = AdminSurface;
+            ApplyClinicalAuthCard(card);
+            ApplyFontTree(form);
+        }
+
+        public static void ApplyRegistrationCardHeader(Panel header, Label titleLabel, Button closeButton)
+        {
+            if (header != null)
+                header.BackColor = PrimaryDark;
+            if (titleLabel != null)
+            {
+                titleLabel.BackColor = PrimaryDark;
+                titleLabel.ForeColor = Color.White;
+                titleLabel.Font = FontAt(8.25F, semibold: true);
+            }
+            if (closeButton != null)
+            {
+                closeButton.FlatStyle = FlatStyle.Flat;
+                closeButton.FlatAppearance.BorderSize = 0;
+                closeButton.BackColor = PrimaryDark;
+                closeButton.ForeColor = Color.FromArgb(220, 255, 255, 255);
+                closeButton.Font = UiFontBold;
+                closeButton.Cursor = Cursors.Hand;
+                closeButton.UseVisualStyleBackColor = false;
+                closeButton.FlatAppearance.MouseOverBackColor = PrimaryContainer;
+            }
+        }
+
+        public static void StyleRegistrationFieldLabel(Label label)
+        {
+            if (label == null) return;
+            label.Font = FontAt(8.25F, semibold: true);
+            label.ForeColor = AdminMuted;
+            label.BackColor = Color.White;
+        }
+
+        public static void ApplyRegisterButton(Button button)
+        {
+            if (button == null) return;
+            button.FlatStyle = FlatStyle.Flat;
+            button.Font = FontAt(8.25F, semibold: true);
+            button.Cursor = Cursors.Hand;
+            button.BackColor = AdminTeal;
+            button.ForeColor = Color.White;
+            button.FlatAppearance.BorderSize = 0;
+            button.FlatAppearance.MouseOverBackColor = AdminTealDark;
+            button.UseVisualStyleBackColor = false;
+        }
+
+        public static void StyleRegistrationBrandFooter(Panel footer, Label brandTitle, Label brandSubtitle, Panel brandIcon)
+        {
+            if (footer != null)
+                footer.BackColor = FooterBackground;
+            if (brandTitle != null)
+            {
+                brandTitle.Font = FontAt(14F, semibold: true);
+                brandTitle.ForeColor = PrimaryDark;
+                brandTitle.BackColor = FooterBackground;
+            }
+            if (brandSubtitle != null)
+            {
+                brandSubtitle.Font = FontAt(8.25F, semibold: true);
+                brandSubtitle.ForeColor = FooterText;
+                brandSubtitle.BackColor = FooterBackground;
+            }
+            if (brandIcon != null)
+            {
+                brandIcon.BackColor = AdminTeal;
+                foreach (Control child in brandIcon.Controls)
+                {
+                    child.BackColor = AdminTeal;
+                    child.ForeColor = Color.White;
+                }
+            }
+        }
+
         public static void StyleTextBox(TextBox textBox)
         {
             if (textBox == null) return;
