@@ -1,0 +1,64 @@
+using System.Drawing;
+using System.Windows.Forms;
+
+namespace SmartMedNew.UI
+{
+    public interface IAdminPage
+    {
+        void RefreshPage();
+        void SyncScrollRootWidth(int fallback);
+    }
+
+    public abstract class AdminPageControl : UserControl, IAdminPage
+    {
+        protected Panel ScrollHost { get; private set; }
+        protected Control ScrollRoot { get; private set; }
+
+        protected AdminPageControl()
+        {
+            DoubleBuffered = true;
+            BackColor = UiTheme.AdminSurface;
+        }
+
+        protected void WireScrollRoot(Control scrollRoot)
+        {
+            ScrollRoot = scrollRoot;
+            Controls.Clear();
+
+            ScrollHost = new Panel
+            {
+                Dock = DockStyle.Fill,
+                AutoScroll = true,
+                BackColor = UiTheme.AdminSurface,
+                Padding = new Padding(24, 24, 24, 24)
+            };
+
+            scrollRoot.Dock = DockStyle.Top;
+            scrollRoot.Width = GetScrollContentWidth();
+            ScrollHost.Controls.Add(scrollRoot);
+            Controls.Add(ScrollHost);
+            UiTheme.EnableDoubleBuffer(ScrollHost);
+            ScrollHost.Resize += (s, e) => SyncScrollRootWidth();
+        }
+
+        protected int GetScrollContentWidth(int fallback = 800)
+        {
+            var w = ScrollHost?.ClientSize.Width ?? Width;
+            if (w < 200) w = fallback;
+            return System.Math.Max(600, w - 48);
+        }
+
+        public virtual void SyncScrollRootWidth(int fallback = 800)
+        {
+            if (ScrollHost == null || ScrollRoot == null || ScrollHost.IsDisposed)
+                return;
+
+            var width = GetScrollContentWidth(fallback);
+            if (ScrollRoot.Width != width)
+                ScrollRoot.Width = width;
+            ScrollRoot.PerformLayout();
+        }
+
+        public abstract void RefreshPage();
+    }
+}

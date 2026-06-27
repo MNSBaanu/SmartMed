@@ -2,6 +2,8 @@ using System;
 using System.Drawing;
 using System.Drawing.Text;
 using System.IO;
+using System.Reflection;
+using System.Text;
 using System.Windows.Forms;
 using PdfSharp.Drawing;
 using PdfSharp.Fonts;
@@ -28,9 +30,14 @@ namespace SmartMedNew.UI
         public static readonly Color InputFocusBackground = Color.White;
         public static readonly Color PlaceholderText = Color.FromArgb(130, 138, 136);
         public static readonly Color FooterBackground = Color.FromArgb(232, 239, 238);
+        public static readonly Color AdminSidebar = Color.FromArgb(232, 239, 238);
+        public static readonly Color SurfaceContainer = Color.FromArgb(232, 239, 238);
         public static readonly Color ErrorContainer = Color.FromArgb(255, 218, 214);
         public static readonly Color Error = Color.FromArgb(186, 26, 26);
         public static readonly Color ErrorOnContainer = Color.FromArgb(147, 0, 10);
+        public static readonly Color Danger = Color.FromArgb(186, 26, 26);
+        public static readonly Color Success = Color.FromArgb(16, 185, 129);
+        public static readonly Color GridHeaderText = Color.FromArgb(48, 56, 55);
 
         public const string FontFamilyName = "Hanken Grotesk";
         public const float FontSize = 9F;
@@ -432,6 +439,264 @@ namespace SmartMedNew.UI
             StyleTextBox(textBox);
             textBox.UseSystemPasswordChar = false;
             textBox.PasswordChar = masked ? PasswordMaskChar : '\0';
+        }
+
+        public static void EnableDoubleBuffer(Control control)
+        {
+            if (control == null) return;
+            typeof(Control).InvokeMember(
+                "DoubleBuffered",
+                BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.SetProperty,
+                null,
+                control,
+                new object[] { true });
+        }
+
+        public static void ApplyClinicalGrid(DataGridView grid)
+        {
+            if (grid == null) return;
+            EnableDoubleBuffer(grid);
+            grid.EnableHeadersVisualStyles = false;
+            grid.BackgroundColor = Color.White;
+            grid.BorderStyle = BorderStyle.None;
+            grid.GridColor = Color.FromArgb(238, 245, 244);
+            grid.ColumnHeadersHeight = 36;
+            grid.RowTemplate.Height = 36;
+            grid.DefaultCellStyle.BackColor = Color.White;
+            grid.DefaultCellStyle.ForeColor = AdminOnSurface;
+            grid.DefaultCellStyle.SelectionBackColor = Color.FromArgb(220, 240, 236);
+            grid.DefaultCellStyle.SelectionForeColor = AdminOnSurface;
+            grid.DefaultCellStyle.Font = UiFont;
+            grid.DefaultCellStyle.Padding = new Padding(8, 4, 8, 4);
+            grid.AlternatingRowsDefaultCellStyle.BackColor = Color.FromArgb(250, 252, 252);
+            grid.ColumnHeadersDefaultCellStyle.BackColor = SurfaceContainer;
+            grid.ColumnHeadersDefaultCellStyle.ForeColor = AdminMuted;
+            grid.ColumnHeadersDefaultCellStyle.Font = UiFontBold;
+            grid.ColumnHeadersDefaultCellStyle.Padding = new Padding(10, 0, 10, 0);
+            grid.ColumnHeadersDefaultCellStyle.SelectionBackColor = grid.ColumnHeadersDefaultCellStyle.BackColor;
+            grid.CellBorderStyle = DataGridViewCellBorderStyle.SingleHorizontal;
+        }
+
+        public static void BeautifyGridHeaders(DataGridView grid)
+        {
+            if (grid?.Columns == null) return;
+            foreach (DataGridViewColumn col in grid.Columns)
+            {
+                if (col.Name == "Actions") continue;
+                col.HeaderText = SplitCamelCase(col.Name);
+            }
+        }
+
+        private static string SplitCamelCase(string name)
+        {
+            if (string.IsNullOrEmpty(name)) return name;
+            var result = new StringBuilder();
+            for (var i = 0; i < name.Length; i++)
+            {
+                if (i > 0 && char.IsUpper(name[i]))
+                    result.Append(' ');
+                result.Append(name[i]);
+            }
+            return result.ToString();
+        }
+
+        public static void ApplyAdminWinFormsShell(
+            Form form,
+            Panel titleBar,
+            Panel menuBar,
+            Panel sidebar,
+            Panel content,
+            Panel statusBar)
+        {
+            if (form != null)
+            {
+                form.BackColor = AdminSurface;
+                form.Font = UiFont;
+                EnableDoubleBuffer(form);
+            }
+
+            if (titleBar != null)
+            {
+                titleBar.BackColor = Color.White;
+                EnableDoubleBuffer(titleBar);
+            }
+
+            if (menuBar != null)
+            {
+                menuBar.BackColor = Color.White;
+                menuBar.Font = FontAt(8.25F);
+                EnableDoubleBuffer(menuBar);
+                foreach (Control c in menuBar.Controls)
+                {
+                    if (c is Label lbl)
+                    {
+                        lbl.ForeColor = AdminLabelText;
+                        lbl.BackColor = Color.White;
+                        lbl.Cursor = Cursors.Default;
+                    }
+                }
+            }
+
+            if (sidebar != null)
+            {
+                sidebar.BackColor = AdminSidebar;
+                EnableDoubleBuffer(sidebar);
+            }
+
+            if (content != null)
+            {
+                content.BackColor = AdminSurface;
+                content.Padding = Padding.Empty;
+                EnableDoubleBuffer(content);
+            }
+
+            if (statusBar != null)
+            {
+                statusBar.BackColor = AdminTeal;
+                EnableDoubleBuffer(statusBar);
+                foreach (Control c in statusBar.Controls)
+                {
+                    if (c is Label lbl)
+                    {
+                        lbl.ForeColor = Color.White;
+                        lbl.BackColor = AdminTeal;
+                        lbl.Font = FontAt(8.25F);
+                    }
+                }
+            }
+        }
+
+        public static void StyleWinFormsNavButton(Button button, bool active)
+        {
+            if (button == null) return;
+            button.Paint -= NavButton_Paint;
+            button.FlatStyle = FlatStyle.Flat;
+            button.FlatAppearance.BorderSize = 0;
+            button.Height = Math.Max(button.Height, 36);
+            button.TextAlign = ContentAlignment.MiddleLeft;
+            button.Padding = new Padding(16, 0, 12, 0);
+            button.Cursor = Cursors.Hand;
+            button.UseVisualStyleBackColor = false;
+            button.Font = active ? UiFontBold : UiFont;
+
+            if (string.Equals(button.Text, "Exit Application", StringComparison.Ordinal))
+            {
+                button.BackColor = AdminSidebar;
+                button.ForeColor = AdminMuted;
+                button.FlatAppearance.MouseOverBackColor = Color.FromArgb(255, 230, 230);
+                button.FlatAppearance.MouseDownBackColor = Color.FromArgb(255, 210, 210);
+                return;
+            }
+
+            if (active)
+            {
+                button.BackColor = Color.White;
+                button.ForeColor = AdminTeal;
+                button.FlatAppearance.MouseOverBackColor = Color.White;
+                button.Paint += NavButton_Paint;
+            }
+            else
+            {
+                button.BackColor = AdminSidebar;
+                button.ForeColor = AdminMuted;
+                button.FlatAppearance.MouseOverBackColor = Color.FromArgb(245, 250, 249);
+                button.FlatAppearance.MouseDownBackColor = Color.FromArgb(235, 242, 241);
+            }
+        }
+
+        private static void NavButton_Paint(object sender, PaintEventArgs e)
+        {
+            var button = (Button)sender;
+            using (var brush = new SolidBrush(AdminTeal))
+                e.Graphics.FillRectangle(brush, button.Width - 3, 0, 3, button.Height);
+        }
+
+        public static void SetGridDataSource(DataGridView grid, object dataSource)
+        {
+            if (grid == null) return;
+            grid.SuspendLayout();
+            try { grid.DataSource = dataSource; }
+            finally { grid.ResumeLayout(false); }
+        }
+
+        public static void StyleComboBox(ComboBox comboBox)
+        {
+            if (comboBox == null) return;
+            comboBox.FlatStyle = FlatStyle.Flat;
+            comboBox.BackColor = Color.White;
+            comboBox.ForeColor = AdminOnSurface;
+            comboBox.Font = UiFont;
+        }
+
+        public static void StyleTabButton(Button btn, bool active)
+        {
+            if (btn == null) return;
+            btn.FlatStyle = FlatStyle.Flat;
+            btn.FlatAppearance.BorderSize = 0;
+            btn.Cursor = Cursors.Hand;
+            btn.UseVisualStyleBackColor = false;
+            if (active)
+            {
+                btn.BackColor = Color.White;
+                btn.ForeColor = AdminOnSurface;
+                btn.Font = UiFontBold;
+            }
+            else
+            {
+                btn.BackColor = AdminSidebar;
+                btn.ForeColor = AdminMuted;
+                btn.Font = UiFont;
+            }
+        }
+
+        public static Button CreateFlatButton(string text, UiButtonStyle style, int width = 120, int height = 36)
+        {
+            var btn = new Button
+            {
+                Text = text,
+                Width = width,
+                Height = height,
+                Font = UiFont,
+                FlatStyle = FlatStyle.Flat,
+                Cursor = Cursors.Hand
+            };
+            ApplyFlatButton(btn, style);
+            return btn;
+        }
+
+        public static void ApplyFlatButton(Button button, UiButtonStyle style)
+        {
+            if (button == null) return;
+            button.FlatStyle = FlatStyle.Flat;
+            button.FlatAppearance.BorderSize = 0;
+            button.Font = UiFont;
+            button.Cursor = Cursors.Hand;
+            button.UseVisualStyleBackColor = false;
+
+            if (style == UiButtonStyle.Success)
+            {
+                button.BackColor = Success;
+                button.ForeColor = Color.White;
+                button.FlatAppearance.MouseOverBackColor = Color.FromArgb(5, 150, 105);
+            }
+            else if (style == UiButtonStyle.Danger)
+            {
+                button.BackColor = Danger;
+                button.ForeColor = Color.White;
+                button.FlatAppearance.MouseOverBackColor = Color.FromArgb(153, 27, 27);
+            }
+            else if (style == UiButtonStyle.Secondary)
+            {
+                button.BackColor = Color.FromArgb(238, 245, 244);
+                button.ForeColor = AdminOnSurface;
+                button.FlatAppearance.MouseOverBackColor = Color.FromArgb(227, 234, 233);
+            }
+            else
+            {
+                button.BackColor = AdminTeal;
+                button.ForeColor = Color.White;
+                button.FlatAppearance.MouseOverBackColor = AdminTealDark;
+            }
         }
     }
 }
