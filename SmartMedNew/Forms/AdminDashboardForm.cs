@@ -31,6 +31,7 @@ namespace SmartMedNew.UI
             DoubleBuffered = true;
             BackColor = UiTheme.AdminSurface;
             BuildContent();
+            UiTheme.EnableFontPropagation(this);
             LoadDashboardData();
         }
 

@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Text;
 using System.IO;
@@ -124,6 +125,7 @@ namespace SmartMedNew.UI
 
         private static void TryLoadBundledFonts()
         {
+            FontAssets.RegisterProcessFonts();
             _fontCollection = new PrivateFontCollection();
             _familyRegular = TryRegisterFamily("HankenGrotesk-Regular.ttf");
             _familySemiBold = TryRegisterFamily("HankenGrotesk-SemiBold.ttf");
@@ -156,6 +158,8 @@ namespace SmartMedNew.UI
             return new Font(_familyRegular, size, FontStyle.Regular, GraphicsUnit.Point);
         }
 
+        private static readonly HashSet<Control> FontPropagationRoots = new HashSet<Control>();
+
         public static void ApplyFontTree(Control root)
         {
             if (root == null) return;
@@ -163,23 +167,62 @@ namespace SmartMedNew.UI
             ApplyFontRecursive(root);
         }
 
+        public static void EnableFontPropagation(Control root)
+        {
+            if (root == null) return;
+            EnsureFonts();
+            if (FontPropagationRoots.Add(root))
+                root.ControlAdded += OnControlAddedForFont;
+            ApplyFontTree(root);
+        }
+
+        private static void OnControlAddedForFont(object sender, ControlEventArgs e)
+        {
+            if (e.Control == null) return;
+            ApplyFontTree(e.Control);
+            EnableFontPropagation(e.Control);
+        }
+
         private static void ApplyFontRecursive(Control control)
         {
-            if (control.Font != null)
-            {
-                var size = control.Font.Size;
-                var bold = control.Font.Bold;
-                control.Font = size >= 16F && bold
-                    ? FontAt(size, bold: true)
-                    : size >= 14F && bold
-                        ? FontAt(size, semibold: true)
-                        : bold
-                            ? FontAt(size, bold: true)
-                            : FontAt(size);
-            }
+            if (control == null) return;
+
+            control.Font = MapFont(control.Font);
+
+            if (control is DataGridView grid)
+                ApplyGridFonts(grid);
 
             foreach (Control child in control.Controls)
                 ApplyFontRecursive(child);
+        }
+
+        private static Font MapFont(Font current)
+        {
+            if (current == null) return UiFont;
+
+            var size = current.Size;
+            var bold = current.Bold || (current.Style & FontStyle.Bold) == FontStyle.Bold;
+            var familyName = current.FontFamily?.Name ?? string.Empty;
+            var semiboldName = familyName.IndexOf("Semi", StringComparison.OrdinalIgnoreCase) >= 0;
+
+            if (bold)
+            {
+                if (size >= 16F) return FontAt(size, bold: true);
+                if (size >= 14F) return FontAt(size, semibold: true);
+                return FontAt(size, bold: true);
+            }
+
+            if (semiboldName) return FontAt(size, semibold: true);
+            return FontAt(size);
+        }
+
+        private static void ApplyGridFonts(DataGridView grid)
+        {
+            var cellFont = FontAt(UiFont.Size);
+            grid.DefaultCellStyle.Font = cellFont;
+            grid.AlternatingRowsDefaultCellStyle.Font = cellFont;
+            grid.ColumnHeadersDefaultCellStyle.Font = FontAt(UiFont.Size, bold: true);
+            grid.RowHeadersDefaultCellStyle.Font = cellFont;
         }
 
         public static void ApplyLoginForm(Form form, Panel body, Panel card, LinkLabel helpLink)
@@ -201,7 +244,7 @@ namespace SmartMedNew.UI
                 helpLink.VisitedLinkColor = LinkTeal;
             }
 
-            ApplyFontTree(form);
+            EnableFontPropagation(form);
         }
 
         public static void ApplyClinicalAuthCard(Panel card)
@@ -350,7 +393,7 @@ namespace SmartMedNew.UI
             if (body != null)
                 body.BackColor = AdminSurface;
             ApplyClinicalAuthCard(card);
-            ApplyFontTree(form);
+            EnableFontPropagation(form);
         }
 
         public static void ApplyRegistrationCardHeader(Panel header, Label titleLabel, Button closeButton)
@@ -564,6 +607,9 @@ namespace SmartMedNew.UI
                     }
                 }
             }
+
+            if (form != null)
+                EnableFontPropagation(form);
         }
 
         public static void StyleWinFormsNavButton(Button button, bool active)

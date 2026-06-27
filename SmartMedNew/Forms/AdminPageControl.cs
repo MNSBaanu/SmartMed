@@ -18,6 +18,7 @@ namespace SmartMedNew.UI
         {
             DoubleBuffered = true;
             BackColor = UiTheme.AdminSurface;
+            Font = UiTheme.UiFont;
         }
 
         protected void WireScrollRoot(Control scrollRoot)
@@ -39,6 +40,7 @@ namespace SmartMedNew.UI
             Controls.Add(ScrollHost);
             UiTheme.EnableDoubleBuffer(ScrollHost);
             ScrollHost.Resize += (s, e) => SyncScrollRootWidth();
+            UiTheme.EnableFontPropagation(this);
         }
 
         protected int GetScrollContentWidth(int fallback = 800)

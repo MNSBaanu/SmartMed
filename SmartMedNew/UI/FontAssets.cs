@@ -1,13 +1,45 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.InteropServices;
 
 namespace SmartMedNew.UI
 {
     internal static class FontAssets
     {
         private const string ResourcePrefix = "SmartMedNew.Assets.Fonts.";
+        private const uint FrPrivate = 0x10;
+        private static readonly string[] BundledFontFiles =
+        {
+            "HankenGrotesk-Regular.ttf",
+            "HankenGrotesk-SemiBold.ttf",
+            "HankenGrotesk-Bold.ttf"
+        };
+        private static bool _gdiRegistered;
+
+        [DllImport("gdi32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
+        private static extern int AddFontResourceEx(string lpszFilename, uint fl, IntPtr pdv);
+
+        public static void RegisterProcessFonts()
+        {
+            if (_gdiRegistered) return;
+            _gdiRegistered = true;
+
+            foreach (var fileName in BundledFontFiles)
+            {
+                try
+                {
+                    var path = GetFontFilePath(fileName);
+                    AddFontResourceEx(path, FrPrivate, IntPtr.Zero);
+                }
+                catch
+                {
+                    // Continue with PrivateFontCollection fallback in UiTheme.
+                }
+            }
+        }
 
         public static string GetFontFilePath(string fileName)
         {
