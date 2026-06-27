@@ -327,17 +327,23 @@ namespace SmartMed.UI
             }
         }
 
-        public static void ApplyLoginForm(MaterialForm form, Panel body, LinkLabel forgotLink = null)
+        public static void ApplyLoginForm(MaterialForm form, Panel body, Panel card = null, LinkLabel forgotLink = null)
         {
             RegisterForm(form);
-            form.BackColor = CardBackground;
+            form.BackColor = PageBackground;
             form.Font = UiFont;
             form.Padding = new Padding(0, 64, 0, 0);
 
             if (body != null)
             {
-                body.BackColor = CardBackground;
+                body.BackColor = PageBackground;
                 ApplyFontTree(body);
+            }
+
+            if (card != null)
+            {
+                card.BackColor = CardBackground;
+                ApplyFontTree(card);
             }
 
             if (forgotLink != null)

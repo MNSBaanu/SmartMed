@@ -33,6 +33,7 @@ namespace SmartMed.UI
         {
 
             this.panelBody = new System.Windows.Forms.Panel();
+            this.panelLoginCard = new System.Windows.Forms.Panel();
 
             this.lblUsername = new System.Windows.Forms.Label();
 
@@ -59,21 +60,7 @@ namespace SmartMed.UI
 
             // 
 
-            this.panelBody.Controls.Add(this.lnkForgot);
-            this.panelBody.Controls.Add(this.btnQuickCustomer);
-            this.panelBody.Controls.Add(this.btnQuickAdmin);
-            this.panelBody.Controls.Add(this.btnRegister);
-
-            this.panelBody.Controls.Add(this.btnLogin);
-
-            this.panelBody.Controls.Add(this.btnTogglePassword);
-            this.panelBody.Controls.Add(this.txtPassword);
-
-            this.panelBody.Controls.Add(this.lblPassword);
-
-            this.panelBody.Controls.Add(this.txtUsername);
-
-            this.panelBody.Controls.Add(this.lblUsername);
+            this.panelBody.Controls.Add(this.panelLoginCard);
 
             this.panelBody.Dock = System.Windows.Forms.DockStyle.Fill;
 
@@ -81,11 +68,28 @@ namespace SmartMed.UI
 
             this.panelBody.Name = "panelBody";
 
-            this.panelBody.Padding = new System.Windows.Forms.Padding(24, 16, 24, 16);
-
-            this.panelBody.Size = new System.Drawing.Size(368, 252);
+            this.panelBody.Size = new System.Drawing.Size(1184, 696);
 
             this.panelBody.TabIndex = 0;
+            this.panelBody.Resize += new System.EventHandler(this.PanelBody_Resize);
+            // 
+            // panelLoginCard
+            // 
+            this.panelLoginCard.Controls.Add(this.lnkForgot);
+            this.panelLoginCard.Controls.Add(this.btnQuickCustomer);
+            this.panelLoginCard.Controls.Add(this.btnQuickAdmin);
+            this.panelLoginCard.Controls.Add(this.btnRegister);
+            this.panelLoginCard.Controls.Add(this.btnLogin);
+            this.panelLoginCard.Controls.Add(this.btnTogglePassword);
+            this.panelLoginCard.Controls.Add(this.txtPassword);
+            this.panelLoginCard.Controls.Add(this.lblPassword);
+            this.panelLoginCard.Controls.Add(this.txtUsername);
+            this.panelLoginCard.Controls.Add(this.lblUsername);
+            this.panelLoginCard.Location = new System.Drawing.Point(408, 222);
+            this.panelLoginCard.Name = "panelLoginCard";
+            this.panelLoginCard.Padding = new System.Windows.Forms.Padding(24, 16, 24, 16);
+            this.panelLoginCard.Size = new System.Drawing.Size(368, 252);
+            this.panelLoginCard.TabIndex = 0;
 
             // 
 
@@ -258,15 +262,11 @@ namespace SmartMed.UI
 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 
-            this.ClientSize = new System.Drawing.Size(368, 316);
+            this.ClientSize = new System.Drawing.Size(1184, 760);
 
             this.Controls.Add(this.panelBody);
 
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
-
-            this.MaximizeBox = false;
-
-            this.MinimizeBox = false;
+            this.MinimumSize = new System.Drawing.Size(1000, 640);
 
             this.Name = "LoginForm";
 
@@ -293,6 +293,7 @@ namespace SmartMed.UI
 
 
         private System.Windows.Forms.Panel panelBody;
+        private System.Windows.Forms.Panel panelLoginCard;
 
         private System.Windows.Forms.Label lblUsername;
 

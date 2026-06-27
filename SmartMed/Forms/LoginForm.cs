@@ -34,7 +34,8 @@ namespace SmartMed.UI
 
         private void ApplyChrome()
         {
-            UiTheme.ApplyLoginForm(this, panelBody, lnkForgot);
+            UiTheme.ApplyLoginForm(this, panelBody, panelLoginCard, lnkForgot);
+            CenterLoginCard();
             UiTheme.ApplyFlatButton(btnLogin, UiButtonStyle.Primary);
             UiTheme.ApplyFlatButton(btnRegister, UiButtonStyle.Success);
             UiTheme.ApplyFlatButton(btnQuickAdmin, UiButtonStyle.Primary);
@@ -59,6 +60,15 @@ namespace SmartMed.UI
             if (e.KeyCode != Keys.Enter) return;
             e.SuppressKeyPress = true;
             txtPassword.Focus();
+        }
+
+        private void PanelBody_Resize(object sender, EventArgs e) => CenterLoginCard();
+
+        private void CenterLoginCard()
+        {
+            if (panelLoginCard == null || panelBody == null) return;
+            panelLoginCard.Left = Math.Max(0, (panelBody.ClientSize.Width - panelLoginCard.Width) / 2);
+            panelLoginCard.Top = Math.Max(0, (panelBody.ClientSize.Height - panelLoginCard.Height) / 2);
         }
 
         private void LnkForgot_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
