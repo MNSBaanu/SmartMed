@@ -276,17 +276,27 @@ namespace SmartMedNew.UI
             StyleClinicalTextBox(textBox, placeholder);
         }
 
-        public static void StyleLinkButton(Button button)
+        public static void StylePasswordToggleButton(Button button)
         {
             if (button == null) return;
             button.FlatStyle = FlatStyle.Flat;
-            button.Font = UiFontSemibold;
+            button.Text = string.Empty;
             button.Cursor = Cursors.Hand;
-            button.BackColor = Color.White;
+            button.BackColor = InputBackground;
             button.ForeColor = LinkTeal;
             button.FlatAppearance.BorderSize = 0;
-            button.FlatAppearance.MouseOverBackColor = Color.FromArgb(238, 245, 244);
+            button.FlatAppearance.MouseOverBackColor = InputFocusBackground;
             button.UseVisualStyleBackColor = false;
+            button.ImageAlign = ContentAlignment.MiddleCenter;
+            button.TabStop = false;
+        }
+
+        public static void SetPasswordToggleIcon(Button button, bool visible)
+        {
+            if (button == null) return;
+            var previous = button.Image;
+            button.Image = ClinicalIcons.CreateVisibilityIcon(visible, LinkTeal, 20);
+            previous?.Dispose();
         }
 
         public static void ApplyLoginButton(Button button)

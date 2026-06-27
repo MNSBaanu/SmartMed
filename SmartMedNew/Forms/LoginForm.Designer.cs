@@ -194,11 +194,11 @@ namespace SmartMedNew.UI
             // 
             this.btnTogglePassword.Cursor = System.Windows.Forms.Cursors.Hand;
             this.btnTogglePassword.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnTogglePassword.Location = new System.Drawing.Point(320, 326);
+            this.btnTogglePassword.Location = new System.Drawing.Point(360, 326);
             this.btnTogglePassword.Name = "btnTogglePassword";
-            this.btnTogglePassword.Size = new System.Drawing.Size(56, 40);
+            this.btnTogglePassword.Size = new System.Drawing.Size(40, 40);
             this.btnTogglePassword.TabIndex = 8;
-            this.btnTogglePassword.Text = "Show";
+            this.btnTogglePassword.Text = "";
             this.btnTogglePassword.UseVisualStyleBackColor = false;
             this.btnTogglePassword.Click += new System.EventHandler(this.BtnTogglePassword_Click);
             // 
@@ -206,7 +206,7 @@ namespace SmartMedNew.UI
             // 
             this.txtPassword.Location = new System.Drawing.Point(32, 326);
             this.txtPassword.Name = "txtPassword";
-            this.txtPassword.Size = new System.Drawing.Size(344, 40);
+            this.txtPassword.Size = new System.Drawing.Size(368, 40);
             this.txtPassword.TabIndex = 7;
             this.txtPassword.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TxtPassword_KeyDown);
             // 

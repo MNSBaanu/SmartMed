@@ -56,7 +56,7 @@ namespace SmartMedNew.UI
             UiTheme.StyleClinicalPasswordBox(txtPassword, "Enter your password");
             txtPassword.GotFocus += (s, e) => SetPasswordVisible(_passwordVisible);
             UiTheme.ApplyLoginButton(btnLogin);
-            UiTheme.StyleLinkButton(btnTogglePassword);
+            UiTheme.StylePasswordToggleButton(btnTogglePassword);
             chkStayLoggedIn.Font = UiTheme.UiFont;
             chkStayLoggedIn.ForeColor = UiTheme.AdminLabelText;
             chkStayLoggedIn.BackColor = Color.White;
@@ -84,7 +84,9 @@ namespace SmartMedNew.UI
                 txtPassword.PasswordChar = visible ? '\0' : UiTheme.PasswordMaskChar;
             }
 
-            btnTogglePassword.Text = visible ? "Hide" : "Show";
+            btnTogglePassword.Text = string.Empty;
+            btnTogglePassword.AccessibleName = visible ? "Hide password" : "Show password";
+            UiTheme.SetPasswordToggleIcon(btnTogglePassword, visible);
         }
 
         private void PanelMain_Paint(object sender, PaintEventArgs e)
