@@ -60,7 +60,7 @@ namespace SmartMedNew.UI
             this.panelTitleBar.Location = new System.Drawing.Point(0, 0);
             this.panelTitleBar.Name = "panelTitleBar";
             this.panelTitleBar.Padding = new System.Windows.Forms.Padding(16, 0, 16, 0);
-            this.panelTitleBar.Size = new System.Drawing.Size(984, 40);
+            this.panelTitleBar.Size = new System.Drawing.Size(720, 40);
             this.panelTitleBar.TabIndex = 0;
             // 
             // lblTitleBarText
@@ -70,7 +70,7 @@ namespace SmartMedNew.UI
             this.lblTitleBarText.Name = "lblTitleBarText";
             this.lblTitleBarText.Size = new System.Drawing.Size(205, 15);
             this.lblTitleBarText.TabIndex = 1;
-            this.lblTitleBarText.Text = "SmartMed - Clinical Login (v4.2.0)";
+            this.lblTitleBarText.Text = "SmartMed \u2014 Clinical Login";
             // 
             // pnlTitleIcon
             // 
@@ -84,23 +84,24 @@ namespace SmartMedNew.UI
             // lblTitleIcon
             // 
             this.lblTitleIcon.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lblTitleIcon.Font = new System.Drawing.Font("Hanken Grotesk", 8F, System.Drawing.FontStyle.Bold);
+            this.lblTitleIcon.Font = new System.Drawing.Font("Hanken Grotesk", 7F, System.Drawing.FontStyle.Bold);
             this.lblTitleIcon.ForeColor = System.Drawing.Color.White;
             this.lblTitleIcon.Location = new System.Drawing.Point(0, 0);
             this.lblTitleIcon.Name = "lblTitleIcon";
             this.lblTitleIcon.Size = new System.Drawing.Size(20, 20);
             this.lblTitleIcon.TabIndex = 0;
-            this.lblTitleIcon.Text = "+";
+            this.lblTitleIcon.Text = "Rx";
             this.lblTitleIcon.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // panelMain
             // 
             this.panelMain.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(244)))), ((int)(((byte)(251)))), ((int)(((byte)(250)))));
+            this.panelMain.Controls.Add(this.panelFooter);
             this.panelMain.Controls.Add(this.panelLoginCard);
             this.panelMain.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panelMain.Location = new System.Drawing.Point(0, 40);
             this.panelMain.Name = "panelMain";
-            this.panelMain.Size = new System.Drawing.Size(984, 561);
+            this.panelMain.Size = new System.Drawing.Size(720, 600);
             this.panelMain.TabIndex = 1;
             this.panelMain.Paint += new System.Windows.Forms.PaintEventHandler(this.PanelMain_Paint);
             this.panelMain.Resize += new System.EventHandler(this.PanelMain_Resize);
@@ -124,14 +125,14 @@ namespace SmartMedNew.UI
             this.panelLoginCard.Location = new System.Drawing.Point(272, 20);
             this.panelLoginCard.Name = "panelLoginCard";
             this.panelLoginCard.Padding = new System.Windows.Forms.Padding(32);
-            this.panelLoginCard.Size = new System.Drawing.Size(440, 520);
+            this.panelLoginCard.Size = new System.Drawing.Size(440, 536);
             this.panelLoginCard.TabIndex = 0;
             // 
             // panelError
             // 
             this.panelError.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(218)))), ((int)(((byte)(214)))));
             this.panelError.Controls.Add(this.lblError);
-            this.panelError.Location = new System.Drawing.Point(32, 456);
+            this.panelError.Location = new System.Drawing.Point(32, 472);
             this.panelError.Name = "panelError";
             this.panelError.Padding = new System.Windows.Forms.Padding(12, 8, 12, 8);
             this.panelError.Size = new System.Drawing.Size(376, 48);
@@ -150,7 +151,7 @@ namespace SmartMedNew.UI
             // 
             // btnLogin
             // 
-            this.btnLogin.Location = new System.Drawing.Point(32, 400);
+            this.btnLogin.Location = new System.Drawing.Point(32, 416);
             this.btnLogin.Name = "btnLogin";
             this.btnLogin.Size = new System.Drawing.Size(376, 44);
             this.btnLogin.TabIndex = 11;
@@ -162,7 +163,7 @@ namespace SmartMedNew.UI
             // 
             this.panelActions.Controls.Add(this.lnkTerminalHelp);
             this.panelActions.Controls.Add(this.chkStayLoggedIn);
-            this.panelActions.Location = new System.Drawing.Point(32, 360);
+            this.panelActions.Location = new System.Drawing.Point(32, 376);
             this.panelActions.Name = "panelActions";
             this.panelActions.Size = new System.Drawing.Size(376, 28);
             this.panelActions.TabIndex = 10;
@@ -174,7 +175,7 @@ namespace SmartMedNew.UI
             this.lnkTerminalHelp.Location = new System.Drawing.Point(268, 4);
             this.lnkTerminalHelp.Name = "lnkTerminalHelp";
             this.lnkTerminalHelp.Size = new System.Drawing.Size(108, 15);
-            this.lnkTerminalHelp.TabIndex = 1;
+            this.lnkTerminalHelp.TabIndex = 10;
             this.lnkTerminalHelp.TabStop = true;
             this.lnkTerminalHelp.Text = "Terminal Help?";
             this.lnkTerminalHelp.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.LnkTerminalHelp_LinkClicked);
@@ -185,7 +186,7 @@ namespace SmartMedNew.UI
             this.chkStayLoggedIn.Location = new System.Drawing.Point(0, 2);
             this.chkStayLoggedIn.Name = "chkStayLoggedIn";
             this.chkStayLoggedIn.Size = new System.Drawing.Size(110, 19);
-            this.chkStayLoggedIn.TabIndex = 0;
+            this.chkStayLoggedIn.TabIndex = 9;
             this.chkStayLoggedIn.Text = "Stay logged in";
             this.chkStayLoggedIn.UseVisualStyleBackColor = true;
             // 
@@ -193,9 +194,9 @@ namespace SmartMedNew.UI
             // 
             this.btnTogglePassword.Cursor = System.Windows.Forms.Cursors.Hand;
             this.btnTogglePassword.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnTogglePassword.Location = new System.Drawing.Point(328, 318);
+            this.btnTogglePassword.Location = new System.Drawing.Point(320, 326);
             this.btnTogglePassword.Name = "btnTogglePassword";
-            this.btnTogglePassword.Size = new System.Drawing.Size(48, 28);
+            this.btnTogglePassword.Size = new System.Drawing.Size(56, 40);
             this.btnTogglePassword.TabIndex = 8;
             this.btnTogglePassword.Text = "Show";
             this.btnTogglePassword.UseVisualStyleBackColor = false;
@@ -203,15 +204,16 @@ namespace SmartMedNew.UI
             // 
             // txtPassword
             // 
-            this.txtPassword.Location = new System.Drawing.Point(32, 318);
+            this.txtPassword.Location = new System.Drawing.Point(32, 326);
             this.txtPassword.Name = "txtPassword";
-            this.txtPassword.Size = new System.Drawing.Size(344, 23);
+            this.txtPassword.Size = new System.Drawing.Size(344, 40);
             this.txtPassword.TabIndex = 7;
+            this.txtPassword.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TxtPassword_KeyDown);
             // 
             // lblPassword
             // 
             this.lblPassword.AutoSize = true;
-            this.lblPassword.Location = new System.Drawing.Point(32, 298);
+            this.lblPassword.Location = new System.Drawing.Point(32, 306);
             this.lblPassword.Name = "lblPassword";
             this.lblPassword.Size = new System.Drawing.Size(57, 15);
             this.lblPassword.TabIndex = 6;
@@ -221,7 +223,7 @@ namespace SmartMedNew.UI
             // 
             this.txtClinicalId.Location = new System.Drawing.Point(32, 258);
             this.txtClinicalId.Name = "txtClinicalId";
-            this.txtClinicalId.Size = new System.Drawing.Size(376, 23);
+            this.txtClinicalId.Size = new System.Drawing.Size(376, 40);
             this.txtClinicalId.TabIndex = 5;
             this.txtClinicalId.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TxtClinicalId_KeyDown);
             // 
@@ -296,23 +298,21 @@ namespace SmartMedNew.UI
             // 
             // panelFooter
             // 
-            this.panelFooter.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(232)))), ((int)(((byte)(239)))), ((int)(((byte)(238)))));
+            this.panelFooter.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(244)))), ((int)(((byte)(251)))), ((int)(((byte)(250)))));
             this.panelFooter.Controls.Add(this.lblCopyright);
             this.panelFooter.Controls.Add(this.lblSecurityLine);
-            this.panelFooter.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.panelFooter.Location = new System.Drawing.Point(0, 601);
+            this.panelFooter.Location = new System.Drawing.Point(140, 560);
             this.panelFooter.Name = "panelFooter";
-            this.panelFooter.Padding = new System.Windows.Forms.Padding(0, 8, 0, 8);
-            this.panelFooter.Size = new System.Drawing.Size(984, 60);
+            this.panelFooter.Size = new System.Drawing.Size(440, 44);
             this.panelFooter.TabIndex = 2;
             // 
             // lblCopyright
             // 
             this.lblCopyright.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.lblCopyright.Font = new System.Drawing.Font("Hanken Grotesk", 8.25F);
-            this.lblCopyright.Location = new System.Drawing.Point(0, 36);
+            this.lblCopyright.Location = new System.Drawing.Point(0, 24);
             this.lblCopyright.Name = "lblCopyright";
-            this.lblCopyright.Size = new System.Drawing.Size(984, 16);
+            this.lblCopyright.Size = new System.Drawing.Size(440, 20);
             this.lblCopyright.TabIndex = 1;
             this.lblCopyright.Text = "\u00a9 2024 SmartMed Pharmacy \u2022 Licensed to Clinical Precision Ltd.";
             this.lblCopyright.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -321,9 +321,9 @@ namespace SmartMedNew.UI
             // 
             this.lblSecurityLine.Dock = System.Windows.Forms.DockStyle.Top;
             this.lblSecurityLine.Font = new System.Drawing.Font("Hanken Grotesk", 8.25F);
-            this.lblSecurityLine.Location = new System.Drawing.Point(0, 8);
+            this.lblSecurityLine.Location = new System.Drawing.Point(0, 0);
             this.lblSecurityLine.Name = "lblSecurityLine";
-            this.lblSecurityLine.Size = new System.Drawing.Size(984, 16);
+            this.lblSecurityLine.Size = new System.Drawing.Size(440, 20);
             this.lblSecurityLine.TabIndex = 0;
             this.lblSecurityLine.Text = "CLINICAL SECURITY STANDARD \u2022 SSL ACTIVE";
             this.lblSecurityLine.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -334,15 +334,15 @@ namespace SmartMedNew.UI
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(244)))), ((int)(((byte)(251)))), ((int)(((byte)(250)))));
-            this.ClientSize = new System.Drawing.Size(984, 661);
+            this.ClientSize = new System.Drawing.Size(720, 640);
             this.Controls.Add(this.panelMain);
-            this.Controls.Add(this.panelFooter);
             this.Controls.Add(this.panelTitleBar);
             this.Font = new System.Drawing.Font("Hanken Grotesk", 9F);
-            this.MinimumSize = new System.Drawing.Size(900, 640);
+            this.MinimumSize = new System.Drawing.Size(640, 580);
             this.Name = "LoginForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "SmartMed \u2014 Clinical Login";
+            this.Load += new System.EventHandler(this.LoginForm_Load);
             this.panelTitleBar.ResumeLayout(false);
             this.panelTitleBar.PerformLayout();
             this.pnlTitleIcon.ResumeLayout(false);

@@ -8,6 +8,7 @@ using System.Text;
 using System.Windows.Forms;
 using PdfSharp.Drawing;
 using PdfSharp.Pdf;
+using SmartMedNew.UI;
 
 namespace SmartMedNew.Services
 {
@@ -47,10 +48,10 @@ namespace SmartMedNew.Services
 
             const double margin = 40;
             const double rowHeight = 16;
-            var titleFont = new XFont("Arial", 14, XFontStyle.Bold);
-            var subtitleFont = new XFont("Arial", 9);
-            var headerFont = new XFont("Arial", 9, XFontStyle.Bold);
-            var bodyFont = new XFont("Arial", 8);
+            var titleFont = UiTheme.PdfFont(14, bold: true);
+            var subtitleFont = UiTheme.PdfFont(9);
+            var headerFont = UiTheme.PdfFont(9, bold: true);
+            var bodyFont = UiTheme.PdfFont(8);
 
             var colCount = table.Columns.Count;
             var colWidths = BuildColumnWidths(table, XUnit.FromPoint(595).Point - margin * 2);
@@ -122,14 +123,14 @@ namespace SmartMedNew.Services
                 throw new InvalidOperationException("No data to print.");
 
             var rowIndex = 0;
-            var bodyFont = new System.Drawing.Font("Segoe UI", 9f);
+            var bodyFont = UiTheme.UiFont;
             var doc = new PrintDocument { DocumentName = title };
             doc.PrintPage += (s, e) =>
             {
                 float y = e.MarginBounds.Top;
                 float lineHeight = e.Graphics.MeasureString("X", bodyFont).Height + 4;
 
-                e.Graphics.DrawString(title, new System.Drawing.Font("Segoe UI", 9f, System.Drawing.FontStyle.Bold), Brushes.Black, e.MarginBounds.Left, y);
+                e.Graphics.DrawString(title, UiTheme.UiFontBold, Brushes.Black, e.MarginBounds.Left, y);
                 y += lineHeight * 2;
 
                 var headers = new StringBuilder();
@@ -139,7 +140,7 @@ namespace SmartMedNew.Services
                     if (headers.Length > 0) headers.Append(" | ");
                     headers.Append(col.HeaderText);
                 }
-                e.Graphics.DrawString(headers.ToString(), new System.Drawing.Font("Segoe UI", 9f, System.Drawing.FontStyle.Bold), Brushes.Black, e.MarginBounds.Left, y);
+                e.Graphics.DrawString(headers.ToString(), UiTheme.UiFontBold, Brushes.Black, e.MarginBounds.Left, y);
                 y += lineHeight;
 
                 while (rowIndex < grid.Rows.Count && y + lineHeight < e.MarginBounds.Bottom)

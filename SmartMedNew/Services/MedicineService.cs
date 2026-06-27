@@ -8,6 +8,7 @@ using System.Text;
 using System.Windows.Forms;
 using SmartMedNew.Data;
 using SmartMedNew.Models;
+using SmartMedNew.UI;
 
 namespace SmartMedNew.Services
 {
@@ -235,19 +236,19 @@ namespace SmartMedNew.Services
                 throw new InvalidOperationException("No medicines to print.");
 
             var index = 0;
-            var bodyFont = new System.Drawing.Font("Segoe UI", 9f);
+            var bodyFont = UiTheme.UiFont;
             var doc = new PrintDocument { DocumentName = title };
             doc.PrintPage += (s, e) =>
             {
                 float y = e.MarginBounds.Top;
                 float lineHeight = e.Graphics.MeasureString("X", bodyFont).Height + 4;
 
-                e.Graphics.DrawString(title, new System.Drawing.Font("Segoe UI", 9f, System.Drawing.FontStyle.Bold), Brushes.Black, e.MarginBounds.Left, y);
+                e.Graphics.DrawString(title, UiTheme.UiFontBold, Brushes.Black, e.MarginBounds.Left, y);
                 y += lineHeight * 2;
 
                 e.Graphics.DrawString(
                     "Name | Category | Stock | Price (LKR) | Expiry | Rx",
-                    new System.Drawing.Font("Segoe UI", 9f, System.Drawing.FontStyle.Bold),
+                    UiTheme.UiFontBold,
                     Brushes.Black,
                     e.MarginBounds.Left,
                     y);

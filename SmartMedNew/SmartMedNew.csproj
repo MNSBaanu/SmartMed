@@ -3,7 +3,7 @@
     <OutputType>WinExe</OutputType>
     <TargetFramework>net48</TargetFramework>
     <UseWindowsForms>true</UseWindowsForms>
-    <RootNamespace>SmartMedNew.UI</RootNamespace>
+    <RootNamespace>SmartMedNew</RootNamespace>
     <AssemblyName>SmartMedNew</AssemblyName>
     <StartupObject>SmartMedNew.UI.Program</StartupObject>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
@@ -30,6 +30,9 @@
     <None Include="Assets\Fonts\HankenGrotesk-Bold.ttf">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <EmbeddedResource Include="Assets\Fonts\HankenGrotesk-Regular.ttf" />
+    <EmbeddedResource Include="Assets\Fonts\HankenGrotesk-SemiBold.ttf" />
+    <EmbeddedResource Include="Assets\Fonts\HankenGrotesk-Bold.ttf" />
     <None Update="App.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

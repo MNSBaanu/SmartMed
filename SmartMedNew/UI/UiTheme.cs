@@ -3,6 +3,8 @@ using System.Drawing;
 using System.Drawing.Text;
 using System.IO;
 using System.Windows.Forms;
+using PdfSharp.Drawing;
+using PdfSharp.Fonts;
 
 namespace SmartMedNew.UI
 {
@@ -19,7 +21,12 @@ namespace SmartMedNew.UI
         public static readonly Color AdminOutline = Color.FromArgb(193, 200, 198);
         public static readonly Color AdminOnSurface = Color.FromArgb(22, 29, 29);
         public static readonly Color AdminMuted = Color.FromArgb(65, 72, 71);
+        public static readonly Color AdminLabelText = Color.FromArgb(48, 56, 55);
+        public static readonly Color FooterText = Color.FromArgb(90, 98, 96);
+        public static readonly Color LinkTeal = Color.FromArgb(27, 79, 71);
         public static readonly Color InputBackground = Color.FromArgb(238, 245, 244);
+        public static readonly Color InputFocusBackground = Color.White;
+        public static readonly Color PlaceholderText = Color.FromArgb(130, 138, 136);
         public static readonly Color FooterBackground = Color.FromArgb(232, 239, 238);
         public static readonly Color ErrorContainer = Color.FromArgb(255, 218, 214);
         public static readonly Color Error = Color.FromArgb(186, 26, 26);
@@ -68,8 +75,18 @@ namespace SmartMedNew.UI
         public static void Init()
         {
             if (_initialized) return;
+            EnsurePdfFonts();
             EnsureFonts();
             _initialized = true;
+        }
+
+        public static XFont PdfFont(float size, bool bold = false) =>
+            new XFont(FontFamilyName, size, bold ? XFontStyle.Bold : XFontStyle.Regular);
+
+        private static void EnsurePdfFonts()
+        {
+            if (GlobalFontSettings.FontResolver == null)
+                GlobalFontSettings.FontResolver = new HankenGroteskFontResolver();
         }
 
         private static void EnsureFonts()
@@ -77,80 +94,59 @@ namespace SmartMedNew.UI
             if (_uiFont != null) return;
 
             TryLoadBundledFonts();
-
-            if (_familyRegular != null)
+            if (_familyRegular == null)
             {
-                _uiFont = new Font(_familyRegular, FontSize, FontStyle.Regular, GraphicsUnit.Point);
-                _uiFontBold = _familyBold != null
-                    ? new Font(_familyBold, FontSize, FontStyle.Regular, GraphicsUnit.Point)
-                    : new Font(_familyRegular, FontSize, FontStyle.Bold, GraphicsUnit.Point);
-                _uiFontSemibold = _familySemiBold != null
-                    ? new Font(_familySemiBold, 10F, FontStyle.Regular, GraphicsUnit.Point)
-                    : new Font(_familyRegular, 10F, FontStyle.Bold, GraphicsUnit.Point);
-                _uiFontAuthTitle = _familySemiBold != null
-                    ? new Font(_familySemiBold, 14F, FontStyle.Regular, GraphicsUnit.Point)
-                    : new Font(_familyRegular, 14F, FontStyle.Bold, GraphicsUnit.Point);
-                _uiFontTitle = _familyBold != null
-                    ? new Font(_familyBold, 16F, FontStyle.Regular, GraphicsUnit.Point)
-                    : new Font(_familyRegular, 16F, FontStyle.Bold, GraphicsUnit.Point);
-                return;
+                throw new InvalidOperationException(
+                    "Hanken Grotesk font files are required in Assets/Fonts (Regular, SemiBold, Bold).");
             }
 
-            _uiFont = new Font(FontFamilyName, FontSize, FontStyle.Regular, GraphicsUnit.Point);
-            _uiFontBold = new Font(FontFamilyName, FontSize, FontStyle.Bold, GraphicsUnit.Point);
-            _uiFontSemibold = new Font(FontFamilyName, 10F, FontStyle.Bold, GraphicsUnit.Point);
-            _uiFontAuthTitle = new Font(FontFamilyName, 14F, FontStyle.Bold, GraphicsUnit.Point);
-            _uiFontTitle = new Font(FontFamilyName, 16F, FontStyle.Bold, GraphicsUnit.Point);
+            _uiFont = new Font(_familyRegular, FontSize, FontStyle.Regular, GraphicsUnit.Point);
+            _uiFontBold = _familyBold != null
+                ? new Font(_familyBold, FontSize, FontStyle.Regular, GraphicsUnit.Point)
+                : new Font(_familySemiBold ?? _familyRegular, FontSize, FontStyle.Regular, GraphicsUnit.Point);
+            _uiFontSemibold = _familySemiBold != null
+                ? new Font(_familySemiBold, 10F, FontStyle.Regular, GraphicsUnit.Point)
+                : new Font(_familyBold ?? _familyRegular, 10F, FontStyle.Regular, GraphicsUnit.Point);
+            _uiFontAuthTitle = _familySemiBold != null
+                ? new Font(_familySemiBold, 14F, FontStyle.Regular, GraphicsUnit.Point)
+                : new Font(_familyBold ?? _familyRegular, 14F, FontStyle.Regular, GraphicsUnit.Point);
+            _uiFontTitle = _familyBold != null
+                ? new Font(_familyBold, 16F, FontStyle.Regular, GraphicsUnit.Point)
+                : new Font(_familySemiBold ?? _familyRegular, 16F, FontStyle.Regular, GraphicsUnit.Point);
         }
 
         private static void TryLoadBundledFonts()
         {
+            _fontCollection = new PrivateFontCollection();
+            _familyRegular = TryRegisterFamily("HankenGrotesk-Regular.ttf");
+            _familySemiBold = TryRegisterFamily("HankenGrotesk-SemiBold.ttf");
+            _familyBold = TryRegisterFamily("HankenGrotesk-Bold.ttf");
+        }
+
+        private static FontFamily TryRegisterFamily(string fileName)
+        {
             try
             {
-                var baseDir = AppDomain.CurrentDomain.BaseDirectory;
-                var regularPath = Path.Combine(baseDir, "Assets", "Fonts", "HankenGrotesk-Regular.ttf");
-                var semiBoldPath = Path.Combine(baseDir, "Assets", "Fonts", "HankenGrotesk-SemiBold.ttf");
-                var boldPath = Path.Combine(baseDir, "Assets", "Fonts", "HankenGrotesk-Bold.ttf");
-
-                if (!File.Exists(regularPath))
-                    return;
-
-                _fontCollection = new PrivateFontCollection();
-                _fontCollection.AddFontFile(regularPath);
-                _familyRegular = _fontCollection.Families[_fontCollection.Families.Length - 1];
-
-                if (File.Exists(semiBoldPath))
-                {
-                    _fontCollection.AddFontFile(semiBoldPath);
-                    _familySemiBold = _fontCollection.Families[_fontCollection.Families.Length - 1];
-                }
-
-                if (File.Exists(boldPath))
-                {
-                    _fontCollection.AddFontFile(boldPath);
-                    _familyBold = _fontCollection.Families[_fontCollection.Families.Length - 1];
-                }
+                var path = FontAssets.GetFontFilePath(fileName);
+                _fontCollection.AddFontFile(path);
+                return _fontCollection.Families[_fontCollection.Families.Length - 1];
             }
             catch
             {
-                _familyRegular = null;
-                _familySemiBold = null;
-                _familyBold = null;
+                return null;
             }
         }
 
         public static Font FontAt(float size, bool semibold = false, bool bold = false)
         {
             EnsureFonts();
-            if (bold && _familyBold != null)
-                return new Font(_familyBold, size, FontStyle.Regular, GraphicsUnit.Point);
+            if (bold)
+                return _familyBold != null
+                    ? new Font(_familyBold, size, FontStyle.Regular, GraphicsUnit.Point)
+                    : new Font(_familySemiBold ?? _familyRegular, size, FontStyle.Regular, GraphicsUnit.Point);
             if (semibold && _familySemiBold != null)
                 return new Font(_familySemiBold, size, FontStyle.Regular, GraphicsUnit.Point);
-            if (bold || semibold)
-                return new Font(FontFamilyName, size, FontStyle.Bold, GraphicsUnit.Point);
-            if (_familyRegular != null)
-                return new Font(_familyRegular, size, FontStyle.Regular, GraphicsUnit.Point);
-            return new Font(FontFamilyName, size, FontStyle.Regular, GraphicsUnit.Point);
+            return new Font(_familyRegular, size, FontStyle.Regular, GraphicsUnit.Point);
         }
 
         public static void ApplyFontTree(Control root)
@@ -191,11 +187,11 @@ namespace SmartMedNew.UI
 
             if (helpLink != null)
             {
-                helpLink.Font = UiFont;
+                helpLink.Font = UiFontSemibold;
                 helpLink.BackColor = Color.White;
-                helpLink.LinkColor = AdminTeal;
+                helpLink.LinkColor = LinkTeal;
                 helpLink.ActiveLinkColor = PrimaryContainer;
-                helpLink.VisitedLinkColor = AdminTeal;
+                helpLink.VisitedLinkColor = LinkTeal;
             }
 
             ApplyFontTree(form);
@@ -221,8 +217,76 @@ namespace SmartMedNew.UI
         {
             if (label == null) return;
             label.Font = UiFont;
-            label.ForeColor = AdminMuted;
+            label.ForeColor = AdminLabelText;
             label.BackColor = Color.White;
+        }
+
+        public static bool IsPlaceholderActive(TextBox textBox) =>
+            textBox != null && textBox.ForeColor == PlaceholderText;
+
+        public static string ReadTextBoxValue(TextBox textBox)
+        {
+            if (textBox == null || IsPlaceholderActive(textBox))
+                return string.Empty;
+            return textBox.Text.Trim();
+        }
+
+        private static void ApplyPlaceholder(TextBox textBox, string placeholder)
+        {
+            if (!string.IsNullOrWhiteSpace(textBox.Text) && !IsPlaceholderActive(textBox))
+                return;
+
+            textBox.Text = placeholder;
+            textBox.ForeColor = PlaceholderText;
+            textBox.PasswordChar = '\0';
+        }
+
+        private static void ClearPlaceholder(TextBox textBox)
+        {
+            if (!IsPlaceholderActive(textBox))
+                return;
+
+            textBox.Text = string.Empty;
+            textBox.ForeColor = AdminOnSurface;
+        }
+
+        public static void StyleClinicalTextBox(TextBox textBox, string placeholder)
+        {
+            if (textBox == null || textBox.Tag as string == "clinical-input") return;
+            textBox.Tag = "clinical-input";
+            textBox.AccessibleDescription = placeholder;
+            StyleTextBox(textBox);
+
+            textBox.GotFocus += (s, e) =>
+            {
+                ClearPlaceholder(textBox);
+                textBox.BackColor = InputFocusBackground;
+            };
+            textBox.LostFocus += (s, e) =>
+            {
+                textBox.BackColor = InputBackground;
+                ApplyPlaceholder(textBox, placeholder);
+            };
+
+            ApplyPlaceholder(textBox, placeholder);
+        }
+
+        public static void StyleClinicalPasswordBox(TextBox textBox, string placeholder)
+        {
+            StyleClinicalTextBox(textBox, placeholder);
+        }
+
+        public static void StyleLinkButton(Button button)
+        {
+            if (button == null) return;
+            button.FlatStyle = FlatStyle.Flat;
+            button.Font = UiFontSemibold;
+            button.Cursor = Cursors.Hand;
+            button.BackColor = Color.White;
+            button.ForeColor = LinkTeal;
+            button.FlatAppearance.BorderSize = 0;
+            button.FlatAppearance.MouseOverBackColor = Color.FromArgb(238, 245, 244);
+            button.UseVisualStyleBackColor = false;
         }
 
         public static void ApplyLoginButton(Button button)
