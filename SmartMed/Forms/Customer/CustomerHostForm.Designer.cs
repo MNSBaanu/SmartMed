@@ -72,9 +72,9 @@ namespace SmartMed.UI
             // 
             // panelWinControls
             // 
-            this.panelWinControls.Controls.Add(this.btnWinClose);
-            this.panelWinControls.Controls.Add(this.btnWinMaximize);
             this.panelWinControls.Controls.Add(this.btnWinMinimize);
+            this.panelWinControls.Controls.Add(this.btnWinMaximize);
+            this.panelWinControls.Controls.Add(this.btnWinClose);
             this.panelWinControls.Dock = System.Windows.Forms.DockStyle.Right;
             this.panelWinControls.Location = new System.Drawing.Point(1142, 0);
             this.panelWinControls.Name = "panelWinControls";
@@ -83,7 +83,7 @@ namespace SmartMed.UI
             // 
             // btnWinClose
             // 
-            this.btnWinClose.Dock = System.Windows.Forms.DockStyle.Right;
+            this.btnWinClose.Dock = System.Windows.Forms.DockStyle.Left;
             this.btnWinClose.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnWinClose.Location = new System.Drawing.Point(92, 0);
             this.btnWinClose.Name = "btnWinClose";
@@ -95,7 +95,7 @@ namespace SmartMed.UI
             // 
             // btnWinMaximize
             // 
-            this.btnWinMaximize.Dock = System.Windows.Forms.DockStyle.Right;
+            this.btnWinMaximize.Dock = System.Windows.Forms.DockStyle.Left;
             this.btnWinMaximize.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnWinMaximize.Location = new System.Drawing.Point(46, 0);
             this.btnWinMaximize.Name = "btnWinMaximize";
@@ -107,7 +107,7 @@ namespace SmartMed.UI
             // 
             // btnWinMinimize
             // 
-            this.btnWinMinimize.Dock = System.Windows.Forms.DockStyle.Right;
+            this.btnWinMinimize.Dock = System.Windows.Forms.DockStyle.Left;
             this.btnWinMinimize.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnWinMinimize.Location = new System.Drawing.Point(0, 0);
             this.btnWinMinimize.Name = "btnWinMinimize";

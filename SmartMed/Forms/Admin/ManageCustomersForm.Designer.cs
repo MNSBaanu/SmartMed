@@ -30,8 +30,9 @@ namespace SmartMed.UI
 
         private System.Windows.Forms.TextBox txtSearch;
         private System.Windows.Forms.DataGridView gridCustomers;
-        private System.Windows.Forms.Label lblItemCount;
-        private System.Windows.Forms.Label lblSelectedCount;
+        private System.Windows.Forms.Label lblTotalCustomers;
+        private System.Windows.Forms.Label lblActiveCustomers;
+        private System.Windows.Forms.Label lblInactiveCustomers;
         private System.Windows.Forms.Label lblPageInfo;
         private System.Windows.Forms.Button btnPagePrev;
         private System.Windows.Forms.Button btnPageNext;

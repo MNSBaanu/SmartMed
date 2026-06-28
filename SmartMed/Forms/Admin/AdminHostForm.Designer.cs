@@ -75,9 +75,9 @@ namespace SmartMed.UI
             // 
             // panelWinControls
             // 
-            this.panelWinControls.Controls.Add(this.btnWinClose);
-            this.panelWinControls.Controls.Add(this.btnWinMaximize);
             this.panelWinControls.Controls.Add(this.btnWinMinimize);
+            this.panelWinControls.Controls.Add(this.btnWinMaximize);
+            this.panelWinControls.Controls.Add(this.btnWinClose);
             this.panelWinControls.Dock = System.Windows.Forms.DockStyle.Right;
             this.panelWinControls.Location = new System.Drawing.Point(1142, 0);
             this.panelWinControls.Name = "panelWinControls";
@@ -86,7 +86,7 @@ namespace SmartMed.UI
             // 
             // btnWinClose
             // 
-            this.btnWinClose.Dock = System.Windows.Forms.DockStyle.Right;
+            this.btnWinClose.Dock = System.Windows.Forms.DockStyle.Left;
             this.btnWinClose.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnWinClose.Location = new System.Drawing.Point(92, 0);
             this.btnWinClose.Name = "btnWinClose";
@@ -98,7 +98,7 @@ namespace SmartMed.UI
             // 
             // btnWinMaximize
             // 
-            this.btnWinMaximize.Dock = System.Windows.Forms.DockStyle.Right;
+            this.btnWinMaximize.Dock = System.Windows.Forms.DockStyle.Left;
             this.btnWinMaximize.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnWinMaximize.Location = new System.Drawing.Point(46, 0);
             this.btnWinMaximize.Name = "btnWinMaximize";
@@ -110,7 +110,7 @@ namespace SmartMed.UI
             // 
             // btnWinMinimize
             // 
-            this.btnWinMinimize.Dock = System.Windows.Forms.DockStyle.Right;
+            this.btnWinMinimize.Dock = System.Windows.Forms.DockStyle.Left;
             this.btnWinMinimize.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnWinMinimize.Location = new System.Drawing.Point(0, 0);
             this.btnWinMinimize.Name = "btnWinMinimize";
@@ -325,7 +325,7 @@ namespace SmartMed.UI
             this.btnNavReports.Name = "btnNavReports";
             this.btnNavReports.Size = new System.Drawing.Size(220, 36);
             this.btnNavReports.TabIndex = 5;
-            this.btnNavReports.Text = "Reporting Services";
+            this.btnNavReports.Text = "Generate Reports";
             this.btnNavReports.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.btnNavReports.UseVisualStyleBackColor = false;
             this.btnNavReports.Click += new System.EventHandler(this.BtnNavReports_Click);
@@ -337,7 +337,7 @@ namespace SmartMed.UI
             this.btnNavOrders.Name = "btnNavOrders";
             this.btnNavOrders.Size = new System.Drawing.Size(220, 36);
             this.btnNavOrders.TabIndex = 4;
-            this.btnNavOrders.Text = "Order Management";
+            this.btnNavOrders.Text = "Manage Orders";
             this.btnNavOrders.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.btnNavOrders.UseVisualStyleBackColor = false;
             this.btnNavOrders.Click += new System.EventHandler(this.BtnNavOrders_Click);
@@ -349,7 +349,7 @@ namespace SmartMed.UI
             this.btnNavCustomers.Name = "btnNavCustomers";
             this.btnNavCustomers.Size = new System.Drawing.Size(220, 36);
             this.btnNavCustomers.TabIndex = 3;
-            this.btnNavCustomers.Text = "Customer Database";
+            this.btnNavCustomers.Text = "Manage Customers";
             this.btnNavCustomers.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.btnNavCustomers.UseVisualStyleBackColor = false;
             this.btnNavCustomers.Click += new System.EventHandler(this.BtnNavCustomers_Click);
@@ -361,7 +361,7 @@ namespace SmartMed.UI
             this.btnNavMedicines.Name = "btnNavMedicines";
             this.btnNavMedicines.Size = new System.Drawing.Size(220, 36);
             this.btnNavMedicines.TabIndex = 2;
-            this.btnNavMedicines.Text = "Inventory Explorer";
+            this.btnNavMedicines.Text = "Manage Medicines";
             this.btnNavMedicines.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.btnNavMedicines.UseVisualStyleBackColor = false;
             this.btnNavMedicines.Click += new System.EventHandler(this.BtnNavMedicines_Click);
@@ -373,7 +373,7 @@ namespace SmartMed.UI
             this.btnNavDashboard.Name = "btnNavDashboard";
             this.btnNavDashboard.Size = new System.Drawing.Size(220, 36);
             this.btnNavDashboard.TabIndex = 1;
-            this.btnNavDashboard.Text = "Dashboard";
+            this.btnNavDashboard.Text = "Operational Dashboard";
             this.btnNavDashboard.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.btnNavDashboard.UseVisualStyleBackColor = false;
             this.btnNavDashboard.Click += new System.EventHandler(this.BtnNavDashboard_Click);

@@ -145,7 +145,7 @@ namespace SmartMed.UI
             _reportsPage.Dock = DockStyle.Fill;
             panelContent.Controls.Add(_reportsPage);
             _reportsPage.RefreshPage();
-            UpdateTitleBar("Reports & Analytics");
+            UpdateTitleBar("Generate Reports");
         }
 
         private void UpdateTitleBar(string section)
