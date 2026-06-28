@@ -62,11 +62,35 @@
     <Compile Update="Forms\AdminHostForm.Designer.cs">
       <DependentUpon>AdminHostForm.cs</DependentUpon>
     </Compile>
+    <EmbeddedResource Update="Forms\AdminHostForm.resx">
+      <DependentUpon>AdminHostForm.cs</DependentUpon>
+    </EmbeddedResource>
     <Compile Update="Forms\AdminDashboardForm.cs">
       <SubType>UserControl</SubType>
     </Compile>
+    <Compile Update="Forms\AdminDashboardForm.Designer.cs">
+      <DependentUpon>AdminDashboardForm.cs</DependentUpon>
+    </Compile>
+    <EmbeddedResource Update="Forms\AdminDashboardForm.resx">
+      <DependentUpon>AdminDashboardForm.cs</DependentUpon>
+    </EmbeddedResource>
     <Compile Update="Forms\ManageOrdersForm.cs">
       <SubType>UserControl</SubType>
     </Compile>
+    <Compile Update="Forms\ManageOrdersForm.Designer.cs">
+      <DependentUpon>ManageOrdersForm.cs</DependentUpon>
+    </Compile>
+    <EmbeddedResource Update="Forms\ManageOrdersForm.resx">
+      <DependentUpon>ManageOrdersForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <Compile Update="Forms\ManageCustomersForm.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="Forms\ManageCustomersForm.Designer.cs">
+      <DependentUpon>ManageCustomersForm.cs</DependentUpon>
+    </Compile>
+    <EmbeddedResource Update="Forms\ManageCustomersForm.resx">
+      <DependentUpon>ManageCustomersForm.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
 </Project>

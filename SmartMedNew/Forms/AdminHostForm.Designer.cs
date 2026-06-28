@@ -352,7 +352,7 @@ namespace SmartMedNew.UI
             this.btnNavCustomers.Text = "Customer Database";
             this.btnNavCustomers.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.btnNavCustomers.UseVisualStyleBackColor = false;
-            this.btnNavCustomers.Click += new System.EventHandler(this.BtnNavComingSoon_Click);
+            this.btnNavCustomers.Click += new System.EventHandler(this.BtnNavCustomers_Click);
             // 
             // btnNavMedicines
             // 

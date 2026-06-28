@@ -8,26 +8,17 @@ using SmartMedNew.UI;
 
 namespace SmartMedNew.UI
 {
-    public sealed class AdminDashboardForm : UserControl
+    public sealed partial class AdminDashboardForm : UserControl
     {
         private readonly ReportService _reports = new ReportService();
         private readonly OrderService _orders = new OrderService();
         private readonly MedicineService _medicines = new MedicineService();
 
-        private Label lblStockValue;
-        private Label lblOrdersValue;
-        private Label lblSalesValue;
-        private Label lblCustomersValue;
-        private TextBox txtSearch;
-        private DataGridView gridLowStock;
-        private DataGridView gridExpiry;
-        private DataGridView gridRecent;
-        private Panel _scrollHost;
-        private TableLayoutPanel _contentPanel;
         private List<object> _recentRows = new List<object>();
 
         public AdminDashboardForm()
         {
+            InitializeComponent();
             DoubleBuffered = true;
             BackColor = UiTheme.AdminSurface;
             BuildContent();

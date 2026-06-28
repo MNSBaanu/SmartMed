@@ -8,25 +8,13 @@ using SmartMedNew.Services;
 
 namespace SmartMedNew.UI
 {
-    public sealed class ManageOrdersForm : AdminPageControl
+    public sealed partial class ManageOrdersForm : AdminPageControl
     {
         private const int PageSize = 10;
 
         private readonly OrderService _orders = new OrderService();
         private readonly CustomerService _customers = new CustomerService();
 
-        private TextBox txtSearch;
-        private ComboBox cmbStatus;
-        private DateTimePicker dtpFrom;
-        private DateTimePicker dtpTo;
-        private CheckBox chkDateRange;
-        private DataGridView gridOrders;
-        private Label lblVolume;
-        private Label lblAvgTime;
-        private Label lblFlags;
-        private Label lblPageInfo;
-        private Button btnPagePrev;
-        private Button btnPageNext;
         private List<OrderRow> _allRows = new List<OrderRow>();
         private List<OrderRow> _filteredRows = new List<OrderRow>();
         private int _currentPage = 1;
@@ -34,6 +22,7 @@ namespace SmartMedNew.UI
 
         public ManageOrdersForm()
         {
+            InitializeComponent();
             BuildContent();
             RefreshPage();
         }
