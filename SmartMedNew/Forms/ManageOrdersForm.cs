@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.IO;
 using System.Linq;
 using System.Windows.Forms;
 using SmartMedNew.Models;
@@ -12,8 +11,6 @@ namespace SmartMedNew.UI
     public sealed class ManageOrdersForm : AdminPageControl
     {
         private const int PageSize = 10;
-        private const string StatusAll = "All Statuses";
-        private const string StatusFlagged = "Flagged";
 
         private readonly OrderService _orders = new OrderService();
         private readonly CustomerService _customers = new CustomerService();
@@ -22,18 +19,18 @@ namespace SmartMedNew.UI
         private ComboBox cmbStatus;
         private DateTimePicker dtpFrom;
         private DateTimePicker dtpTo;
+        private CheckBox chkDateRange;
         private DataGridView gridOrders;
         private Label lblVolume;
         private Label lblAvgTime;
         private Label lblFlags;
         private Label lblPageInfo;
-        private Button btnPrevPage;
-        private Button btnNextPage;
-        private FlowLayoutPanel pnlPageNumbers;
-
-        private List<Order> _allOrders = new List<Order>();
-        private List<Order> _filteredOrders = new List<Order>();
-        private int _currentPage;
+        private Button btnPagePrev;
+        private Button btnPageNext;
+        private List<OrderRow> _allRows = new List<OrderRow>();
+        private List<OrderRow> _filteredRows = new List<OrderRow>();
+        private int _currentPage = 1;
+        private int? _selectedOrderId;
 
         public ManageOrdersForm()
         {
@@ -44,43 +41,61 @@ namespace SmartMedNew.UI
         public override void RefreshPage()
         {
             SyncScrollRootWidth();
-            _allOrders = _orders.GetAll();
-            ApplyFilters();
+            LoadOrders();
         }
 
         private void BuildContent()
         {
-            lblVolume = new Label();
-            lblAvgTime = new Label();
-            lblFlags = new Label();
-
-            var scrollRoot = new TableLayoutPanel
+            var root = new TableLayoutPanel
             {
                 AutoSize = true,
                 AutoSizeMode = AutoSizeMode.GrowAndShrink,
                 ColumnCount = 1,
                 RowCount = 4,
-                BackColor = UiTheme.AdminSurface
+                MinimumSize = new Size(0, 700)
             };
-            scrollRoot.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100f));
-            scrollRoot.RowStyles.Add(new RowStyle(SizeType.AutoSize));
-            scrollRoot.RowStyles.Add(new RowStyle(SizeType.AutoSize));
-            scrollRoot.RowStyles.Add(new RowStyle(SizeType.Absolute, 400f));
-            scrollRoot.RowStyles.Add(new RowStyle(SizeType.AutoSize));
+            root.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100f));
+            root.RowStyles.Add(new RowStyle(SizeType.AutoSize));
+            root.RowStyles.Add(new RowStyle(SizeType.AutoSize));
+            root.RowStyles.Add(new RowStyle(SizeType.Percent, 100f));
+            root.RowStyles.Add(new RowStyle(SizeType.AutoSize));
 
-            scrollRoot.Controls.Add(CreatePageHeader(), 0, 0);
-            scrollRoot.Controls.Add(CreateFilterPanel(), 0, 1);
-            scrollRoot.Controls.Add(CreateGridPanel(), 0, 2);
-            scrollRoot.Controls.Add(CreateFooterPanel(), 0, 3);
+            root.Controls.Add(CreatePageHeader(), 0, 0);
+            root.Controls.Add(CreateFilterPanel(), 0, 1);
+            root.Controls.Add(CreateGridPanel(), 0, 2);
+            root.Controls.Add(CreateFooterPanel(), 0, 3);
 
-            WireScrollRoot(scrollRoot);
+            WireScrollRoot(root);
         }
 
-        private Panel CreatePageHeader()
+        private static Panel CreatePageHeader()
         {
-            return AdminUiHelpers.CreatePageHeader(
-                "Manage Orders",
-                "Monitor and process pharmaceutical orders across all clinical departments.");
+            var header = new Panel
+            {
+                Dock = DockStyle.Top,
+                Height = 72,
+                Margin = new Padding(0, 0, 0, 16),
+                BackColor = UiTheme.AdminSurface
+            };
+            header.Controls.Add(new Label
+            {
+                Text = "Monitor and process pharmaceutical orders across all clinical departments.",
+                Font = UiTheme.UiFont,
+                ForeColor = UiTheme.AdminMuted,
+                Location = new Point(0, 40),
+                AutoSize = true,
+                BackColor = UiTheme.AdminSurface
+            });
+            header.Controls.Add(new Label
+            {
+                Text = "Manage Orders",
+                Font = UiTheme.FontAt(20f, bold: true),
+                ForeColor = UiTheme.PrimaryDark,
+                Location = new Point(0, 4),
+                AutoSize = true,
+                BackColor = UiTheme.AdminSurface
+            });
+            return header;
         }
 
         private Panel CreateFilterPanel()
@@ -88,10 +103,10 @@ namespace SmartMedNew.UI
             var outer = new Panel
             {
                 Dock = DockStyle.Top,
-                Height = 108,
-                Margin = new Padding(0, 0, 0, 20),
-                BackColor = Color.FromArgb(238, 245, 244),
-                Padding = new Padding(16, 20, 16, 12)
+                AutoSize = true,
+                Margin = new Padding(0, 0, 0, 16),
+                Padding = new Padding(16, 20, 16, 16),
+                BackColor = Color.FromArgb(238, 245, 244)
             };
             outer.Paint += (s, e) =>
             {
@@ -102,106 +117,87 @@ namespace SmartMedNew.UI
                     e.Graphics.DrawRectangle(pen, rect);
             };
 
-            var legend = new Label
+            var badge = new Label
             {
                 Text = "  Filter Options  ",
                 AutoSize = true,
-                BackColor = UiTheme.PrimaryDark,
+                Font = UiTheme.FontAt(8.25f, semibold: true),
                 ForeColor = Color.White,
-                Font = UiTheme.FontAt(9f, semibold: true),
-                Location = new Point(12, -2)
+                BackColor = Color.FromArgb(12, 46, 43),
+                Location = new Point(12, 0)
             };
-            outer.Controls.Add(legend);
+
+            txtSearch = new TextBox { Width = 260 };
+            UiTheme.StyleTextBox(txtSearch);
+
+            cmbStatus = new ComboBox
+            {
+                DropDownStyle = ComboBoxStyle.DropDownList,
+                Width = 160
+            };
+            UiTheme.StyleComboBox(cmbStatus);
+            cmbStatus.Items.AddRange(new object[]
+            {
+                "All Statuses",
+                OrderService.StatusPending,
+                OrderService.StatusReadyForPickup,
+                OrderService.StatusDelivered,
+                "Flagged"
+            });
+            cmbStatus.SelectedIndex = 0;
+
+            dtpFrom = new DateTimePicker { Format = DateTimePickerFormat.Short, Width = 120 };
+            dtpTo = new DateTimePicker { Format = DateTimePickerFormat.Short, Width = 120 };
+            chkDateRange = new CheckBox
+            {
+                Text = "Use date range",
+                AutoSize = true,
+                ForeColor = UiTheme.AdminOnSurface,
+                BackColor = Color.FromArgb(238, 245, 244)
+            };
 
             var flow = new FlowLayoutPanel
             {
-                Dock = DockStyle.Fill,
+                Dock = DockStyle.Top,
+                AutoSize = true,
                 FlowDirection = FlowDirection.LeftToRight,
                 WrapContents = true,
-                BackColor = Color.FromArgb(238, 245, 244),
-                Padding = new Padding(0, 8, 0, 0)
-            };
-
-            flow.Controls.Add(CreateFilterField("Search Orders:", CreateSearchBox(), 288));
-            flow.Controls.Add(CreateFilterField("Status Category:", CreateStatusCombo(), 192));
-
-            var dateWrap = new FlowLayoutPanel
-            {
-                FlowDirection = FlowDirection.LeftToRight,
-                AutoSize = true,
-                WrapContents = false,
+                Padding = new Padding(0, 12, 0, 0),
                 BackColor = Color.FromArgb(238, 245, 244)
             };
-            dtpFrom = CreateDatePicker(DateTime.Today.AddMonths(-1));
-            dtpTo = CreateDatePicker(DateTime.Today);
-            dateWrap.Controls.Add(dtpFrom);
-            dateWrap.Controls.Add(new Label
-            {
-                Text = "to",
-                AutoSize = true,
-                ForeColor = UiTheme.AdminMuted,
-                Font = UiTheme.FontAt(9f, semibold: true),
-                Margin = new Padding(6, 6, 6, 0),
-                BackColor = Color.FromArgb(238, 245, 244)
-            });
-            dateWrap.Controls.Add(dtpTo);
-            flow.Controls.Add(CreateFilterField("Service Date Range:", dateWrap, 280));
+
+            flow.Controls.Add(CreateFilterField("Search Orders:", CreateSearchBox()));
+            flow.Controls.Add(CreateFilterField("Status Category:", cmbStatus));
+            flow.Controls.Add(CreateFilterField("Service Date Range:", CreateDateRangePanel()));
 
             var actions = new FlowLayoutPanel
             {
                 FlowDirection = FlowDirection.LeftToRight,
                 AutoSize = true,
                 WrapContents = false,
-                BackColor = Color.FromArgb(238, 245, 244),
-                Margin = new Padding(12, 22, 0, 0)
+                Margin = new Padding(0, 22, 0, 0),
+                BackColor = Color.FromArgb(238, 245, 244)
             };
-            var btnApply = AdminUiHelpers.CreateWinButton("Apply Filters", primary: true, width: 128, height: 32);
-            btnApply.Margin = new Padding(0, 0, 8, 0);
+            var btnApply = CreateWinButton("Apply Filters", primary: true, width: 120);
             btnApply.Click += (s, e) => ApplyFilters();
-            var btnExport = AdminUiHelpers.CreateWinButton("Export Data", primary: false, width: 118, height: 32);
-            btnExport.BackColor = Color.White;
+            var btnExport = CreateWinButton("Export Data", primary: false, width: 110);
             btnExport.Click += BtnExport_Click;
             actions.Controls.Add(btnApply);
             actions.Controls.Add(btnExport);
             flow.Controls.Add(actions);
 
             outer.Controls.Add(flow);
-            legend.BringToFront();
+            outer.Controls.Add(badge);
+            badge.BringToFront();
             return outer;
-        }
-
-        private static Panel CreateFilterField(string labelText, Control input, int width)
-        {
-            var wrap = new Panel
-            {
-                Width = width,
-                Height = 58,
-                Margin = new Padding(0, 0, 16, 0),
-                BackColor = Color.FromArgb(238, 245, 244)
-            };
-            wrap.Controls.Add(new Label
-            {
-                Text = labelText,
-                Font = UiTheme.FontAt(9f, semibold: true),
-                ForeColor = UiTheme.PrimaryDark,
-                Location = new Point(0, 0),
-                AutoSize = true,
-                BackColor = Color.FromArgb(238, 245, 244)
-            });
-            input.Location = new Point(0, 22);
-            wrap.Controls.Add(input);
-            return wrap;
         }
 
         private Panel CreateSearchBox()
         {
-            txtSearch = new TextBox { Width = 288, Height = 28 };
-            UiTheme.StyleTextBox(txtSearch);
-
             var wrap = new Panel
             {
-                Width = 288,
-                Height = 28,
+                Width = 280,
+                Height = 30,
                 BackColor = Color.White
             };
             wrap.Paint += (s, e) =>
@@ -212,68 +208,95 @@ namespace SmartMedNew.UI
                 using (var pen = new Pen(UiTheme.AdminOutline))
                     e.Graphics.DrawRectangle(pen, rect);
             };
-
-            txtSearch.BorderStyle = BorderStyle.None;
             txtSearch.Dock = DockStyle.Fill;
+            txtSearch.BorderStyle = BorderStyle.None;
             txtSearch.Margin = new Padding(8, 0, 8, 0);
             wrap.Controls.Add(txtSearch);
             return wrap;
         }
 
-        private ComboBox CreateStatusCombo()
+        private Panel CreateDateRangePanel()
         {
-            cmbStatus = new ComboBox
+            var panel = new FlowLayoutPanel
             {
-                DropDownStyle = ComboBoxStyle.DropDownList,
-                Width = 192,
-                Height = 28
+                AutoSize = true,
+                FlowDirection = FlowDirection.LeftToRight,
+                WrapContents = false,
+                BackColor = Color.FromArgb(238, 245, 244)
             };
-            UiTheme.StyleComboBox(cmbStatus);
-            cmbStatus.Items.AddRange(new object[]
+            panel.Controls.Add(chkDateRange);
+            panel.Controls.Add(dtpFrom);
+            panel.Controls.Add(new Label
             {
-                StatusAll,
-                OrderService.StatusPending,
-                OrderService.StatusReadyForPickup,
-                OrderService.StatusDelivered,
-                StatusFlagged
+                Text = "to",
+                AutoSize = true,
+                Margin = new Padding(6, 6, 6, 0),
+                ForeColor = UiTheme.AdminMuted,
+                BackColor = Color.FromArgb(238, 245, 244)
             });
-            cmbStatus.SelectedIndex = 0;
-            return cmbStatus;
+            panel.Controls.Add(dtpTo);
+            return panel;
         }
 
-        private static DateTimePicker CreateDatePicker(DateTime value)
+        private static Panel CreateFilterField(string label, Control input)
         {
-            var dtp = new DateTimePicker
+            var wrap = new Panel
             {
-                Format = DateTimePickerFormat.Short,
-                Width = 118,
-                Height = 28,
-                Value = value
+                AutoSize = true,
+                Margin = new Padding(0, 0, 20, 8),
+                BackColor = Color.FromArgb(238, 245, 244)
             };
-            return dtp;
+            var lbl = new Label
+            {
+                Text = label,
+                AutoSize = true,
+                Font = UiTheme.FontAt(8.25f, semibold: true),
+                ForeColor = UiTheme.PrimaryDark,
+                Dock = DockStyle.Top,
+                BackColor = Color.FromArgb(238, 245, 244)
+            };
+            input.Margin = new Padding(0, 4, 0, 0);
+            wrap.Controls.Add(input);
+            wrap.Controls.Add(lbl);
+            return wrap;
         }
 
         private Panel CreateGridPanel()
         {
             gridOrders = new DataGridView
             {
+                Dock = DockStyle.Fill,
                 ReadOnly = true,
                 AllowUserToAddRows = false,
                 AllowUserToDeleteRows = false,
                 RowHeadersVisible = false,
                 SelectionMode = DataGridViewSelectionMode.FullRowSelect,
+                MultiSelect = false,
                 AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill,
-                ScrollBars = ScrollBars.Vertical,
-                MultiSelect = false
+                MinimumSize = new Size(0, 280)
             };
             UiTheme.ApplyClinicalGrid(gridOrders);
             gridOrders.CellFormatting += GridOrders_CellFormatting;
             gridOrders.CellContentClick += GridOrders_CellContentClick;
-            gridOrders.DefaultCellStyle.WrapMode = DataGridViewTriState.True;
-            gridOrders.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.AllCells;
-            gridOrders.RowTemplate.Height = 48;
+            gridOrders.SelectionChanged += GridOrders_SelectionChanged;
 
-            return AdminUiHelpers.CreateSectionPanel(string.Empty, gridOrders);
+            var outer = new Panel
+            {
+                Dock = DockStyle.Fill,
+                BackColor = Color.White,
+                Padding = new Padding(1),
+                Margin = new Padding(0, 0, 0, 16)
+            };
+            outer.Paint += (s, e) =>
+            {
+                var rect = outer.ClientRectangle;
+                rect.Width -= 1;
+                rect.Height -= 1;
+                using (var pen = new Pen(UiTheme.AdminOutline))
+                    e.Graphics.DrawRectangle(pen, rect);
+            };
+            outer.Controls.Add(gridOrders);
+            return outer;
         }
 
         private Panel CreateFooterPanel()
@@ -281,82 +304,79 @@ namespace SmartMedNew.UI
             var footer = new Panel
             {
                 Dock = DockStyle.Top,
-                Height = 88,
-                Margin = new Padding(0, 20, 0, 0),
+                Height = 72,
                 BackColor = UiTheme.AdminSurface
             };
+
+            lblVolume = CreateFooterStat("VOLUME", UiTheme.AdminTeal);
+            lblAvgTime = CreateFooterStat("AVG TIME", Color.FromArgb(41, 163, 122));
+            lblFlags = CreateFooterStat("FLAGS", UiTheme.Danger);
 
             var stats = new FlowLayoutPanel
             {
                 Dock = DockStyle.Left,
                 AutoSize = true,
                 FlowDirection = FlowDirection.LeftToRight,
-                WrapContents = false,
                 BackColor = UiTheme.AdminSurface
             };
-            stats.Controls.Add(CreateFooterStatCard("Volume", lblVolume, UiTheme.AdminTeal));
-            stats.Controls.Add(CreateFooterStatCard("Avg Time", lblAvgTime, UiTheme.AdminTeal));
-            stats.Controls.Add(CreateFooterStatCard("Flags", lblFlags, UiTheme.Danger));
+            stats.Controls.Add(WrapFooterCard(lblVolume, UiTheme.AdminTeal));
+            stats.Controls.Add(WrapFooterCard(lblAvgTime, Color.FromArgb(41, 163, 122)));
+            stats.Controls.Add(WrapFooterCard(lblFlags, UiTheme.Danger));
 
-            pnlPageNumbers = new FlowLayoutPanel
-            {
-                AutoSize = true,
-                FlowDirection = FlowDirection.LeftToRight,
-                WrapContents = false,
-                BackColor = Color.FromArgb(232, 239, 238),
-                Padding = new Padding(6, 4, 6, 4),
-                Margin = new Padding(0)
-            };
-            pnlPageNumbers.Paint += (s, e) =>
-            {
-                var rect = pnlPageNumbers.ClientRectangle;
-                rect.Width -= 1;
-                rect.Height -= 1;
-                using (var pen = new Pen(UiTheme.AdminOutline))
-                    e.Graphics.DrawRectangle(pen, rect);
-            };
-
-            btnPrevPage = CreatePageButton("<");
-            btnPrevPage.Click += (s, e) => { _currentPage--; BindCurrentPage(); };
-            btnNextPage = CreatePageButton(">");
-            btnNextPage.Click += (s, e) => { _currentPage++; BindCurrentPage(); };
-
+            btnPagePrev = CreateWinButton("<", false, 36);
+            btnPagePrev.Height = 32;
+            btnPagePrev.Click += (s, e) => ChangePage(-1);
+            btnPageNext = CreateWinButton(">", false, 36);
+            btnPageNext.Height = 32;
+            btnPageNext.Click += (s, e) => ChangePage(1);
             lblPageInfo = new Label
             {
                 AutoSize = true,
-                Font = UiTheme.FontAt(9f, semibold: true),
+                Text = "Page 1",
                 ForeColor = UiTheme.AdminMuted,
-                Margin = new Padding(8, 8, 8, 0),
-                BackColor = Color.FromArgb(232, 239, 238)
+                BackColor = UiTheme.AdminSurface,
+                Margin = new Padding(8, 8, 8, 0)
             };
 
-            pnlPageNumbers.Controls.Add(btnPrevPage);
-            pnlPageNumbers.Controls.Add(lblPageInfo);
-            pnlPageNumbers.Controls.Add(btnNextPage);
-
-            var pagerWrap = new Panel
+            var pager = new FlowLayoutPanel
             {
                 Dock = DockStyle.Right,
                 AutoSize = true,
+                FlowDirection = FlowDirection.LeftToRight,
                 BackColor = UiTheme.AdminSurface,
-                Padding = new Padding(0, 20, 0, 0)
+                Padding = new Padding(8, 4, 0, 0)
             };
-            pagerWrap.Controls.Add(pnlPageNumbers);
+            pager.Controls.Add(btnPagePrev);
+            pager.Controls.Add(lblPageInfo);
+            pager.Controls.Add(btnPageNext);
 
-            footer.Controls.Add(pagerWrap);
+            footer.Controls.Add(pager);
             footer.Controls.Add(stats);
             return footer;
         }
 
-        private static Panel CreateFooterStatCard(string title, Label valueLabel, Color accent)
+        private static Label CreateFooterStat(string title, Color accent)
+        {
+            return new Label
+            {
+                Text = "0",
+                Font = UiTheme.FontAt(16f, bold: true),
+                ForeColor = UiTheme.PrimaryDark,
+                AutoSize = true,
+                Tag = title,
+                BackColor = Color.White
+            };
+        }
+
+        private static Panel WrapFooterCard(Label valueLabel, Color accent)
         {
             var card = new Panel
             {
-                Width = 144,
-                Height = 68,
-                Margin = new Padding(0, 0, 14, 0),
-                Padding = new Padding(12, 10, 10, 10),
-                BackColor = Color.FromArgb(232, 239, 238)
+                Width = 130,
+                Height = 56,
+                Margin = new Padding(0, 0, 12, 0),
+                Padding = new Padding(12, 8, 8, 8),
+                BackColor = Color.White
             };
             card.Paint += (s, e) =>
             {
@@ -368,211 +388,173 @@ namespace SmartMedNew.UI
                 using (var brush = new SolidBrush(accent))
                     e.Graphics.FillRectangle(brush, 0, 0, 4, rect.Height);
             };
-
+            card.Controls.Add(valueLabel);
             card.Controls.Add(new Label
             {
-                Text = title.ToUpperInvariant(),
-                Font = UiTheme.FontAt(8.25f, semibold: true),
-                ForeColor = UiTheme.AdminMuted,
+                Text = valueLabel.Tag?.ToString() ?? "",
                 Dock = DockStyle.Top,
                 Height = 14,
-                BackColor = Color.FromArgb(232, 239, 238)
+                Font = UiTheme.FontAt(7.5f, semibold: true),
+                ForeColor = UiTheme.AdminMuted,
+                BackColor = Color.White
             });
-
-            valueLabel.Text = "0";
-            valueLabel.Font = UiTheme.FontAt(18f, bold: true);
-            valueLabel.ForeColor = title == "Flags" ? UiTheme.Danger : UiTheme.PrimaryDark;
-            valueLabel.Dock = DockStyle.Fill;
-            valueLabel.TextAlign = ContentAlignment.MiddleLeft;
-            valueLabel.BackColor = Color.FromArgb(232, 239, 238);
-            card.Controls.Add(valueLabel);
             return card;
         }
 
-        private static Button CreatePageButton(string text)
+        private void LoadOrders()
         {
-            var btn = AdminUiHelpers.CreateWinButton(text, primary: false, width: 36, height: 32);
-            btn.Margin = new Padding(2, 0, 2, 0);
-            btn.BackColor = Color.White;
-            return btn;
+            _allRows = _orders.GetAll()
+                .OrderByDescending(o => o.OrderDate)
+                .Select(BuildRow)
+                .ToList();
+            ApplyFilters();
         }
+
+        private OrderRow BuildRow(Order order)
+        {
+            var rxStatus = _orders.GetPrescriptionStatusDisplay(order.OrderID);
+            var displayStatus = order.Status;
+            if (string.Equals(rxStatus, PrescriptionService.StatusRejected, StringComparison.OrdinalIgnoreCase))
+                displayStatus = "Flagged";
+
+            return new OrderRow
+            {
+                OrderID = order.OrderID,
+                OrderRef = $"#ORD-{order.OrderID:D4}",
+                CustomerName = order.CustomerName ?? "—",
+                CustomerRef = FormatPatientRef(order.CustomerID, order.OrderID),
+                OrderDate = order.OrderDate.ToString("MMM dd, yyyy HH:mm"),
+                TotalAmount = $"LKR {order.TotalAmount:N2}",
+                Status = displayStatus,
+                RawStatus = order.Status,
+                RxStatus = rxStatus,
+                Prescription = _orders.GetPrescriptionDisplay(order.OrderID),
+                OrderDateValue = order.OrderDate
+            };
+        }
+
+        private static string FormatPatientRef(int customerId, int orderId) =>
+            $"PAT-{customerId:D3}-{(orderId % 100):D2}";
 
         private void ApplyFilters()
         {
-            IEnumerable<Order> query = _allOrders;
+            IEnumerable<OrderRow> rows = _allRows;
 
-            var statusFilter = cmbStatus.SelectedItem?.ToString() ?? StatusAll;
-            if (statusFilter == StatusFlagged)
-                query = query.Where(IsFlagged);
-            else if (statusFilter != StatusAll)
-                query = query.Where(o => string.Equals(o.Status, statusFilter, StringComparison.OrdinalIgnoreCase));
-
-            var from = dtpFrom.Value.Date;
-            var to = dtpTo.Value.Date.AddDays(1).AddTicks(-1);
-            query = query.Where(o => o.OrderDate >= from && o.OrderDate <= to);
-
-            var list = query.ToList();
-            list = SearchService.SearchOrders(list, txtSearch?.Text);
-            _filteredOrders = list;
-            _currentPage = 0;
-            UpdateStats();
-            BindCurrentPage();
-        }
-
-        private void UpdateStats()
-        {
-            lblVolume.Text = _filteredOrders.Count.ToString("N0");
-            if (_filteredOrders.Count == 0)
+            var term = txtSearch?.Text?.Trim();
+            if (!string.IsNullOrWhiteSpace(term))
             {
-                lblAvgTime.Text = "—";
-                lblFlags.Text = "00";
-                return;
+                rows = rows.Where(r =>
+                    r.OrderRef.IndexOf(term, StringComparison.OrdinalIgnoreCase) >= 0
+                    || r.CustomerName.IndexOf(term, StringComparison.OrdinalIgnoreCase) >= 0
+                    || r.CustomerRef.IndexOf(term, StringComparison.OrdinalIgnoreCase) >= 0
+                    || r.Status.IndexOf(term, StringComparison.OrdinalIgnoreCase) >= 0);
             }
 
-            var avgMinutes = _filteredOrders.Average(o => (DateTime.Now - o.OrderDate).TotalMinutes);
-            lblAvgTime.Text = avgMinutes >= 60
-                ? $"{avgMinutes / 60.0:F1}h"
-                : $"{avgMinutes:F1}m";
-            lblFlags.Text = _filteredOrders.Count(IsFlagged).ToString("D2");
+            var statusFilter = cmbStatus?.SelectedItem?.ToString() ?? "All Statuses";
+            if (statusFilter != "All Statuses")
+            {
+                if (statusFilter == "Flagged")
+                    rows = rows.Where(r => r.Status == "Flagged");
+                else
+                    rows = rows.Where(r => r.RawStatus == statusFilter);
+            }
+
+            if (chkDateRange != null && chkDateRange.Checked)
+            {
+                var from = dtpFrom.Value.Date;
+                var to = dtpTo.Value.Date.AddDays(1).AddTicks(-1);
+                rows = rows.Where(r => r.OrderDateValue >= from && r.OrderDateValue <= to);
+            }
+
+            _filteredRows = rows.ToList();
+            _currentPage = 1;
+            BindPage();
+            UpdateStats();
         }
 
-        private void BindCurrentPage()
+        private void BindPage()
         {
-            var totalPages = Math.Max(1, (int)Math.Ceiling(_filteredOrders.Count / (double)PageSize));
-            if (_currentPage >= totalPages) _currentPage = totalPages - 1;
-            if (_currentPage < 0) _currentPage = 0;
+            var totalPages = Math.Max(1, (int)Math.Ceiling(_filteredRows.Count / (double)PageSize));
+            if (_currentPage > totalPages) _currentPage = totalPages;
+            if (_currentPage < 1) _currentPage = 1;
 
-            var pageItems = _filteredOrders
-                .Skip(_currentPage * PageSize)
+            var pageRows = _filteredRows
+                .Skip((_currentPage - 1) * PageSize)
                 .Take(PageSize)
-                .Select(BuildRow)
+                .Select(r => new
+                {
+                    r.OrderID,
+                    r.OrderRef,
+                    Customer = $"{r.CustomerName}\n{r.CustomerRef}",
+                    r.OrderDate,
+                    r.TotalAmount,
+                    r.Status,
+                    View = "View",
+                    Edit = "Edit"
+                })
                 .ToList();
 
-            UiTheme.SetGridDataSource(gridOrders, pageItems);
+            UiTheme.SetGridDataSource(gridOrders, pageRows);
             HideInternalColumns();
-            EnsureActionColumns();
             UiTheme.BeautifyGridHeaders(gridOrders);
-            ApplyColumnHeaders();
 
-            lblPageInfo.Text = $"Page {_currentPage + 1} of {totalPages}";
-            btnPrevPage.Enabled = _currentPage > 0;
-            btnNextPage.Enabled = _currentPage < totalPages - 1;
-            RebuildPageNumberButtons(totalPages);
-        }
+            if (gridOrders.Columns.Contains("Customer"))
+                gridOrders.Columns["Customer"].DefaultCellStyle.WrapMode = DataGridViewTriState.True;
 
-        private object BuildRow(Order order)
-        {
-            return new
-            {
-                order.OrderID,
-                OrderRef = FormatOrderRef(order.OrderID),
-                CustomerDisplay = $"{order.CustomerName}{Environment.NewLine}{FormatPatientId(order.CustomerID)}",
-                OrderDate = order.OrderDate.ToString("MMM dd, yyyy HH:mm"),
-                TotalAmount = $"LKR {order.TotalAmount:N2}",
-                Status = GetDisplayStatus(order),
-                RawStatus = order.Status
-            };
+            lblPageInfo.Text = $"Page {_currentPage} / {totalPages}";
+            btnPagePrev.Enabled = _currentPage > 1;
+            btnPageNext.Enabled = _currentPage < totalPages;
         }
 
         private void HideInternalColumns()
         {
             if (gridOrders.Columns.Contains("OrderID"))
                 gridOrders.Columns["OrderID"].Visible = false;
-            if (gridOrders.Columns.Contains("RawStatus"))
-                gridOrders.Columns["RawStatus"].Visible = false;
         }
 
-        private void EnsureActionColumns()
+        private void UpdateStats()
         {
-            if (!gridOrders.Columns.Contains("View"))
+            lblVolume.Text = _filteredRows.Count.ToString("N0");
+
+            if (_filteredRows.Count == 0)
             {
-                gridOrders.Columns.Add(new DataGridViewButtonColumn
-                {
-                    Name = "View",
-                    HeaderText = "Actions",
-                    Text = "View",
-                    UseColumnTextForButtonValue = true,
-                    Width = 64,
-                    FlatStyle = FlatStyle.Flat
-                });
-            }
-            if (!gridOrders.Columns.Contains("Edit"))
-            {
-                gridOrders.Columns.Add(new DataGridViewButtonColumn
-                {
-                    Name = "Edit",
-                    HeaderText = "",
-                    Text = "Edit",
-                    UseColumnTextForButtonValue = true,
-                    Width = 52,
-                    FlatStyle = FlatStyle.Flat
-                });
+                lblAvgTime.Text = "—";
+                lblFlags.Text = "0";
+                return;
             }
 
-            if (gridOrders.Columns.Contains("View"))
-                gridOrders.Columns["View"].DisplayIndex = gridOrders.Columns.Count - 2;
-            if (gridOrders.Columns.Contains("Edit"))
-                gridOrders.Columns["Edit"].DisplayIndex = gridOrders.Columns.Count - 1;
+            var delivered = _filteredRows.Where(r => r.RawStatus == OrderService.StatusDelivered).ToList();
+            if (delivered.Count > 0)
+            {
+                var avgMinutes = delivered.Average(r => (DateTime.Now - r.OrderDateValue).TotalMinutes);
+                lblAvgTime.Text = avgMinutes >= 60
+                    ? $"{avgMinutes / 60:0.#}h"
+                    : $"{avgMinutes:0.#}m";
+            }
+            else
+            {
+                lblAvgTime.Text = "—";
+            }
+
+            lblFlags.Text = _filteredRows.Count(r => r.Status == "Flagged").ToString("D2");
         }
 
-        private void ApplyColumnHeaders()
+        private void ChangePage(int delta)
         {
-            SetHeader("OrderRef", "Order ID");
-            SetHeader("CustomerDisplay", "Customer Name & ID");
-            SetHeader("OrderDate", "Order Date");
-            SetHeader("TotalAmount", "Total Amount");
-            SetHeader("Status", "Status");
+            _currentPage += delta;
+            BindPage();
         }
 
-        private void SetHeader(string columnName, string headerText)
+        private void GridOrders_SelectionChanged(object sender, EventArgs e)
         {
-            if (gridOrders.Columns.Contains(columnName))
-                gridOrders.Columns[columnName].HeaderText = headerText;
-        }
-
-        private void RebuildPageNumberButtons(int totalPages)
-        {
-            foreach (Control c in pnlPageNumbers.Controls.Cast<Control>().ToList())
+            if (gridOrders.CurrentRow == null)
             {
-                if (c != btnPrevPage && c != btnNextPage && c != lblPageInfo)
-                    pnlPageNumbers.Controls.Remove(c);
+                _selectedOrderId = null;
+                return;
             }
-
-            var insertIndex = pnlPageNumbers.Controls.GetChildIndex(lblPageInfo);
-            var start = Math.Max(0, Math.Min(_currentPage - 1, totalPages - 3));
-            var end = Math.Min(totalPages, start + 3);
-
-            for (var i = start; i < end; i++)
-            {
-                var pageIndex = i;
-                var btn = CreatePageButton((i + 1).ToString());
-                if (i == _currentPage)
-                {
-                    btn.BackColor = UiTheme.PrimaryDark;
-                    btn.ForeColor = Color.White;
-                    btn.FlatAppearance.BorderColor = UiTheme.PrimaryDark;
-                }
-                btn.Click += (s, e) =>
-                {
-                    _currentPage = pageIndex;
-                    BindCurrentPage();
-                };
-                pnlPageNumbers.Controls.Add(btn);
-                pnlPageNumbers.Controls.SetChildIndex(btn, insertIndex++);
-            }
-
-            if (end < totalPages)
-            {
-                var ellipsis = new Label
-                {
-                    Text = "...",
-                    AutoSize = true,
-                    Margin = new Padding(4, 8, 4, 0),
-                    BackColor = Color.FromArgb(232, 239, 238)
-                };
-                pnlPageNumbers.Controls.Add(ellipsis);
-                pnlPageNumbers.Controls.SetChildIndex(ellipsis, insertIndex++);
-            }
+            var cell = gridOrders.CurrentRow.Cells["OrderID"];
+            if (cell?.Value != null)
+                _selectedOrderId = Convert.ToInt32(cell.Value);
         }
 
         private void GridOrders_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
@@ -580,33 +562,29 @@ namespace SmartMedNew.UI
             if (e.RowIndex < 0 || e.ColumnIndex < 0) return;
             if (gridOrders.Columns[e.ColumnIndex].Name != "Status") return;
 
-            var status = e.Value?.ToString() ?? string.Empty;
-            e.CellStyle.Font = UiTheme.UiFontBold;
-            e.CellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
-
-            if (string.Equals(status, StatusFlagged, StringComparison.OrdinalIgnoreCase))
+            var status = e.Value?.ToString() ?? "";
+            if (string.Equals(status, OrderService.StatusPending, StringComparison.OrdinalIgnoreCase)
+                || status == "Flagged")
             {
                 e.CellStyle.BackColor = Color.FromArgb(255, 218, 214);
-                e.CellStyle.ForeColor = UiTheme.Danger;
-                return;
-            }
-            if (string.Equals(status, OrderService.StatusPending, StringComparison.OrdinalIgnoreCase))
-            {
-                e.CellStyle.BackColor = Color.FromArgb(255, 218, 219);
                 e.CellStyle.ForeColor = Color.FromArgb(104, 57, 61);
-                return;
+                e.CellStyle.Font = UiTheme.UiFontBold;
+                if (status == OrderService.StatusPending)
+                    e.Value = "Pending";
             }
-            if (string.Equals(status, OrderService.StatusReadyForPickup, StringComparison.OrdinalIgnoreCase))
+            else if (string.Equals(status, OrderService.StatusReadyForPickup, StringComparison.OrdinalIgnoreCase)
+                     || string.Equals(status, "Ready", StringComparison.OrdinalIgnoreCase))
             {
                 e.CellStyle.BackColor = Color.FromArgb(199, 234, 228);
                 e.CellStyle.ForeColor = UiTheme.AdminTeal;
+                e.CellStyle.Font = UiTheme.UiFontBold;
                 e.Value = "Ready";
-                return;
             }
-            if (string.Equals(status, OrderService.StatusDelivered, StringComparison.OrdinalIgnoreCase))
+            else if (string.Equals(status, OrderService.StatusDelivered, StringComparison.OrdinalIgnoreCase))
             {
                 e.CellStyle.BackColor = Color.FromArgb(184, 237, 226);
                 e.CellStyle.ForeColor = Color.FromArgb(27, 79, 71);
+                e.CellStyle.Font = UiTheme.UiFontBold;
             }
         }
 
@@ -626,134 +604,32 @@ namespace SmartMedNew.UI
         private void ShowOrderDetails(int orderId)
         {
             var order = _orders.GetById(orderId);
-            if (order == null)
-            {
-                MessageBox.Show("Order not found.", "SmartMed", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                return;
-            }
+            if (order == null) return;
 
-            var customer = _customers.GetById(order.CustomerID);
             var items = _orders.GetItems(orderId);
-            var rxDisplay = _orders.GetPrescriptionDisplay(orderId);
-            var rxStatus = _orders.GetPrescriptionStatusDisplay(orderId);
-            var hasRx = _orders.OrderHasPrescription(orderId);
-
-            using (var dlg = new Form
+            var lines = new List<string>
             {
-                Text = $"Order {FormatOrderRef(orderId)}",
-                StartPosition = FormStartPosition.CenterParent,
-                FormBorderStyle = FormBorderStyle.FixedDialog,
-                MaximizeBox = false,
-                MinimizeBox = false,
-                ClientSize = new Size(520, 420),
-                Font = UiTheme.UiFont,
-                BackColor = Color.White
-            })
-            {
-                var info = new Label
-                {
-                    Text = $"Customer: {order.CustomerName} ({FormatPatientId(order.CustomerID)})" + Environment.NewLine +
-                           $"Email: {customer?.Email ?? "—"}" + Environment.NewLine +
-                           $"Order Date: {order.OrderDate:MMM dd, yyyy HH:mm}" + Environment.NewLine +
-                           $"Status: {GetDisplayStatus(order)}" + Environment.NewLine +
-                           $"Total: LKR {order.TotalAmount:N2}" + Environment.NewLine +
-                           (hasRx ? $"Prescription: {rxDisplay} ({rxStatus})" : "Prescription: Not required"),
-                    Location = new Point(16, 16),
-                    Size = new Size(488, 110),
-                    BackColor = Color.White
-                };
-                dlg.Controls.Add(info);
+                $"Order: #ORD-{order.OrderID:D4}",
+                $"Customer: {order.CustomerName} ({FormatPatientRef(order.CustomerID, order.OrderID)})",
+                $"Date: {order.OrderDate:MMM dd, yyyy HH:mm}",
+                $"Status: {order.Status}",
+                $"Total: LKR {order.TotalAmount:N2}",
+                $"Prescription: {_orders.GetPrescriptionDisplay(orderId)}",
+                $"Rx Status: {_orders.GetPrescriptionStatusDisplay(orderId)}",
+                "",
+                "Line items:"
+            };
+            foreach (var item in items)
+                lines.Add($"  • {item.MedicineName} x{item.Quantity} — LKR {item.Subtotal:N2}");
 
-                var grid = new DataGridView
-                {
-                    Location = new Point(16, 132),
-                    Size = new Size(488, 200),
-                    ReadOnly = true,
-                    AllowUserToAddRows = false,
-                    RowHeadersVisible = false,
-                    AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill
-                };
-                UiTheme.ApplyClinicalGrid(grid);
-                grid.DataSource = items.Select(i => new
-                {
-                    i.MedicineName,
-                    i.Quantity,
-                    UnitPrice = $"LKR {i.UnitPrice:N2}",
-                    Subtotal = $"LKR {i.Subtotal:N2}",
-                    Rx = i.RequiresPrescription ? "Yes" : "No"
-                }).ToList();
-                UiTheme.BeautifyGridHeaders(grid);
-                dlg.Controls.Add(grid);
+            var result = MessageBox.Show(
+                string.Join(Environment.NewLine, lines) + Environment.NewLine + Environment.NewLine + "Open prescription file?",
+                "Order Details",
+                MessageBoxButtons.YesNo,
+                MessageBoxIcon.Information);
 
-                var actions = new FlowLayoutPanel
-                {
-                    Dock = DockStyle.Bottom,
-                    Height = 48,
-                    FlowDirection = FlowDirection.RightToLeft,
-                    Padding = new Padding(12, 8, 12, 8),
-                    BackColor = UiTheme.AdminSidebar
-                };
-
-                var btnClose = AdminUiHelpers.CreateWinButton("Close", false, 88, 32);
-                btnClose.Click += (s, e) => dlg.Close();
-                actions.Controls.Add(btnClose);
-
-                if (hasRx)
-                {
-                    var btnOpenRx = AdminUiHelpers.CreateWinButton("View Prescription", false, 140, 32);
-                    btnOpenRx.Click += (s, e) => OpenPrescriptionFile(orderId);
-                    actions.Controls.Add(btnOpenRx);
-
-                    if (string.Equals(rxStatus, PrescriptionService.StatusPending, StringComparison.OrdinalIgnoreCase))
-                    {
-                        var btnVerify = AdminUiHelpers.CreateWinButton("Verify", true, 80, 32);
-                        btnVerify.Click += (s, e) =>
-                        {
-                            if (ConfirmPrescriptionAction("Verify this prescription?"))
-                            {
-                                try
-                                {
-                                    _orders.VerifyPrescription(orderId);
-                                    dlg.Close();
-                                    RefreshPage();
-                                    MessageBox.Show("Prescription verified.", "SmartMed",
-                                        MessageBoxButtons.OK, MessageBoxIcon.Information);
-                                }
-                                catch (Exception ex)
-                                {
-                                    MessageBox.Show(ex.Message, "Verify Failed",
-                                        MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                                }
-                            }
-                        };
-                        var btnReject = AdminUiHelpers.CreateWinButton("Reject", false, 80, 32);
-                        btnReject.Click += (s, e) =>
-                        {
-                            if (ConfirmPrescriptionAction("Reject this prescription?"))
-                            {
-                                try
-                                {
-                                    _orders.RejectPrescription(orderId);
-                                    dlg.Close();
-                                    RefreshPage();
-                                    MessageBox.Show("Prescription rejected.", "SmartMed",
-                                        MessageBoxButtons.OK, MessageBoxIcon.Information);
-                                }
-                                catch (Exception ex)
-                                {
-                                    MessageBox.Show(ex.Message, "Reject Failed",
-                                        MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                                }
-                            }
-                        };
-                        actions.Controls.Add(btnReject);
-                        actions.Controls.Add(btnVerify);
-                    }
-                }
-
-                dlg.Controls.Add(actions);
-                dlg.ShowDialog(FindForm());
-            }
+            if (result == DialogResult.Yes)
+                OpenPrescription(orderId);
         }
 
         private void ShowStatusEditor(int orderId)
@@ -761,87 +637,140 @@ namespace SmartMedNew.UI
             var order = _orders.GetById(orderId);
             if (order == null) return;
 
-            if (IsFlagged(order))
+            var nextStatuses = OrderService.GetAllowedNextStatuses(order.Status);
+            if (nextStatuses.Count == 0)
             {
-                MessageBox.Show(
-                    "This order is flagged because the prescription was rejected. Review the prescription from View before updating status.",
-                    "Order Flagged",
-                    MessageBoxButtons.OK,
-                    MessageBoxIcon.Warning);
-                return;
-            }
-
-            var allowed = OrderService.GetAllowedNextStatuses(order.Status);
-            if (allowed.Count == 0)
-            {
-                MessageBox.Show("This order status cannot be changed.", "SmartMed",
+                MessageBox.Show("This order cannot be updated further.", "Manage Orders",
                     MessageBoxButtons.OK, MessageBoxIcon.Information);
                 return;
             }
 
             using (var dlg = new Form
             {
-                Text = "Update Order Status",
-                StartPosition = FormStartPosition.CenterParent,
+                Text = $"Update Order #ORD-{orderId:D4}",
                 FormBorderStyle = FormBorderStyle.FixedDialog,
+                StartPosition = FormStartPosition.CenterParent,
+                ClientSize = new Size(360, 200),
                 MaximizeBox = false,
                 MinimizeBox = false,
-                ClientSize = new Size(360, 160),
                 Font = UiTheme.UiFont,
-                BackColor = Color.White
+                BackColor = UiTheme.AdminSurface
             })
             {
-                dlg.Controls.Add(new Label
-                {
-                    Text = $"Order {FormatOrderRef(orderId)} — current: {order.Status}",
-                    Location = new Point(16, 16),
-                    AutoSize = true,
-                    BackColor = Color.White
-                });
-
                 var cmb = new ComboBox
                 {
                     DropDownStyle = ComboBoxStyle.DropDownList,
-                    Location = new Point(16, 48),
+                    Left = 16,
+                    Top = 48,
                     Width = 320
                 };
                 UiTheme.StyleComboBox(cmb);
-                cmb.Items.AddRange(allowed.Cast<object>().ToArray());
+                foreach (var status in nextStatuses)
+                    cmb.Items.Add(status);
                 cmb.SelectedIndex = 0;
+
+                dlg.Controls.Add(new Label
+                {
+                    Text = $"Current status: {order.Status}",
+                    Left = 16,
+                    Top = 16,
+                    AutoSize = true,
+                    ForeColor = UiTheme.AdminOnSurface,
+                    BackColor = UiTheme.AdminSurface
+                });
+                dlg.Controls.Add(new Label
+                {
+                    Text = "New status:",
+                    Left = 16,
+                    Top = 30,
+                    AutoSize = true,
+                    ForeColor = UiTheme.AdminMuted,
+                    BackColor = UiTheme.AdminSurface
+                });
                 dlg.Controls.Add(cmb);
 
-                var btnSave = AdminUiHelpers.CreateWinButton("Update", true, 96, 32);
-                btnSave.Location = new Point(240, 96);
-                btnSave.Click += (s, e) =>
+                var btnRx = CreateWinButton("View Rx", false, 90);
+                btnRx.Left = 16;
+                btnRx.Top = 100;
+                btnRx.Click += (s, e) => OpenPrescription(orderId);
+
+                var btnVerify = CreateWinButton("Verify Rx", true, 90);
+                btnVerify.Left = 112;
+                btnVerify.Top = 100;
+                btnVerify.Click += (s, e) =>
                 {
                     try
                     {
-                        _orders.UpdateStatus(orderId, cmb.SelectedItem.ToString());
-                        dlg.Close();
-                        RefreshPage();
-                        MessageBox.Show("Order status updated.", "SmartMed",
-                            MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        _orders.VerifyPrescription(orderId);
+                        MessageBox.Show("Prescription verified.", "SmartMed");
                     }
                     catch (Exception ex)
                     {
-                        MessageBox.Show(ex.Message, "Update Failed",
-                            MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        MessageBox.Show(ex.Message, "Verify Failed", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     }
                 };
 
-                var btnCancel = AdminUiHelpers.CreateWinButton("Cancel", false, 96, 32);
-                btnCancel.Location = new Point(136, 96);
-                btnCancel.Click += (s, e) => dlg.Close();
+                var btnSave = CreateWinButton("Update", true, 90);
+                btnSave.Left = 246;
+                btnSave.Top = 140;
+                btnSave.DialogResult = DialogResult.OK;
+                var btnCancel = CreateWinButton("Cancel", false, 90);
+                btnCancel.Left = 150;
+                btnCancel.Top = 140;
+                btnCancel.DialogResult = DialogResult.Cancel;
 
+                dlg.Controls.Add(btnRx);
+                dlg.Controls.Add(btnVerify);
                 dlg.Controls.Add(btnSave);
                 dlg.Controls.Add(btnCancel);
-                dlg.ShowDialog(FindForm());
+                dlg.AcceptButton = btnSave;
+                dlg.CancelButton = btnCancel;
+
+                if (dlg.ShowDialog(FindForm()) != DialogResult.OK || cmb.SelectedItem == null)
+                    return;
+
+                try
+                {
+                    _orders.UpdateStatus(orderId, cmb.SelectedItem.ToString());
+                    LoadOrders();
+                    MessageBox.Show("Order status updated.", "SmartMed",
+                        MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message, "Update Failed", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                }
+            }
+        }
+
+        private void OpenPrescription(int orderId)
+        {
+            var filePath = _orders.GetPrescriptionFilePath(orderId);
+            if (string.IsNullOrWhiteSpace(filePath))
+            {
+                MessageBox.Show("No prescription file for this order.", "Prescription",
+                    MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return;
+            }
+            if (!System.IO.File.Exists(filePath))
+            {
+                MessageBox.Show("Prescription file is not available.", "Prescription",
+                    MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return;
+            }
+            try
+            {
+                System.Diagnostics.Process.Start(filePath);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Prescription", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
         }
 
         private void BtnExport_Click(object sender, EventArgs e)
         {
-            if (_filteredOrders.Count == 0)
+            if (_filteredRows.Count == 0)
             {
                 MessageBox.Show("No orders to export.", "Export", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 return;
@@ -856,57 +785,64 @@ namespace SmartMedNew.UI
                 if (dlg.ShowDialog(FindForm()) != DialogResult.OK) return;
                 try
                 {
-                    _orders.ExportOrdersToCsv(_filteredOrders, dlg.FileName);
-                    MessageBox.Show("Orders exported successfully.", "Export",
-                        MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    var orders = _filteredRows
+                        .Select(r => _orders.GetById(r.OrderID))
+                        .Where(o => o != null)
+                        .ToList();
+                    _orders.ExportOrdersToCsv(orders, dlg.FileName);
+                    MessageBox.Show("Export complete.", "Export", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show(ex.Message, "Export Failed",
-                        MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    MessageBox.Show(ex.Message, "Export Failed", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 }
             }
         }
 
-        private static bool ConfirmPrescriptionAction(string message) =>
-            MessageBox.Show(message, "Prescription Review", MessageBoxButtons.YesNo,
-                MessageBoxIcon.Question) == DialogResult.Yes;
-
-        private void OpenPrescriptionFile(int orderId)
+        private static Button CreateWinButton(string text, bool primary, int width)
         {
-            var filePath = _orders.GetPrescriptionFilePath(orderId);
-            if (string.IsNullOrWhiteSpace(filePath) || !File.Exists(filePath))
+            var btn = new Button
             {
-                MessageBox.Show("Prescription file is not available.", "Prescription",
-                    MessageBoxButtons.OK, MessageBoxIcon.Information);
-                return;
-            }
-
-            try
+                Text = text,
+                Width = width,
+                Height = 30,
+                FlatStyle = FlatStyle.Flat,
+                Font = UiTheme.UiFont,
+                Cursor = Cursors.Hand,
+                Margin = new Padding(0, 0, 8, 0)
+            };
+            btn.FlatAppearance.BorderSize = 1;
+            if (primary)
             {
-                System.Diagnostics.Process.Start(filePath);
+                btn.BackColor = Color.FromArgb(12, 46, 43);
+                btn.ForeColor = Color.White;
+                btn.FlatAppearance.BorderColor = UiTheme.AdminTealDark;
+                btn.FlatAppearance.MouseOverBackColor = Color.FromArgb(59, 109, 100);
             }
-            catch (Exception ex)
+            else
             {
-                MessageBox.Show($"Could not open prescription file.\n{ex.Message}", "Prescription",
-                    MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                btn.BackColor = Color.White;
+                btn.ForeColor = UiTheme.AdminOnSurface;
+                btn.FlatAppearance.BorderColor = UiTheme.AdminOutline;
+                btn.FlatAppearance.MouseOverBackColor = Color.FromArgb(238, 245, 244);
             }
+            btn.UseVisualStyleBackColor = false;
+            return btn;
         }
 
-        private bool IsFlagged(Order order)
+        private sealed class OrderRow
         {
-            if (!_orders.OrderHasPrescription(order.OrderID))
-                return false;
-            var rxStatus = _orders.GetPrescriptionStatusDisplay(order.OrderID);
-            return string.Equals(rxStatus, PrescriptionService.StatusRejected, StringComparison.OrdinalIgnoreCase);
+            public int OrderID { get; set; }
+            public string OrderRef { get; set; }
+            public string CustomerName { get; set; }
+            public string CustomerRef { get; set; }
+            public string OrderDate { get; set; }
+            public DateTime OrderDateValue { get; set; }
+            public string TotalAmount { get; set; }
+            public string Status { get; set; }
+            public string RawStatus { get; set; }
+            public string RxStatus { get; set; }
+            public string Prescription { get; set; }
         }
-
-        private string GetDisplayStatus(Order order) =>
-            IsFlagged(order) ? StatusFlagged : order.Status;
-
-        private static string FormatOrderRef(int orderId) => $"#ORD-{orderId:D4}";
-
-        private static string FormatPatientId(int customerId) =>
-            $"PAT-{customerId / 100:D3}-{customerId % 100:D2}";
     }
 }
