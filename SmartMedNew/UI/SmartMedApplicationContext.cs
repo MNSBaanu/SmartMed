@@ -53,22 +53,18 @@ namespace SmartMedNew.UI
             if (Session.IsAdminLoggedIn)
             {
                 login.Hide();
-                var host = new AdminHostForm();
-                host.FormClosed += OnMainFormClosed;
-                MainForm = host;
-                host.Show();
+                var adminHost = new AdminHostForm();
+                adminHost.FormClosed += OnMainFormClosed;
+                MainForm = adminHost;
+                adminHost.Show();
                 return;
             }
 
-            var displayName = Session.CurrentCustomer?.Name;
-            MessageBox.Show(
-                $"Welcome, {displayName}!\n\nSigned in as Customer.\nHost dashboards will be added next.",
-                "SmartMed Clinical",
-                MessageBoxButtons.OK,
-                MessageBoxIcon.Information);
-
-            login.FormClosed -= OnLoginFormClosed;
-            ExitThread();
+            login.Hide();
+            var customerHost = new CustomerHostForm();
+            customerHost.FormClosed += OnMainFormClosed;
+            MainForm = customerHost;
+            customerHost.Show();
         }
 
         private void OnLoginFormClosed(object sender, FormClosedEventArgs e)

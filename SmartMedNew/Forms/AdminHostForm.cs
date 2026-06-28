@@ -9,8 +9,10 @@ namespace SmartMedNew.UI
     public sealed partial class AdminHostForm : Form
     {
         private AdminDashboardForm _dashboard;
+        private ManageMedicinesForm _medicinesPage;
         private ManageCustomersForm _customersPage;
         private ManageOrdersForm _ordersPage;
+        private ReportsForm _reportsPage;
         private AdminNavItem _activeNav = AdminNavItem.Overview;
         private readonly Timer _clockTimer = new Timer { Interval = 30000 };
 
@@ -90,6 +92,20 @@ namespace SmartMedNew.UI
             UpdateTitleBar("Operational Dashboard");
         }
 
+        private void ShowMedicines()
+        {
+            panelContent.Controls.Clear();
+            panelContent.AutoScrollPosition = new Point(0, 0);
+
+            if (_medicinesPage == null || _medicinesPage.IsDisposed)
+                _medicinesPage = new ManageMedicinesForm();
+
+            _medicinesPage.Dock = DockStyle.Fill;
+            panelContent.Controls.Add(_medicinesPage);
+            _medicinesPage.RefreshPage();
+            UpdateTitleBar("Manage Medicines");
+        }
+
         private void ShowCustomers()
         {
             panelContent.Controls.Clear();
@@ -116,6 +132,20 @@ namespace SmartMedNew.UI
             panelContent.Controls.Add(_ordersPage);
             _ordersPage.RefreshPage();
             UpdateTitleBar("Manage Orders");
+        }
+
+        private void ShowReports()
+        {
+            panelContent.Controls.Clear();
+            panelContent.AutoScrollPosition = new Point(0, 0);
+
+            if (_reportsPage == null || _reportsPage.IsDisposed)
+                _reportsPage = new ReportsForm();
+
+            _reportsPage.Dock = DockStyle.Fill;
+            panelContent.Controls.Add(_reportsPage);
+            _reportsPage.RefreshPage();
+            UpdateTitleBar("Reports & Analytics");
         }
 
         private void UpdateTitleBar(string section)
@@ -155,6 +185,12 @@ namespace SmartMedNew.UI
             ShowDashboard();
         }
 
+        private void BtnNavMedicines_Click(object sender, EventArgs e)
+        {
+            SetActiveNav(AdminNavItem.Medicines);
+            ShowMedicines();
+        }
+
         private void BtnNavCustomers_Click(object sender, EventArgs e)
         {
             SetActiveNav(AdminNavItem.Customers);
@@ -165,6 +201,12 @@ namespace SmartMedNew.UI
         {
             SetActiveNav(AdminNavItem.Orders);
             ShowOrders();
+        }
+
+        private void BtnNavReports_Click(object sender, EventArgs e)
+        {
+            SetActiveNav(AdminNavItem.Reports);
+            ShowReports();
         }
 
         private void BtnNavComingSoon_Click(object sender, EventArgs e)
@@ -204,8 +246,10 @@ namespace SmartMedNew.UI
         {
             _clockTimer.Dispose();
             _dashboard?.Dispose();
+            _medicinesPage?.Dispose();
             _customersPage?.Dispose();
             _ordersPage?.Dispose();
+            _reportsPage?.Dispose();
             base.OnFormClosed(e);
         }
     }

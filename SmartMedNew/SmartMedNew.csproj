@@ -92,5 +92,79 @@
     <EmbeddedResource Update="Forms\ManageCustomersForm.resx">
       <DependentUpon>ManageCustomersForm.cs</DependentUpon>
     </EmbeddedResource>
+    <Compile Update="Forms\ManageMedicinesForm.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="Forms\ManageMedicinesForm.Designer.cs">
+      <DependentUpon>ManageMedicinesForm.cs</DependentUpon>
+    </Compile>
+    <EmbeddedResource Update="Forms\ManageMedicinesForm.resx">
+      <DependentUpon>ManageMedicinesForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <Compile Update="Forms\ReportsForm.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="Forms\ReportsForm.Designer.cs">
+      <DependentUpon>ReportsForm.cs</DependentUpon>
+    </Compile>
+    <EmbeddedResource Update="Forms\ReportsForm.resx">
+      <DependentUpon>ReportsForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <Compile Update="Forms\CustomerNavItem.cs" />
+    <Compile Update="Forms\CustomerPageControl.cs" />
+    <Compile Update="Forms\CustomerHostForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Forms\CustomerHostForm.Designer.cs">
+      <DependentUpon>CustomerHostForm.cs</DependentUpon>
+    </Compile>
+    <EmbeddedResource Update="Forms\CustomerHostForm.resx">
+      <DependentUpon>CustomerHostForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <Compile Update="Forms\CustomerDashboardForm.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="Forms\CustomerDashboardForm.Designer.cs">
+      <DependentUpon>CustomerDashboardForm.cs</DependentUpon>
+    </Compile>
+    <EmbeddedResource Update="Forms\CustomerDashboardForm.resx">
+      <DependentUpon>CustomerDashboardForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <Compile Update="Forms\SearchMedicinesForm.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="Forms\SearchMedicinesForm.Designer.cs">
+      <DependentUpon>SearchMedicinesForm.cs</DependentUpon>
+    </Compile>
+    <EmbeddedResource Update="Forms\SearchMedicinesForm.resx">
+      <DependentUpon>SearchMedicinesForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <Compile Update="Forms\PlaceOrderForm.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="Forms\PlaceOrderForm.Designer.cs">
+      <DependentUpon>PlaceOrderForm.cs</DependentUpon>
+    </Compile>
+    <EmbeddedResource Update="Forms\PlaceOrderForm.resx">
+      <DependentUpon>PlaceOrderForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <Compile Update="Forms\TrackOrdersForm.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="Forms\TrackOrdersForm.Designer.cs">
+      <DependentUpon>TrackOrdersForm.cs</DependentUpon>
+    </Compile>
+    <EmbeddedResource Update="Forms\TrackOrdersForm.resx">
+      <DependentUpon>TrackOrdersForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <Compile Update="Forms\ProfileManagementForm.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="Forms\ProfileManagementForm.Designer.cs">
+      <DependentUpon>ProfileManagementForm.cs</DependentUpon>
+    </Compile>
+    <EmbeddedResource Update="Forms\ProfileManagementForm.resx">
+      <DependentUpon>ProfileManagementForm.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
 </Project>
