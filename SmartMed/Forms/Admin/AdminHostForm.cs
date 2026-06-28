@@ -52,21 +52,10 @@ namespace SmartMed.UI
 
         private void ApplyWinControls()
         {
-            foreach (Control c in panelWinControls.Controls)
-            {
-                if (c is Button btn)
-                {
-                    btn.FlatAppearance.BorderSize = 0;
-                    btn.BackColor = Color.White;
-                    btn.ForeColor = UiTheme.AdminMuted;
-                    btn.Font = UiTheme.UiFont;
-                    btn.Cursor = Cursors.Hand;
-                    btn.UseVisualStyleBackColor = false;
-                    btn.FlatAppearance.MouseOverBackColor = Color.FromArgb(232, 239, 238);
-                    if (btn == btnWinClose)
-                        btn.FlatAppearance.MouseOverBackColor = UiTheme.Danger;
-                }
-            }
+            UiTheme.ArrangeWindowControls(panelWinControls, btnWinMinimize, btnWinMaximize, btnWinClose);
+            UiTheme.StyleWindowControlButton(btnWinMinimize);
+            UiTheme.StyleWindowControlButton(btnWinMaximize);
+            UiTheme.StyleWindowControlButton(btnWinClose, isClose: true);
         }
 
         private void WireMenuBar()

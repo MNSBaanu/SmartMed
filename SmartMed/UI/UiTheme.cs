@@ -612,6 +612,53 @@ namespace SmartMed.UI
                 EnableFontPropagation(form);
         }
 
+        /// <summary>
+        /// Lays out custom title-bar buttons left-to-right: Minimize, Maximize, Close (matches native Login chrome).
+        /// </summary>
+        public static void ArrangeWindowControls(Panel host, Button minimize, Button maximize, Button close)
+        {
+            if (host == null) return;
+
+            host.SuspendLayout();
+            host.Controls.Clear();
+
+            var flow = new FlowLayoutPanel
+            {
+                Dock = DockStyle.Fill,
+                FlowDirection = FlowDirection.LeftToRight,
+                WrapContents = false,
+                Margin = Padding.Empty,
+                Padding = Padding.Empty,
+                BackColor = host.BackColor
+            };
+
+            foreach (var btn in new[] { minimize, maximize, close })
+            {
+                if (btn == null) continue;
+                btn.Dock = DockStyle.None;
+                btn.Margin = Padding.Empty;
+                btn.Size = new Size(46, 32);
+                flow.Controls.Add(btn);
+            }
+
+            host.Controls.Add(flow);
+            host.ResumeLayout(true);
+        }
+
+        public static void StyleWindowControlButton(Button button, bool isClose = false)
+        {
+            if (button == null) return;
+            button.FlatAppearance.BorderSize = 0;
+            button.BackColor = Color.White;
+            button.ForeColor = AdminMuted;
+            button.Font = UiFont;
+            button.Cursor = Cursors.Hand;
+            button.UseVisualStyleBackColor = false;
+            button.FlatAppearance.MouseOverBackColor = isClose
+                ? Danger
+                : Color.FromArgb(232, 239, 238);
+        }
+
         public static void StyleWinFormsNavButton(Button button, bool active)
         {
             if (button == null) return;
