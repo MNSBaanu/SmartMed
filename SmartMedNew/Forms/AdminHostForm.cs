@@ -9,6 +9,7 @@ namespace SmartMedNew.UI
     public sealed partial class AdminHostForm : Form
     {
         private AdminDashboardForm _dashboard;
+        private ManageOrdersForm _ordersPage;
         private AdminNavItem _activeNav = AdminNavItem.Overview;
         private readonly Timer _clockTimer = new Timer { Interval = 30000 };
 
@@ -85,6 +86,29 @@ namespace SmartMedNew.UI
             _dashboard.Dock = DockStyle.Fill;
             panelContent.Controls.Add(_dashboard);
             _dashboard.RefreshData();
+            UpdateTitleBar("Operational Dashboard");
+        }
+
+        private void ShowOrders()
+        {
+            panelContent.Controls.Clear();
+            panelContent.AutoScrollPosition = new Point(0, 0);
+
+            if (_ordersPage == null || _ordersPage.IsDisposed)
+                _ordersPage = new ManageOrdersForm();
+
+            _ordersPage.Dock = DockStyle.Fill;
+            panelContent.Controls.Add(_ordersPage);
+            _ordersPage.RefreshPage();
+            UpdateTitleBar("Manage Orders");
+        }
+
+        private void UpdateTitleBar(string section)
+        {
+            lblTitleBar.Text = $"SmartMed Clinical Management - {section}";
+            Text = section == "Operational Dashboard"
+                ? "SmartMed - Operational Dashboard"
+                : $"SmartMed - {section}";
         }
 
         internal void SetActiveNav(AdminNavItem nav)
@@ -114,6 +138,12 @@ namespace SmartMedNew.UI
         {
             SetActiveNav(AdminNavItem.Overview);
             ShowDashboard();
+        }
+
+        private void BtnNavOrders_Click(object sender, EventArgs e)
+        {
+            SetActiveNav(AdminNavItem.Orders);
+            ShowOrders();
         }
 
         private void BtnNavComingSoon_Click(object sender, EventArgs e)
@@ -153,6 +183,7 @@ namespace SmartMedNew.UI
         {
             _clockTimer.Dispose();
             _dashboard?.Dispose();
+            _ordersPage?.Dispose();
             base.OnFormClosed(e);
         }
     }

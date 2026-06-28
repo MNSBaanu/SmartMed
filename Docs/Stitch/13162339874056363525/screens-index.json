@@ -110,9 +110,20 @@
     "pngBytes": 74192
   },
   {
+    "slug": "login",
+    "screenId": "df3064256ad24a729d3b0f3a100fc51f",
+    "title": "login",
+    "htmlUrl": "https://contribution.usercontent.google.com/download?c=CgthaWRhX2NvZGVmeBJ8Eh1hcHBfY29tcGFuaW9uX2dlbmVyYXRlZF9maWxlcxpbCiVodG1sXzg4MzZiZmVhZWE5MjQyMTg5MTdjZjJjMGRiNjFmMzZjEgsSBxDk5J3DoR4YAZIBJAoKcHJvamVjdF9pZBIWQhQxMzE2MjMzOTg3NDA1NjM2MzUyNQ&filename=&opi=89354086",
+    "imageUrl": "https://lh3.googleusercontent.com/aida/AP1WRLte8nK77Xip8bs1N-jWsUXzJYFQfomxp3twuS6djrf-I7Pt6HXmi4zUu8_GgO1gIqOJDH9tXdpwbHEf4m3c3Ty8JGLJIv5Z2NsRCgbDkWaIoRsAEXtGwnZ_09RO5iARCgl5ZJAsfDnvs3zaVW3He8GAqjEvjmmE2x0y4m3fj300wpJrgzy3_bfLGdg7e-6V63AwYCSWxOG5aDrHgMO2ZIAH84mXuaD3ZZiqglkUuine02qtyqH58BqaU0FC",
+    "htmlFile": "login.html",
+    "pngFile": "login.png",
+    "htmlBytes": 12830,
+    "pngBytes": 39387
+  },
+  {
     "slug": "registration",
     "screenId": "719984e1cd6e4c5cb8b3f16793014c49",
-    "title": "Registration - Modern WinForms Style",
+    "title": "registration",
     "htmlUrl": "https://contribution.usercontent.google.com/download?c=CgthaWRhX2NvZGVmeBJ8Eh1hcHBfY29tcGFuaW9uX2dlbmVyYXRlZF9maWxlcxpbCiVodG1sXzU5YzQyOTFkNmNhNDQxZGRhNjg5ZTZmMzExN2RlYzVjEgsSBxDk5J3DoR4YAZIBJAoKcHJvamVjdF9pZBIWQhQxMzE2MjMzOTg3NDA1NjM2MzUyNQ&filename=&opi=89354086",
     "imageUrl": "https://lh3.googleusercontent.com/aida/AP1WRLvJyzaDxtEK2NH8vrDcgA4Q27EhMyP67tvqUuuU8wZpdUxsZRuCrqJ77ZN-B21CGYncLtAQ58gDpotEHbCnlZWDBQ2z20SkreuD4JvUY9YWltvhph5t4hbIWADgdkj1viAaFZXbCQtvlE3ccWeDi6vBaKdOOocyrWiRHxGxNOOH0eJm_o4KdraGmnKrUCti7D-jAdQKR8HGKraRAUAv4VoR6jhdEDG_U4Lks67w14zzrX-73iqVwffyCRIg",
     "htmlFile": "registration.html",
@@ -122,6 +133,6 @@
   },
   {
     "projectId": "13162339874056363525",
-    "fetchedAt": "2026-06-27T12:18:02.680Z"
+    "fetchedAt": "2026-06-28T07:39:03.601Z"
   }
 ]

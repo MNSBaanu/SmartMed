@@ -340,7 +340,7 @@ namespace SmartMedNew.UI
             this.btnNavOrders.Text = "Order Management";
             this.btnNavOrders.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.btnNavOrders.UseVisualStyleBackColor = false;
-            this.btnNavOrders.Click += new System.EventHandler(this.BtnNavComingSoon_Click);
+            this.btnNavOrders.Click += new System.EventHandler(this.BtnNavOrders_Click);
             // 
             // btnNavCustomers
             // 

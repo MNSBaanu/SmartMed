@@ -65,5 +65,8 @@
     <Compile Update="Forms\AdminDashboardForm.cs">
       <SubType>UserControl</SubType>
     </Compile>
+    <Compile Update="Forms\ManageOrdersForm.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
   </ItemGroup>
 </Project>
