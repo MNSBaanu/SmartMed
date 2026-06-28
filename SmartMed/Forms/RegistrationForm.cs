@@ -33,6 +33,7 @@ namespace SmartMed.UI
             lblPageTitle.BackColor = Color.White;
             lblPageSubtitle.ForeColor = UiTheme.AdminLabelText;
             lblPageSubtitle.BackColor = Color.White;
+            lblPageSubtitle.Font = UiTheme.UiFont;
 
             UiTheme.StyleRegistrationFieldLabel(lblFullName);
             UiTheme.StyleRegistrationFieldLabel(lblEmail);
@@ -64,18 +65,24 @@ namespace SmartMed.UI
             panelStatusBar.BackColor = UiTheme.FooterBackground;
             lblStatusLeft.ForeColor = UiTheme.FooterText;
             lblStatusLeft.BackColor = UiTheme.FooterBackground;
+            lblStatusLeft.Font = UiTheme.FontAt(8.25F);
             lblStatusCenter.ForeColor = UiTheme.FooterText;
             lblStatusCenter.BackColor = UiTheme.FooterBackground;
+            lblStatusCenter.Font = UiTheme.FontAt(8.25F);
             lblStatusRight.ForeColor = UiTheme.FooterText;
             lblStatusRight.BackColor = UiTheme.FooterBackground;
+            lblStatusRight.Font = UiTheme.FontAt(8.25F);
 
             panelBody.BackColor = Color.White;
             panelSuccess.BackColor = Color.White;
             lblSuccessIcon.ForeColor = UiTheme.AdminTeal;
+            lblSuccessIcon.Font = UiTheme.FontAt(20F, bold: true);
             lblSuccessTitle.ForeColor = UiTheme.AdminOnSurface;
             lblSuccessTitle.BackColor = Color.White;
+            lblSuccessTitle.Font = UiTheme.FontAt(12F, bold: true);
             lblSuccessMessage.ForeColor = UiTheme.AdminLabelText;
             lblSuccessMessage.BackColor = Color.White;
+            lblSuccessMessage.Font = UiTheme.UiFont;
             UiTheme.ApplyRegisterButton(btnReturnLogin);
 
             LayoutRegistrationContent();

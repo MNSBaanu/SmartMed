@@ -121,7 +121,6 @@ namespace SmartMed.UI
             // 
             // lblSuccessTitle
             // 
-            this.lblSuccessTitle.Font = new System.Drawing.Font("Hanken Grotesk", 12F, System.Drawing.FontStyle.Bold);
             this.lblSuccessTitle.Location = new System.Drawing.Point(32, 140);
             this.lblSuccessTitle.Name = "lblSuccessTitle";
             this.lblSuccessTitle.Size = new System.Drawing.Size(456, 28);
@@ -131,7 +130,6 @@ namespace SmartMed.UI
             // 
             // lblSuccessIcon
             // 
-            this.lblSuccessIcon.Font = new System.Drawing.Font("Hanken Grotesk", 20F, System.Drawing.FontStyle.Bold);
             this.lblSuccessIcon.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(53)))), ((int)(((byte)(103)))), ((int)(((byte)(94)))));
             this.lblSuccessIcon.Location = new System.Drawing.Point(32, 80);
             this.lblSuccessIcon.Name = "lblSuccessIcon";
@@ -350,7 +348,6 @@ namespace SmartMed.UI
             // lblPageTitle
             // 
             this.lblPageTitle.AutoSize = true;
-            this.lblPageTitle.Font = new System.Drawing.Font("Hanken Grotesk", 14F, System.Drawing.FontStyle.Bold);
             this.lblPageTitle.Location = new System.Drawing.Point(32, 32);
             this.lblPageTitle.Name = "lblPageTitle";
             this.lblPageTitle.Size = new System.Drawing.Size(220, 25);
@@ -421,7 +418,6 @@ namespace SmartMed.UI
             // lblStatusRight
             // 
             this.lblStatusRight.Dock = System.Windows.Forms.DockStyle.Right;
-            this.lblStatusRight.Font = new System.Drawing.Font("Hanken Grotesk", 8.25F);
             this.lblStatusRight.Location = new System.Drawing.Point(464, 0);
             this.lblStatusRight.Name = "lblStatusRight";
             this.lblStatusRight.Size = new System.Drawing.Size(240, 32);
@@ -432,7 +428,6 @@ namespace SmartMed.UI
             // lblStatusCenter
             // 
             this.lblStatusCenter.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lblStatusCenter.Font = new System.Drawing.Font("Hanken Grotesk", 8.25F);
             this.lblStatusCenter.Location = new System.Drawing.Point(296, 0);
             this.lblStatusCenter.Name = "lblStatusCenter";
             this.lblStatusCenter.Size = new System.Drawing.Size(408, 32);
@@ -443,7 +438,6 @@ namespace SmartMed.UI
             // lblStatusLeft
             // 
             this.lblStatusLeft.Dock = System.Windows.Forms.DockStyle.Left;
-            this.lblStatusLeft.Font = new System.Drawing.Font("Hanken Grotesk", 8.25F);
             this.lblStatusLeft.Location = new System.Drawing.Point(16, 0);
             this.lblStatusLeft.Name = "lblStatusLeft";
             this.lblStatusLeft.Size = new System.Drawing.Size(280, 32);
@@ -460,7 +454,6 @@ namespace SmartMed.UI
             this.ClientSize = new System.Drawing.Size(720, 780);
             this.Controls.Add(this.panelMain);
             this.Controls.Add(this.panelStatusBar);
-            this.Font = new System.Drawing.Font("Hanken Grotesk", 9F);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.MaximizeBox = false;
             this.MinimizeBox = false;

@@ -20,6 +20,7 @@ namespace SmartMed.UI
         {
             InitializeComponent();
             DoubleBuffered = true;
+            UiTheme.ApplyFormFonts(this);
             UiTheme.ApplyAdminWinFormsShell(
                 this, panelTitleBar, panelMenuBar, panelSidebar, panelContent, panelStatusBar);
             ApplyProfile();

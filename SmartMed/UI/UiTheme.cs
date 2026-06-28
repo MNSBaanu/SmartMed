@@ -88,6 +88,25 @@ namespace SmartMed.UI
             _initialized = true;
         }
 
+        /// <summary>Sets the form root font and applies Hanken Grotesk to all child controls.</summary>
+        public static void ApplyFormFonts(Form form)
+        {
+            if (form == null) return;
+            EnsureFonts();
+            form.Font = UiFont;
+            EnableFontPropagation(form);
+            ApplyFontTree(form);
+        }
+
+        private static bool IsBundledFamily(FontFamily family)
+        {
+            if (family == null || _familyRegular == null) return false;
+            var name = family.Name;
+            return (_familyRegular != null && name == _familyRegular.Name)
+                || (_familySemiBold != null && name == _familySemiBold.Name)
+                || (_familyBold != null && name == _familyBold.Name);
+        }
+
         public static XFont PdfFont(float size, bool bold = false) =>
             new XFont(FontFamilyName, size, bold ? XFontStyle.Bold : XFontStyle.Regular);
 
@@ -199,16 +218,18 @@ namespace SmartMed.UI
         private static Font MapFont(Font current)
         {
             if (current == null) return UiFont;
+            if (IsBundledFamily(current.FontFamily))
+                return current;
 
             var size = current.Size;
-            var bold = current.Bold || (current.Style & FontStyle.Bold) == FontStyle.Bold;
-            var familyName = current.FontFamily?.Name ?? string.Empty;
-            var semiboldName = familyName.IndexOf("Semi", StringComparison.OrdinalIgnoreCase) >= 0;
+            var style = current.Style;
+            var bold = (style & FontStyle.Bold) == FontStyle.Bold || current.Bold;
+            var semiboldName = current.FontFamily?.Name?.IndexOf("Semi", StringComparison.OrdinalIgnoreCase) >= 0;
 
             if (bold)
             {
                 if (size >= 16F) return FontAt(size, bold: true);
-                if (size >= 14F) return FontAt(size, semibold: true);
+                if (size >= 13F) return FontAt(size, semibold: true);
                 return FontAt(size, bold: true);
             }
 

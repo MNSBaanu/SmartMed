@@ -170,7 +170,6 @@ namespace SmartMed.UI
 
             this.lblTitleIcon.Dock = System.Windows.Forms.DockStyle.Fill;
 
-            this.lblTitleIcon.Font = new System.Drawing.Font("Hanken Grotesk", 7F, System.Drawing.FontStyle.Bold);
 
             this.lblTitleIcon.ForeColor = System.Drawing.Color.White;
 
@@ -292,7 +291,6 @@ namespace SmartMed.UI
 
             this.lblError.Dock = System.Windows.Forms.DockStyle.Fill;
 
-            this.lblError.Font = new System.Drawing.Font("Hanken Grotesk", 8.25F);
 
             this.lblError.Location = new System.Drawing.Point(12, 8);
 
@@ -524,7 +522,6 @@ namespace SmartMed.UI
 
             this.lblAuthTitle.AutoSize = true;
 
-            this.lblAuthTitle.Font = new System.Drawing.Font("Hanken Grotesk", 14F, System.Drawing.FontStyle.Bold);
 
             this.lblAuthTitle.Location = new System.Drawing.Point(32, 182);
 
@@ -544,7 +541,6 @@ namespace SmartMed.UI
 
             this.lblVersion.AutoSize = true;
 
-            this.lblVersion.Font = new System.Drawing.Font("Hanken Grotesk", 8.25F);
 
             this.lblVersion.Location = new System.Drawing.Point(32, 152);
 
@@ -564,7 +560,6 @@ namespace SmartMed.UI
 
             this.lblBrand.AutoSize = true;
 
-            this.lblBrand.Font = new System.Drawing.Font("Hanken Grotesk", 16F, System.Drawing.FontStyle.Bold);
 
             this.lblBrand.Location = new System.Drawing.Point(32, 124);
 
@@ -602,7 +597,6 @@ namespace SmartMed.UI
 
             this.lblBrandIcon.Dock = System.Windows.Forms.DockStyle.Fill;
 
-            this.lblBrandIcon.Font = new System.Drawing.Font("Hanken Grotesk", 24F, System.Drawing.FontStyle.Bold);
 
             this.lblBrandIcon.ForeColor = System.Drawing.Color.White;
 
@@ -646,7 +640,6 @@ namespace SmartMed.UI
 
             this.lblCopyright.Dock = System.Windows.Forms.DockStyle.Bottom;
 
-            this.lblCopyright.Font = new System.Drawing.Font("Hanken Grotesk", 8.25F);
 
             this.lblCopyright.Location = new System.Drawing.Point(0, 24);
 
@@ -668,7 +661,6 @@ namespace SmartMed.UI
 
             this.lblSecurityLine.Dock = System.Windows.Forms.DockStyle.Top;
 
-            this.lblSecurityLine.Font = new System.Drawing.Font("Hanken Grotesk", 8.25F);
 
             this.lblSecurityLine.Location = new System.Drawing.Point(0, 0);
 
@@ -701,8 +693,6 @@ namespace SmartMed.UI
             this.Controls.Add(this.panelMain);
 
             this.Controls.Add(this.panelTitleBar);
-
-            this.Font = new System.Drawing.Font("Hanken Grotesk", 9F);
 
             this.MinimumSize = new System.Drawing.Size(640, 580);
 

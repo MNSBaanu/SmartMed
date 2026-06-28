@@ -61,6 +61,7 @@ namespace SmartMed.UI
             UiTheme.StylePasswordBox(txtCurrent, masked: true);
             UiTheme.StylePasswordBox(txtNew, masked: true);
             UiTheme.StylePasswordBox(txtConfirm, masked: true);
+            UiTheme.EnableFontPropagation(this);
         }
 
         private static Label MakeLabel(string text) =>
@@ -69,6 +70,7 @@ namespace SmartMed.UI
                 Text = text,
                 Dock = DockStyle.Top,
                 AutoSize = true,
+                Font = UiTheme.UiFont,
                 ForeColor = UiTheme.AdminMuted,
                 BackColor = UiTheme.AdminSurface,
                 Margin = new Padding(0, 0, 0, 4)

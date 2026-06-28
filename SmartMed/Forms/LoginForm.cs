@@ -46,21 +46,25 @@ namespace SmartMed.UI
             pnlTitleIcon.BackColor = UiTheme.PrimaryContainer;
             lblTitleIcon.ForeColor = Color.White;
             lblTitleIcon.BackColor = UiTheme.PrimaryContainer;
+            lblTitleIcon.Font = UiTheme.FontAt(7F, bold: true);
 
             lblBrand.ForeColor = UiTheme.AdminTealDark;
             lblBrand.Font = UiTheme.UiFontTitle;
             lblBrand.BackColor = Color.White;
             lblVersion.ForeColor = UiTheme.FooterText;
             lblVersion.BackColor = Color.White;
+            lblVersion.Font = UiTheme.FontAt(8.25F);
             lblAuthTitle.ForeColor = UiTheme.AdminOnSurface;
             lblAuthTitle.Font = UiTheme.UiFontAuthTitle;
             lblAuthTitle.BackColor = Color.White;
             lblAuthSubtitle.ForeColor = UiTheme.AdminLabelText;
             lblAuthSubtitle.BackColor = Color.White;
+            lblAuthSubtitle.Font = UiTheme.UiFont;
 
             pnlBrandIcon.BackColor = UiTheme.PrimaryContainer;
             lblBrandIcon.ForeColor = Color.White;
             lblBrandIcon.BackColor = UiTheme.PrimaryContainer;
+            lblBrandIcon.Font = UiTheme.FontAt(24F, bold: true);
 
             UiTheme.StyleClinicalFieldLabel(lblUsername);
             UiTheme.StyleClinicalFieldLabel(lblPassword);
@@ -76,13 +80,16 @@ namespace SmartMed.UI
             panelFooter.BackColor = UiTheme.AdminSurface;
             lblSecurityLine.ForeColor = UiTheme.FooterText;
             lblSecurityLine.BackColor = UiTheme.AdminSurface;
+            lblSecurityLine.Font = UiTheme.FontAt(8.25F);
             lblCopyright.ForeColor = UiTheme.FooterText;
             lblCopyright.BackColor = UiTheme.AdminSurface;
+            lblCopyright.Font = UiTheme.FontAt(8.25F);
 
             panelError.BackColor = UiTheme.ErrorContainer;
             panelError.Visible = false;
             lblError.ForeColor = UiTheme.ErrorOnContainer;
             lblError.BackColor = UiTheme.ErrorContainer;
+            lblError.Font = UiTheme.FontAt(8.25F);
 
             SetPasswordVisible(_passwordVisible);
         }
