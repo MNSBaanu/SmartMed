@@ -31,8 +31,15 @@ namespace SmartMed.UI
         public static readonly Color InputFocusBackground = Color.White;
         public static readonly Color PlaceholderText = Color.FromArgb(130, 138, 136);
         public static readonly Color FooterBackground = Color.FromArgb(232, 239, 238);
-        public static readonly Color AdminSidebar = Color.FromArgb(232, 239, 238);
+        public static readonly Color AdminSidebar = Color.FromArgb(238, 245, 244);
         public static readonly Color SurfaceContainer = Color.FromArgb(232, 239, 238);
+        public static readonly Color SurfaceContainerHigh = Color.FromArgb(227, 234, 233);
+        public static readonly Color SurfaceContainerLow = Color.FromArgb(238, 245, 244);
+        public static readonly Color OnPrimaryContainer = Color.FromArgb(117, 151, 146);
+        public static readonly Color SecondaryContainer = Color.FromArgb(184, 237, 226);
+        public static readonly Color OnSecondaryContainer = Color.FromArgb(59, 109, 100);
+        public static readonly Color OnSecondaryFixedVariant = Color.FromArgb(27, 79, 71);
+        public const int SidebarWidth = 260;
         public static readonly Color ErrorContainer = Color.FromArgb(255, 218, 214);
         public static readonly Color Error = Color.FromArgb(186, 26, 26);
         public static readonly Color ErrorOnContainer = Color.FromArgb(147, 0, 10);
@@ -683,46 +690,216 @@ namespace SmartMed.UI
         public static void StyleWinFormsNavButton(Button button, bool active)
         {
             if (button == null) return;
-            button.Paint -= NavButton_Paint;
+            button.Paint -= NavButton_LegacyPaint;
             button.FlatStyle = FlatStyle.Flat;
             button.FlatAppearance.BorderSize = 0;
-            button.Height = Math.Max(button.Height, 36);
+            button.Height = Math.Max(button.Height, 40);
             button.TextAlign = ContentAlignment.MiddleLeft;
-            button.Padding = new Padding(16, 0, 12, 0);
+            button.Padding = new Padding(40, 0, 12, 0);
+            button.Margin = new Padding(12, 2, 12, 2);
             button.Cursor = Cursors.Hand;
             button.UseVisualStyleBackColor = false;
             button.Font = active ? UiFontBold : UiFont;
-
-            if (string.Equals(button.Text, "Exit Application", StringComparison.Ordinal))
-            {
-                button.BackColor = AdminSidebar;
-                button.ForeColor = AdminMuted;
-                button.FlatAppearance.MouseOverBackColor = Color.FromArgb(255, 230, 230);
-                button.FlatAppearance.MouseDownBackColor = Color.FromArgb(255, 210, 210);
-                return;
-            }
+            button.Tag = active;
 
             if (active)
             {
-                button.BackColor = Color.White;
-                button.ForeColor = AdminTeal;
-                button.FlatAppearance.MouseOverBackColor = Color.White;
-                button.Paint += NavButton_Paint;
+                button.BackColor = AdminSidebar;
+                button.ForeColor = OnPrimaryContainer;
+                button.FlatAppearance.MouseOverBackColor = AdminSidebar;
             }
             else
             {
                 button.BackColor = AdminSidebar;
                 button.ForeColor = AdminMuted;
-                button.FlatAppearance.MouseOverBackColor = Color.FromArgb(245, 250, 249);
-                button.FlatAppearance.MouseDownBackColor = Color.FromArgb(235, 242, 241);
+                button.FlatAppearance.MouseOverBackColor = SurfaceContainerHigh;
+                button.FlatAppearance.MouseDownBackColor = SurfaceContainer;
+            }
+
+            if (button is NavButton)
+                button.Invalidate();
+            else
+                button.Paint += NavButton_LegacyPaint;
+        }
+
+        internal static void PaintNavButton(Button button, Graphics graphics)
+        {
+            var active = button.Tag is bool isActive && isActive;
+            graphics.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
+
+            using (var clear = new SolidBrush(button.BackColor))
+                graphics.FillRectangle(clear, button.ClientRectangle);
+
+            var bounds = new Rectangle(12, 2, button.Width - 24, button.Height - 4);
+            if (active)
+            {
+                using (var fill = new SolidBrush(PrimaryContainer))
+                    graphics.FillRectangle(fill, bounds);
+                using (var accent = new SolidBrush(PrimaryDark))
+                    graphics.FillRectangle(accent, bounds.Left, bounds.Top, 4, bounds.Height);
+            }
+
+            var fore = active ? OnPrimaryContainer : button.ForeColor;
+            var font = active ? UiFontBold : UiFont;
+            var iconBounds = new Rectangle(bounds.Left + 12, bounds.Top, 24, bounds.Height);
+            TextRenderer.DrawText(graphics, GetNavGlyph(button.Name), font, iconBounds, fore,
+                TextFormatFlags.HorizontalCenter | TextFormatFlags.VerticalCenter);
+            var textBounds = new Rectangle(bounds.Left + 40, bounds.Top, bounds.Width - 44, bounds.Height);
+            TextRenderer.DrawText(graphics, button.Text, font, textBounds, fore,
+                TextFormatFlags.Left | TextFormatFlags.VerticalCenter);
+        }
+
+        private static void NavButton_LegacyPaint(object sender, PaintEventArgs e) =>
+            PaintNavButton((Button)sender, e.Graphics);
+
+        public static void StyleSidebarBrand(Panel brand, Panel iconHost, Label title, Label subtitle, bool customerPortal)
+        {
+            if (brand == null) return;
+            brand.BackColor = AdminSidebar;
+            brand.Padding = new Padding(24, 20, 24, 16);
+            brand.Height = 88;
+
+            if (iconHost != null)
+            {
+                iconHost.Size = new Size(40, 40);
+                iconHost.Location = new Point(24, 20);
+                iconHost.BackColor = customerPortal ? AdminTeal : PrimaryContainer;
+                iconHost.Paint -= SidebarBrandIcon_Paint;
+                iconHost.Paint += SidebarBrandIcon_Paint;
+                iconHost.Tag = customerPortal;
+            }
+
+            if (title != null)
+            {
+                title.Text = "SmartMed";
+                title.Font = UiFontBold;
+                title.ForeColor = PrimaryDark;
+                title.BackColor = AdminSidebar;
+                title.AutoSize = true;
+                title.Location = new Point(72, 22);
+            }
+
+            if (subtitle != null)
+            {
+                subtitle.Text = customerPortal ? "Health Portal" : "Clinical Management";
+                subtitle.Font = FontAt(8.25F);
+                subtitle.ForeColor = OnSecondaryFixedVariant;
+                subtitle.BackColor = AdminSidebar;
+                subtitle.AutoSize = true;
+                subtitle.Location = new Point(72, 44);
             }
         }
 
-        private static void NavButton_Paint(object sender, PaintEventArgs e)
+        public static void StyleSidebarProfileFooter(Panel profile, Panel avatar, Label name, Label role)
         {
-            var button = (Button)sender;
-            using (var brush = new SolidBrush(AdminTeal))
-                e.Graphics.FillRectangle(brush, button.Width - 3, 0, 3, button.Height);
+            if (profile == null) return;
+            profile.BackColor = SurfaceContainer;
+            profile.Padding = new Padding(24, 16, 24, 16);
+            profile.Height = 72;
+
+            if (avatar != null)
+            {
+                avatar.Size = new Size(32, 32);
+                avatar.Location = new Point(24, 20);
+            }
+
+            if (name != null)
+            {
+                name.Font = UiFontBold;
+                name.ForeColor = PrimaryDark;
+                name.BackColor = SurfaceContainer;
+                name.AutoSize = true;
+                name.Location = new Point(64, 20);
+            }
+
+            if (role != null)
+            {
+                role.Font = FontAt(7.5F);
+                role.ForeColor = AdminMuted;
+                role.BackColor = SurfaceContainer;
+                role.AutoSize = true;
+                role.Location = new Point(64, 40);
+                role.Text = role.Text?.ToUpperInvariant() ?? string.Empty;
+            }
+        }
+
+        public static void StyleCustomerSupportPanel(Panel panel, Label heading, Label body, Button contact)
+        {
+            if (panel == null) return;
+            panel.BackColor = SecondaryContainer;
+            panel.Padding = new Padding(16);
+            panel.Margin = new Padding(16, 0, 16, 16);
+
+            if (heading != null)
+            {
+                heading.Text = "Need Help?";
+                heading.Font = UiFontBold;
+                heading.ForeColor = OnSecondaryContainer;
+                heading.BackColor = SecondaryContainer;
+                heading.AutoSize = true;
+                heading.Location = new Point(16, 16);
+            }
+
+            if (body != null)
+            {
+                body.Text = "Our clinical staff is online to assist you with prescriptions.";
+                body.Font = FontAt(8.25F);
+                body.ForeColor = OnSecondaryContainer;
+                body.BackColor = SecondaryContainer;
+                body.Location = new Point(16, 36);
+                body.Size = new Size(212, 36);
+            }
+
+            if (contact != null)
+            {
+                contact.Text = "CONTACT US";
+                contact.FlatStyle = FlatStyle.Flat;
+                contact.FlatAppearance.BorderSize = 0;
+                contact.BackColor = AdminTeal;
+                contact.ForeColor = Color.White;
+                contact.Font = FontAt(8.25F);
+                contact.Cursor = Cursors.Hand;
+                contact.UseVisualStyleBackColor = false;
+                contact.FlatAppearance.MouseOverBackColor = AdminTealDark;
+                contact.Size = new Size(212, 32);
+                contact.Location = new Point(16, 76);
+            }
+        }
+
+        private static void SidebarBrandIcon_Paint(object sender, PaintEventArgs e)
+        {
+            var panel = (Panel)sender;
+            var customer = panel.Tag is bool b && b;
+            e.Graphics.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
+            using (var brush = new SolidBrush(panel.BackColor))
+                e.Graphics.FillRectangle(brush, panel.ClientRectangle);
+            var glyph = customer ? "+" : "✚";
+            var color = customer ? Color.White : OnPrimaryContainer;
+            TextRenderer.DrawText(e.Graphics, glyph, UiFontBold, panel.ClientRectangle, color,
+                TextFormatFlags.HorizontalCenter | TextFormatFlags.VerticalCenter);
+        }
+
+
+        private static string GetNavGlyph(string buttonName)
+        {
+            if (string.IsNullOrEmpty(buttonName)) return "•";
+            if (buttonName.IndexOf("Dashboard", StringComparison.OrdinalIgnoreCase) >= 0
+                || buttonName.IndexOf("Home", StringComparison.OrdinalIgnoreCase) >= 0)
+                return "▣";
+            if (buttonName.IndexOf("Medicine", StringComparison.OrdinalIgnoreCase) >= 0
+                || buttonName.IndexOf("Inventory", StringComparison.OrdinalIgnoreCase) >= 0
+                || buttonName.IndexOf("Browse", StringComparison.OrdinalIgnoreCase) >= 0)
+                return "▤";
+            if (buttonName.IndexOf("Customer", StringComparison.OrdinalIgnoreCase) >= 0
+                || buttonName.IndexOf("Profile", StringComparison.OrdinalIgnoreCase) >= 0)
+                return "◉";
+            if (buttonName.IndexOf("Order", StringComparison.OrdinalIgnoreCase) >= 0)
+                return "▥";
+            if (buttonName.IndexOf("Report", StringComparison.OrdinalIgnoreCase) >= 0)
+                return "▦";
+            if (buttonName.IndexOf("Cart", StringComparison.OrdinalIgnoreCase) >= 0)
+                return "▧";
+            return "•";
         }
 
         public static void SetGridDataSource(DataGridView grid, object dataSource)

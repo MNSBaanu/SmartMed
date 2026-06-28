@@ -22,7 +22,7 @@ namespace SmartMed.UI
             UiTheme.ApplyFormFonts(this);
             UiTheme.ApplyAdminWinFormsShell(
                 this, panelTitleBar, panelMenuBar, panelSidebar, panelContent, panelStatusBar);
-            ApplyProfile();
+            ApplySidebarChrome();
             ApplyWinControls();
             WireMenuBar();
             SetActiveNav(CustomerNavItem.Home);
@@ -35,25 +35,13 @@ namespace SmartMed.UI
 
         internal void RefreshProfileDisplay()
         {
-            lblProfileName.Text = Session.CurrentCustomer?.Name ?? "Customer";
-            panelAvatar.Invalidate();
+            _profile?.RefreshPage();
         }
 
-        private void ApplyProfile()
+        private void ApplySidebarChrome()
         {
-            var displayName = Session.CurrentCustomer?.Name ?? "Customer";
-            lblProfileName.Text = displayName;
-            lblProfileRole.Text = "Patient";
-
-            panelAvatar.Paint += (s, e) =>
-            {
-                e.Graphics.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
-                using (var brush = new SolidBrush(UiTheme.AdminTeal))
-                    e.Graphics.FillEllipse(brush, 0, 0, panelAvatar.Width - 1, panelAvatar.Height - 1);
-                var initial = displayName.Length > 0 ? displayName.Substring(0, 1).ToUpperInvariant() : "C";
-                TextRenderer.DrawText(e.Graphics, initial, UiTheme.UiFontBold, panelAvatar.ClientRectangle,
-                    Color.White, TextFormatFlags.HorizontalCenter | TextFormatFlags.VerticalCenter);
-            };
+            UiTheme.StyleSidebarBrand(panelBrand, panelBrandIcon, lblBrandTitle, lblBrandSubtitle, customerPortal: true);
+            UiTheme.StyleCustomerSupportPanel(panelSupport, lblSupportHeading, lblSupportBody, btnSupportContact);
         }
 
         private void ApplyWinControls()
@@ -79,7 +67,7 @@ namespace SmartMed.UI
             panelContent.AutoScrollPosition = new Point(0, 0);
             page.Dock = DockStyle.Fill;
             panelContent.Controls.Add(page);
-            lblTitleBar.Text = $"SmartMed Customer Portal - {title}";
+            lblTitleBar.Text = $"SmartMed Health Portal - {title}";
             Text = $"SmartMed - {title}";
         }
 
@@ -95,7 +83,7 @@ namespace SmartMed.UI
         {
             if (_browse == null || _browse.IsDisposed)
                 _browse = new SearchMedicinesForm();
-            ShowPage(_browse, "Browse Medicines");
+            ShowPage(_browse, "Browse Medicine");
             _browse.RefreshPage();
         }
 
@@ -156,7 +144,16 @@ namespace SmartMed.UI
         private void BtnNavCart_Click(object sender, EventArgs e) => NavigateTo(CustomerNavItem.Cart);
         private void BtnNavOrders_Click(object sender, EventArgs e) => NavigateTo(CustomerNavItem.Orders);
         private void BtnNavProfile_Click(object sender, EventArgs e) => NavigateTo(CustomerNavItem.Profile);
-        private void BtnNavExit_Click(object sender, EventArgs e) => Logout();
+
+        private void BtnSupportContact_Click(object sender, EventArgs e)
+        {
+            MessageBox.Show(
+                "A member of our clinical team will contact you shortly.",
+                "SmartMed Support",
+                MessageBoxButtons.OK,
+                MessageBoxIcon.Information);
+        }
+
         private void BtnWinMinimize_Click(object sender, EventArgs e) => WindowState = FormWindowState.Minimized;
         private void BtnWinMaximize_Click(object sender, EventArgs e) =>
             WindowState = WindowState == FormWindowState.Maximized ? FormWindowState.Normal : FormWindowState.Maximized;

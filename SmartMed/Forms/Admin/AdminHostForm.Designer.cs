@@ -32,19 +32,20 @@ namespace SmartMed.UI
             this.lblStatusCloud = new System.Windows.Forms.Label();
             this.lblStatusHealth = new System.Windows.Forms.Label();
             this.panelSidebar = new System.Windows.Forms.Panel();
-            this.btnNavExit = new System.Windows.Forms.Button();
-            this.btnNavAccess = new System.Windows.Forms.Button();
-            this.btnNavConfig = new System.Windows.Forms.Button();
-            this.lblNavSystem = new System.Windows.Forms.Label();
-            this.btnNavReports = new System.Windows.Forms.Button();
-            this.btnNavOrders = new System.Windows.Forms.Button();
-            this.btnNavCustomers = new System.Windows.Forms.Button();
-            this.btnNavMedicines = new System.Windows.Forms.Button();
-            this.btnNavDashboard = new System.Windows.Forms.Button();
             this.panelProfile = new System.Windows.Forms.Panel();
             this.lblProfileRole = new System.Windows.Forms.Label();
             this.lblProfileName = new System.Windows.Forms.Label();
             this.panelAvatar = new System.Windows.Forms.Panel();
+            this.panelNavSpacer = new System.Windows.Forms.Panel();
+            this.btnNavReports = new SmartMed.UI.NavButton();
+            this.btnNavOrders = new SmartMed.UI.NavButton();
+            this.btnNavCustomers = new SmartMed.UI.NavButton();
+            this.btnNavMedicines = new SmartMed.UI.NavButton();
+            this.btnNavDashboard = new SmartMed.UI.NavButton();
+            this.panelBrand = new System.Windows.Forms.Panel();
+            this.lblBrandSubtitle = new System.Windows.Forms.Label();
+            this.lblBrandTitle = new System.Windows.Forms.Label();
+            this.panelBrandIcon = new System.Windows.Forms.Panel();
             this.panelContent = new System.Windows.Forms.Panel();
             this.panelTitleBar.SuspendLayout();
             this.panelWinControls.SuspendLayout();
@@ -52,6 +53,7 @@ namespace SmartMed.UI
             this.panelStatusBar.SuspendLayout();
             this.panelSidebar.SuspendLayout();
             this.panelProfile.SuspendLayout();
+            this.panelBrand.SuspendLayout();
             this.SuspendLayout();
             // 
             // panelTitleBar
@@ -256,152 +258,44 @@ namespace SmartMed.UI
             // 
             // panelSidebar
             // 
-            this.panelSidebar.Controls.Add(this.btnNavExit);
-            this.panelSidebar.Controls.Add(this.btnNavAccess);
-            this.panelSidebar.Controls.Add(this.btnNavConfig);
-            this.panelSidebar.Controls.Add(this.lblNavSystem);
+            this.panelSidebar.Controls.Add(this.panelProfile);
+            this.panelSidebar.Controls.Add(this.panelNavSpacer);
             this.panelSidebar.Controls.Add(this.btnNavReports);
             this.panelSidebar.Controls.Add(this.btnNavOrders);
             this.panelSidebar.Controls.Add(this.btnNavCustomers);
             this.panelSidebar.Controls.Add(this.btnNavMedicines);
             this.panelSidebar.Controls.Add(this.btnNavDashboard);
-            this.panelSidebar.Controls.Add(this.panelProfile);
+            this.panelSidebar.Controls.Add(this.panelBrand);
             this.panelSidebar.Dock = System.Windows.Forms.DockStyle.Left;
             this.panelSidebar.Location = new System.Drawing.Point(0, 56);
             this.panelSidebar.Name = "panelSidebar";
-            this.panelSidebar.Size = new System.Drawing.Size(220, 720);
+            this.panelSidebar.Size = new System.Drawing.Size(260, 720);
             this.panelSidebar.TabIndex = 3;
-            // 
-            // btnNavExit
-            // 
-            this.btnNavExit.Dock = System.Windows.Forms.DockStyle.Top;
-            this.btnNavExit.Location = new System.Drawing.Point(0, 404);
-            this.btnNavExit.Name = "btnNavExit";
-            this.btnNavExit.Size = new System.Drawing.Size(220, 36);
-            this.btnNavExit.TabIndex = 9;
-            this.btnNavExit.Text = "Exit Application";
-            this.btnNavExit.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnNavExit.UseVisualStyleBackColor = false;
-            this.btnNavExit.Click += new System.EventHandler(this.BtnNavExit_Click);
-            // 
-            // btnNavAccess
-            // 
-            this.btnNavAccess.Dock = System.Windows.Forms.DockStyle.Top;
-            this.btnNavAccess.Location = new System.Drawing.Point(0, 368);
-            this.btnNavAccess.Name = "btnNavAccess";
-            this.btnNavAccess.Size = new System.Drawing.Size(220, 36);
-            this.btnNavAccess.TabIndex = 8;
-            this.btnNavAccess.Text = "Access Control";
-            this.btnNavAccess.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnNavAccess.UseVisualStyleBackColor = false;
-            this.btnNavAccess.Click += new System.EventHandler(this.BtnNavComingSoon_Click);
-            // 
-            // btnNavConfig
-            // 
-            this.btnNavConfig.Dock = System.Windows.Forms.DockStyle.Top;
-            this.btnNavConfig.Location = new System.Drawing.Point(0, 332);
-            this.btnNavConfig.Name = "btnNavConfig";
-            this.btnNavConfig.Size = new System.Drawing.Size(220, 36);
-            this.btnNavConfig.TabIndex = 7;
-            this.btnNavConfig.Text = "Configuration";
-            this.btnNavConfig.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnNavConfig.UseVisualStyleBackColor = false;
-            this.btnNavConfig.Click += new System.EventHandler(this.BtnNavComingSoon_Click);
-            // 
-            // lblNavSystem
-            // 
-            this.lblNavSystem.Dock = System.Windows.Forms.DockStyle.Top;
-            this.lblNavSystem.Location = new System.Drawing.Point(0, 308);
-            this.lblNavSystem.Name = "lblNavSystem";
-            this.lblNavSystem.Padding = new System.Windows.Forms.Padding(16, 8, 0, 4);
-            this.lblNavSystem.Size = new System.Drawing.Size(220, 24);
-            this.lblNavSystem.TabIndex = 6;
-            this.lblNavSystem.Text = "SYSTEM";
-            // 
-            // btnNavReports
-            // 
-            this.btnNavReports.Dock = System.Windows.Forms.DockStyle.Top;
-            this.btnNavReports.Location = new System.Drawing.Point(0, 272);
-            this.btnNavReports.Name = "btnNavReports";
-            this.btnNavReports.Size = new System.Drawing.Size(220, 36);
-            this.btnNavReports.TabIndex = 5;
-            this.btnNavReports.Text = "Generate Reports";
-            this.btnNavReports.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnNavReports.UseVisualStyleBackColor = false;
-            this.btnNavReports.Click += new System.EventHandler(this.BtnNavReports_Click);
-            // 
-            // btnNavOrders
-            // 
-            this.btnNavOrders.Dock = System.Windows.Forms.DockStyle.Top;
-            this.btnNavOrders.Location = new System.Drawing.Point(0, 236);
-            this.btnNavOrders.Name = "btnNavOrders";
-            this.btnNavOrders.Size = new System.Drawing.Size(220, 36);
-            this.btnNavOrders.TabIndex = 4;
-            this.btnNavOrders.Text = "Manage Orders";
-            this.btnNavOrders.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnNavOrders.UseVisualStyleBackColor = false;
-            this.btnNavOrders.Click += new System.EventHandler(this.BtnNavOrders_Click);
-            // 
-            // btnNavCustomers
-            // 
-            this.btnNavCustomers.Dock = System.Windows.Forms.DockStyle.Top;
-            this.btnNavCustomers.Location = new System.Drawing.Point(0, 200);
-            this.btnNavCustomers.Name = "btnNavCustomers";
-            this.btnNavCustomers.Size = new System.Drawing.Size(220, 36);
-            this.btnNavCustomers.TabIndex = 3;
-            this.btnNavCustomers.Text = "Manage Customers";
-            this.btnNavCustomers.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnNavCustomers.UseVisualStyleBackColor = false;
-            this.btnNavCustomers.Click += new System.EventHandler(this.BtnNavCustomers_Click);
-            // 
-            // btnNavMedicines
-            // 
-            this.btnNavMedicines.Dock = System.Windows.Forms.DockStyle.Top;
-            this.btnNavMedicines.Location = new System.Drawing.Point(0, 164);
-            this.btnNavMedicines.Name = "btnNavMedicines";
-            this.btnNavMedicines.Size = new System.Drawing.Size(220, 36);
-            this.btnNavMedicines.TabIndex = 2;
-            this.btnNavMedicines.Text = "Manage Medicines";
-            this.btnNavMedicines.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnNavMedicines.UseVisualStyleBackColor = false;
-            this.btnNavMedicines.Click += new System.EventHandler(this.BtnNavMedicines_Click);
-            // 
-            // btnNavDashboard
-            // 
-            this.btnNavDashboard.Dock = System.Windows.Forms.DockStyle.Top;
-            this.btnNavDashboard.Location = new System.Drawing.Point(0, 128);
-            this.btnNavDashboard.Name = "btnNavDashboard";
-            this.btnNavDashboard.Size = new System.Drawing.Size(220, 36);
-            this.btnNavDashboard.TabIndex = 1;
-            this.btnNavDashboard.Text = "Operational Dashboard";
-            this.btnNavDashboard.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnNavDashboard.UseVisualStyleBackColor = false;
-            this.btnNavDashboard.Click += new System.EventHandler(this.BtnNavDashboard_Click);
             // 
             // panelProfile
             // 
             this.panelProfile.Controls.Add(this.lblProfileRole);
             this.panelProfile.Controls.Add(this.lblProfileName);
             this.panelProfile.Controls.Add(this.panelAvatar);
-            this.panelProfile.Dock = System.Windows.Forms.DockStyle.Top;
-            this.panelProfile.Location = new System.Drawing.Point(0, 0);
+            this.panelProfile.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.panelProfile.Location = new System.Drawing.Point(0, 648);
             this.panelProfile.Name = "panelProfile";
-            this.panelProfile.Size = new System.Drawing.Size(220, 128);
-            this.panelProfile.TabIndex = 0;
+            this.panelProfile.Size = new System.Drawing.Size(260, 72);
+            this.panelProfile.TabIndex = 8;
             // 
             // lblProfileRole
             // 
             this.lblProfileRole.AutoSize = true;
-            this.lblProfileRole.Location = new System.Drawing.Point(68, 52);
+            this.lblProfileRole.Location = new System.Drawing.Point(64, 40);
             this.lblProfileRole.Name = "lblProfileRole";
-            this.lblProfileRole.Size = new System.Drawing.Size(78, 15);
+            this.lblProfileRole.Size = new System.Drawing.Size(84, 15);
             this.lblProfileRole.TabIndex = 2;
-            this.lblProfileRole.Text = "Administrator";
+            this.lblProfileRole.Text = "SYSTEM ADMIN";
             // 
             // lblProfileName
             // 
             this.lblProfileName.AutoSize = true;
-            this.lblProfileName.Location = new System.Drawing.Point(68, 28);
+            this.lblProfileName.Location = new System.Drawing.Point(64, 20);
             this.lblProfileName.Name = "lblProfileName";
             this.lblProfileName.Size = new System.Drawing.Size(33, 15);
             this.lblProfileName.TabIndex = 1;
@@ -409,18 +303,122 @@ namespace SmartMed.UI
             // 
             // panelAvatar
             // 
-            this.panelAvatar.Location = new System.Drawing.Point(16, 24);
+            this.panelAvatar.Location = new System.Drawing.Point(24, 20);
             this.panelAvatar.Name = "panelAvatar";
-            this.panelAvatar.Size = new System.Drawing.Size(40, 40);
+            this.panelAvatar.Size = new System.Drawing.Size(32, 32);
             this.panelAvatar.TabIndex = 0;
+            // 
+            // panelNavSpacer
+            // 
+            this.panelNavSpacer.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panelNavSpacer.Location = new System.Drawing.Point(0, 308);
+            this.panelNavSpacer.Name = "panelNavSpacer";
+            this.panelNavSpacer.Size = new System.Drawing.Size(260, 340);
+            this.panelNavSpacer.TabIndex = 7;
+            // 
+            // btnNavReports
+            // 
+            this.btnNavReports.Dock = System.Windows.Forms.DockStyle.Top;
+            this.btnNavReports.Location = new System.Drawing.Point(0, 268);
+            this.btnNavReports.Name = "btnNavReports";
+            this.btnNavReports.Size = new System.Drawing.Size(260, 40);
+            this.btnNavReports.TabIndex = 5;
+            this.btnNavReports.Text = "Reports";
+            this.btnNavReports.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnNavReports.UseVisualStyleBackColor = false;
+            this.btnNavReports.Click += new System.EventHandler(this.BtnNavReports_Click);
+            // 
+            // btnNavOrders
+            // 
+            this.btnNavOrders.Dock = System.Windows.Forms.DockStyle.Top;
+            this.btnNavOrders.Location = new System.Drawing.Point(0, 228);
+            this.btnNavOrders.Name = "btnNavOrders";
+            this.btnNavOrders.Size = new System.Drawing.Size(260, 40);
+            this.btnNavOrders.TabIndex = 4;
+            this.btnNavOrders.Text = "Orders";
+            this.btnNavOrders.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnNavOrders.UseVisualStyleBackColor = false;
+            this.btnNavOrders.Click += new System.EventHandler(this.BtnNavOrders_Click);
+            // 
+            // btnNavCustomers
+            // 
+            this.btnNavCustomers.Dock = System.Windows.Forms.DockStyle.Top;
+            this.btnNavCustomers.Location = new System.Drawing.Point(0, 188);
+            this.btnNavCustomers.Name = "btnNavCustomers";
+            this.btnNavCustomers.Size = new System.Drawing.Size(260, 40);
+            this.btnNavCustomers.TabIndex = 3;
+            this.btnNavCustomers.Text = "Customers";
+            this.btnNavCustomers.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnNavCustomers.UseVisualStyleBackColor = false;
+            this.btnNavCustomers.Click += new System.EventHandler(this.BtnNavCustomers_Click);
+            // 
+            // btnNavMedicines
+            // 
+            this.btnNavMedicines.Dock = System.Windows.Forms.DockStyle.Top;
+            this.btnNavMedicines.Location = new System.Drawing.Point(0, 148);
+            this.btnNavMedicines.Name = "btnNavMedicines";
+            this.btnNavMedicines.Size = new System.Drawing.Size(260, 40);
+            this.btnNavMedicines.TabIndex = 2;
+            this.btnNavMedicines.Text = "Inventory";
+            this.btnNavMedicines.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnNavMedicines.UseVisualStyleBackColor = false;
+            this.btnNavMedicines.Click += new System.EventHandler(this.BtnNavMedicines_Click);
+            // 
+            // btnNavDashboard
+            // 
+            this.btnNavDashboard.Dock = System.Windows.Forms.DockStyle.Top;
+            this.btnNavDashboard.Location = new System.Drawing.Point(0, 88);
+            this.btnNavDashboard.Name = "btnNavDashboard";
+            this.btnNavDashboard.Size = new System.Drawing.Size(260, 40);
+            this.btnNavDashboard.TabIndex = 1;
+            this.btnNavDashboard.Text = "Dashboard";
+            this.btnNavDashboard.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnNavDashboard.UseVisualStyleBackColor = false;
+            this.btnNavDashboard.Click += new System.EventHandler(this.BtnNavDashboard_Click);
+            // 
+            // panelBrand
+            // 
+            this.panelBrand.Controls.Add(this.lblBrandSubtitle);
+            this.panelBrand.Controls.Add(this.lblBrandTitle);
+            this.panelBrand.Controls.Add(this.panelBrandIcon);
+            this.panelBrand.Dock = System.Windows.Forms.DockStyle.Top;
+            this.panelBrand.Location = new System.Drawing.Point(0, 0);
+            this.panelBrand.Name = "panelBrand";
+            this.panelBrand.Size = new System.Drawing.Size(260, 88);
+            this.panelBrand.TabIndex = 0;
+            // 
+            // lblBrandSubtitle
+            // 
+            this.lblBrandSubtitle.AutoSize = true;
+            this.lblBrandSubtitle.Location = new System.Drawing.Point(72, 44);
+            this.lblBrandSubtitle.Name = "lblBrandSubtitle";
+            this.lblBrandSubtitle.Size = new System.Drawing.Size(114, 15);
+            this.lblBrandSubtitle.TabIndex = 2;
+            this.lblBrandSubtitle.Text = "Clinical Management";
+            // 
+            // lblBrandTitle
+            // 
+            this.lblBrandTitle.AutoSize = true;
+            this.lblBrandTitle.Location = new System.Drawing.Point(72, 22);
+            this.lblBrandTitle.Name = "lblBrandTitle";
+            this.lblBrandTitle.Size = new System.Drawing.Size(59, 15);
+            this.lblBrandTitle.TabIndex = 1;
+            this.lblBrandTitle.Text = "SmartMed";
+            // 
+            // panelBrandIcon
+            // 
+            this.panelBrandIcon.Location = new System.Drawing.Point(24, 20);
+            this.panelBrandIcon.Name = "panelBrandIcon";
+            this.panelBrandIcon.Size = new System.Drawing.Size(40, 40);
+            this.panelBrandIcon.TabIndex = 0;
             // 
             // panelContent
             // 
             this.panelContent.AutoScroll = true;
             this.panelContent.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panelContent.Location = new System.Drawing.Point(220, 56);
+            this.panelContent.Location = new System.Drawing.Point(260, 56);
             this.panelContent.Name = "panelContent";
-            this.panelContent.Size = new System.Drawing.Size(1060, 720);
+            this.panelContent.Size = new System.Drawing.Size(1020, 720);
             this.panelContent.TabIndex = 4;
             // 
             // AdminHostForm
@@ -448,6 +446,8 @@ namespace SmartMed.UI
             this.panelSidebar.ResumeLayout(false);
             this.panelProfile.ResumeLayout(false);
             this.panelProfile.PerformLayout();
+            this.panelBrand.ResumeLayout(false);
+            this.panelBrand.PerformLayout();
             this.ResumeLayout(false);
         }
 
@@ -470,19 +470,20 @@ namespace SmartMed.UI
         private System.Windows.Forms.Label lblStatusCloud;
         private System.Windows.Forms.Label lblStatusTime;
         private System.Windows.Forms.Panel panelSidebar;
+        private System.Windows.Forms.Panel panelBrand;
+        private System.Windows.Forms.Panel panelBrandIcon;
+        private System.Windows.Forms.Label lblBrandTitle;
+        private System.Windows.Forms.Label lblBrandSubtitle;
+        private System.Windows.Forms.Panel panelNavSpacer;
         private System.Windows.Forms.Panel panelProfile;
         private System.Windows.Forms.Panel panelAvatar;
         private System.Windows.Forms.Label lblProfileName;
         private System.Windows.Forms.Label lblProfileRole;
-        private System.Windows.Forms.Button btnNavDashboard;
-        private System.Windows.Forms.Button btnNavMedicines;
-        private System.Windows.Forms.Button btnNavCustomers;
-        private System.Windows.Forms.Button btnNavOrders;
-        private System.Windows.Forms.Button btnNavReports;
-        private System.Windows.Forms.Label lblNavSystem;
-        private System.Windows.Forms.Button btnNavConfig;
-        private System.Windows.Forms.Button btnNavAccess;
-        private System.Windows.Forms.Button btnNavExit;
+        private SmartMed.UI.NavButton btnNavDashboard;
+        private SmartMed.UI.NavButton btnNavMedicines;
+        private SmartMed.UI.NavButton btnNavCustomers;
+        private SmartMed.UI.NavButton btnNavOrders;
+        private SmartMed.UI.NavButton btnNavReports;
         private System.Windows.Forms.Panel panelContent;
     }
 }

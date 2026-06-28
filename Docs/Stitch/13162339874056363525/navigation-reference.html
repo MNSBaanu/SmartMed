@@ -1,0 +1,271 @@
+<!DOCTYPE html><html class="light" lang="en"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>SmartMed | Navigation Reference</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;600;700;800&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "primary-fixed": "#c7eae4",
+                    "outline-variant": "#c1c8c6",
+                    "secondary": "#35675e",
+                    "on-surface-variant": "#414847",
+                    "secondary-fixed": "#b8ede2",
+                    "tertiary-fixed": "#ffdadb",
+                    "secondary-fixed-dim": "#9dd1c6",
+                    "error": "#ba1a1a",
+                    "inverse-primary": "#abcdc8",
+                    "on-tertiary-container": "#bb8184",
+                    "surface": "#f4fbfa",
+                    "primary-container": "#0c2e2b",
+                    "on-secondary-fixed": "#00201c",
+                    "primary-fixed-dim": "#abcdc8",
+                    "on-secondary": "#ffffff",
+                    "surface-dim": "#d4dbdb",
+                    "surface-container-high": "#e3eae9",
+                    "secondary-container": "#b8ede2",
+                    "on-tertiary-fixed": "#340f13",
+                    "inverse-on-surface": "#ebf2f1",
+                    "on-error-container": "#93000a",
+                    "surface-variant": "#dde4e3",
+                    "on-surface": "#161d1d",
+                    "surface-container-lowest": "#ffffff",
+                    "surface-container": "#e8efee",
+                    "inverse-surface": "#2b3231",
+                    "on-tertiary": "#ffffff",
+                    "on-error": "#ffffff",
+                    "on-background": "#161d1d",
+                    "tertiary": "#2b080d",
+                    "primary": "#001816",
+                    "on-secondary-fixed-variant": "#1b4f47",
+                    "on-tertiary-fixed-variant": "#68393d",
+                    "outline": "#717977",
+                    "background": "#f4fbfa",
+                    "tertiary-container": "#441c20",
+                    "on-primary-container": "#759792",
+                    "error-container": "#ffdad6",
+                    "on-secondary-container": "#3b6d64",
+                    "surface-bright": "#f4fbfa",
+                    "tertiary-fixed-dim": "#f7b6b9",
+                    "surface-tint": "#446460",
+                    "on-primary-fixed-variant": "#2d4c49",
+                    "surface-container-low": "#eef5f4",
+                    "surface-container-highest": "#dde4e3",
+                    "on-primary-fixed": "#00201d",
+                    "on-primary": "#ffffff"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "base": "8px",
+                    "gutter": "20px",
+                    "sidebar-width": "260px",
+                    "element-gap": "16px",
+                    "container-padding": "24px"
+            },
+            "fontFamily": {
+                    "display-lg": ["Hanken Grotesk"],
+                    "headline-md-mobile": ["Hanken Grotesk"],
+                    "body-lg": ["Hanken Grotesk"],
+                    "headline-sm": ["Hanken Grotesk"],
+                    "headline-md": ["Hanken Grotesk"],
+                    "body-md": ["Hanken Grotesk"],
+                    "label-md": ["Hanken Grotesk"]
+            },
+            "fontSize": {
+                    "display-lg": ["36px", {"lineHeight": "44px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "headline-md-mobile": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                    "body-lg": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "headline-sm": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                    "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                    "body-md": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                    "label-md": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        body {
+            font-family: 'Hanken Grotesk', sans-serif;
+            background-color: #f4fbfa;
+            color: #161d1d;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .sidebar-container {
+            height: 800px;
+            max-height: 90vh;
+        }
+    </style>
+</head>
+<body class="min-h-screen overflow-x-hidden">
+<main class="max-w-7xl mx-auto px-container-padding py-12">
+<!-- Header Section -->
+<header class="mb-12 text-center">
+<h1 class="font-display-lg text-display-lg text-primary mb-2">Navigation System Reference</h1>
+<p class="font-body-lg text-body-lg text-on-surface-variant max-w-2xl mx-auto">
+                Comparing the Admin Role and Customer Role navigation structures. These components utilize high-contrast anchors and 8px base grid rhythm.
+            </p>
+</header>
+<!-- Side-by-Side View -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-start">
+<!-- Admin Side Bar Reference -->
+<section class="flex flex-col gap-6">
+<div class="flex items-center justify-between border-b border-outline-variant pb-4">
+<h2 class="font-headline-md text-headline-md text-primary">Admin Navigation</h2>
+<span class="bg-secondary text-on-secondary text-label-md font-label-md px-3 py-1 rounded-full uppercase tracking-wider">Role: Admin</span>
+</div>
+<!-- The Actual Admin Sidebar Component (Simulated as a card) -->
+<div class="sidebar-container bg-surface-container-low border border-outline-variant rounded-lg overflow-hidden flex flex-col w-sidebar-width mx-auto shadow-sm">
+<!-- Brand Header -->
+<div class="p-container-padding border-b border-outline-variant">
+<div class="flex items-center gap-3 mb-1">
+<div class="w-10 h-10 bg-primary flex items-center justify-center rounded-lg">
+<span class="material-symbols-outlined text-on-primary">medical_services</span>
+</div>
+<div>
+<h3 class="font-headline-sm text-headline-sm text-primary leading-tight">SmartMed</h3>
+<p class="font-label-md text-label-md text-on-secondary-fixed-variant">Clinical Management</p>
+</div>
+</div>
+</div>
+<!-- Nav Items -->
+<nav class="flex-1 py-container-padding flex flex-col gap-1">
+<!-- Active: Dashboard -->
+<div class="flex items-center gap-stack-md bg-primary-container text-on-primary-container rounded-lg px-container-padding py-3 mx-3 border-l-4 border-primary cursor-pointer active:scale-95 duration-150">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">dashboard</span>
+<span class="font-body-md text-body-md">Dashboard</span>
+</div>
+<div class="flex items-center gap-stack-md text-on-surface-variant px-container-padding py-3 mx-3 rounded-lg hover:bg-surface-container-high transition-colors cursor-pointer active:scale-95 duration-150">
+<span class="material-symbols-outlined">inventory_2</span>
+<span class="font-body-md text-body-md">Inventory</span>
+</div>
+<div class="flex items-center gap-stack-md text-on-surface-variant px-container-padding py-3 mx-3 rounded-lg hover:bg-surface-container-high transition-colors cursor-pointer active:scale-95 duration-150">
+<span class="material-symbols-outlined">group</span>
+<span class="font-body-md text-body-md">Customers</span>
+</div>
+<div class="flex items-center gap-stack-md text-on-surface-variant px-container-padding py-3 mx-3 rounded-lg hover:bg-surface-container-high transition-colors cursor-pointer active:scale-95 duration-150">
+<span class="material-symbols-outlined">receipt_long</span>
+<span class="font-body-md text-body-md">Orders</span>
+</div>
+<div class="flex items-center gap-stack-md text-on-surface-variant px-container-padding py-3 mx-3 rounded-lg hover:bg-surface-container-high transition-colors cursor-pointer active:scale-95 duration-150">
+<span class="material-symbols-outlined">bar_chart</span>
+<span class="font-body-md text-body-md">Reports</span>
+</div>
+</nav>
+<!-- Profile Section -->
+<div class="p-container-padding border-t border-outline-variant bg-surface-container">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-full bg-secondary-fixed overflow-hidden flex-shrink-0">
+<img class="w-full h-full object-cover" data-alt="A professional headshot of a female clinical administrator in a bright, modern healthcare office with soft natural lighting and a minimalist background." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDjD2wSaTGAK-_lm4K4y7kVtfUEWraEXjca8GliNYuUAhGWhfJR7WhrQ88qlruna_87jwQkigNcTmAzAYeFarL-1bmXhsiBDsVQtWA1YiEA0KUd9Xo-r5q0AmcHOs61ODk_-mqwSeFrLkWIPr2Y8GWWzhmkZ9FbM49o9NKcsRg8gPcdCwDQtphvSKCYl9QkyvOO6eTP0lh3uKIVcD2-wCnd0-yH9_7qFNAMaLoJ7ry8xHmVWvyFZ8AhGlFFwBfKkg-DpBp0V9ROE0Nt">
+</div>
+<div class="overflow-hidden">
+<p class="font-label-md text-label-md text-primary font-bold truncate">Dr. Aris Thorne</p>
+<p class="font-label-md text-[10px] text-on-surface-variant uppercase tracking-tighter">System Admin</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Customer Side Bar Reference -->
+<section class="flex flex-col gap-6">
+<div class="flex items-center justify-between border-b border-outline-variant pb-4">
+<h2 class="font-headline-md text-headline-md text-primary">Customer Navigation</h2>
+<span class="bg-primary-fixed text-on-primary-fixed text-label-md font-label-md px-3 py-1 rounded-full uppercase tracking-wider">Role: Customer</span>
+</div>
+<!-- The Actual Customer Sidebar Component (Simulated as a card) -->
+<div class="sidebar-container bg-surface-container-low border border-outline-variant rounded-lg overflow-hidden flex flex-col w-sidebar-width mx-auto shadow-sm">
+<!-- Brand Header -->
+<div class="p-container-padding border-b border-outline-variant">
+<div class="flex items-center gap-3 mb-1">
+<div class="w-10 h-10 bg-secondary flex items-center justify-center rounded-lg">
+<span class="material-symbols-outlined text-on-secondary">health_and_safety</span>
+</div>
+<div>
+<h3 class="font-headline-sm text-headline-sm text-primary leading-tight">SmartMed</h3>
+<p class="font-label-md text-label-md text-on-secondary-fixed-variant">Health Portal</p>
+</div>
+</div>
+</div>
+<!-- Nav Items -->
+<nav class="flex-1 py-container-padding flex flex-col gap-1">
+<!-- Active: Home -->
+<div class="flex items-center gap-stack-md bg-primary-container text-on-primary-container rounded-lg px-container-padding py-3 mx-3 border-l-4 border-primary cursor-pointer active:scale-95 duration-150">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">home</span>
+<span class="font-body-md text-body-md">Home</span>
+</div>
+<div class="flex items-center gap-stack-md text-on-surface-variant px-container-padding py-3 mx-3 rounded-lg hover:bg-surface-container-high transition-colors cursor-pointer active:scale-95 duration-150">
+<span class="material-symbols-outlined">search</span>
+<span class="font-body-md text-body-md">Browse Medicine</span>
+</div>
+<div class="flex items-center gap-stack-md text-on-surface-variant px-container-padding py-3 mx-3 rounded-lg hover:bg-surface-container-high transition-colors cursor-pointer active:scale-95 duration-150">
+<div class="relative">
+<span class="material-symbols-outlined">shopping_cart</span>
+<span class="absolute -top-1 -right-1 w-2 h-2 bg-error rounded-full"></span>
+</div>
+<span class="font-body-md text-body-md">My Cart</span>
+</div>
+<div class="flex items-center gap-stack-md text-on-surface-variant px-container-padding py-3 mx-3 rounded-lg hover:bg-surface-container-high transition-colors cursor-pointer active:scale-95 duration-150">
+<span class="material-symbols-outlined">package_2</span>
+<span class="font-body-md text-body-md">My Orders</span>
+</div>
+<div class="flex items-center gap-stack-md text-on-surface-variant px-container-padding py-3 mx-3 rounded-lg hover:bg-surface-container-high transition-colors cursor-pointer active:scale-95 duration-150">
+<span class="material-symbols-outlined">person</span>
+<span class="font-body-md text-body-md">My Profile</span>
+</div>
+</nav>
+<!-- Support Section -->
+<div class="mx-4 mb-4 p-4 bg-secondary-container rounded-lg">
+<p class="font-label-md text-label-md text-on-secondary-container font-bold mb-1">Need Help?</p>
+<p class="font-label-md text-[11px] text-on-secondary-container leading-snug mb-3">Our clinical staff is online to assist you with prescriptions.</p>
+<button class="w-full bg-secondary text-on-secondary font-label-md text-label-md py-2 rounded uppercase tracking-wide hover:opacity-90 transition-opacity">Contact Us</button>
+</div>
+</div>
+</section>
+</div>
+<!-- Design Specs Footer -->
+<footer class="mt-20 pt-8 border-t border-outline-variant flex flex-col md:flex-row justify-between items-center gap-4">
+<div class="flex items-center gap-4">
+<span class="font-label-md text-label-md text-on-surface-variant uppercase">Style: Clinical Minimalist</span>
+<span class="w-1 h-1 bg-outline rounded-full"></span>
+<span class="font-label-md text-label-md text-on-surface-variant uppercase">Font: Hanken Grotesk</span>
+<span class="w-1 h-1 bg-outline rounded-full"></span>
+<span class="font-label-md text-label-md text-on-surface-variant uppercase">Spacing: 8px Grid</span>
+</div>
+<p class="font-label-md text-label-md text-outline">© 2024 SmartMed Pharmacy Systems. All rights reserved.</p>
+</footer>
+</main>
+<script>
+        // Simple micro-interaction for navigation items
+        document.querySelectorAll('nav div').forEach(item => {
+            item.addEventListener('click', function() {
+                // Remove active classes from all siblings
+                const parent = this.parentElement;
+                parent.querySelectorAll('div').forEach(el => {
+                    el.classList.remove('bg-primary-container', 'text-on-primary-container', 'border-l-4', 'border-primary');
+                    el.classList.add('text-on-surface-variant', 'hover:bg-surface-container-high');
+                    const icon = el.querySelector('.material-symbols-outlined');
+                    if(icon) icon.style.fontVariationSettings = "'FILL' 0";
+                });
+                
+                // Add active classes to clicked item
+                this.classList.add('bg-primary-container', 'text-on-primary-container', 'border-l-4', 'border-primary');
+                this.classList.remove('text-on-surface-variant', 'hover:bg-surface-container-high');
+                const activeIcon = this.querySelector('.material-symbols-outlined');
+                if(activeIcon) activeIcon.style.fontVariationSettings = "'FILL' 1";
+            });
+        });
+    </script>
+</body></html>

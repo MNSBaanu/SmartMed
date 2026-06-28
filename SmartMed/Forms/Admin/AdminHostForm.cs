@@ -24,6 +24,7 @@ namespace SmartMed.UI
             UiTheme.ApplyAdminWinFormsShell(
                 this, panelTitleBar, panelMenuBar, panelSidebar, panelContent, panelStatusBar);
             ApplyProfile();
+            ApplySidebarChrome();
             ApplyWinControls();
             WireMenuBar();
             SetActiveNav(AdminNavItem.Overview);
@@ -34,11 +35,17 @@ namespace SmartMed.UI
             UpdateStatusTime();
         }
 
+        private void ApplySidebarChrome()
+        {
+            UiTheme.StyleSidebarBrand(panelBrand, panelBrandIcon, lblBrandTitle, lblBrandSubtitle, customerPortal: false);
+            UiTheme.StyleSidebarProfileFooter(panelProfile, panelAvatar, lblProfileName, lblProfileRole);
+        }
+
         private void ApplyProfile()
         {
             var displayName = Session.CurrentAdmin?.Username ?? "Administrator";
             lblProfileName.Text = displayName;
-            lblProfileRole.Text = "Administrator";
+            lblProfileRole.Text = "System Admin";
 
             panelAvatar.Paint += (s, e) =>
             {
@@ -154,8 +161,6 @@ namespace SmartMed.UI
             StyleNavButton(btnNavCustomers, nav == AdminNavItem.Customers);
             StyleNavButton(btnNavOrders, nav == AdminNavItem.Orders);
             StyleNavButton(btnNavReports, nav == AdminNavItem.Reports);
-            StyleNavButton(btnNavConfig, false);
-            StyleNavButton(btnNavAccess, false);
         }
 
         private static void StyleNavButton(Button button, bool active)
@@ -199,11 +204,6 @@ namespace SmartMed.UI
             ShowReports();
         }
 
-        private void BtnNavComingSoon_Click(object sender, EventArgs e)
-        {
-            ShowComingSoon();
-        }
-
         private static void ShowComingSoon()
         {
             MessageBox.Show(
@@ -212,8 +212,6 @@ namespace SmartMed.UI
                 MessageBoxButtons.OK,
                 MessageBoxIcon.Information);
         }
-
-        private void BtnNavExit_Click(object sender, EventArgs e) => Logout();
 
         private void BtnWinMinimize_Click(object sender, EventArgs e) => WindowState = FormWindowState.Minimized;
 
