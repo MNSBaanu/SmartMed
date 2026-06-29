@@ -58,10 +58,19 @@ namespace SmartMed.UI
             WireScrollRoot(root);
         }
 
-        private static Panel CreatePageHeader() =>
+        private Panel CreatePageHeader() =>
             AdminUiHelpers.CreatePageHeader(
                 "Manage Customers",
-                "View and maintain customer records, contact details, and order activity.");
+                "View and maintain customer records, contact details, and order activity.",
+                actions =>
+                {
+                    var btnExport = AdminUiHelpers.CreateWinButton("Export", false, 96);
+                    btnExport.Click += BtnExport_Click;
+                    var btnPrint = AdminUiHelpers.CreateWinButton("Print", false, 96);
+                    btnPrint.Click += BtnPrint_Click;
+                    actions.Controls.Add(btnExport);
+                    actions.Controls.Add(btnPrint);
+                });
 
         private Panel CreateToolbar()
         {
@@ -482,6 +491,49 @@ namespace SmartMed.UI
                 ForeColor = UiTheme.AdminMuted,
                 BackColor = UiTheme.AdminSurface
             };
+
+        private List<Customer> GetFilteredCustomers() =>
+            _filteredRows.Select(r => r.Customer).Where(c => c != null).ToList();
+
+        private void BtnExport_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                using (var dialog = new SaveFileDialog
+                {
+                    Filter = "CSV files (*.csv)|*.csv",
+                    FileName = $"SmartMed_Customers_{DateTime.Now:yyyyMMdd}.csv"
+                })
+                {
+                    if (dialog.ShowDialog() != DialogResult.OK) return;
+                    _customers.ExportToCsv(GetFilteredCustomers(), dialog.FileName);
+                    MessageBox.Show("Customers exported.", "Export",
+                        MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Export Failed", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
+        }
+
+        private void BtnPrint_Click(object sender, EventArgs e)
+        {
+            if (gridCustomers.Rows.Count == 0)
+            {
+                MessageBox.Show("No customers to print.", "Print", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return;
+            }
+
+            try
+            {
+                ExportHelper.PrintGrid(gridCustomers, "Customer List");
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Print Failed", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
+        }
 
         private sealed class CustomerRow
         {

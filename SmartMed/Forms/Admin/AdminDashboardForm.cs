@@ -147,7 +147,7 @@ namespace SmartMed.UI
             var btnRefresh = CreateWinButton("Refresh", primary: false, width: 96);
             btnRefresh.Click += (s, e) => LoadDashboardData();
             var btnNewOrder = CreateWinButton("+ New Order", primary: true, width: 118);
-            btnNewOrder.Click += (s, e) => ShowComingSoon();
+            btnNewOrder.Click += (s, e) => GoToAdminSection(AdminNavItem.Orders);
 
             actions.Controls.Add(searchWrap);
             actions.Controls.Add(btnRefresh);
@@ -488,8 +488,11 @@ namespace SmartMed.UI
         private void GridRecent_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
             if (e.RowIndex < 0 || gridRecent.Columns[e.ColumnIndex].Name != "Actions") return;
-            ShowComingSoon();
+            GoToAdminSection(AdminNavItem.Orders);
         }
+
+        private void GoToAdminSection(AdminNavItem nav) =>
+            (FindForm() as AdminHostForm)?.NavigateTo(nav);
 
         private void BtnPrintRecent_Click(object sender, EventArgs e)
         {

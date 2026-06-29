@@ -639,7 +639,7 @@ namespace SmartMed.UI
                 Text = $"Update Order #ORD-{orderId:D4}",
                 FormBorderStyle = FormBorderStyle.FixedDialog,
                 StartPosition = FormStartPosition.CenterParent,
-                ClientSize = new Size(360, 200),
+                ClientSize = new Size(400, 200),
                 MaximizeBox = false,
                 MinimizeBox = false,
                 Font = UiTheme.UiFont,
@@ -699,6 +699,27 @@ namespace SmartMed.UI
                     }
                 };
 
+                var btnReject = CreateWinButton("Reject Rx", false, 90);
+                btnReject.Left = 208;
+                btnReject.Top = 100;
+                btnReject.Click += (s, e) =>
+                {
+                    if (MessageBox.Show(
+                            "Reject this prescription? The order cannot move forward until a valid prescription is provided.",
+                            "Reject Prescription", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) != DialogResult.Yes)
+                        return;
+
+                    try
+                    {
+                        _orders.RejectPrescription(orderId);
+                        MessageBox.Show("Prescription rejected.", "SmartMed");
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show(ex.Message, "Reject Failed", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    }
+                };
+
                 var btnSave = CreateWinButton("Update", true, 90);
                 btnSave.Left = 246;
                 btnSave.Top = 140;
@@ -710,6 +731,7 @@ namespace SmartMed.UI
 
                 dlg.Controls.Add(btnRx);
                 dlg.Controls.Add(btnVerify);
+                dlg.Controls.Add(btnReject);
                 dlg.Controls.Add(btnSave);
                 dlg.Controls.Add(btnCancel);
                 dlg.AcceptButton = btnSave;

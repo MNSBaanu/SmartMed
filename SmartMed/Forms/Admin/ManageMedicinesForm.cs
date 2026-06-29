@@ -18,7 +18,12 @@ namespace SmartMed.UI
         private readonly MedicineService _medicines = new MedicineService();
 
         private List<Medicine> _allMedicines = new List<Medicine>();
+        private List<string> _expiryAlertLines = new List<string>();
         private int? _selectedId;
+
+        private Panel panelExpiryAlerts;
+        private Label lblExpirySummary;
+        private Button btnViewExpiryAlerts;
 
         public ManageMedicinesForm()
         {
@@ -40,10 +45,11 @@ namespace SmartMed.UI
                 AutoSize = true,
                 AutoSizeMode = AutoSizeMode.GrowAndShrink,
                 ColumnCount = 1,
-                RowCount = 4,
-                MinimumSize = new Size(0, 680)
+                RowCount = 5,
+                MinimumSize = new Size(0, 720)
             };
             root.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100f));
+            root.RowStyles.Add(new RowStyle(SizeType.AutoSize));
             root.RowStyles.Add(new RowStyle(SizeType.AutoSize));
             root.RowStyles.Add(new RowStyle(SizeType.AutoSize));
             root.RowStyles.Add(new RowStyle(SizeType.Percent, 100f));
@@ -51,16 +57,72 @@ namespace SmartMed.UI
 
             root.Controls.Add(CreatePageHeader(), 0, 0);
             root.Controls.Add(CreateToolbar(), 0, 1);
-            root.Controls.Add(CreateGridSection(), 0, 2);
-            root.Controls.Add(CreateStatsRow(), 0, 3);
+            root.Controls.Add(CreateExpiryAlertPanel(), 0, 2);
+            root.Controls.Add(CreateGridSection(), 0, 3);
+            root.Controls.Add(CreateStatsRow(), 0, 4);
 
             WireScrollRoot(root);
         }
 
-        private static Panel CreatePageHeader() =>
+        private Panel CreatePageHeader() =>
             AdminUiHelpers.CreatePageHeader(
                 "Manage Medicines",
-                "Update and monitor pharmaceutical inventory levels.");
+                "Update and monitor pharmaceutical inventory levels.",
+                actions =>
+                {
+                    var btnExport = AdminUiHelpers.CreateWinButton("Export", false, 96);
+                    btnExport.Click += BtnExport_Click;
+                    var btnPrint = AdminUiHelpers.CreateWinButton("Print", false, 96);
+                    btnPrint.Click += BtnPrint_Click;
+                    actions.Controls.Add(btnExport);
+                    actions.Controls.Add(btnPrint);
+                });
+
+        private Panel CreateExpiryAlertPanel()
+        {
+            panelExpiryAlerts = new Panel
+            {
+                Dock = DockStyle.Top,
+                Height = 40,
+                BackColor = Color.FromArgb(255, 248, 240),
+                Padding = new Padding(12, 8, 12, 8),
+                Margin = new Padding(0, 0, 0, 12)
+            };
+            panelExpiryAlerts.Paint += (s, e) =>
+            {
+                using (var pen = new Pen(Color.FromArgb(200, 120, 0)))
+                    e.Graphics.DrawRectangle(pen, 0, 0, panelExpiryAlerts.Width - 1, panelExpiryAlerts.Height - 1);
+            };
+
+            btnViewExpiryAlerts = new Button
+            {
+                Text = "View All Alerts",
+                Width = 130,
+                Height = 26,
+                Dock = DockStyle.Right,
+                Visible = false,
+                FlatStyle = FlatStyle.Flat,
+                BackColor = Color.White,
+                ForeColor = UiTheme.AdminTeal,
+                Cursor = Cursors.Hand
+            };
+            btnViewExpiryAlerts.FlatAppearance.BorderColor = UiTheme.AdminOutline;
+            btnViewExpiryAlerts.Click += BtnViewExpiryAlerts_Click;
+
+            lblExpirySummary = new Label
+            {
+                Dock = DockStyle.Fill,
+                ForeColor = Color.FromArgb(140, 70, 0),
+                Text = "Expiry alerts will appear after loading medicines.",
+                AutoSize = false,
+                TextAlign = ContentAlignment.MiddleLeft,
+                BackColor = panelExpiryAlerts.BackColor
+            };
+
+            panelExpiryAlerts.Controls.Add(lblExpirySummary);
+            panelExpiryAlerts.Controls.Add(btnViewExpiryAlerts);
+            return panelExpiryAlerts;
+        }
 
         private Panel CreateStatsRow()
         {
@@ -81,7 +143,7 @@ namespace SmartMed.UI
 
             statsRow.Controls.Add(AdminUiHelpers.CreateStatCard("Total Items", lblTotalItems, UiTheme.AdminTeal), 0, 0);
             statsRow.Controls.Add(AdminUiHelpers.CreateStatCard("Low Stock", lblLowStock, UiTheme.Danger), 1, 0);
-            statsRow.Controls.Add(AdminUiHelpers.CreateStatCard("Expiring Soon", lblExpiringSoon, Color.FromArgb(16, 185, 129)), 2, 0);
+            statsRow.Controls.Add(AdminUiHelpers.CreateStatCard("Compliance", lblExpiringSoon, Color.FromArgb(16, 185, 129)), 2, 0);
             return statsRow;
         }
 
@@ -184,6 +246,17 @@ namespace SmartMed.UI
             right.Controls.Add(txtMinPrice);
             right.Controls.Add(txtMaxPrice);
 
+            var btnClearSearch = AdminUiHelpers.CreateWinButton("Clear", false, 70);
+            btnClearSearch.Click += (s, e) =>
+            {
+                txtSearch.Clear();
+                cmbCategory.SelectedIndex = 0;
+                txtMinPrice.Clear();
+                txtMaxPrice.Clear();
+                ApplyFilters();
+            };
+            right.Controls.Add(btnClearSearch);
+
             panel.Controls.Add(right);
             panel.Controls.Add(left);
             return panel;
@@ -251,6 +324,7 @@ namespace SmartMed.UI
             var filtered = GetFilteredMedicines();
             BindGrid(filtered);
             UpdateStats(_allMedicines);
+            UpdateExpiryAlerts(_allMedicines);
         }
 
         private void BindGrid(List<Medicine> items)
@@ -266,6 +340,10 @@ namespace SmartMed.UI
                 Price = _medicines.GetEffectivePrice(m).ToString("N2"),
                 Expiry = m.ExpiryDate.ToString("yyyy-MM-dd"),
                 Rx = m.RequiresPrescription ? "Rx" : "—",
+                Discount = $"{m.DiscountPercent:N0}%",
+                StartDate = FormatPromoDate(m.PromotionStartDate),
+                EndDate = FormatPromoDate(m.PromotionEndDate),
+                Promo = FormatPromotionStatus(m),
                 Status = GetStatusLabel(m)
             }).ToList();
 
@@ -304,7 +382,126 @@ namespace SmartMed.UI
         {
             lblTotalItems.Text = all.Count.ToString("N0");
             lblLowStock.Text = all.Count(m => _medicines.IsLowStock(m)).ToString("N0");
-            lblExpiringSoon.Text = _medicines.CountExpiringSoon(all).ToString("N0");
+            lblExpiringSoon.Text = $"{_medicines.CompliancePercent(all):N1}%";
+        }
+
+        private void UpdateExpiryAlerts(List<Medicine> all)
+        {
+            if (lblExpirySummary == null) return;
+
+            var expired = _medicines.CountExpired(all);
+            var expiring = _medicines.CountExpiringSoon(all);
+            _expiryAlertLines = BuildExpiryAlertLines(all);
+
+            if (expired == 0 && expiring == 0)
+            {
+                lblExpirySummary.Text = "No expiry alerts. All medicines are within safe expiry dates.";
+                lblExpirySummary.ForeColor = Color.FromArgb(0, 100, 0);
+                btnViewExpiryAlerts.Visible = false;
+                return;
+            }
+
+            var parts = new List<string>();
+            if (expired > 0) parts.Add($"{expired} expired");
+            if (expiring > 0) parts.Add($"{expiring} expiring within 30 days");
+            lblExpirySummary.Text = string.Join(" · ", parts);
+            lblExpirySummary.ForeColor = expired > 0 ? Color.DarkRed : Color.FromArgb(140, 70, 0);
+            btnViewExpiryAlerts.Text = $"View All Alerts ({_expiryAlertLines.Count})";
+            btnViewExpiryAlerts.Visible = true;
+        }
+
+        private List<string> BuildExpiryAlertLines(IEnumerable<Medicine> all) =>
+            all
+                .Where(m => _medicines.CheckExpiry(m) != MedicineService.ExpiryValid)
+                .OrderBy(m => m.ExpiryDate)
+                .Select(m =>
+                {
+                    var status = _medicines.CheckExpiry(m) == MedicineService.ExpiryExpired
+                        ? "Expired"
+                        : "Expiring soon";
+                    return $"{status} — {m.MedicineName} (exp. {m.ExpiryDate:yyyy-MM-dd})";
+                })
+                .ToList();
+
+        private void BtnViewExpiryAlerts_Click(object sender, EventArgs e)
+        {
+            if (_expiryAlertLines.Count == 0) return;
+
+            using (var dlg = new Form
+            {
+                Text = "Expiry Alerts",
+                StartPosition = FormStartPosition.CenterParent,
+                Width = 520,
+                Height = 420,
+                MinimizeBox = false,
+                MaximizeBox = false,
+                FormBorderStyle = FormBorderStyle.FixedDialog,
+                Font = UiTheme.UiFont,
+                BackColor = UiTheme.AdminSurface
+            })
+            {
+                var list = new ListBox
+                {
+                    Dock = DockStyle.Fill,
+                    BorderStyle = BorderStyle.FixedSingle,
+                    IntegralHeight = false,
+                    Font = UiTheme.UiFont
+                };
+                list.Items.AddRange(_expiryAlertLines.ToArray());
+                var btnClose = AdminUiHelpers.CreateWinButton("Close", false, 88);
+                btnClose.Dock = DockStyle.Bottom;
+                btnClose.Height = 36;
+                btnClose.DialogResult = DialogResult.OK;
+                dlg.Controls.Add(btnClose);
+                dlg.Controls.Add(list);
+                dlg.AcceptButton = btnClose;
+                dlg.ShowDialog(FindForm());
+            }
+        }
+
+        private static string FormatPromoDate(DateTime? date) =>
+            date?.ToString("yyyy-MM-dd") ?? "—";
+
+        private string FormatPromotionStatus(Medicine m)
+        {
+            if (!m.IsOnPromotion) return "No";
+            return _medicines.IsPromotionActive(m) ? "Active" : "Scheduled";
+        }
+
+        private void BtnExport_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                var items = GetFilteredMedicines();
+                using (var dialog = new SaveFileDialog
+                {
+                    Filter = "CSV files (*.csv)|*.csv",
+                    FileName = $"SmartMed_Inventory_{DateTime.Now:yyyyMMdd}.csv"
+                })
+                {
+                    if (dialog.ShowDialog() != DialogResult.OK) return;
+                    _medicines.ExportToCsv(items, dialog.FileName);
+                    MessageBox.Show("Inventory exported successfully.", "SmartMed",
+                        MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Export Failed", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
+        }
+
+        private void BtnPrint_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                var items = GetFilteredMedicines();
+                _medicines.PrintInventory(items, "SmartMed — Medicine Inventory");
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Print Failed", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
         }
 
         private void GridMedicines_SelectionChanged(object sender, EventArgs e)

@@ -47,6 +47,13 @@ namespace SmartMed.UI
             lblProfileName.Text = displayName;
             lblProfileRole.Text = "System Admin";
 
+            panelProfile.Cursor = Cursors.Hand;
+            panelProfile.Click += (s, e) => ShowChangePasswordDialog();
+            lblProfileName.Cursor = Cursors.Hand;
+            lblProfileName.Click += (s, e) => ShowChangePasswordDialog();
+            lblProfileRole.Cursor = Cursors.Hand;
+            lblProfileRole.Click += (s, e) => ShowChangePasswordDialog();
+
             panelAvatar.Paint += (s, e) =>
             {
                 e.Graphics.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
@@ -56,6 +63,12 @@ namespace SmartMed.UI
                 TextRenderer.DrawText(e.Graphics, initial, UiTheme.UiFontBold, panelAvatar.ClientRectangle,
                     Color.White, TextFormatFlags.HorizontalCenter | TextFormatFlags.VerticalCenter);
             };
+        }
+
+        private void ShowChangePasswordDialog()
+        {
+            using (var dlg = new ChangePasswordForm(isAdmin: true))
+                dlg.ShowDialog(this);
         }
 
         private void ApplyWinControls()
@@ -161,6 +174,15 @@ namespace SmartMed.UI
             StyleNavButton(btnNavCustomers, nav == AdminNavItem.Customers);
             StyleNavButton(btnNavOrders, nav == AdminNavItem.Orders);
             StyleNavButton(btnNavReports, nav == AdminNavItem.Reports);
+        }
+
+        internal void NavigateTo(AdminNavItem nav)
+        {
+            if (nav == AdminNavItem.Overview) { SetActiveNav(nav); ShowDashboard(); }
+            else if (nav == AdminNavItem.Medicines) { SetActiveNav(nav); ShowMedicines(); }
+            else if (nav == AdminNavItem.Customers) { SetActiveNav(nav); ShowCustomers(); }
+            else if (nav == AdminNavItem.Orders) { SetActiveNav(nav); ShowOrders(); }
+            else if (nav == AdminNavItem.Reports) { SetActiveNav(nav); ShowReports(); }
         }
 
         private static void StyleNavButton(Button button, bool active)
