@@ -8,135 +8,99 @@ namespace SmartMed.UI
 {
     public sealed partial class PlaceOrderForm : CustomerPageControl
     {
-        private readonly OrderService _orders = new OrderService();
+        private OrderService _orders;
+        private bool _servicesReady;
+        private bool _runtimeWired;
+        private bool _chromeApplied;
         private string _prescriptionPath;
 
         public PlaceOrderForm()
         {
             InitializeComponent();
+            if (!IsDesignHost())
+            {
+                _orders = new OrderService();
+                _servicesReady = true;
+            }
         }
 
-        protected override void BuildPageLayout() => BuildContent();
+        protected override bool PreferDesignTimePreview() => !_servicesReady || IsDesignHost();
 
-        protected override void DoRefreshPage()
+        protected override void OnLoad(EventArgs e)
         {
-            SyncScrollRootWidth();
-            RefreshCart();
+            base.OnLoad(e);
+            ApplyViewChrome();
+            if (_servicesReady)
+                WireRuntimeBehavior();
         }
+
+        protected override void BuildPageLayout()
+        {
+            // Layout lives in PlaceOrderForm.Designer.cs.
+        }
+
+        protected override void DoRefreshPage() => RefreshCart();
 
         protected override void LoadDesignTimePreview()
         {
+            ApplyViewChrome();
+
             UiTheme.SetGridDataSource(gridCart, DesignTimePreviewData.CartRows());
-            if (gridCart.Columns.Contains("MedicineID"))
-                gridCart.Columns["MedicineID"].Visible = false;
-            if (gridCart.Columns.Contains("DiscountDisplay"))
-                gridCart.Columns["DiscountDisplay"].HeaderText = "Discount";
-            if (gridCart.Columns.Contains("PromoDisplay"))
-                gridCart.Columns["PromoDisplay"].HeaderText = "Promo";
+            BeautifyCartGrid();
             lblTotal.Text = "Total: LKR 975.00 (2 items)";
             lblRxNote.Visible = true;
         }
 
-        private void BuildContent()
+        private void ApplyViewChrome()
         {
-            txtPrescriptionPath = new TextBox { Width = 360, ReadOnly = true, Margin = new Padding(0, 0, 8, 0) };
+            if (_chromeApplied) return;
+            _chromeApplied = true;
+
+            AdminPageView.EnsureTheme();
+            AdminPageView.ApplyChrome(this);
+
+            UiTheme.ApplyClinicalGrid(gridCart);
             UiTheme.StyleTextBox(txtPrescriptionPath);
 
-            lblRxNote = new Label
-            {
-                Dock = DockStyle.Top,
-                Height = 24,
-                ForeColor = UiTheme.Danger,
-                BackColor = UiTheme.AdminSurface,
-                Text = "Rx medicines require a prescription upload.",
-                Margin = new Padding(0, 0, 0, 12)
-            };
-
-            lblTotal = new Label
-            {
-                Dock = DockStyle.Top,
-                Height = 28,
-                Font = UiTheme.UiFontBold,
-                ForeColor = UiTheme.AdminOnSurface,
-                BackColor = UiTheme.AdminSurface,
-                Margin = new Padding(0, 0, 0, 12)
-            };
-
-            gridCart = new DataGridView
-            {
-                Dock = DockStyle.Top,
-                Height = 260,
-                ReadOnly = true,
-                AllowUserToAddRows = false,
-                AllowUserToDeleteRows = false,
-                RowHeadersVisible = false,
-                SelectionMode = DataGridViewSelectionMode.FullRowSelect,
-                AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill,
-                Margin = new Padding(0, 0, 0, 12)
-            };
-            UiTheme.ApplyClinicalGrid(gridCart);
-
-            var root = new Panel
-            {
-                AutoSize = true,
-                MinimumSize = new Size(0, 400),
-                BackColor = UiTheme.AdminSurface
-            };
-
-            root.Controls.Add(CreateRxRow());
-            root.Controls.Add(lblRxNote);
-            root.Controls.Add(lblTotal);
-            root.Controls.Add(CreateActionsPanel());
-            root.Controls.Add(gridCart);
-            root.Controls.Add(AdminUiHelpers.CreatePageHeader("My Cart & Checkout",
-                "Review items, upload prescriptions, and place your order."));
-
-            WireScrollRoot(root);
+            WirePanelBorder(panelGridOuter);
         }
 
-        private Panel CreateActionsPanel()
+        private static void WirePanelBorder(Panel panel)
         {
-            var actions = new FlowLayoutPanel
+            if (panel == null || panel.Tag as string == "dash-border") return;
+            panel.Tag = "dash-border";
+            panel.Paint += (s, e) =>
             {
-                Dock = DockStyle.Top,
-                AutoSize = true,
-                Margin = new Padding(0, 0, 0, 12),
-                BackColor = UiTheme.AdminSurface
+                var rect = panel.ClientRectangle;
+                rect.Width -= 1;
+                rect.Height -= 1;
+                using (var pen = new Pen(UiTheme.AdminOutline))
+                    e.Graphics.DrawRectangle(pen, rect);
             };
-
-            var btnRemove = AdminUiHelpers.CreateWinButton("Remove Selected", false, 130);
-            btnRemove.Click += BtnRemove_Click;
-            var btnClear = AdminUiHelpers.CreateWinButton("Clear Cart", false, 100);
-            btnClear.Click += (s, e) => { CartService.Clear(); RefreshCart(); };
-            var btnPlace = AdminUiHelpers.CreateWinButton("Place Order", true, 120);
-            btnPlace.Click += BtnPlace_Click;
-
-            actions.Controls.Add(btnRemove);
-            actions.Controls.Add(btnClear);
-            actions.Controls.Add(btnPlace);
-            return actions;
         }
 
-        private Panel CreateRxRow()
+        private void WireRuntimeBehavior()
         {
-            var rxRow = new FlowLayoutPanel
-            {
-                Dock = DockStyle.Top,
-                AutoSize = true,
-                Margin = new Padding(0, 12, 0, 8),
-                BackColor = UiTheme.AdminSurface
-            };
+            if (_runtimeWired) return;
+            _runtimeWired = true;
 
-            var btnBrowse = AdminUiHelpers.CreateWinButton("Upload Prescription", false, 150);
-            btnBrowse.Click += BtnBrowse_Click;
-            rxRow.Controls.Add(txtPrescriptionPath);
-            rxRow.Controls.Add(btnBrowse);
-            return rxRow;
+            btnRemoveSelected.Click += BtnRemove_Click;
+            btnClearCart.Click += (s, e) =>
+            {
+                CartService.Clear();
+                RefreshCart();
+            };
+            btnPlaceOrder.Click += BtnPlace_Click;
+            btnUploadPrescription.Click += BtnBrowse_Click;
         }
 
         private void RefreshCart()
         {
             if (gridCart == null) return;
+
+            if (PreferDesignTimePreview())
+                return;
+
             UiTheme.SetGridDataSource(gridCart, CartService.Items.Select(l => new
             {
                 l.MedicineID,
@@ -150,14 +114,20 @@ namespace SmartMed.UI
                 Subtotal = $"LKR {l.Subtotal:N2}",
                 Rx = l.RequiresPrescription ? "Yes" : "No"
             }).ToList());
+            BeautifyCartGrid();
+            lblTotal.Text = $"Total: LKR {CartService.Total:N2} ({CartService.ItemCount} items)";
+            lblRxNote.Visible = CartService.RequiresPrescription;
+        }
+
+        private void BeautifyCartGrid()
+        {
             if (gridCart.Columns.Contains("MedicineID"))
                 gridCart.Columns["MedicineID"].Visible = false;
             if (gridCart.Columns.Contains("DiscountDisplay"))
                 gridCart.Columns["DiscountDisplay"].HeaderText = "Discount";
             if (gridCart.Columns.Contains("PromoDisplay"))
                 gridCart.Columns["PromoDisplay"].HeaderText = "Promo";
-            lblTotal.Text = $"Total: LKR {CartService.Total:N2} ({CartService.ItemCount} items)";
-            lblRxNote.Visible = CartService.RequiresPrescription;
+            UiTheme.BeautifyGridHeaders(gridCart);
         }
 
         private void BtnBrowse_Click(object sender, EventArgs e)
@@ -184,6 +154,8 @@ namespace SmartMed.UI
 
         private void BtnPlace_Click(object sender, EventArgs e)
         {
+            if (!_servicesReady) return;
+
             try
             {
                 var customer = Session.CurrentCustomer;
