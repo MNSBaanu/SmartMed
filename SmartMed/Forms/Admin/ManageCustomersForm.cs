@@ -24,14 +24,55 @@ namespace SmartMed.UI
         public ManageCustomersForm()
         {
             InitializeComponent();
-            BuildContent();
-            RefreshPage();
         }
 
-        public override void RefreshPage()
+        protected override void BuildPageLayout() => BuildContent();
+
+        protected override void DoRefreshPage()
         {
             SyncScrollRootWidth();
             LoadCustomers();
+        }
+
+        protected override void LoadDesignTimePreview()
+        {
+            var sample = DesignTimePreviewData.SampleCustomer();
+            _allRows = new List<CustomerRow>
+            {
+                new CustomerRow
+                {
+                    CustomerID = sample.CustomerID,
+                    CustomerRef = "#SM-01001",
+                    Name = sample.Name,
+                    ContactInfo = $"{sample.Email} / {sample.Phone}",
+                    LastOrder = DateTime.Today.AddDays(-14).ToString("yyyy-MM-dd"),
+                    OrderCount = 3,
+                    Status = "ACTIVE",
+                    Customer = sample
+                },
+                new CustomerRow
+                {
+                    CustomerID = 1002,
+                    CustomerRef = "#SM-01002",
+                    Name = "Kamal Silva",
+                    ContactInfo = "kamal@example.com / 0779876543",
+                    LastOrder = "—",
+                    OrderCount = 0,
+                    Status = "INACTIVE",
+                    Customer = new Customer
+                    {
+                        CustomerID = 1002,
+                        Name = "Kamal Silva",
+                        Email = "kamal@example.com",
+                        Phone = "0779876543",
+                        Address = "45 Galle Road, Colombo"
+                    }
+                }
+            };
+            _filteredRows = _allRows;
+            _currentPage = 1;
+            BindPage();
+            UpdateStats();
         }
 
         private void BuildContent()

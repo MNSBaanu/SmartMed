@@ -1,3 +1,5 @@
+using System;
+using System.ComponentModel;
 using System.Drawing;
 using System.Windows.Forms;
 
@@ -11,6 +13,8 @@ namespace SmartMed.UI
 
     public abstract class AdminPageControl : UserControl, IAdminPage
     {
+        private bool _pageBuilt;
+
         protected Panel ScrollHost { get; private set; }
         protected Control ScrollRoot { get; private set; }
 
@@ -19,6 +23,46 @@ namespace SmartMed.UI
             DoubleBuffered = true;
             BackColor = UiTheme.AdminSurface;
             Font = UiTheme.UiFont;
+        }
+
+        protected bool IsDesignHost() => DesignHostHelper.IsDesignHost(this);
+
+        protected override void OnLoad(EventArgs e)
+        {
+            base.OnLoad(e);
+            EnsurePageContent();
+        }
+
+        protected override void OnCreateControl()
+        {
+            base.OnCreateControl();
+            EnsurePageContent();
+        }
+
+        protected void EnsurePageContent()
+        {
+            if (_pageBuilt)
+                return;
+
+            _pageBuilt = true;
+            BuildPageLayout();
+            SyncScrollRootWidth();
+            if (IsDesignHost())
+                LoadDesignTimePreview();
+            else
+                DoRefreshPage();
+        }
+
+        protected abstract void BuildPageLayout();
+        protected abstract void DoRefreshPage();
+        protected virtual void LoadDesignTimePreview() { }
+
+        public void RefreshPage()
+        {
+            EnsurePageContent();
+            if (IsDesignHost())
+                return;
+            DoRefreshPage();
         }
 
         protected void WireScrollRoot(Control scrollRoot)
@@ -47,7 +91,7 @@ namespace SmartMed.UI
         {
             var w = ScrollHost?.ClientSize.Width ?? Width;
             if (w < 200) w = fallback;
-            return System.Math.Max(600, w - 48);
+            return Math.Max(600, w - 48);
         }
 
         public virtual void SyncScrollRootWidth(int fallback = 800)
@@ -60,7 +104,5 @@ namespace SmartMed.UI
                 ScrollRoot.Width = width;
             ScrollRoot.PerformLayout();
         }
-
-        public abstract void RefreshPage();
     }
 }

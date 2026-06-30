@@ -15,11 +15,11 @@ namespace SmartMed.UI
         public CustomerDashboardForm()
         {
             InitializeComponent();
-            BuildContent();
-            RefreshPage();
         }
 
-        public override void RefreshPage()
+        protected override void BuildPageLayout() => BuildContent();
+
+        protected override void DoRefreshPage()
         {
             SyncScrollRootWidth();
             var customer = Session.CurrentCustomer;
@@ -49,6 +49,17 @@ namespace SmartMed.UI
                 UiTheme.SetGridDataSource(gridRecent, recent);
                 UiTheme.BeautifyGridHeaders(gridRecent);
             }
+        }
+
+        protected override void LoadDesignTimePreview()
+        {
+            if (_headerSubtitle != null)
+                _headerSubtitle.Text = "Welcome, Jane Perera — browse medicines, manage your cart, and track orders.";
+            lblCart.Text = "2";
+            lblOrders.Text = "1";
+            lblPromotions.Text = "3";
+            UiTheme.SetGridDataSource(gridRecent, DesignTimePreviewData.CustomerDashboardOrders());
+            UiTheme.BeautifyGridHeaders(gridRecent);
         }
 
         private void BuildContent()

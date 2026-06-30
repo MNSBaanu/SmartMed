@@ -28,14 +28,23 @@ namespace SmartMed.UI
         public ManageMedicinesForm()
         {
             InitializeComponent();
-            BuildContent();
-            RefreshPage();
         }
 
-        public override void RefreshPage()
+        protected override void BuildPageLayout() => BuildContent();
+
+        protected override void DoRefreshPage()
         {
             SyncScrollRootWidth();
             LoadMedicines();
+        }
+
+        protected override void LoadDesignTimePreview()
+        {
+            _allMedicines = DesignTimePreviewData.Medicines();
+            RefreshCategoryFilter();
+            BindGrid(_allMedicines);
+            UpdateStats(_allMedicines);
+            UpdateExpiryAlerts(_allMedicines);
         }
 
         private void BuildContent()

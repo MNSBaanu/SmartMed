@@ -27,12 +27,28 @@ namespace SmartMed.UI
             ApplySidebarChrome();
             ApplyWinControls();
             WireMenuBar();
+
+            if (DesignHostHelper.IsDesignHost(this))
+            {
+                ShowDesignPreview();
+                return;
+            }
+
             SetActiveNav(AdminNavItem.Overview);
             ShowDashboard();
 
             _clockTimer.Tick += (s, e) => UpdateStatusTime();
             _clockTimer.Start();
             UpdateStatusTime();
+        }
+
+        private void ShowDesignPreview()
+        {
+            panelContent.Controls.Clear();
+            panelContent.AutoScrollPosition = new Point(0, 0);
+            var preview = new AdminDashboardForm { Dock = DockStyle.Fill };
+            panelContent.Controls.Add(preview);
+            UpdateTitleBar("Operational Dashboard");
         }
 
         private void ApplySidebarChrome()

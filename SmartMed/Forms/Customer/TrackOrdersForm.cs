@@ -15,14 +15,25 @@ namespace SmartMed.UI
         public TrackOrdersForm()
         {
             InitializeComponent();
-            BuildContent();
-            RefreshPage();
         }
 
-        public override void RefreshPage()
+        protected override void BuildPageLayout() => BuildContent();
+
+        protected override void DoRefreshPage()
         {
             SyncScrollRootWidth();
             RefreshOrders();
+        }
+
+        protected override void LoadDesignTimePreview()
+        {
+            UiTheme.SetGridDataSource(gridOrders, DesignTimePreviewData.TrackOrderRows());
+            if (gridOrders.Columns.Contains("OrderID"))
+                gridOrders.Columns["OrderID"].Visible = false;
+            UiTheme.BeautifyGridHeaders(gridOrders);
+            UiTheme.SetGridDataSource(gridItems, DesignTimePreviewData.TrackOrderItemRows());
+            UiTheme.BeautifyGridHeaders(gridItems);
+            _selectedOrderId = 1;
         }
 
         private void BuildContent()

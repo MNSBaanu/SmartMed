@@ -25,12 +25,29 @@ namespace SmartMed.UI
             ApplySidebarChrome();
             ApplyWinControls();
             WireMenuBar();
+
+            if (DesignHostHelper.IsDesignHost(this))
+            {
+                ShowDesignPreview();
+                return;
+            }
+
             SetActiveNav(CustomerNavItem.Home);
             ShowHome();
 
             _clockTimer.Tick += (s, e) => UpdateStatusTime();
             _clockTimer.Start();
             UpdateStatusTime();
+        }
+
+        private void ShowDesignPreview()
+        {
+            panelContent.Controls.Clear();
+            panelContent.AutoScrollPosition = new Point(0, 0);
+            var preview = new CustomerDashboardForm { Dock = DockStyle.Fill };
+            panelContent.Controls.Add(preview);
+            lblTitleBar.Text = "SmartMed Health Portal - Home";
+            Text = "SmartMed - Home";
         }
 
         internal void RefreshProfileDisplay()

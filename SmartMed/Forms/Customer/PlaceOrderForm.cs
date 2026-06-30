@@ -14,14 +14,27 @@ namespace SmartMed.UI
         public PlaceOrderForm()
         {
             InitializeComponent();
-            BuildContent();
-            RefreshPage();
         }
 
-        public override void RefreshPage()
+        protected override void BuildPageLayout() => BuildContent();
+
+        protected override void DoRefreshPage()
         {
             SyncScrollRootWidth();
             RefreshCart();
+        }
+
+        protected override void LoadDesignTimePreview()
+        {
+            UiTheme.SetGridDataSource(gridCart, DesignTimePreviewData.CartRows());
+            if (gridCart.Columns.Contains("MedicineID"))
+                gridCart.Columns["MedicineID"].Visible = false;
+            if (gridCart.Columns.Contains("DiscountDisplay"))
+                gridCart.Columns["DiscountDisplay"].HeaderText = "Discount";
+            if (gridCart.Columns.Contains("PromoDisplay"))
+                gridCart.Columns["PromoDisplay"].HeaderText = "Promo";
+            lblTotal.Text = "Total: LKR 975.00 (2 items)";
+            lblRxNote.Visible = true;
         }
 
         private void BuildContent()

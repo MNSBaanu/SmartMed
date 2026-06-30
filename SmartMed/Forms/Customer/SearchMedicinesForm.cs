@@ -13,14 +13,23 @@ namespace SmartMed.UI
         public SearchMedicinesForm()
         {
             InitializeComponent();
-            BuildContent();
-            RefreshPage();
         }
 
-        public override void RefreshPage()
+        protected override void BuildPageLayout() => BuildContent();
+
+        protected override void DoRefreshPage()
         {
             SyncScrollRootWidth();
             Search();
+        }
+
+        protected override void LoadDesignTimePreview()
+        {
+            UiTheme.SetGridDataSource(grid, DesignTimePreviewData.SearchMedicineRows());
+            if (grid.Columns.Contains("MedicineID"))
+                grid.Columns["MedicineID"].Visible = false;
+            UiTheme.BeautifyGridHeaders(grid);
+            lblDetails.Text = "Amoxicillin 500mg | Antibiotic | LKR 427.50 | Stock: 12 | Rx: Yes | Discount: 5% | Promo: Active";
         }
 
         private void BuildContent()

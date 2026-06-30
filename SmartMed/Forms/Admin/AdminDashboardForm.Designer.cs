@@ -36,7 +36,5 @@ namespace SmartMed.UI
         private System.Windows.Forms.DataGridView gridLowStock;
         private System.Windows.Forms.DataGridView gridExpiry;
         private System.Windows.Forms.DataGridView gridRecent;
-        private System.Windows.Forms.Panel _scrollHost;
-        private System.Windows.Forms.TableLayoutPanel _contentPanel;
     }
 }

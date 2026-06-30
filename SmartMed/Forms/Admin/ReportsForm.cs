@@ -19,17 +19,31 @@ namespace SmartMed.UI
         public ReportsForm()
         {
             InitializeComponent();
-            BuildContent();
-            ResetReportPreview();
         }
 
-        public override void RefreshPage()
+        protected override void BuildPageLayout() => BuildContent();
+
+        protected override void DoRefreshPage()
         {
             SyncScrollRootWidth();
             if (_reportViewed)
                 LoadActiveReport();
             else
                 ResetReportPreview();
+        }
+
+        protected override void LoadDesignTimePreview()
+        {
+            _currentReportTable = DesignTimePreviewData.SalesReportTable();
+            UiTheme.SetGridDataSource(gridReport, _currentReportTable);
+            UiTheme.BeautifyGridHeaders(gridReport);
+            lblTotalRevenue.Text = "LKR 3,340.00";
+            lblTotalOrders.Text = "2";
+            lblLowStock.Text = "1";
+            lblOutstanding.Text = "LKR 890.00";
+            lblFooterStatus.Text = "Design preview — sample sales report.";
+            _reportViewed = true;
+            UpdateExportButtons();
         }
 
         private void BuildContent()

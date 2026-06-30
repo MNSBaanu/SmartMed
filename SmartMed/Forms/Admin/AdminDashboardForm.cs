@@ -8,7 +8,7 @@ using SmartMed.UI;
 
 namespace SmartMed.UI
 {
-    public sealed partial class AdminDashboardForm : UserControl
+    public sealed partial class AdminDashboardForm : AdminPageControl
     {
         private readonly ReportService _reports = new ReportService();
         private readonly OrderService _orders = new OrderService();
@@ -19,17 +19,45 @@ namespace SmartMed.UI
         public AdminDashboardForm()
         {
             InitializeComponent();
-            DoubleBuffered = true;
-            BackColor = UiTheme.AdminSurface;
-            BuildContent();
-            UiTheme.EnableFontPropagation(this);
-            LoadDashboardData();
         }
 
-        public void RefreshData()
+        public void RefreshData() => RefreshPage();
+
+        protected override void BuildPageLayout() => BuildContent();
+
+        protected override void DoRefreshPage()
         {
             SyncScrollRootWidth();
             LoadDashboardData();
+        }
+
+        protected override void LoadDesignTimePreview()
+        {
+            lblStockValue.Text = "128";
+            lblOrdersValue.Text = "4";
+            lblSalesValue.Text = "245,600";
+            lblCustomersValue.Text = "86";
+
+            gridLowStock.DataSource = new[]
+            {
+                new { MedicineName = "Amoxicillin 500mg", Level = "8 units", Status = "LOW" },
+                new { MedicineName = "Metformin 850mg", Level = "3 units", Status = "CRITICAL" }
+            };
+            UiTheme.BeautifyGridHeaders(gridLowStock);
+
+            gridExpiry.DataSource = new[]
+            {
+                new { BatchId = "#M-003", Medicine = "Metformin 850mg", DueDate = "EXPIRED" },
+                new { BatchId = "#M-001", Medicine = "Amoxicillin 500mg", DueDate = "18 Days" }
+            };
+            UiTheme.BeautifyGridHeaders(gridExpiry);
+
+            _recentRows = new List<object>
+            {
+                new { OrderRef = "#SM-0001", CustomerName = "Jane Perera", FulfillmentStatus = OrderService.StatusPending, Timestamp = "2 hours ago" },
+                new { OrderRef = "#SM-0002", CustomerName = "Kamal Silva", FulfillmentStatus = OrderService.StatusDelivered, Timestamp = "1 day ago" }
+            };
+            BindRecentGrid(_recentRows);
         }
 
         private void BuildContent()
@@ -45,59 +73,27 @@ namespace SmartMed.UI
             gridRecent.CellFormatting += GridRecent_CellFormatting;
             gridRecent.CellContentClick += GridRecent_CellContentClick;
 
-            Controls.Clear();
-            BackColor = UiTheme.AdminSurface;
-
-            _scrollHost = new Panel
-            {
-                Dock = DockStyle.Fill,
-                AutoScroll = true,
-                BackColor = UiTheme.AdminSurface,
-                Padding = new Padding(24, 24, 24, 24)
-            };
-            Controls.Add(_scrollHost);
-
-            _contentPanel = new TableLayoutPanel
+            var root = new TableLayoutPanel
             {
                 AutoSize = true,
                 AutoSizeMode = AutoSizeMode.GrowAndShrink,
-                Dock = DockStyle.Top,
                 ColumnCount = 1,
                 RowCount = 4,
-                Width = Math.Max(600, GetScrollContentWidth()),
+                MinimumSize = new Size(0, 720),
                 BackColor = UiTheme.AdminSurface
             };
-            _contentPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100f));
-            _contentPanel.RowStyles.Add(new RowStyle(SizeType.AutoSize));
-            _contentPanel.RowStyles.Add(new RowStyle(SizeType.AutoSize));
-            _contentPanel.RowStyles.Add(new RowStyle(SizeType.Absolute, 210f));
-            _contentPanel.RowStyles.Add(new RowStyle(SizeType.Absolute, 320f));
+            root.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100f));
+            root.RowStyles.Add(new RowStyle(SizeType.AutoSize));
+            root.RowStyles.Add(new RowStyle(SizeType.AutoSize));
+            root.RowStyles.Add(new RowStyle(SizeType.Absolute, 210f));
+            root.RowStyles.Add(new RowStyle(SizeType.Absolute, 320f));
 
-            _contentPanel.Controls.Add(CreatePageHeader(), 0, 0);
-            _contentPanel.Controls.Add(CreateStatsRow(), 0, 1);
-            _contentPanel.Controls.Add(CreateAlertsRow(), 0, 2);
-            _contentPanel.Controls.Add(CreateRecentActivityPanel(), 0, 3);
+            root.Controls.Add(CreatePageHeader(), 0, 0);
+            root.Controls.Add(CreateStatsRow(), 0, 1);
+            root.Controls.Add(CreateAlertsRow(), 0, 2);
+            root.Controls.Add(CreateRecentActivityPanel(), 0, 3);
 
-            _scrollHost.Controls.Add(_contentPanel);
-            UiTheme.EnableDoubleBuffer(_scrollHost);
-            _scrollHost.Resize += (s, e) => SyncScrollRootWidth();
-        }
-
-        private int GetScrollContentWidth(int fallback = 800)
-        {
-            var w = _scrollHost?.ClientSize.Width ?? fallback;
-            return w < 200 ? fallback : w - 48;
-        }
-
-        private void SyncScrollRootWidth(int fallback = 800)
-        {
-            if (_scrollHost == null || _contentPanel == null || _scrollHost.IsDisposed)
-                return;
-
-            var width = Math.Max(600, GetScrollContentWidth(fallback));
-            if (_contentPanel.Width != width)
-                _contentPanel.Width = width;
-            _contentPanel.PerformLayout();
+            WireScrollRoot(root);
         }
 
         private Panel CreatePageHeader()

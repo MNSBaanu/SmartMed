@@ -18,11 +18,20 @@ namespace SmartMed.UI
         public ProfileManagementForm()
         {
             InitializeComponent();
-            BuildContent();
-            RefreshPage();
         }
 
-        public override void RefreshPage() => LoadProfile();
+        protected override void BuildPageLayout() => BuildContent();
+
+        protected override void DoRefreshPage() => LoadProfile();
+
+        protected override void LoadDesignTimePreview()
+        {
+            var customer = DesignTimePreviewData.SampleCustomer();
+            _txtName.Text = customer.Name;
+            _txtEmail.Text = customer.Email;
+            _txtPhone.Text = customer.Phone;
+            _txtAddress.Text = customer.Address;
+        }
 
         private void BuildContent()
         {

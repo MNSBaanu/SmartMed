@@ -23,14 +23,54 @@ namespace SmartMed.UI
         public ManageOrdersForm()
         {
             InitializeComponent();
-            BuildContent();
-            RefreshPage();
         }
 
-        public override void RefreshPage()
+        protected override void BuildPageLayout() => BuildContent();
+
+        protected override void DoRefreshPage()
         {
             SyncScrollRootWidth();
             LoadOrders();
+        }
+
+        protected override void LoadDesignTimePreview()
+        {
+            var now = DateTime.Now;
+            _allRows = new List<OrderRow>
+            {
+                new OrderRow
+                {
+                    OrderID = 1,
+                    OrderRef = "#ORD-0001",
+                    CustomerName = "Jane Perera",
+                    CustomerRef = "PAT-001-01",
+                    OrderDate = now.AddDays(-1).ToString("MMM dd, yyyy HH:mm"),
+                    TotalAmount = "LKR 1,250.00",
+                    Status = OrderService.StatusPending,
+                    RawStatus = OrderService.StatusPending,
+                    RxStatus = "Approved",
+                    Prescription = "Uploaded",
+                    OrderDateValue = now.AddDays(-1)
+                },
+                new OrderRow
+                {
+                    OrderID = 2,
+                    OrderRef = "#ORD-0002",
+                    CustomerName = "Kamal Silva",
+                    CustomerRef = "PAT-002-02",
+                    OrderDate = now.AddDays(-3).ToString("MMM dd, yyyy HH:mm"),
+                    TotalAmount = "LKR 890.00",
+                    Status = OrderService.StatusDelivered,
+                    RawStatus = OrderService.StatusDelivered,
+                    RxStatus = "—",
+                    Prescription = "—",
+                    OrderDateValue = now.AddDays(-3)
+                }
+            };
+            _filteredRows = _allRows;
+            _currentPage = 1;
+            BindPage();
+            UpdateStats();
         }
 
         private void BuildContent()
