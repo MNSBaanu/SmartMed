@@ -38,11 +38,27 @@ namespace SmartMed.UI
             InitializeComponent();
             DoubleBuffered = true;
             HideErrorPanel();
+            ApplyViewChrome();
             if (!DesignHostHelper.IsDesignHost(this))
             {
                 _auth = new AuthService();
                 WireRuntimeBehavior();
             }
+        }
+
+        protected override void OnLoad(EventArgs e)
+        {
+            base.OnLoad(e);
+            ApplyViewChrome();
+        }
+
+        private void ApplyViewChrome()
+        {
+            AuthFormView.ApplyCardBorder(panelLoginCard);
+            AuthFormView.ApplyPasswordFieldBorder(pnlPasswordField);
+            LayoutLoginContent();
+            panelMain.Resize -= PanelMain_Resize;
+            panelMain.Resize += PanelMain_Resize;
         }
 
         internal void ResetAfterLogout()
@@ -65,11 +81,9 @@ namespace SmartMed.UI
             lblError.BackColor = Color.White;
         }
 
-        /// <summary>Runtime-only behavior. All layout, fonts, and colors come from LoginForm.Designer.cs.</summary>
+        /// <summary>Runtime-only input behavior (placeholders, password toggle).</summary>
         private void WireRuntimeBehavior()
         {
-            UiTheme.Init();
-            UiTheme.ApplyClinicalAuthCard(panelLoginCard);
             UiTheme.WireClinicalPlaceholderTextBox(txtUsername, "Enter email or username");
             UiTheme.WireClinicalPasswordField(pnlPasswordField, txtPassword, btnTogglePassword, "Enter your password");
             txtPassword.GotFocus -= TxtPassword_ApplyMask;
@@ -79,10 +93,6 @@ namespace SmartMed.UI
             panelError.SendToBack();
             lnkForgot.BringToFront();
             SetPasswordVisible(_passwordVisible);
-
-            panelMain.Resize -= PanelMain_Resize;
-            panelMain.Resize += PanelMain_Resize;
-            LayoutLoginContent();
         }
 
         private void LayoutLoginContent()

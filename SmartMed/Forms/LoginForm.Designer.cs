@@ -85,7 +85,7 @@ namespace SmartMed.UI
             // 
             this.lblTitleBarText.AutoSize = true;
             this.lblTitleBarText.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(241)))), ((int)(((byte)(245)))), ((int)(((byte)(249)))));
-            this.lblTitleBarText.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F);
+            this.lblTitleBarText.Font = new System.Drawing.Font("Hanken Grotesk", 9F);
             this.lblTitleBarText.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(48)))), ((int)(((byte)(56)))), ((int)(((byte)(55)))));
             this.lblTitleBarText.Location = new System.Drawing.Point(36, 12);
             this.lblTitleBarText.Name = "lblTitleBarText";
@@ -105,7 +105,7 @@ namespace SmartMed.UI
             // lblTitleIcon
             // 
             this.lblTitleIcon.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lblTitleIcon.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.5F, System.Drawing.FontStyle.Bold);
+            this.lblTitleIcon.Font = new System.Drawing.Font("Hanken Grotesk", 6.5F, System.Drawing.FontStyle.Bold);
             this.lblTitleIcon.ForeColor = System.Drawing.Color.White;
             this.lblTitleIcon.Location = new System.Drawing.Point(0, 0);
             this.lblTitleIcon.Name = "lblTitleIcon";
@@ -140,7 +140,7 @@ namespace SmartMed.UI
             // 
             this.lblCopyright.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(244)))), ((int)(((byte)(251)))), ((int)(((byte)(250)))));
             this.lblCopyright.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.lblCopyright.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
+            this.lblCopyright.Font = new System.Drawing.Font("Hanken Grotesk", 8.25F);
             this.lblCopyright.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(90)))), ((int)(((byte)(98)))), ((int)(((byte)(96)))));
             this.lblCopyright.Location = new System.Drawing.Point(0, 24);
             this.lblCopyright.Name = "lblCopyright";
@@ -153,7 +153,7 @@ namespace SmartMed.UI
             // 
             this.lblSecurityLine.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(244)))), ((int)(((byte)(251)))), ((int)(((byte)(250)))));
             this.lblSecurityLine.Dock = System.Windows.Forms.DockStyle.Top;
-            this.lblSecurityLine.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
+            this.lblSecurityLine.Font = new System.Drawing.Font("Hanken Grotesk", 8.25F);
             this.lblSecurityLine.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(90)))), ((int)(((byte)(98)))), ((int)(((byte)(96)))));
             this.lblSecurityLine.Location = new System.Drawing.Point(0, 0);
             this.lblSecurityLine.Name = "lblSecurityLine";
@@ -201,7 +201,7 @@ namespace SmartMed.UI
             // 
             this.lblError.BackColor = System.Drawing.Color.White;
             this.lblError.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lblError.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
+            this.lblError.Font = new System.Drawing.Font("Hanken Grotesk", 8.25F);
             this.lblError.ForeColor = System.Drawing.Color.White;
             this.lblError.Location = new System.Drawing.Point(12, 8);
             this.lblError.Name = "lblError";
@@ -213,7 +213,7 @@ namespace SmartMed.UI
             this.lnkForgot.ActiveLinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(12)))), ((int)(((byte)(46)))), ((int)(((byte)(43)))));
             this.lnkForgot.AutoSize = true;
             this.lnkForgot.BackColor = System.Drawing.Color.White;
-            this.lnkForgot.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold);
+            this.lnkForgot.Font = new System.Drawing.Font("Hanken Grotesk", 10F, System.Drawing.FontStyle.Bold);
             this.lnkForgot.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(27)))), ((int)(((byte)(79)))), ((int)(((byte)(71)))));
             this.lnkForgot.Location = new System.Drawing.Point(32, 516);
             this.lnkForgot.Name = "lnkForgot";
@@ -230,7 +230,7 @@ namespace SmartMed.UI
             this.btnQuickCustomer.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(193)))), ((int)(((byte)(200)))), ((int)(((byte)(198)))));
             this.btnQuickCustomer.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(245)))), ((int)(((byte)(250)))), ((int)(((byte)(249)))));
             this.btnQuickCustomer.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnQuickCustomer.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold);
+            this.btnQuickCustomer.Font = new System.Drawing.Font("Hanken Grotesk", 10F, System.Drawing.FontStyle.Bold);
             this.btnQuickCustomer.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(22)))), ((int)(((byte)(29)))), ((int)(((byte)(29)))));
             this.btnQuickCustomer.Location = new System.Drawing.Point(228, 468);
             this.btnQuickCustomer.Name = "btnQuickCustomer";
@@ -246,7 +246,7 @@ namespace SmartMed.UI
             this.btnQuickAdmin.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(193)))), ((int)(((byte)(200)))), ((int)(((byte)(198)))));
             this.btnQuickAdmin.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(245)))), ((int)(((byte)(250)))), ((int)(((byte)(249)))));
             this.btnQuickAdmin.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnQuickAdmin.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold);
+            this.btnQuickAdmin.Font = new System.Drawing.Font("Hanken Grotesk", 10F, System.Drawing.FontStyle.Bold);
             this.btnQuickAdmin.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(22)))), ((int)(((byte)(29)))), ((int)(((byte)(29)))));
             this.btnQuickAdmin.Location = new System.Drawing.Point(32, 468);
             this.btnQuickAdmin.Name = "btnQuickAdmin";
@@ -262,7 +262,7 @@ namespace SmartMed.UI
             this.btnRegister.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(193)))), ((int)(((byte)(200)))), ((int)(((byte)(198)))));
             this.btnRegister.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(245)))), ((int)(((byte)(250)))), ((int)(((byte)(249)))));
             this.btnRegister.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnRegister.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold);
+            this.btnRegister.Font = new System.Drawing.Font("Hanken Grotesk", 10F, System.Drawing.FontStyle.Bold);
             this.btnRegister.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(22)))), ((int)(((byte)(29)))), ((int)(((byte)(29)))));
             this.btnRegister.Location = new System.Drawing.Point(228, 416);
             this.btnRegister.Name = "btnRegister";
@@ -278,7 +278,7 @@ namespace SmartMed.UI
             this.btnLogin.FlatAppearance.BorderSize = 0;
             this.btnLogin.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(24)))), ((int)(((byte)(22)))));
             this.btnLogin.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnLogin.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold);
+            this.btnLogin.Font = new System.Drawing.Font("Hanken Grotesk", 10F, System.Drawing.FontStyle.Bold);
             this.btnLogin.ForeColor = System.Drawing.Color.White;
             this.btnLogin.Location = new System.Drawing.Point(32, 416);
             this.btnLogin.Name = "btnLogin";
@@ -304,7 +304,7 @@ namespace SmartMed.UI
             | System.Windows.Forms.AnchorStyles.Right)));
             this.txtPassword.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(238)))), ((int)(((byte)(245)))), ((int)(((byte)(244)))));
             this.txtPassword.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.txtPassword.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F);
+            this.txtPassword.Font = new System.Drawing.Font("Hanken Grotesk", 9F);
             this.txtPassword.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(130)))), ((int)(((byte)(138)))), ((int)(((byte)(136)))));
             this.txtPassword.Location = new System.Drawing.Point(10, 10);
             this.txtPassword.Name = "txtPassword";
@@ -322,7 +322,7 @@ namespace SmartMed.UI
             this.btnTogglePassword.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(238)))), ((int)(((byte)(245)))), ((int)(((byte)(244)))));
             this.btnTogglePassword.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(238)))), ((int)(((byte)(245)))), ((int)(((byte)(244)))));
             this.btnTogglePassword.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnTogglePassword.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold);
+            this.btnTogglePassword.Font = new System.Drawing.Font("Hanken Grotesk", 9F, System.Drawing.FontStyle.Bold);
             this.btnTogglePassword.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(27)))), ((int)(((byte)(79)))), ((int)(((byte)(71)))));
             this.btnTogglePassword.Location = new System.Drawing.Point(291, 3);
             this.btnTogglePassword.Name = "btnTogglePassword";
@@ -336,7 +336,7 @@ namespace SmartMed.UI
             // 
             this.lblPassword.AutoSize = true;
             this.lblPassword.BackColor = System.Drawing.Color.White;
-            this.lblPassword.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F);
+            this.lblPassword.Font = new System.Drawing.Font("Hanken Grotesk", 9F);
             this.lblPassword.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(48)))), ((int)(((byte)(56)))), ((int)(((byte)(55)))));
             this.lblPassword.Location = new System.Drawing.Point(32, 306);
             this.lblPassword.Name = "lblPassword";
@@ -348,7 +348,7 @@ namespace SmartMed.UI
             // 
             this.txtUsername.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(238)))), ((int)(((byte)(245)))), ((int)(((byte)(244)))));
             this.txtUsername.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.txtUsername.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F);
+            this.txtUsername.Font = new System.Drawing.Font("Hanken Grotesk", 9F);
             this.txtUsername.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(130)))), ((int)(((byte)(138)))), ((int)(((byte)(136)))));
             this.txtUsername.Location = new System.Drawing.Point(32, 258);
             this.txtUsername.Name = "txtUsername";
@@ -361,7 +361,7 @@ namespace SmartMed.UI
             // 
             this.lblUsername.AutoSize = true;
             this.lblUsername.BackColor = System.Drawing.Color.White;
-            this.lblUsername.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F);
+            this.lblUsername.Font = new System.Drawing.Font("Hanken Grotesk", 9F);
             this.lblUsername.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(48)))), ((int)(((byte)(56)))), ((int)(((byte)(55)))));
             this.lblUsername.Location = new System.Drawing.Point(32, 238);
             this.lblUsername.Name = "lblUsername";
@@ -373,7 +373,7 @@ namespace SmartMed.UI
             // 
             this.lblAuthSubtitle.AutoSize = true;
             this.lblAuthSubtitle.BackColor = System.Drawing.Color.White;
-            this.lblAuthSubtitle.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F);
+            this.lblAuthSubtitle.Font = new System.Drawing.Font("Hanken Grotesk", 9F);
             this.lblAuthSubtitle.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(48)))), ((int)(((byte)(56)))), ((int)(((byte)(55)))));
             this.lblAuthSubtitle.Location = new System.Drawing.Point(32, 206);
             this.lblAuthSubtitle.Name = "lblAuthSubtitle";
@@ -385,7 +385,7 @@ namespace SmartMed.UI
             // 
             this.lblAuthTitle.AutoSize = true;
             this.lblAuthTitle.BackColor = System.Drawing.Color.White;
-            this.lblAuthTitle.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Bold);
+            this.lblAuthTitle.Font = new System.Drawing.Font("Hanken Grotesk", 14F, System.Drawing.FontStyle.Bold);
             this.lblAuthTitle.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(22)))), ((int)(((byte)(29)))), ((int)(((byte)(29)))));
             this.lblAuthTitle.Location = new System.Drawing.Point(32, 182);
             this.lblAuthTitle.Name = "lblAuthTitle";
@@ -397,7 +397,7 @@ namespace SmartMed.UI
             // 
             this.lblVersion.AutoSize = true;
             this.lblVersion.BackColor = System.Drawing.Color.White;
-            this.lblVersion.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
+            this.lblVersion.Font = new System.Drawing.Font("Hanken Grotesk", 8.25F);
             this.lblVersion.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(90)))), ((int)(((byte)(98)))), ((int)(((byte)(96)))));
             this.lblVersion.Location = new System.Drawing.Point(32, 152);
             this.lblVersion.Name = "lblVersion";
@@ -409,7 +409,7 @@ namespace SmartMed.UI
             // 
             this.lblBrand.AutoSize = true;
             this.lblBrand.BackColor = System.Drawing.Color.White;
-            this.lblBrand.Font = new System.Drawing.Font("Microsoft Sans Serif", 16F, System.Drawing.FontStyle.Bold);
+            this.lblBrand.Font = new System.Drawing.Font("Hanken Grotesk", 16F, System.Drawing.FontStyle.Bold);
             this.lblBrand.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(27)))), ((int)(((byte)(79)))), ((int)(((byte)(71)))));
             this.lblBrand.Location = new System.Drawing.Point(32, 124);
             this.lblBrand.Name = "lblBrand";
@@ -429,7 +429,7 @@ namespace SmartMed.UI
             // lblBrandIcon
             // 
             this.lblBrandIcon.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lblBrandIcon.Font = new System.Drawing.Font("Microsoft Sans Serif", 20F, System.Drawing.FontStyle.Bold);
+            this.lblBrandIcon.Font = new System.Drawing.Font("Hanken Grotesk", 20F, System.Drawing.FontStyle.Bold);
             this.lblBrandIcon.ForeColor = System.Drawing.Color.White;
             this.lblBrandIcon.Location = new System.Drawing.Point(0, 0);
             this.lblBrandIcon.Name = "lblBrandIcon";
@@ -447,7 +447,7 @@ namespace SmartMed.UI
             this.ClientSize = new System.Drawing.Size(720, 700);
             this.Controls.Add(this.panelMain);
             this.Controls.Add(this.panelTitleBar);
-            this.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F);
+            this.Font = new System.Drawing.Font("Hanken Grotesk", 9F);
             this.MinimumSize = new System.Drawing.Size(640, 580);
             this.Name = "LoginForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;

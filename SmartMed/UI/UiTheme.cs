@@ -406,28 +406,42 @@ namespace SmartMed.UI
             ApplyPlaceholder(textBox, placeholder);
         }
 
+        public static void WireClinicalPasswordTextBox(TextBox textBox, bool masked = true)
+        {
+            if (textBox == null) return;
+            if (textBox.Tag as string == "clinical-password-wired") return;
+
+            textBox.Tag = "clinical-password-wired";
+            textBox.UseSystemPasswordChar = false;
+            textBox.PasswordChar = masked ? PasswordMaskChar : '\0';
+        }
+
         public static void StyleClinicalPasswordBox(TextBox textBox, string placeholder)
         {
             StyleClinicalTextBox(textBox, placeholder);
+        }
+
+        public static void ApplyClinicalInputShellBorder(Panel shell)
+        {
+            if (shell == null) return;
+            if (shell.Tag as string == "clinical-input-shell") return;
+
+            shell.Tag = "clinical-input-shell";
+            shell.Paint += (s, e) =>
+            {
+                var rect = shell.ClientRectangle;
+                rect.Width -= 1;
+                rect.Height -= 1;
+                using (var pen = new Pen(AdminOutline))
+                    e.Graphics.DrawRectangle(pen, rect);
+            };
         }
 
         public static void WireClinicalPasswordField(Panel shell, TextBox textBox, Button toggle, string placeholder)
         {
             if (shell == null || textBox == null) return;
 
-            if (shell.Tag as string != "clinical-password-shell")
-            {
-                shell.Tag = "clinical-password-shell";
-                shell.Paint += (s, e) =>
-                {
-                    var rect = shell.ClientRectangle;
-                    rect.Width -= 1;
-                    rect.Height -= 1;
-                    using (var pen = new Pen(AdminOutline))
-                        e.Graphics.DrawRectangle(pen, rect);
-                };
-            }
-
+            ApplyClinicalInputShellBorder(shell);
             WireClinicalPlaceholderTextBox(textBox, placeholder);
             SetPasswordToggleText(toggle, false);
         }
