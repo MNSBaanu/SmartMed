@@ -13,29 +13,49 @@ namespace SmartMed.UI
         private const int PageSize = 10;
         private const int ActiveOrderDays = 90;
 
-        private readonly CustomerService _customers = new CustomerService();
-        private readonly OrderService _orders = new OrderService();
+        private CustomerService _customers;
+        private OrderService _orders;
+        private bool _servicesReady;
 
         private List<CustomerRow> _allRows = new List<CustomerRow>();
         private List<CustomerRow> _filteredRows = new List<CustomerRow>();
         private int _currentPage = 1;
         private int? _selectedId;
+        private bool _runtimeWired;
+        private bool _chromeApplied;
 
         public ManageCustomersForm()
         {
             InitializeComponent();
+            if (!IsDesignHost())
+            {
+                _customers = new CustomerService();
+                _orders = new OrderService();
+                _servicesReady = true;
+            }
         }
 
-        protected override void BuildPageLayout() => BuildContent();
+        protected override bool PreferDesignTimePreview() => !_servicesReady || IsDesignHost();
 
-        protected override void DoRefreshPage()
+        protected override void OnLoad(EventArgs e)
         {
-            SyncScrollRootWidth();
-            LoadCustomers();
+            base.OnLoad(e);
+            ApplyViewChrome();
+            if (_servicesReady)
+                WireRuntimeBehavior();
         }
+
+        protected override void BuildPageLayout()
+        {
+            // Layout lives in ManageCustomersForm.Designer.cs.
+        }
+
+        protected override void DoRefreshPage() => LoadCustomers();
 
         protected override void LoadDesignTimePreview()
         {
+            ApplyViewChrome();
+
             var sample = DesignTimePreviewData.SampleCustomer();
             _allRows = new List<CustomerRow>
             {
@@ -75,200 +95,86 @@ namespace SmartMed.UI
             UpdateStats();
         }
 
-        private void BuildContent()
+        private void ApplyViewChrome()
         {
-            var root = new TableLayoutPanel
-            {
-                AutoSize = true,
-                AutoSizeMode = AutoSizeMode.GrowAndShrink,
-                ColumnCount = 1,
-                RowCount = 4,
-                MinimumSize = new Size(0, 680)
-            };
-            root.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100f));
-            root.RowStyles.Add(new RowStyle(SizeType.AutoSize));
-            root.RowStyles.Add(new RowStyle(SizeType.AutoSize));
-            root.RowStyles.Add(new RowStyle(SizeType.Percent, 100f));
-            root.RowStyles.Add(new RowStyle(SizeType.AutoSize));
+            if (_chromeApplied) return;
+            _chromeApplied = true;
 
-            root.Controls.Add(CreatePageHeader(), 0, 0);
-            root.Controls.Add(CreateToolbar(), 0, 1);
-            root.Controls.Add(CreateGridSection(), 0, 2);
-            root.Controls.Add(CreateFooterPanel(), 0, 3);
+            AdminPageView.EnsureTheme();
+            AdminPageView.ApplyChrome(this);
 
-            WireScrollRoot(root);
-        }
-
-        private Panel CreatePageHeader() =>
-            AdminUiHelpers.CreatePageHeader(
-                "Manage Customers",
-                "View and maintain customer records, contact details, and order activity.",
-                actions =>
-                {
-                    var btnExport = AdminUiHelpers.CreateWinButton("Export", false, 96);
-                    btnExport.Click += BtnExport_Click;
-                    var btnPrint = AdminUiHelpers.CreateWinButton("Print", false, 96);
-                    btnPrint.Click += BtnPrint_Click;
-                    actions.Controls.Add(btnExport);
-                    actions.Controls.Add(btnPrint);
-                });
-
-        private Panel CreateToolbar()
-        {
-            var panel = new Panel
-            {
-                Dock = DockStyle.Top,
-                Height = 44,
-                Margin = new Padding(0, 0, 0, 12),
-                BackColor = UiTheme.AdminSurface
-            };
-
-            btnAdd = AdminUiHelpers.CreateWinButton("+ Add Customer", primary: true, width: 130);
-            btnAdd.Click += (s, e) => ShowCustomerDialog(null);
-
-            btnEdit = AdminUiHelpers.CreateWinButton("Edit", false, 72);
-            btnEdit.Click += (s, e) =>
-            {
-                if (!_selectedId.HasValue)
-                {
-                    MessageBox.Show("Select a customer to edit.", "Manage Customers",
-                        MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    return;
-                }
-                ShowCustomerDialog(_customers.GetById(_selectedId.Value));
-            };
-
-            btnRemove = AdminUiHelpers.CreateWinButton("Remove", false, 84);
-            btnRemove.Click += BtnRemove_Click;
-
-            btnReload = AdminUiHelpers.CreateWinButton("Reload", false, 84);
-            btnReload.Click += (s, e) => RefreshPage();
-
-            var left = new FlowLayoutPanel
-            {
-                Dock = DockStyle.Left,
-                AutoSize = true,
-                FlowDirection = FlowDirection.LeftToRight,
-                WrapContents = false,
-                BackColor = UiTheme.AdminSurface
-            };
-            left.Controls.Add(btnAdd);
-            left.Controls.Add(btnEdit);
-            left.Controls.Add(btnRemove);
-            left.Controls.Add(btnReload);
-
-            txtSearch = new TextBox { Width = 200 };
-            UiTheme.StyleTextBox(txtSearch);
-            txtSearch.TextChanged += (s, e) => ApplyFilters();
-
-            var right = new FlowLayoutPanel
-            {
-                Dock = DockStyle.Right,
-                AutoSize = true,
-                FlowDirection = FlowDirection.LeftToRight,
-                WrapContents = false,
-                BackColor = UiTheme.AdminSurface,
-                Padding = new Padding(0, 4, 0, 0)
-            };
-            right.Controls.Add(new Label
-            {
-                Text = "Search:",
-                AutoSize = true,
-                Margin = new Padding(0, 6, 6, 0),
-                ForeColor = UiTheme.AdminMuted,
-                BackColor = UiTheme.AdminSurface
-            });
-            right.Controls.Add(txtSearch);
-
-            panel.Controls.Add(right);
-            panel.Controls.Add(left);
-            return panel;
-        }
-
-        private Panel CreateGridSection()
-        {
-            gridCustomers = new DataGridView
-            {
-                Dock = DockStyle.Fill,
-                ReadOnly = true,
-                AllowUserToAddRows = false,
-                AllowUserToDeleteRows = false,
-                RowHeadersVisible = false,
-                SelectionMode = DataGridViewSelectionMode.FullRowSelect,
-                MultiSelect = false,
-                AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill,
-                MinimumSize = new Size(0, 360)
-            };
             UiTheme.ApplyClinicalGrid(gridCustomers);
+            UiTheme.StyleTextBox(txtSearch);
+
+            WirePanelBorder(panelGridOuter);
+            WireStatCard(panelStatTotal, UiTheme.AdminTeal);
+            WireStatCard(panelStatActive, Color.FromArgb(16, 185, 129));
+            WireStatCard(panelStatInactive, UiTheme.AdminMuted);
+        }
+
+        private static void WirePanelBorder(Panel panel)
+        {
+            if (panel == null || panel.Tag as string == "dash-border") return;
+            panel.Tag = "dash-border";
+            panel.Paint += (s, e) =>
+            {
+                var rect = panel.ClientRectangle;
+                rect.Width -= 1;
+                rect.Height -= 1;
+                using (var pen = new Pen(UiTheme.AdminOutline))
+                    e.Graphics.DrawRectangle(pen, rect);
+            };
+        }
+
+        private static void WireStatCard(Panel card, Color accent)
+        {
+            if (card == null || card.Tag as string == "dash-stat") return;
+            card.Tag = "dash-stat";
+            card.Paint += (s, e) =>
+            {
+                var rect = card.ClientRectangle;
+                rect.Width -= 1;
+                rect.Height -= 1;
+                using (var pen = new Pen(UiTheme.AdminOutline))
+                    e.Graphics.DrawRectangle(pen, rect);
+                using (var brush = new SolidBrush(accent))
+                    e.Graphics.FillRectangle(brush, 0, 0, 4, rect.Height);
+            };
+        }
+
+        private void WireRuntimeBehavior()
+        {
+            if (_runtimeWired) return;
+            _runtimeWired = true;
+
+            btnAdd.Click += (s, e) => ShowCustomerDialog(null);
+            btnEdit.Click += BtnEdit_Click;
+            btnRemove.Click += BtnRemove_Click;
+            btnReload.Click += (s, e) => RefreshPage();
+            txtSearch.TextChanged += (s, e) => ApplyFilters();
+            btnExport.Click += BtnExport_Click;
+            btnPrint.Click += BtnPrint_Click;
+            btnPagePrev.Click += (s, e) => ChangePage(-1);
+            btnPageNext.Click += (s, e) => ChangePage(1);
             gridCustomers.CellFormatting += GridCustomers_CellFormatting;
             gridCustomers.SelectionChanged += GridCustomers_SelectionChanged;
-
-            return AdminUiHelpers.CreateSectionPanel("Customer Records", gridCustomers);
         }
 
-        private Panel CreateFooterPanel()
+        private void BtnEdit_Click(object sender, EventArgs e)
         {
-            var footer = new Panel
+            if (!_selectedId.HasValue)
             {
-                Dock = DockStyle.Top,
-                Height = 108,
-                Margin = new Padding(0, 16, 0, 0),
-                BackColor = UiTheme.AdminSurface
-            };
-
-            lblTotalCustomers = new Label();
-            lblActiveCustomers = new Label();
-            lblInactiveCustomers = new Label();
-
-            var statsRow = new TableLayoutPanel
-            {
-                Dock = DockStyle.Left,
-                Width = 520,
-                Height = 108,
-                ColumnCount = 3,
-                RowCount = 1
-            };
-            for (var i = 0; i < 3; i++)
-                statsRow.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 33.33f));
-
-            statsRow.Controls.Add(AdminUiHelpers.CreateStatCard("Total Customers", lblTotalCustomers, UiTheme.AdminTeal), 0, 0);
-            statsRow.Controls.Add(AdminUiHelpers.CreateStatCard("Active", lblActiveCustomers, Color.FromArgb(16, 185, 129)), 1, 0);
-            statsRow.Controls.Add(AdminUiHelpers.CreateStatCard("Inactive", lblInactiveCustomers, UiTheme.AdminMuted), 2, 0);
-
-            btnPagePrev = AdminUiHelpers.CreateWinButton("<", false, 36);
-            btnPagePrev.Height = 32;
-            btnPagePrev.Click += (s, e) => ChangePage(-1);
-            btnPageNext = AdminUiHelpers.CreateWinButton(">", false, 36);
-            btnPageNext.Height = 32;
-            btnPageNext.Click += (s, e) => ChangePage(1);
-            lblPageInfo = new Label
-            {
-                AutoSize = true,
-                Text = "Page 1 of 1",
-                ForeColor = UiTheme.AdminMuted,
-                BackColor = UiTheme.AdminSurface,
-                Margin = new Padding(8, 8, 8, 0)
-            };
-
-            var pager = new FlowLayoutPanel
-            {
-                Dock = DockStyle.Right,
-                AutoSize = true,
-                FlowDirection = FlowDirection.LeftToRight,
-                BackColor = UiTheme.AdminSurface,
-                Padding = new Padding(8, 38, 0, 0)
-            };
-            pager.Controls.Add(btnPagePrev);
-            pager.Controls.Add(lblPageInfo);
-            pager.Controls.Add(btnPageNext);
-
-            footer.Controls.Add(pager);
-            footer.Controls.Add(statsRow);
-            return footer;
+                MessageBox.Show("Select a customer to edit.", "Manage Customers",
+                    MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return;
+            }
+            ShowCustomerDialog(_customers.GetById(_selectedId.Value));
         }
 
         private void LoadCustomers()
         {
+            if (!_servicesReady) return;
+
             var orderLookup = _orders.GetAll()
                 .GroupBy(o => o.CustomerID)
                 .ToDictionary(
