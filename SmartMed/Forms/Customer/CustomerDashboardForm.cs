@@ -8,53 +8,71 @@ namespace SmartMed.UI
 {
     public sealed partial class CustomerDashboardForm : CustomerPageControl
     {
-        private readonly OrderService _orders = new OrderService();
-        private readonly MedicineService _medicines = new MedicineService();
-        private Label _headerSubtitle;
+        private OrderService _orders;
+        private MedicineService _medicines;
+        private bool _servicesReady;
+        private bool _runtimeWired;
+        private bool _chromeApplied;
 
         public CustomerDashboardForm()
         {
             InitializeComponent();
+            if (!IsDesignHost())
+            {
+                _orders = new OrderService();
+                _medicines = new MedicineService();
+                _servicesReady = true;
+            }
         }
 
-        protected override void BuildPageLayout() => BuildContent();
+        protected override bool PreferDesignTimePreview() => !_servicesReady || IsDesignHost();
+
+        protected override void OnLoad(EventArgs e)
+        {
+            base.OnLoad(e);
+            ApplyViewChrome();
+            if (_servicesReady)
+                WireRuntimeBehavior();
+        }
+
+        protected override void BuildPageLayout()
+        {
+            // Layout lives in CustomerDashboardForm.Designer.cs.
+        }
 
         protected override void DoRefreshPage()
         {
-            SyncScrollRootWidth();
+            if (!_servicesReady) return;
+
             var customer = Session.CurrentCustomer;
-            if (_headerSubtitle != null)
-                _headerSubtitle.Text = $"Welcome, {customer?.Name ?? "Customer"} — browse medicines, manage your cart, and track orders.";
-            if (lblCart != null)
-                lblCart.Text = CartService.ItemCount.ToString();
-            if (lblOrders != null)
-            {
-                var orders = _orders.GetByCustomer(customer?.CustomerID ?? 0);
-                lblOrders.Text = orders.Count(o => o.Status != "Delivered").ToString();
-            }
-            if (lblPromotions != null)
-                lblPromotions.Text = _medicines.GetAll().Count(m => _medicines.IsPromotionActive(m)).ToString();
-            if (gridRecent != null)
-            {
-                var recent = _orders.GetByCustomer(customer?.CustomerID ?? 0)
-                    .Take(5)
-                    .Select(o => new
-                    {
-                        OrderRef = $"#SM-{o.OrderID:D4}",
-                        o.OrderDate,
-                        o.Status,
-                        Total = $"LKR {o.TotalAmount:N2}"
-                    })
-                    .ToList();
-                UiTheme.SetGridDataSource(gridRecent, recent);
-                UiTheme.BeautifyGridHeaders(gridRecent);
-            }
+            lblPageSubtitle.Text =
+                $"Welcome, {customer?.Name ?? "Customer"} — browse medicines, manage your cart, and track orders.";
+            lblCart.Text = CartService.ItemCount.ToString();
+
+            var orders = _orders.GetByCustomer(customer?.CustomerID ?? 0);
+            lblOrders.Text = orders.Count(o => o.Status != OrderService.StatusDelivered).ToString();
+            lblPromotions.Text = _medicines.GetAll().Count(m => _medicines.IsPromotionActive(m)).ToString();
+
+            var recent = orders
+                .Take(5)
+                .Select(o => new
+                {
+                    OrderRef = $"#SM-{o.OrderID:D4}",
+                    o.OrderDate,
+                    o.Status,
+                    Total = $"LKR {o.TotalAmount:N2}"
+                })
+                .ToList();
+            UiTheme.SetGridDataSource(gridRecent, recent);
+            UiTheme.BeautifyGridHeaders(gridRecent);
         }
 
         protected override void LoadDesignTimePreview()
         {
-            if (_headerSubtitle != null)
-                _headerSubtitle.Text = "Welcome, Jane Perera — browse medicines, manage your cart, and track orders.";
+            ApplyViewChrome();
+
+            lblPageSubtitle.Text =
+                "Welcome, Jane Perera — browse medicines, manage your cart, and track orders.";
             lblCart.Text = "2";
             lblOrders.Text = "1";
             lblPromotions.Text = "3";
@@ -62,97 +80,60 @@ namespace SmartMed.UI
             UiTheme.BeautifyGridHeaders(gridRecent);
         }
 
-        private void BuildContent()
+        private void ApplyViewChrome()
         {
-            var root = new TableLayoutPanel
-            {
-                AutoSize = true,
-                AutoSizeMode = AutoSizeMode.GrowAndShrink,
-                ColumnCount = 1,
-                MinimumSize = new Size(0, 520)
-            };
-            root.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100f));
-            root.RowStyles.Add(new RowStyle(SizeType.AutoSize));
-            root.RowStyles.Add(new RowStyle(SizeType.AutoSize));
-            root.RowStyles.Add(new RowStyle(SizeType.AutoSize));
-            root.RowStyles.Add(new RowStyle(SizeType.AutoSize));
-            root.RowStyles.Add(new RowStyle(SizeType.AutoSize));
+            if (_chromeApplied) return;
+            _chromeApplied = true;
 
-            var header = AdminUiHelpers.CreatePageHeader("Customer Home",
-                "Browse medicines, manage your cart, and track orders.");
-            foreach (Control c in header.Controls)
-            {
-                if (c is Label lbl && lbl.ForeColor == UiTheme.AdminMuted)
-                {
-                    _headerSubtitle = lbl;
-                    break;
-                }
-            }
-            root.Controls.Add(header, 0, 0);
+            AdminPageView.EnsureTheme();
+            AdminPageView.ApplyChrome(this);
 
-            var stats = new TableLayoutPanel
-            {
-                Dock = DockStyle.Top,
-                ColumnCount = 3,
-                Height = 90,
-                Margin = new Padding(0, 0, 0, 16),
-                BackColor = UiTheme.AdminSurface
-            };
-            stats.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 33.33f));
-            stats.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 33.33f));
-            stats.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 33.34f));
-            lblCart = new Label();
-            lblOrders = new Label();
-            lblPromotions = new Label();
-            stats.Controls.Add(AdminUiHelpers.CreateStatCard("Items in Cart", lblCart, UiTheme.AdminTeal), 0, 0);
-            stats.Controls.Add(AdminUiHelpers.CreateStatCard("Active Orders", lblOrders, Color.FromArgb(59, 130, 246)), 1, 0);
-            stats.Controls.Add(AdminUiHelpers.CreateStatCard("Promotions", lblPromotions, Color.FromArgb(16, 185, 129)), 2, 0);
-            root.Controls.Add(stats, 0, 1);
-
-            root.Controls.Add(new Label
-            {
-                Text = "Recent Orders",
-                Font = UiTheme.FontAt(11f, semibold: true),
-                ForeColor = UiTheme.PrimaryDark,
-                AutoSize = true,
-                Margin = new Padding(0, 0, 0, 8),
-                BackColor = UiTheme.AdminSurface
-            }, 0, 2);
-
-            gridRecent = new DataGridView
-            {
-                Dock = DockStyle.Top,
-                Height = 220,
-                ReadOnly = true,
-                AllowUserToAddRows = false,
-                AllowUserToDeleteRows = false,
-                RowHeadersVisible = false,
-                SelectionMode = DataGridViewSelectionMode.FullRowSelect,
-                AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill,
-                Margin = new Padding(0, 0, 0, 16)
-            };
             UiTheme.ApplyClinicalGrid(gridRecent);
-            root.Controls.Add(gridRecent, 0, 3);
 
-            var actions = new FlowLayoutPanel
-            {
-                AutoSize = true,
-                Margin = new Padding(0, 8, 0, 0),
-                BackColor = UiTheme.AdminSurface
-            };
-            actions.Controls.Add(CreateNavButton("Browse Medicines", () => Navigate(CustomerNavItem.Browse)));
-            actions.Controls.Add(CreateNavButton("View Cart", () => Navigate(CustomerNavItem.Cart), primary: true));
-            actions.Controls.Add(CreateNavButton("Change Password", ShowChangePassword));
-            root.Controls.Add(actions, 0, 4);
-
-            WireScrollRoot(root);
+            WirePanelBorder(panelGridOuter);
+            WireStatCard(panelStatCart, UiTheme.AdminTeal);
+            WireStatCard(panelStatOrders, Color.FromArgb(59, 130, 246));
+            WireStatCard(panelStatPromotions, Color.FromArgb(16, 185, 129));
         }
 
-        private static Button CreateNavButton(string text, Action onClick, bool primary = false)
+        private static void WirePanelBorder(Panel panel)
         {
-            var btn = AdminUiHelpers.CreateWinButton(text, primary, 160);
-            btn.Click += (s, e) => onClick();
-            return btn;
+            if (panel == null || panel.Tag as string == "dash-border") return;
+            panel.Tag = "dash-border";
+            panel.Paint += (s, e) =>
+            {
+                var rect = panel.ClientRectangle;
+                rect.Width -= 1;
+                rect.Height -= 1;
+                using (var pen = new Pen(UiTheme.AdminOutline))
+                    e.Graphics.DrawRectangle(pen, rect);
+            };
+        }
+
+        private static void WireStatCard(Panel card, Color accent)
+        {
+            if (card == null || card.Tag as string == "dash-stat") return;
+            card.Tag = "dash-stat";
+            card.Paint += (s, e) =>
+            {
+                var rect = card.ClientRectangle;
+                rect.Width -= 1;
+                rect.Height -= 1;
+                using (var pen = new Pen(UiTheme.AdminOutline))
+                    e.Graphics.DrawRectangle(pen, rect);
+                using (var brush = new SolidBrush(accent))
+                    e.Graphics.FillRectangle(brush, 0, 0, 4, rect.Height);
+            };
+        }
+
+        private void WireRuntimeBehavior()
+        {
+            if (_runtimeWired) return;
+            _runtimeWired = true;
+
+            btnBrowseMedicines.Click += (s, e) => Navigate(CustomerNavItem.Browse);
+            btnViewCart.Click += (s, e) => Navigate(CustomerNavItem.Cart);
+            btnChangePassword.Click += (s, e) => ShowChangePassword();
         }
 
         private void Navigate(CustomerNavItem item) =>
