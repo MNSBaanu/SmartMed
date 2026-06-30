@@ -404,7 +404,7 @@ namespace SmartMed.UI
             // 
             // panelContent
             // 
-            this.panelContent.AutoScroll = true;
+            this.panelContent.AutoScroll = false;
             this.panelContent.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panelContent.Location = new System.Drawing.Point(260, 56);
             this.panelContent.Name = "panelContent";

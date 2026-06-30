@@ -414,7 +414,7 @@ namespace SmartMed.UI
             // 
             // panelContent
             // 
-            this.panelContent.AutoScroll = true;
+            this.panelContent.AutoScroll = false;
             this.panelContent.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panelContent.Location = new System.Drawing.Point(297, 60);
             this.panelContent.Name = "panelContent";
@@ -423,7 +423,7 @@ namespace SmartMed.UI
             // 
             // AdminHostForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1463, 853);
             this.Controls.Add(this.panelContent);

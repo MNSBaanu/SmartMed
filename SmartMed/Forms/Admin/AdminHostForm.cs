@@ -2,7 +2,6 @@ using System;
 using System.Drawing;
 using System.Windows.Forms;
 using SmartMed.Services;
-using SmartMed.UI;
 
 namespace SmartMed.UI
 {
@@ -15,24 +14,51 @@ namespace SmartMed.UI
         private ReportsForm _reportsPage;
         private AdminNavItem _activeNav = AdminNavItem.Overview;
         private readonly Timer _clockTimer = new Timer { Interval = 30000 };
+        private bool _chromeApplied;
+        private bool _runtimeWired;
+        private bool _avatarWired;
 
         public AdminHostForm()
         {
             InitializeComponent();
             DoubleBuffered = true;
-            UiTheme.ApplyFormFonts(this);
-            UiTheme.ApplyAdminWinFormsShell(
-                this, panelTitleBar, panelMenuBar, panelSidebar, panelContent, panelStatusBar);
-            ApplyProfile();
-            ApplySidebarChrome();
-            ApplyWinControls();
-            WireMenuBar();
+            ApplyViewChrome();
 
             if (DesignHostHelper.IsDesignHost(this))
             {
-                ShowDesignPreview();
+                LoadDesignTimePreview();
                 return;
             }
+
+            WireRuntimeBehavior();
+        }
+
+        protected override void OnLoad(EventArgs e)
+        {
+            base.OnLoad(e);
+            ApplyViewChrome();
+        }
+
+        private void ApplyViewChrome()
+        {
+            if (_chromeApplied) return;
+            _chromeApplied = true;
+
+            UiTheme.ApplyFormFonts(this);
+            UiTheme.ApplyAdminWinFormsShell(
+                this, panelTitleBar, panelMenuBar, panelSidebar, panelContent, panelStatusBar);
+            ApplySidebarChrome();
+            ApplyWinControls();
+            ApplyProfileDisplay();
+        }
+
+        private void WireRuntimeBehavior()
+        {
+            if (_runtimeWired) return;
+            _runtimeWired = true;
+
+            WireProfileActions();
+            WireMenuBar();
 
             SetActiveNav(AdminNavItem.Overview);
             ShowDashboard();
@@ -42,8 +68,11 @@ namespace SmartMed.UI
             UpdateStatusTime();
         }
 
-        private void ShowDesignPreview()
+        private void LoadDesignTimePreview()
         {
+            ApplyViewChrome();
+            SetActiveNav(AdminNavItem.Overview);
+
             var preview = new AdminDashboardForm();
             HostPageHelper.ShowInPanel(panelContent, preview);
             UpdateTitleBar("Operational Dashboard");
@@ -55,28 +84,41 @@ namespace SmartMed.UI
             UiTheme.StyleSidebarProfileFooter(panelProfile, panelAvatar, lblProfileName, lblProfileRole);
         }
 
-        private void ApplyProfile()
+        private void ApplyProfileDisplay()
         {
-            var displayName = Session.CurrentAdmin?.Username ?? "Administrator";
+            var displayName = DesignHostHelper.IsDesignHost(this)
+                ? "Administrator"
+                : (Session.CurrentAdmin?.Username ?? "Administrator");
             lblProfileName.Text = displayName;
             lblProfileRole.Text = "System Admin";
+            WireProfileAvatar();
+        }
 
-            panelProfile.Cursor = Cursors.Hand;
-            panelProfile.Click += (s, e) => ShowChangePasswordDialog();
-            lblProfileName.Cursor = Cursors.Hand;
-            lblProfileName.Click += (s, e) => ShowChangePasswordDialog();
-            lblProfileRole.Cursor = Cursors.Hand;
-            lblProfileRole.Click += (s, e) => ShowChangePasswordDialog();
+        private void WireProfileAvatar()
+        {
+            if (_avatarWired) return;
+            _avatarWired = true;
 
             panelAvatar.Paint += (s, e) =>
             {
                 e.Graphics.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
                 using (var brush = new SolidBrush(UiTheme.AdminTeal))
                     e.Graphics.FillEllipse(brush, 0, 0, panelAvatar.Width - 1, panelAvatar.Height - 1);
-                var initial = displayName.Length > 0 ? displayName.Substring(0, 1).ToUpperInvariant() : "A";
+                var name = lblProfileName.Text ?? string.Empty;
+                var initial = name.Length > 0 ? name.Substring(0, 1).ToUpperInvariant() : "A";
                 TextRenderer.DrawText(e.Graphics, initial, UiTheme.UiFontBold, panelAvatar.ClientRectangle,
                     Color.White, TextFormatFlags.HorizontalCenter | TextFormatFlags.VerticalCenter);
             };
+        }
+
+        private void WireProfileActions()
+        {
+            panelProfile.Cursor = Cursors.Hand;
+            panelProfile.Click += (s, e) => ShowChangePasswordDialog();
+            lblProfileName.Cursor = Cursors.Hand;
+            lblProfileName.Click += (s, e) => ShowChangePasswordDialog();
+            lblProfileRole.Cursor = Cursors.Hand;
+            lblProfileRole.Click += (s, e) => ShowChangePasswordDialog();
         }
 
         private void ShowChangePasswordDialog()

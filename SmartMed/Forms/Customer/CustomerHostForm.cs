@@ -1,7 +1,5 @@
 using System;
-using System.Drawing;
 using System.Windows.Forms;
-using SmartMed.Services;
 
 namespace SmartMed.UI
 {
@@ -14,23 +12,48 @@ namespace SmartMed.UI
         private ProfileManagementForm _profile;
         private CustomerNavItem _activeNav = CustomerNavItem.Home;
         private readonly Timer _clockTimer = new Timer { Interval = 30000 };
+        private bool _chromeApplied;
+        private bool _runtimeWired;
 
         public CustomerHostForm()
         {
             InitializeComponent();
             DoubleBuffered = true;
+            ApplyViewChrome();
+
+            if (DesignHostHelper.IsDesignHost(this))
+            {
+                LoadDesignTimePreview();
+                return;
+            }
+
+            WireRuntimeBehavior();
+        }
+
+        protected override void OnLoad(EventArgs e)
+        {
+            base.OnLoad(e);
+            ApplyViewChrome();
+        }
+
+        private void ApplyViewChrome()
+        {
+            if (_chromeApplied) return;
+            _chromeApplied = true;
+
             UiTheme.ApplyFormFonts(this);
             UiTheme.ApplyAdminWinFormsShell(
                 this, panelTitleBar, panelMenuBar, panelSidebar, panelContent, panelStatusBar);
             ApplySidebarChrome();
             ApplyWinControls();
-            WireMenuBar();
+        }
 
-            if (DesignHostHelper.IsDesignHost(this))
-            {
-                ShowDesignPreview();
-                return;
-            }
+        private void WireRuntimeBehavior()
+        {
+            if (_runtimeWired) return;
+            _runtimeWired = true;
+
+            WireMenuBar();
 
             SetActiveNav(CustomerNavItem.Home);
             ShowHome();
@@ -40,8 +63,11 @@ namespace SmartMed.UI
             UpdateStatusTime();
         }
 
-        private void ShowDesignPreview()
+        private void LoadDesignTimePreview()
         {
+            ApplyViewChrome();
+            SetActiveNav(CustomerNavItem.Home);
+
             var preview = new CustomerDashboardForm();
             HostPageHelper.ShowInPanel(panelContent, preview);
             lblTitleBar.Text = "SmartMed Health Portal - Home";
