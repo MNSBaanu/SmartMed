@@ -12,8 +12,10 @@ namespace SmartMed.UI
     {
         private const int PageSize = 10;
 
-        private readonly OrderService _orders = new OrderService();
-        private readonly CustomerService _customers = new CustomerService();
+        private OrderService _orders;
+        private bool _servicesReady;
+        private bool _runtimeWired;
+        private bool _chromeApplied;
 
         private List<OrderRow> _allRows = new List<OrderRow>();
         private List<OrderRow> _filteredRows = new List<OrderRow>();
@@ -23,18 +25,34 @@ namespace SmartMed.UI
         public ManageOrdersForm()
         {
             InitializeComponent();
+            if (!IsDesignHost())
+            {
+                _orders = new OrderService();
+                _servicesReady = true;
+            }
         }
 
-        protected override void BuildPageLayout() => BuildContent();
+        protected override bool PreferDesignTimePreview() => !_servicesReady || IsDesignHost();
 
-        protected override void DoRefreshPage()
+        protected override void OnLoad(EventArgs e)
         {
-            SyncScrollRootWidth();
-            LoadOrders();
+            base.OnLoad(e);
+            ApplyViewChrome();
+            if (_servicesReady)
+                WireRuntimeBehavior();
         }
+
+        protected override void BuildPageLayout()
+        {
+            // Layout lives in ManageOrdersForm.Designer.cs.
+        }
+
+        protected override void DoRefreshPage() => LoadOrders();
 
         protected override void LoadDesignTimePreview()
         {
+            ApplyViewChrome();
+
             var now = DateTime.Now;
             _allRows = new List<OrderRow>
             {
@@ -73,340 +91,71 @@ namespace SmartMed.UI
             UpdateStats();
         }
 
-        private void BuildContent()
+        private void ApplyViewChrome()
         {
-            var root = new TableLayoutPanel
-            {
-                AutoSize = true,
-                AutoSizeMode = AutoSizeMode.GrowAndShrink,
-                ColumnCount = 1,
-                RowCount = 4,
-                MinimumSize = new Size(0, 700)
-            };
-            root.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100f));
-            root.RowStyles.Add(new RowStyle(SizeType.AutoSize));
-            root.RowStyles.Add(new RowStyle(SizeType.AutoSize));
-            root.RowStyles.Add(new RowStyle(SizeType.Percent, 100f));
-            root.RowStyles.Add(new RowStyle(SizeType.AutoSize));
+            if (_chromeApplied) return;
+            _chromeApplied = true;
 
-            root.Controls.Add(CreatePageHeader(), 0, 0);
-            root.Controls.Add(CreateFilterPanel(), 0, 1);
-            root.Controls.Add(CreateGridPanel(), 0, 2);
-            root.Controls.Add(CreateFooterPanel(), 0, 3);
+            AdminPageView.EnsureTheme();
+            AdminPageView.ApplyChrome(this);
 
-            WireScrollRoot(root);
-        }
-
-        private static Panel CreatePageHeader()
-        {
-            var header = new Panel
-            {
-                Dock = DockStyle.Top,
-                Height = 72,
-                Margin = new Padding(0, 0, 0, 16),
-                BackColor = UiTheme.AdminSurface
-            };
-            header.Controls.Add(new Label
-            {
-                Text = "Monitor and process pharmaceutical orders across all clinical departments.",
-                Font = UiTheme.UiFont,
-                ForeColor = UiTheme.AdminMuted,
-                Location = new Point(0, 40),
-                AutoSize = true,
-                BackColor = UiTheme.AdminSurface
-            });
-            header.Controls.Add(new Label
-            {
-                Text = "Manage Orders",
-                Font = UiTheme.FontAt(20f, bold: true),
-                ForeColor = UiTheme.PrimaryDark,
-                Location = new Point(0, 4),
-                AutoSize = true,
-                BackColor = UiTheme.AdminSurface
-            });
-            return header;
-        }
-
-        private Panel CreateFilterPanel()
-        {
-            var outer = new Panel
-            {
-                Dock = DockStyle.Top,
-                AutoSize = true,
-                Margin = new Padding(0, 0, 0, 16),
-                Padding = new Padding(16, 20, 16, 16),
-                BackColor = Color.FromArgb(238, 245, 244)
-            };
-            outer.Paint += (s, e) =>
-            {
-                var rect = outer.ClientRectangle;
-                rect.Width -= 1;
-                rect.Height -= 1;
-                using (var pen = new Pen(UiTheme.AdminOutline))
-                    e.Graphics.DrawRectangle(pen, rect);
-            };
-
-            var badge = new Label
-            {
-                Text = "  Filter Options  ",
-                AutoSize = true,
-                Font = UiTheme.FontAt(8.25f, semibold: true),
-                ForeColor = Color.White,
-                BackColor = Color.FromArgb(12, 46, 43),
-                Location = new Point(12, 0)
-            };
-
-            txtSearch = new TextBox { Width = 260 };
-            UiTheme.StyleTextBox(txtSearch);
-
-            cmbStatus = new ComboBox
-            {
-                DropDownStyle = ComboBoxStyle.DropDownList,
-                Width = 160
-            };
-            UiTheme.StyleComboBox(cmbStatus);
-            cmbStatus.Items.AddRange(new object[]
-            {
-                "All Statuses",
-                OrderService.StatusPending,
-                OrderService.StatusReadyForPickup,
-                OrderService.StatusDelivered,
-                "Flagged"
-            });
-            cmbStatus.SelectedIndex = 0;
-
-            dtpFrom = new DateTimePicker { Format = DateTimePickerFormat.Short, Width = 120 };
-            dtpTo = new DateTimePicker { Format = DateTimePickerFormat.Short, Width = 120 };
-            chkDateRange = new CheckBox
-            {
-                Text = "Use date range",
-                AutoSize = true,
-                ForeColor = UiTheme.AdminOnSurface,
-                BackColor = Color.FromArgb(238, 245, 244)
-            };
-
-            var flow = new FlowLayoutPanel
-            {
-                Dock = DockStyle.Top,
-                AutoSize = true,
-                FlowDirection = FlowDirection.LeftToRight,
-                WrapContents = true,
-                Padding = new Padding(0, 12, 0, 0),
-                BackColor = Color.FromArgb(238, 245, 244)
-            };
-
-            flow.Controls.Add(CreateFilterField("Search Orders:", CreateSearchBox()));
-            flow.Controls.Add(CreateFilterField("Status Category:", cmbStatus));
-            flow.Controls.Add(CreateFilterField("Service Date Range:", CreateDateRangePanel()));
-
-            var actions = new FlowLayoutPanel
-            {
-                FlowDirection = FlowDirection.LeftToRight,
-                AutoSize = true,
-                WrapContents = false,
-                Margin = new Padding(0, 22, 0, 0),
-                BackColor = Color.FromArgb(238, 245, 244)
-            };
-            var btnApply = CreateWinButton("Apply Filters", primary: true, width: 120);
-            btnApply.Click += (s, e) => ApplyFilters();
-            var btnExport = CreateWinButton("Export Data", primary: false, width: 110);
-            btnExport.Click += BtnExport_Click;
-            actions.Controls.Add(btnApply);
-            actions.Controls.Add(btnExport);
-            flow.Controls.Add(actions);
-
-            outer.Controls.Add(flow);
-            outer.Controls.Add(badge);
-            badge.BringToFront();
-            return outer;
-        }
-
-        private Panel CreateSearchBox()
-        {
-            var wrap = new Panel
-            {
-                Width = 280,
-                Height = 30,
-                BackColor = Color.White
-            };
-            wrap.Paint += (s, e) =>
-            {
-                var rect = wrap.ClientRectangle;
-                rect.Width -= 1;
-                rect.Height -= 1;
-                using (var pen = new Pen(UiTheme.AdminOutline))
-                    e.Graphics.DrawRectangle(pen, rect);
-            };
-            txtSearch.Dock = DockStyle.Fill;
-            txtSearch.BorderStyle = BorderStyle.None;
-            txtSearch.Margin = new Padding(8, 0, 8, 0);
-            wrap.Controls.Add(txtSearch);
-            return wrap;
-        }
-
-        private Panel CreateDateRangePanel()
-        {
-            var panel = new FlowLayoutPanel
-            {
-                AutoSize = true,
-                FlowDirection = FlowDirection.LeftToRight,
-                WrapContents = false,
-                BackColor = Color.FromArgb(238, 245, 244)
-            };
-            panel.Controls.Add(chkDateRange);
-            panel.Controls.Add(dtpFrom);
-            panel.Controls.Add(new Label
-            {
-                Text = "to",
-                AutoSize = true,
-                Margin = new Padding(6, 6, 6, 0),
-                ForeColor = UiTheme.AdminMuted,
-                BackColor = Color.FromArgb(238, 245, 244)
-            });
-            panel.Controls.Add(dtpTo);
-            return panel;
-        }
-
-        private static Panel CreateFilterField(string label, Control input)
-        {
-            var wrap = new Panel
-            {
-                AutoSize = true,
-                Margin = new Padding(0, 0, 20, 8),
-                BackColor = Color.FromArgb(238, 245, 244)
-            };
-            var lbl = new Label
-            {
-                Text = label,
-                AutoSize = true,
-                Font = UiTheme.FontAt(8.25f, semibold: true),
-                ForeColor = UiTheme.PrimaryDark,
-                Dock = DockStyle.Top,
-                BackColor = Color.FromArgb(238, 245, 244)
-            };
-            input.Margin = new Padding(0, 4, 0, 0);
-            wrap.Controls.Add(input);
-            wrap.Controls.Add(lbl);
-            return wrap;
-        }
-
-        private Panel CreateGridPanel()
-        {
-            gridOrders = new DataGridView
-            {
-                Dock = DockStyle.Fill,
-                ReadOnly = true,
-                AllowUserToAddRows = false,
-                AllowUserToDeleteRows = false,
-                RowHeadersVisible = false,
-                SelectionMode = DataGridViewSelectionMode.FullRowSelect,
-                MultiSelect = false,
-                AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill,
-                MinimumSize = new Size(0, 280)
-            };
             UiTheme.ApplyClinicalGrid(gridOrders);
-            gridOrders.CellFormatting += GridOrders_CellFormatting;
-            gridOrders.CellContentClick += GridOrders_CellContentClick;
-            gridOrders.SelectionChanged += GridOrders_SelectionChanged;
+            UiTheme.StyleTextBox(txtSearch);
+            UiTheme.StyleComboBox(cmbStatus);
 
-            var outer = new Panel
+            WirePanelBorder(panelFilterOuter);
+            WirePanelBorder(panelGridOuter);
+            WireStatCard(panelStatVolume, UiTheme.AdminTeal);
+            WireStatCard(panelStatAvg, Color.FromArgb(41, 163, 122));
+            WireStatCard(panelStatFlags, UiTheme.Danger);
+            WireSearchWrapBorder(panelSearchWrap);
+
+            if (cmbStatus.Items.Count == 0)
             {
-                Dock = DockStyle.Fill,
-                BackColor = Color.White,
-                Padding = new Padding(1),
-                Margin = new Padding(0, 0, 0, 16)
-            };
-            outer.Paint += (s, e) =>
+                cmbStatus.Items.AddRange(new object[]
+                {
+                    "All Statuses",
+                    OrderService.StatusPending,
+                    OrderService.StatusReadyForPickup,
+                    OrderService.StatusDelivered,
+                    "Flagged"
+                });
+                cmbStatus.SelectedIndex = 0;
+            }
+        }
+
+        private static void WirePanelBorder(Panel panel)
+        {
+            if (panel == null || panel.Tag as string == "dash-border") return;
+            panel.Tag = "dash-border";
+            panel.Paint += (s, e) =>
             {
-                var rect = outer.ClientRectangle;
+                var rect = panel.ClientRectangle;
                 rect.Width -= 1;
                 rect.Height -= 1;
                 using (var pen = new Pen(UiTheme.AdminOutline))
                     e.Graphics.DrawRectangle(pen, rect);
             };
-            outer.Controls.Add(gridOrders);
-            return outer;
         }
 
-        private Panel CreateFooterPanel()
+        private static void WireSearchWrapBorder(Panel panel)
         {
-            var footer = new Panel
+            if (panel == null || panel.Tag as string == "search-wrap") return;
+            panel.Tag = "search-wrap";
+            panel.Paint += (s, e) =>
             {
-                Dock = DockStyle.Top,
-                Height = 72,
-                BackColor = UiTheme.AdminSurface
-            };
-
-            lblVolume = CreateFooterStat("VOLUME", UiTheme.AdminTeal);
-            lblAvgTime = CreateFooterStat("AVG TIME", Color.FromArgb(41, 163, 122));
-            lblFlags = CreateFooterStat("FLAGS", UiTheme.Danger);
-
-            var stats = new FlowLayoutPanel
-            {
-                Dock = DockStyle.Left,
-                AutoSize = true,
-                FlowDirection = FlowDirection.LeftToRight,
-                BackColor = UiTheme.AdminSurface
-            };
-            stats.Controls.Add(WrapFooterCard(lblVolume, UiTheme.AdminTeal));
-            stats.Controls.Add(WrapFooterCard(lblAvgTime, Color.FromArgb(41, 163, 122)));
-            stats.Controls.Add(WrapFooterCard(lblFlags, UiTheme.Danger));
-
-            btnPagePrev = CreateWinButton("<", false, 36);
-            btnPagePrev.Height = 32;
-            btnPagePrev.Click += (s, e) => ChangePage(-1);
-            btnPageNext = CreateWinButton(">", false, 36);
-            btnPageNext.Height = 32;
-            btnPageNext.Click += (s, e) => ChangePage(1);
-            lblPageInfo = new Label
-            {
-                AutoSize = true,
-                Text = "Page 1",
-                ForeColor = UiTheme.AdminMuted,
-                BackColor = UiTheme.AdminSurface,
-                Margin = new Padding(8, 8, 8, 0)
-            };
-
-            var pager = new FlowLayoutPanel
-            {
-                Dock = DockStyle.Right,
-                AutoSize = true,
-                FlowDirection = FlowDirection.LeftToRight,
-                BackColor = UiTheme.AdminSurface,
-                Padding = new Padding(8, 4, 0, 0)
-            };
-            pager.Controls.Add(btnPagePrev);
-            pager.Controls.Add(lblPageInfo);
-            pager.Controls.Add(btnPageNext);
-
-            footer.Controls.Add(pager);
-            footer.Controls.Add(stats);
-            return footer;
-        }
-
-        private static Label CreateFooterStat(string title, Color accent)
-        {
-            return new Label
-            {
-                Text = "0",
-                Font = UiTheme.FontAt(16f, bold: true),
-                ForeColor = UiTheme.PrimaryDark,
-                AutoSize = true,
-                Tag = title,
-                BackColor = Color.White
+                var rect = panel.ClientRectangle;
+                rect.Width -= 1;
+                rect.Height -= 1;
+                using (var pen = new Pen(UiTheme.AdminOutline))
+                    e.Graphics.DrawRectangle(pen, rect);
             };
         }
 
-        private static Panel WrapFooterCard(Label valueLabel, Color accent)
+        private static void WireStatCard(Panel card, Color accent)
         {
-            var card = new Panel
-            {
-                Width = 130,
-                Height = 56,
-                Margin = new Padding(0, 0, 12, 0),
-                Padding = new Padding(12, 8, 8, 8),
-                BackColor = Color.White
-            };
+            if (card == null || card.Tag as string == "dash-stat") return;
+            card.Tag = "dash-stat";
             card.Paint += (s, e) =>
             {
                 var rect = card.ClientRectangle;
@@ -417,21 +166,26 @@ namespace SmartMed.UI
                 using (var brush = new SolidBrush(accent))
                     e.Graphics.FillRectangle(brush, 0, 0, 4, rect.Height);
             };
-            card.Controls.Add(valueLabel);
-            card.Controls.Add(new Label
-            {
-                Text = valueLabel.Tag?.ToString() ?? "",
-                Dock = DockStyle.Top,
-                Height = 14,
-                Font = UiTheme.FontAt(7.5f, semibold: true),
-                ForeColor = UiTheme.AdminMuted,
-                BackColor = Color.White
-            });
-            return card;
+        }
+
+        private void WireRuntimeBehavior()
+        {
+            if (_runtimeWired) return;
+            _runtimeWired = true;
+
+            btnApplyFilters.Click += (s, e) => ApplyFilters();
+            btnExport.Click += BtnExport_Click;
+            btnPagePrev.Click += (s, e) => ChangePage(-1);
+            btnPageNext.Click += (s, e) => ChangePage(1);
+            gridOrders.CellFormatting += GridOrders_CellFormatting;
+            gridOrders.CellContentClick += GridOrders_CellContentClick;
+            gridOrders.SelectionChanged += GridOrders_SelectionChanged;
         }
 
         private void LoadOrders()
         {
+            if (!_servicesReady) return;
+
             _allRows = _orders.GetAll()
                 .OrderByDescending(o => o.OrderDate)
                 .Select(BuildRow)
@@ -718,12 +472,12 @@ namespace SmartMed.UI
                 });
                 dlg.Controls.Add(cmb);
 
-                var btnRx = CreateWinButton("View Rx", false, 90);
+                var btnRx = AdminUiHelpers.CreateWinButton("View Rx", false, 90);
                 btnRx.Left = 16;
                 btnRx.Top = 100;
                 btnRx.Click += (s, e) => OpenPrescription(orderId);
 
-                var btnVerify = CreateWinButton("Verify Rx", true, 90);
+                var btnVerify = AdminUiHelpers.CreateWinButton("Verify Rx", true, 90);
                 btnVerify.Left = 112;
                 btnVerify.Top = 100;
                 btnVerify.Click += (s, e) =>
@@ -739,7 +493,7 @@ namespace SmartMed.UI
                     }
                 };
 
-                var btnReject = CreateWinButton("Reject Rx", false, 90);
+                var btnReject = AdminUiHelpers.CreateWinButton("Reject Rx", false, 90);
                 btnReject.Left = 208;
                 btnReject.Top = 100;
                 btnReject.Click += (s, e) =>
@@ -760,11 +514,11 @@ namespace SmartMed.UI
                     }
                 };
 
-                var btnSave = CreateWinButton("Update", true, 90);
+                var btnSave = AdminUiHelpers.CreateWinButton("Update", true, 90);
                 btnSave.Left = 246;
                 btnSave.Top = 140;
                 btnSave.DialogResult = DialogResult.OK;
-                var btnCancel = CreateWinButton("Cancel", false, 90);
+                var btnCancel = AdminUiHelpers.CreateWinButton("Cancel", false, 90);
                 btnCancel.Left = 150;
                 btnCancel.Top = 140;
                 btnCancel.DialogResult = DialogResult.Cancel;
@@ -848,37 +602,6 @@ namespace SmartMed.UI
                     MessageBox.Show(ex.Message, "Export Failed", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 }
             }
-        }
-
-        private static Button CreateWinButton(string text, bool primary, int width)
-        {
-            var btn = new Button
-            {
-                Text = text,
-                Width = width,
-                Height = 30,
-                FlatStyle = FlatStyle.Flat,
-                Font = UiTheme.UiFont,
-                Cursor = Cursors.Hand,
-                Margin = new Padding(0, 0, 8, 0)
-            };
-            btn.FlatAppearance.BorderSize = 1;
-            if (primary)
-            {
-                btn.BackColor = Color.FromArgb(12, 46, 43);
-                btn.ForeColor = Color.White;
-                btn.FlatAppearance.BorderColor = UiTheme.AdminTealDark;
-                btn.FlatAppearance.MouseOverBackColor = Color.FromArgb(59, 109, 100);
-            }
-            else
-            {
-                btn.BackColor = Color.White;
-                btn.ForeColor = UiTheme.AdminOnSurface;
-                btn.FlatAppearance.BorderColor = UiTheme.AdminOutline;
-                btn.FlatAppearance.MouseOverBackColor = Color.FromArgb(238, 245, 244);
-            }
-            btn.UseVisualStyleBackColor = false;
-            return btn;
         }
 
         private sealed class OrderRow
