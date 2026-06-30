@@ -919,16 +919,9 @@ namespace SmartMed.UI
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(244)))), ((int)(((byte)(251)))), ((int)(((byte)(250)))));
             this.ClientSize = new System.Drawing.Size(1060, 720);
-            this.ControlBox = false;
             this.Controls.Add(this.panelScrollHost);
             this.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F);
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
-            this.MaximizeBox = false;
-            this.MinimizeBox = false;
             this.Name = "AdminDashboardForm";
-            this.ShowIcon = false;
-            this.ShowInTaskbar = false;
-            this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;
             this.Text = "Operational Dashboard";
             this.panelScrollHost.ResumeLayout(false);
             this.panelScrollHost.PerformLayout();

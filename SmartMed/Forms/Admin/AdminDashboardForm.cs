@@ -8,8 +8,7 @@ using SmartMed.Services;
 
 namespace SmartMed.UI
 {
-    [DesignerCategory("Default")]
-    public sealed partial class AdminDashboardForm : Form
+    public sealed partial class AdminDashboardForm : AdminPageControl
     {
         private ReportService _reports;
         private OrderService _orders;
@@ -23,42 +22,33 @@ namespace SmartMed.UI
         public AdminDashboardForm()
         {
             InitializeComponent();
-            AdminPageControl.ConfigureEmbeddedPageShell(this);
-            ApplyViewChrome();
-            if (!DesignHostHelper.IsDesignHost(this))
+            if (!IsDesignHost())
             {
                 _reports = new ReportService();
                 _orders = new OrderService();
                 _medicines = new MedicineService();
                 _servicesReady = true;
-                WireRuntimeBehavior();
-            }
-            else
-            {
-                LoadDesignTimePreview();
             }
         }
+
+        protected override bool PreferDesignTimePreview() => !_servicesReady || IsDesignHost();
+
+        public void RefreshData() => RefreshPage();
 
         protected override void OnLoad(EventArgs e)
         {
             base.OnLoad(e);
             ApplyViewChrome();
-            if (DesignHostHelper.IsDesignHost(this))
-                LoadDesignTimePreview();
-            else if (_servicesReady)
-            {
+            if (_servicesReady)
                 WireRuntimeBehavior();
-                LoadDashboardData();
-            }
         }
 
-        public void RefreshData()
+        protected override void BuildPageLayout()
         {
-            if (DesignHostHelper.IsDesignHost(this))
-                LoadDesignTimePreview();
-            else
-                LoadDashboardData();
+            // Layout lives in AdminDashboardForm.Designer.cs (same pattern as Login/Registration).
         }
+
+        protected override void DoRefreshPage() => LoadDashboardData();
 
         private void ApplyViewChrome()
         {
@@ -138,8 +128,9 @@ namespace SmartMed.UI
             lblSearchHint.Click += (s, e) => txtSearch.Focus();
         }
 
-        private void LoadDesignTimePreview()
+        protected override void LoadDesignTimePreview()
         {
+            ApplyViewChrome();
             lblStockValue.Text = "128";
             lblOrdersValue.Text = "4";
             lblSalesValue.Text = "245,600";
