@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
@@ -8,20 +9,75 @@ using SmartMed.UI;
 
 namespace SmartMed.UI
 {
+    [DesignerCategory("Default")]
     public sealed partial class AdminDashboardForm : AdminPageControl
     {
-        private readonly ReportService _reports = new ReportService();
-        private readonly OrderService _orders = new OrderService();
-        private readonly MedicineService _medicines = new MedicineService();
+        private ReportService _reports;
+        private OrderService _orders;
+        private MedicineService _medicines;
+        private bool _servicesReady;
 
         private List<object> _recentRows = new List<object>();
+        private Button _btnRefresh;
+        private Button _btnNewOrder;
+        private bool _runtimeWired;
+
+        static AdminDashboardForm()
+        {
+            try
+            {
+                UiTheme.Init();
+            }
+            catch
+            {
+                // Designer host may initialize fonts later.
+            }
+        }
 
         public AdminDashboardForm()
         {
             InitializeComponent();
+            if (IsDesignHost())
+                EnsurePageContent();
+            ApplyViewChrome();
+            if (!IsDesignHost())
+            {
+                _reports = new ReportService();
+                _orders = new OrderService();
+                _medicines = new MedicineService();
+                _servicesReady = true;
+            }
         }
 
         public void RefreshData() => RefreshPage();
+
+        protected override void OnLoad(EventArgs e)
+        {
+            base.OnLoad(e);
+            ApplyViewChrome();
+            if (!IsDesignHost())
+                WireRuntimeBehavior();
+        }
+
+        private void ApplyViewChrome()
+        {
+            AdminPageView.ApplyChrome(this);
+            SyncScrollRootWidth();
+        }
+
+        /// <summary>Runtime-only handlers that touch services or navigation.</summary>
+        private void WireRuntimeBehavior()
+        {
+            if (_runtimeWired) return;
+            _runtimeWired = true;
+
+            if (txtSearch != null)
+                txtSearch.TextChanged += (s, e) => ApplyRecentSearch();
+            if (_btnRefresh != null)
+                _btnRefresh.Click += (s, e) => LoadDashboardData();
+            if (_btnNewOrder != null)
+                _btnNewOrder.Click += (s, e) => GoToAdminSection(AdminNavItem.Orders);
+        }
 
         protected override void BuildPageLayout() => BuildContent();
 
@@ -33,6 +89,8 @@ namespace SmartMed.UI
 
         protected override void LoadDesignTimePreview()
         {
+            AdminPageView.EnsureTheme();
+
             lblStockValue.Text = "128";
             lblOrdersValue.Text = "4";
             lblSalesValue.Text = "245,600";
@@ -137,17 +195,14 @@ namespace SmartMed.UI
 
             txtSearch.Margin = new Padding(0);
             UiTheme.StyleTextBox(txtSearch);
-            txtSearch.TextChanged += (s, e) => ApplyRecentSearch();
 
             var searchWrap = CreateSearchBox();
-            var btnRefresh = CreateWinButton("Refresh", primary: false, width: 96);
-            btnRefresh.Click += (s, e) => LoadDashboardData();
-            var btnNewOrder = CreateWinButton("+ New Order", primary: true, width: 118);
-            btnNewOrder.Click += (s, e) => GoToAdminSection(AdminNavItem.Orders);
+            _btnRefresh = CreateWinButton("Refresh", primary: false, width: 96);
+            _btnNewOrder = CreateWinButton("+ New Order", primary: true, width: 118);
 
             actions.Controls.Add(searchWrap);
-            actions.Controls.Add(btnRefresh);
-            actions.Controls.Add(btnNewOrder);
+            actions.Controls.Add(_btnRefresh);
+            actions.Controls.Add(_btnNewOrder);
             header.Controls.Add(actions);
             return header;
         }
@@ -518,6 +573,9 @@ namespace SmartMed.UI
 
         private void LoadDashboardData()
         {
+            if (IsDesignHost() || !_servicesReady)
+                return;
+
             lblStockValue.Text = _medicines.GetAll().Count.ToString("N0");
             lblOrdersValue.Text = _orders.GetAll().Count(o => o.Status == OrderService.StatusPending).ToString("N0");
             lblSalesValue.Text = _reports.TotalSales.ToString("N0");

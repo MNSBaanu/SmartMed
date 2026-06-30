@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Drawing;
 using System.Drawing.Text;
 using System.IO;
@@ -133,8 +134,13 @@ namespace SmartMed.UI
 
             if (_familyRegular == null)
             {
-                throw new InvalidOperationException(
-                    "Hanken Grotesk font files are required in Assets/Fonts (Regular, SemiBold, Bold).");
+                if (LicenseManager.UsageMode == LicenseUsageMode.Designtime)
+                    UseDesignTimeFontFallback();
+                else
+                {
+                    throw new InvalidOperationException(
+                        "Hanken Grotesk font files are required in Assets/Fonts (Regular, SemiBold, Bold).");
+                }
             }
 
             _uiFont = new Font(_familyRegular, FontSize, FontStyle.Regular, GraphicsUnit.Point);
@@ -150,6 +156,19 @@ namespace SmartMed.UI
             _uiFontTitle = _familyBold != null
                 ? new Font(_familyBold, 16F, FontStyle.Regular, GraphicsUnit.Point)
                 : new Font(_familySemiBold ?? _familyRegular, 16F, FontStyle.Regular, GraphicsUnit.Point);
+        }
+
+        private static void UseDesignTimeFontFallback()
+        {
+            var family = SystemFonts.MessageBoxFont.FontFamily;
+            _familyRegular = family;
+            _familySemiBold = family;
+            _familyBold = family;
+            _uiFont = new Font(family, FontSize, FontStyle.Regular, GraphicsUnit.Point);
+            _uiFontBold = new Font(family, FontSize, FontStyle.Bold, GraphicsUnit.Point);
+            _uiFontSemibold = new Font(family, 10F, FontStyle.Bold, GraphicsUnit.Point);
+            _uiFontAuthTitle = new Font(family, 14F, FontStyle.Bold, GraphicsUnit.Point);
+            _uiFontTitle = new Font(family, 16F, FontStyle.Bold, GraphicsUnit.Point);
         }
 
         private static void TryLoadBundledFonts()

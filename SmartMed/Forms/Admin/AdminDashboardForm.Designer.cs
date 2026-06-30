@@ -1,6 +1,6 @@
 namespace SmartMed.UI
 {
-    partial class AdminDashboardForm
+    public sealed partial class AdminDashboardForm
     {
         private System.ComponentModel.IContainer components = null;
 
@@ -20,7 +20,7 @@ namespace SmartMed.UI
             // AdminDashboardForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
             this.Name = "AdminDashboardForm";
             this.Size = new System.Drawing.Size(1060, 720);
             this.ResumeLayout(false);

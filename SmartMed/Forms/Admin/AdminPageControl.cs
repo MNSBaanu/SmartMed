@@ -11,18 +11,28 @@ namespace SmartMed.UI
         void SyncScrollRootWidth(int fallback);
     }
 
-    public abstract class AdminPageControl : UserControl, IAdminPage
+    [ToolboxItem(false)]
+    public class AdminPageControl : UserControl, IAdminPage
     {
         private bool _pageBuilt;
 
         protected Panel ScrollHost { get; private set; }
         protected Control ScrollRoot { get; private set; }
 
-        protected AdminPageControl()
+        public AdminPageControl()
         {
             DoubleBuffered = true;
-            BackColor = UiTheme.AdminSurface;
-            Font = UiTheme.UiFont;
+        }
+
+        public override ISite Site
+        {
+            get => base.Site;
+            set
+            {
+                base.Site = value;
+                if (IsDesignHost())
+                    EnsurePageContent();
+            }
         }
 
         protected bool IsDesignHost() => DesignHostHelper.IsDesignHost(this);
@@ -44,17 +54,20 @@ namespace SmartMed.UI
             if (_pageBuilt)
                 return;
 
-            _pageBuilt = true;
+            AdminPageView.EnsureTheme();
+            AdminPageView.ApplyChrome(this);
+
             BuildPageLayout();
             SyncScrollRootWidth();
             if (IsDesignHost())
                 LoadDesignTimePreview();
             else
                 DoRefreshPage();
+            _pageBuilt = true;
         }
 
-        protected abstract void BuildPageLayout();
-        protected abstract void DoRefreshPage();
+        protected virtual void BuildPageLayout() { }
+        protected virtual void DoRefreshPage() { }
         protected virtual void LoadDesignTimePreview() { }
 
         public void RefreshPage()
