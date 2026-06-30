@@ -8,25 +8,45 @@ namespace SmartMed.UI
 {
     public sealed partial class TrackOrdersForm : CustomerPageControl
     {
-        private readonly OrderService _orders = new OrderService();
-        private readonly MedicineService _medicines = new MedicineService();
+        private OrderService _orders;
+        private MedicineService _medicines;
+        private bool _servicesReady;
+        private bool _runtimeWired;
+        private bool _chromeApplied;
         private int? _selectedOrderId;
 
         public TrackOrdersForm()
         {
             InitializeComponent();
+            if (!IsDesignHost())
+            {
+                _orders = new OrderService();
+                _medicines = new MedicineService();
+                _servicesReady = true;
+            }
         }
 
-        protected override void BuildPageLayout() => BuildContent();
+        protected override bool PreferDesignTimePreview() => !_servicesReady || IsDesignHost();
 
-        protected override void DoRefreshPage()
+        protected override void OnLoad(EventArgs e)
         {
-            SyncScrollRootWidth();
-            RefreshOrders();
+            base.OnLoad(e);
+            ApplyViewChrome();
+            if (_servicesReady)
+                WireRuntimeBehavior();
         }
+
+        protected override void BuildPageLayout()
+        {
+            // Layout lives in TrackOrdersForm.Designer.cs.
+        }
+
+        protected override void DoRefreshPage() => RefreshOrders();
 
         protected override void LoadDesignTimePreview()
         {
+            ApplyViewChrome();
+
             UiTheme.SetGridDataSource(gridOrders, DesignTimePreviewData.TrackOrderRows());
             if (gridOrders.Columns.Contains("OrderID"))
                 gridOrders.Columns["OrderID"].Visible = false;
@@ -36,94 +56,51 @@ namespace SmartMed.UI
             _selectedOrderId = 1;
         }
 
-        private void BuildContent()
+        private void ApplyViewChrome()
         {
-            gridOrders = new DataGridView
-            {
-                Dock = DockStyle.Fill,
-                Height = 220,
-                ReadOnly = true,
-                AllowUserToAddRows = false,
-                AllowUserToDeleteRows = false,
-                RowHeadersVisible = false,
-                SelectionMode = DataGridViewSelectionMode.FullRowSelect,
-                AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill,
-                Margin = new Padding(0, 0, 0, 12)
-            };
-            UiTheme.ApplyClinicalGrid(gridOrders);
-            gridOrders.SelectionChanged += GridOrders_SelectionChanged;
-            gridOrders.CellDoubleClick += GridOrders_CellDoubleClick;
+            if (_chromeApplied) return;
+            _chromeApplied = true;
 
-            gridItems = new DataGridView
-            {
-                Dock = DockStyle.Fill,
-                Height = 180,
-                ReadOnly = true,
-                AllowUserToAddRows = false,
-                AllowUserToDeleteRows = false,
-                RowHeadersVisible = false,
-                SelectionMode = DataGridViewSelectionMode.FullRowSelect,
-                AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill
-            };
+            AdminPageView.EnsureTheme();
+            AdminPageView.ApplyChrome(this);
+
+            UiTheme.ApplyClinicalGrid(gridOrders);
             UiTheme.ApplyClinicalGrid(gridItems);
 
-            var root = new TableLayoutPanel
-            {
-                AutoSize = true,
-                ColumnCount = 1,
-                MinimumSize = new Size(0, 520),
-                BackColor = UiTheme.AdminSurface
-            };
-            root.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100f));
-            root.RowStyles.Add(new RowStyle(SizeType.AutoSize));
-            root.RowStyles.Add(new RowStyle(SizeType.AutoSize));
-            root.RowStyles.Add(new RowStyle(SizeType.Absolute, 220f));
-            root.RowStyles.Add(new RowStyle(SizeType.AutoSize));
-            root.RowStyles.Add(new RowStyle(SizeType.Absolute, 180f));
-
-            root.Controls.Add(AdminUiHelpers.CreatePageHeader("My Orders",
-                "View order history, cancel pending orders, and export receipts."), 0, 0);
-            root.Controls.Add(CreateActionsPanel(), 0, 1);
-            root.Controls.Add(gridOrders, 0, 2);
-            root.Controls.Add(new Label
-            {
-                Text = "Order Items",
-                Font = UiTheme.FontAt(11f, semibold: true),
-                ForeColor = UiTheme.PrimaryDark,
-                AutoSize = true,
-                Margin = new Padding(0, 12, 0, 8),
-                BackColor = UiTheme.AdminSurface
-            }, 0, 3);
-            root.Controls.Add(gridItems, 0, 4);
-
-            WireScrollRoot(root);
+            WirePanelBorder(panelOrdersOuter);
+            WirePanelBorder(panelItemsOuter);
         }
 
-        private FlowLayoutPanel CreateActionsPanel()
+        private static void WirePanelBorder(Panel panel)
         {
-            var actions = new FlowLayoutPanel
+            if (panel == null || panel.Tag as string == "dash-border") return;
+            panel.Tag = "dash-border";
+            panel.Paint += (s, e) =>
             {
-                AutoSize = true,
-                WrapContents = true,
-                Margin = new Padding(0, 8, 0, 8),
-                BackColor = UiTheme.AdminSurface
+                var rect = panel.ClientRectangle;
+                rect.Width -= 1;
+                rect.Height -= 1;
+                using (var pen = new Pen(UiTheme.AdminOutline))
+                    e.Graphics.DrawRectangle(pen, rect);
             };
+        }
 
-            var btnCancel = AdminUiHelpers.CreateWinButton("Cancel Pending Order", false, 160);
-            btnCancel.Click += BtnCancel_Click;
-            var btnExportCsv = AdminUiHelpers.CreateWinButton("Export CSV", false, 110);
+        private void WireRuntimeBehavior()
+        {
+            if (_runtimeWired) return;
+            _runtimeWired = true;
+
+            btnCancelPending.Click += BtnCancel_Click;
             btnExportCsv.Click += BtnExportCsv_Click;
-            var btnExportPdf = AdminUiHelpers.CreateWinButton("Export PDF", false, 110);
             btnExportPdf.Click += BtnExportPdf_Click;
-
-            actions.Controls.Add(btnCancel);
-            actions.Controls.Add(btnExportCsv);
-            actions.Controls.Add(btnExportPdf);
-            return actions;
+            gridOrders.SelectionChanged += GridOrders_SelectionChanged;
+            gridOrders.CellDoubleClick += GridOrders_CellDoubleClick;
         }
 
         private void RefreshOrders()
         {
+            if (!_servicesReady) return;
+
             var customerId = Session.CurrentCustomer?.CustomerID ?? 0;
             var orders = _orders.GetByCustomer(customerId);
             UiTheme.SetGridDataSource(gridOrders, orders.Select(o => new
@@ -144,7 +121,8 @@ namespace SmartMed.UI
 
         private void GridOrders_SelectionChanged(object sender, EventArgs e)
         {
-            if (gridOrders?.CurrentRow == null) return;
+            if (!_servicesReady || gridOrders?.CurrentRow == null) return;
+
             _selectedOrderId = Convert.ToInt32(gridOrders.CurrentRow.Cells["OrderID"].Value);
             var items = _orders.GetItems(_selectedOrderId.Value);
             UiTheme.SetGridDataSource(gridItems, items.Select(i => new
@@ -160,7 +138,7 @@ namespace SmartMed.UI
 
         private void GridOrders_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
         {
-            if (e.RowIndex < 0 || !gridOrders.Columns.Contains("Prescription")) return;
+            if (!_servicesReady || e.RowIndex < 0 || !gridOrders.Columns.Contains("Prescription")) return;
             if (gridOrders.Columns[e.ColumnIndex].Name != "Prescription") return;
 
             var orderId = Convert.ToInt32(gridOrders.Rows[e.RowIndex].Cells["OrderID"].Value);
@@ -187,6 +165,8 @@ namespace SmartMed.UI
 
         private void BtnCancel_Click(object sender, EventArgs e)
         {
+            if (!_servicesReady) return;
+
             if (!_selectedOrderId.HasValue)
             {
                 MessageBox.Show("Select a pending order to cancel.", "Cancel Order",
@@ -212,6 +192,8 @@ namespace SmartMed.UI
 
         private void BtnExportCsv_Click(object sender, EventArgs e)
         {
+            if (!_servicesReady) return;
+
             var customer = Session.CurrentCustomer;
             if (customer == null) return;
 
@@ -237,6 +219,8 @@ namespace SmartMed.UI
 
         private void BtnExportPdf_Click(object sender, EventArgs e)
         {
+            if (!_servicesReady) return;
+
             var customer = Session.CurrentCustomer;
             if (customer == null) return;
 
