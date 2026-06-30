@@ -6,7 +6,7 @@ using SmartMed.Services;
 
 namespace SmartMed.UI
 {
-    public sealed partial class PlaceOrderForm : CustomerPageControl
+    public sealed partial class PlaceOrderForm : EmbeddedPageForm
     {
         private OrderService _orders;
         private bool _servicesReady;
@@ -32,11 +32,6 @@ namespace SmartMed.UI
             ApplyViewChrome();
             if (_servicesReady)
                 WireRuntimeBehavior();
-        }
-
-        protected override void BuildPageLayout()
-        {
-            // Layout lives in PlaceOrderForm.Designer.cs.
         }
 
         protected override void DoRefreshPage() => RefreshCart();

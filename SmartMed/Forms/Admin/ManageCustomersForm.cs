@@ -8,7 +8,7 @@ using SmartMed.Services;
 
 namespace SmartMed.UI
 {
-    public sealed partial class ManageCustomersForm : AdminPageControl
+    public sealed partial class ManageCustomersForm : EmbeddedPageForm
     {
         private const int PageSize = 10;
         private const int ActiveOrderDays = 90;
@@ -43,11 +43,6 @@ namespace SmartMed.UI
             ApplyViewChrome();
             if (_servicesReady)
                 WireRuntimeBehavior();
-        }
-
-        protected override void BuildPageLayout()
-        {
-            // Layout lives in ManageCustomersForm.Designer.cs.
         }
 
         protected override void DoRefreshPage() => LoadCustomers();

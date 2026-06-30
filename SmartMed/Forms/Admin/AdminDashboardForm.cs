@@ -8,7 +8,7 @@ using SmartMed.Services;
 
 namespace SmartMed.UI
 {
-    public sealed partial class AdminDashboardForm : AdminPageControl
+    public sealed partial class AdminDashboardForm : EmbeddedPageForm
     {
         private ReportService _reports;
         private OrderService _orders;
@@ -41,11 +41,6 @@ namespace SmartMed.UI
             ApplyViewChrome();
             if (_servicesReady)
                 WireRuntimeBehavior();
-        }
-
-        protected override void BuildPageLayout()
-        {
-            // Layout lives in AdminDashboardForm.Designer.cs (same pattern as Login/Registration).
         }
 
         protected override void DoRefreshPage() => LoadDashboardData();

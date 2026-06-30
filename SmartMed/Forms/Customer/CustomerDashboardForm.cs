@@ -6,7 +6,7 @@ using SmartMed.Services;
 
 namespace SmartMed.UI
 {
-    public sealed partial class CustomerDashboardForm : CustomerPageControl
+    public sealed partial class CustomerDashboardForm : EmbeddedPageForm
     {
         private OrderService _orders;
         private MedicineService _medicines;
@@ -33,11 +33,6 @@ namespace SmartMed.UI
             ApplyViewChrome();
             if (_servicesReady)
                 WireRuntimeBehavior();
-        }
-
-        protected override void BuildPageLayout()
-        {
-            // Layout lives in CustomerDashboardForm.Designer.cs.
         }
 
         protected override void DoRefreshPage()

@@ -6,7 +6,7 @@ using SmartMed.Services;
 
 namespace SmartMed.UI
 {
-    public sealed partial class ReportsForm : AdminPageControl
+    public sealed partial class ReportsForm : EmbeddedPageForm
     {
         private ReportService _reports;
         private CustomerService _customers;
@@ -44,11 +44,6 @@ namespace SmartMed.UI
                 UpdatePeriodStyles();
                 UpdateStatTitlesForTab();
             }
-        }
-
-        protected override void BuildPageLayout()
-        {
-            // Layout lives in ReportsForm.Designer.cs.
         }
 
         protected override void DoRefreshPage()

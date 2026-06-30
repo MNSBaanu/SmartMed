@@ -5,26 +5,23 @@ using System.Windows.Forms;
 
 namespace SmartMed.UI
 {
-    public interface IAdminPage
+    public interface IEmbeddedPage
     {
         void RefreshPage();
-        void SyncScrollRootWidth(int fallback);
     }
 
+    /// <summary>Base for admin/customer pages embedded in a host shell (borderless child form).</summary>
     [ToolboxItem(false)]
-    public class AdminPageControl : Form, IAdminPage
+    public class EmbeddedPageForm : Form, IEmbeddedPage
     {
         private bool _pageBuilt;
 
-        protected Panel ScrollHost { get; private set; }
-        protected Control ScrollRoot { get; private set; }
-
-        public AdminPageControl()
+        public EmbeddedPageForm()
         {
-            ConfigureEmbeddedPageShell(this);
+            ConfigureEmbeddedShell(this);
         }
 
-        internal static void ConfigureEmbeddedPageShell(Form form)
+        internal static void ConfigureEmbeddedShell(Form form)
         {
             form.FormBorderStyle = FormBorderStyle.None;
             form.ControlBox = false;
@@ -75,11 +72,6 @@ namespace SmartMed.UI
 
             try
             {
-                AdminPageView.EnsureTheme();
-                AdminPageView.ApplyChrome(this);
-
-                BuildPageLayout();
-                SyncScrollRootWidth();
                 if (PreferDesignTimePreview())
                     LoadDesignTimePreview();
                 else
@@ -112,7 +104,6 @@ namespace SmartMed.UI
             });
         }
 
-        protected virtual void BuildPageLayout() { }
         protected virtual void DoRefreshPage() { }
         protected virtual void LoadDesignTimePreview() { }
 
@@ -122,69 +113,6 @@ namespace SmartMed.UI
             if (PreferDesignTimePreview())
                 return;
             DoRefreshPage();
-        }
-
-        protected void WireScrollRoot(Control scrollRoot)
-        {
-            ScrollRoot = scrollRoot;
-            Controls.Clear();
-
-            ScrollHost = new Panel
-            {
-                Dock = DockStyle.Fill,
-                AutoScroll = true,
-                BackColor = UiTheme.AdminSurface,
-                Padding = new Padding(24, 24, 24, 24)
-            };
-
-            scrollRoot.Dock = DockStyle.Top;
-            scrollRoot.Width = GetScrollContentWidth();
-            ScrollHost.Controls.Add(scrollRoot);
-            Controls.Add(ScrollHost);
-
-            if (!IsDesignHost())
-            {
-                UiTheme.EnableDoubleBuffer(ScrollHost);
-                UiTheme.EnableFontPropagation(this);
-            }
-
-            ScrollHost.Resize += (s, e) => SyncScrollRootWidth();
-        }
-
-        /// <summary>Uses scroll host and root already declared in InitializeComponent().</summary>
-        protected void BindDesignerScrollRoot(Panel scrollHost, Control scrollRoot)
-        {
-            ScrollHost = scrollHost;
-            ScrollRoot = scrollRoot;
-
-            scrollRoot.Dock = DockStyle.Top;
-            scrollRoot.Width = GetScrollContentWidth();
-
-            if (!IsDesignHost())
-            {
-                UiTheme.EnableDoubleBuffer(ScrollHost);
-                UiTheme.EnableFontPropagation(this);
-            }
-
-            ScrollHost.Resize += (s, e) => SyncScrollRootWidth();
-        }
-
-        protected int GetScrollContentWidth(int fallback = 800)
-        {
-            var w = ScrollHost?.ClientSize.Width ?? ClientSize.Width;
-            if (w < 200) w = fallback;
-            return Math.Max(600, w - 48);
-        }
-
-        public virtual void SyncScrollRootWidth(int fallback = 800)
-        {
-            if (ScrollHost == null || ScrollRoot == null || ScrollHost.IsDisposed)
-                return;
-
-            var width = GetScrollContentWidth(fallback);
-            if (ScrollRoot.Width != width)
-                ScrollRoot.Width = width;
-            ScrollRoot.PerformLayout();
         }
     }
 }

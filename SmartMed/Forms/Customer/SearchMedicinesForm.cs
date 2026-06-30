@@ -6,7 +6,7 @@ using SmartMed.Services;
 
 namespace SmartMed.UI
 {
-    public sealed partial class SearchMedicinesForm : CustomerPageControl
+    public sealed partial class SearchMedicinesForm : EmbeddedPageForm
     {
         private MedicineService _medicines;
         private bool _servicesReady;
@@ -31,11 +31,6 @@ namespace SmartMed.UI
             ApplyViewChrome();
             if (_servicesReady)
                 WireRuntimeBehavior();
-        }
-
-        protected override void BuildPageLayout()
-        {
-            // Layout lives in SearchMedicinesForm.Designer.cs.
         }
 
         protected override void DoRefreshPage() => Search();

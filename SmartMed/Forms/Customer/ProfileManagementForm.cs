@@ -6,7 +6,7 @@ using SmartMed.Services;
 
 namespace SmartMed.UI
 {
-    public sealed partial class ProfileManagementForm : CustomerPageControl
+    public sealed partial class ProfileManagementForm : EmbeddedPageForm
     {
         private CustomerService _customers;
         private bool _servicesReady;
@@ -31,11 +31,6 @@ namespace SmartMed.UI
             ApplyViewChrome();
             if (_servicesReady)
                 WireRuntimeBehavior();
-        }
-
-        protected override void BuildPageLayout()
-        {
-            // Layout lives in ProfileManagementForm.Designer.cs.
         }
 
         protected override void DoRefreshPage() => LoadProfile();

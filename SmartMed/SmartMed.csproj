@@ -110,12 +110,6 @@
     <EmbeddedResource Update="Forms\Admin\ReportsForm.resx">
       <DependentUpon>ReportsForm.cs</DependentUpon>
     </EmbeddedResource>
-    <Compile Update="Forms\Admin\AdminPageControl.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Update="Forms\Customer\CustomerPageControl.cs">
-      <SubType>Form</SubType>
-    </Compile>
     <Compile Update="Forms\Customer\CustomerNavItem.cs" />
     <Compile Update="Forms\Customer\CustomerHostForm.cs">
       <SubType>Form</SubType>

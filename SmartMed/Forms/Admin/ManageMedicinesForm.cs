@@ -8,7 +8,7 @@ using SmartMed.Services;
 
 namespace SmartMed.UI
 {
-    public sealed partial class ManageMedicinesForm : AdminPageControl
+    public sealed partial class ManageMedicinesForm : EmbeddedPageForm
     {
         private static readonly string[] DefaultCategories =
         {
@@ -46,11 +46,6 @@ namespace SmartMed.UI
             ApplyViewChrome();
             if (_servicesReady)
                 WireRuntimeBehavior();
-        }
-
-        protected override void BuildPageLayout()
-        {
-            // Layout lives in ManageMedicinesForm.Designer.cs.
         }
 
         protected override void DoRefreshPage() => LoadMedicines();
