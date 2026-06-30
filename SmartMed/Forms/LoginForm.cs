@@ -13,6 +13,8 @@ namespace SmartMed.UI
         private const string DemoCustomerEmail = "customer@gmail.com";
         private const string DemoCustomerPassword = "Customer123";
         private const string InvalidCredentialsMessage = "Invalid credentials.";
+        private const int CardFooterGap = 20;
+        private const int ContentTopMargin = 32;
 
         private readonly AuthService _auth;
         private bool _passwordVisible;
@@ -77,7 +79,29 @@ namespace SmartMed.UI
             panelError.SendToBack();
             lnkForgot.BringToFront();
             SetPasswordVisible(_passwordVisible);
+
+            panelMain.Resize -= PanelMain_Resize;
+            panelMain.Resize += PanelMain_Resize;
+            LayoutLoginContent();
         }
+
+        private void LayoutLoginContent()
+        {
+            if (panelLoginCard == null || panelMain == null || panelFooter == null) return;
+
+            var left = Math.Max(0, (panelMain.ClientSize.Width - panelLoginCard.Width) / 2);
+            var totalHeight = panelLoginCard.Height + CardFooterGap + panelFooter.Height;
+            var top = Math.Max(ContentTopMargin, (panelMain.ClientSize.Height - totalHeight) / 2);
+
+            panelLoginCard.Left = left;
+            panelLoginCard.Top = top;
+
+            panelFooter.Width = panelLoginCard.Width;
+            panelFooter.Left = left;
+            panelFooter.Top = panelLoginCard.Bottom + CardFooterGap;
+        }
+
+        private void PanelMain_Resize(object sender, EventArgs e) => LayoutLoginContent();
 
         private void TxtPassword_ApplyMask(object sender, EventArgs e) =>
             SetPasswordVisible(_passwordVisible);
@@ -88,6 +112,7 @@ namespace SmartMed.UI
             UiTheme.ResetClinicalPlaceholder(txtPassword, "Enter your password");
             _passwordVisible = false;
             WireRuntimeBehavior();
+            LayoutLoginContent();
             Show();
             WindowState = FormWindowState.Normal;
             BringToFront();
