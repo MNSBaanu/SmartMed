@@ -11,21 +11,33 @@ namespace SmartMed.UI
         void SyncScrollRootWidth(int fallback);
     }
 
-    public abstract class CustomerPageControl : UserControl, ICustomerPage
+    [ToolboxItem(false)]
+    public class CustomerPageControl : Form, ICustomerPage
     {
         private bool _pageBuilt;
 
         protected Panel ScrollHost { get; private set; }
         protected Control ScrollRoot { get; private set; }
 
-        protected CustomerPageControl()
+        public CustomerPageControl()
         {
-            DoubleBuffered = true;
-            BackColor = UiTheme.AdminSurface;
-            Font = UiTheme.UiFont;
+            AdminPageControl.ConfigureEmbeddedPageShell(this);
+        }
+
+        public override ISite Site
+        {
+            get => base.Site;
+            set
+            {
+                base.Site = value;
+                if (value != null)
+                    EnsurePageContent();
+            }
         }
 
         protected bool IsDesignHost() => DesignHostHelper.IsDesignHost(this);
+
+        protected virtual bool PreferDesignTimePreview() => IsDesignHost();
 
         protected override void OnLoad(EventArgs e)
         {
@@ -39,28 +51,64 @@ namespace SmartMed.UI
             EnsurePageContent();
         }
 
+        protected override void SetVisibleCore(bool value)
+        {
+            EnsurePageContent();
+            base.SetVisibleCore(value);
+        }
+
         protected void EnsurePageContent()
         {
             if (_pageBuilt)
                 return;
 
-            _pageBuilt = true;
-            BuildPageLayout();
-            SyncScrollRootWidth();
-            if (IsDesignHost())
-                LoadDesignTimePreview();
-            else
-                DoRefreshPage();
+            try
+            {
+                AdminPageView.EnsureTheme();
+                AdminPageView.ApplyChrome(this);
+
+                BuildPageLayout();
+                SyncScrollRootWidth();
+                if (PreferDesignTimePreview())
+                    LoadDesignTimePreview();
+                else
+                    DoRefreshPage();
+
+                if (!IsDesignHost())
+                    DoubleBuffered = true;
+
+                PerformLayout();
+                Invalidate(true);
+                _pageBuilt = true;
+            }
+            catch (Exception ex) when (IsDesignHost() || LicenseManager.UsageMode == LicenseUsageMode.Designtime)
+            {
+                ShowDesignTimeBuildError(ex);
+                _pageBuilt = true;
+            }
         }
 
-        protected abstract void BuildPageLayout();
-        protected abstract void DoRefreshPage();
+        private void ShowDesignTimeBuildError(Exception ex)
+        {
+            Controls.Clear();
+            Controls.Add(new Label
+            {
+                Dock = DockStyle.Fill,
+                ForeColor = Color.DarkRed,
+                BackColor = Color.FromArgb(244, 251, 250),
+                Padding = new Padding(16),
+                Text = "Design preview could not be built:" + Environment.NewLine + Environment.NewLine + ex.Message
+            });
+        }
+
+        protected virtual void BuildPageLayout() { }
+        protected virtual void DoRefreshPage() { }
         protected virtual void LoadDesignTimePreview() { }
 
         public void RefreshPage()
         {
             EnsurePageContent();
-            if (IsDesignHost())
+            if (PreferDesignTimePreview())
                 return;
             DoRefreshPage();
         }
@@ -82,14 +130,19 @@ namespace SmartMed.UI
             scrollRoot.Width = GetScrollContentWidth();
             ScrollHost.Controls.Add(scrollRoot);
             Controls.Add(ScrollHost);
-            UiTheme.EnableDoubleBuffer(ScrollHost);
+
+            if (!IsDesignHost())
+            {
+                UiTheme.EnableDoubleBuffer(ScrollHost);
+                UiTheme.EnableFontPropagation(this);
+            }
+
             ScrollHost.Resize += (s, e) => SyncScrollRootWidth();
-            UiTheme.EnableFontPropagation(this);
         }
 
         protected int GetScrollContentWidth(int fallback = 800)
         {
-            var w = ScrollHost?.ClientSize.Width ?? Width;
+            var w = ScrollHost?.ClientSize.Width ?? ClientSize.Width;
             if (w < 200) w = fallback;
             return Math.Max(600, w - 48);
         }

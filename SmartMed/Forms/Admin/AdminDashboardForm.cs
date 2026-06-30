@@ -5,12 +5,11 @@ using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
 using SmartMed.Services;
-using SmartMed.UI;
 
 namespace SmartMed.UI
 {
     [DesignerCategory("Default")]
-    public sealed partial class AdminDashboardForm : AdminPageControl
+    public sealed partial class AdminDashboardForm : Form
     {
         private ReportService _reports;
         private OrderService _orders;
@@ -18,79 +17,129 @@ namespace SmartMed.UI
         private bool _servicesReady;
 
         private List<object> _recentRows = new List<object>();
-        private Button _btnRefresh;
-        private Button _btnNewOrder;
         private bool _runtimeWired;
-
-        static AdminDashboardForm()
-        {
-            try
-            {
-                UiTheme.Init();
-            }
-            catch
-            {
-                // Designer host may initialize fonts later.
-            }
-        }
+        private bool _chromeApplied;
 
         public AdminDashboardForm()
         {
             InitializeComponent();
-            if (IsDesignHost())
-                EnsurePageContent();
+            AdminPageControl.ConfigureEmbeddedPageShell(this);
             ApplyViewChrome();
-            if (!IsDesignHost())
+            if (!DesignHostHelper.IsDesignHost(this))
             {
                 _reports = new ReportService();
                 _orders = new OrderService();
                 _medicines = new MedicineService();
                 _servicesReady = true;
+                WireRuntimeBehavior();
+            }
+            else
+            {
+                LoadDesignTimePreview();
             }
         }
-
-        public void RefreshData() => RefreshPage();
 
         protected override void OnLoad(EventArgs e)
         {
             base.OnLoad(e);
             ApplyViewChrome();
-            if (!IsDesignHost())
+            if (DesignHostHelper.IsDesignHost(this))
+                LoadDesignTimePreview();
+            else if (_servicesReady)
+            {
                 WireRuntimeBehavior();
+                LoadDashboardData();
+            }
+        }
+
+        public void RefreshData()
+        {
+            if (DesignHostHelper.IsDesignHost(this))
+                LoadDesignTimePreview();
+            else
+                LoadDashboardData();
         }
 
         private void ApplyViewChrome()
         {
+            if (_chromeApplied) return;
+            _chromeApplied = true;
+
+            AdminPageView.EnsureTheme();
             AdminPageView.ApplyChrome(this);
-            SyncScrollRootWidth();
+
+            UiTheme.ApplyClinicalGrid(gridLowStock);
+            UiTheme.ApplyClinicalGrid(gridExpiry);
+            UiTheme.ApplyClinicalGrid(gridRecent);
+            UiTheme.StyleTextBox(txtSearch);
+
+            WirePanelBorder(pnlSearchWrap);
+            WireStatCard(panelStatStock, UiTheme.AdminTeal, skipAccent: true);
+            WireStatCard(panelStatOrders, Color.FromArgb(184, 237, 226), skipAccent: true);
+            WireStatCard(panelStatSales, Color.FromArgb(199, 234, 228), skipAccent: true);
+            WireStatCard(panelStatUsers, Color.FromArgb(171, 205, 200), skipAccent: true);
+            WirePanelBorder(panelLowStockOuter);
+            WirePanelBorder(panelExpiryOuter);
+            WirePanelBorder(panelRecentOuter);
+
+            gridLowStock.CellFormatting += GridAlertStatus_CellFormatting;
+            gridExpiry.CellFormatting += GridAlertStatus_CellFormatting;
         }
 
-        /// <summary>Runtime-only handlers that touch services or navigation.</summary>
+        private static void WirePanelBorder(Panel panel)
+        {
+            if (panel == null || panel.Tag as string == "dash-border") return;
+            panel.Tag = "dash-border";
+            panel.Paint += (s, e) =>
+            {
+                var rect = panel.ClientRectangle;
+                rect.Width -= 1;
+                rect.Height -= 1;
+                using (var pen = new Pen(UiTheme.AdminOutline))
+                    e.Graphics.DrawRectangle(pen, rect);
+            };
+        }
+
+        private static void WireStatCard(Panel card, Color accent, bool skipAccent = false)
+        {
+            if (card == null || card.Tag as string == "dash-stat") return;
+            card.Tag = "dash-stat";
+            card.Paint += (s, e) =>
+            {
+                var rect = card.ClientRectangle;
+                rect.Width -= 1;
+                rect.Height -= 1;
+                using (var pen = new Pen(UiTheme.AdminOutline))
+                    e.Graphics.DrawRectangle(pen, rect);
+                if (!skipAccent)
+                {
+                    using (var brush = new SolidBrush(accent))
+                        e.Graphics.FillRectangle(brush, 0, 0, 4, rect.Height);
+                }
+            };
+        }
+
         private void WireRuntimeBehavior()
         {
             if (_runtimeWired) return;
             _runtimeWired = true;
 
-            if (txtSearch != null)
-                txtSearch.TextChanged += (s, e) => ApplyRecentSearch();
-            if (_btnRefresh != null)
-                _btnRefresh.Click += (s, e) => LoadDashboardData();
-            if (_btnNewOrder != null)
-                _btnNewOrder.Click += (s, e) => GoToAdminSection(AdminNavItem.Orders);
+            txtSearch.TextChanged += (s, e) => ApplyRecentSearch();
+            btnRefresh.Click += (s, e) => LoadDashboardData();
+            btnNewOrder.Click += (s, e) => GoToAdminSection(AdminNavItem.Orders);
+            btnFilter.Click += (s, e) => txtSearch.Focus();
+            btnPrint.Click += BtnPrintRecent_Click;
+            gridRecent.CellFormatting += GridRecent_CellFormatting;
+            gridRecent.CellContentClick += GridRecent_CellContentClick;
+
+            txtSearch.GotFocus += (s, e) => lblSearchHint.Visible = false;
+            txtSearch.LostFocus += (s, e) => lblSearchHint.Visible = string.IsNullOrEmpty(txtSearch.Text);
+            pnlSearchWrap.Click += (s, e) => txtSearch.Focus();
+            lblSearchHint.Click += (s, e) => txtSearch.Focus();
         }
 
-        protected override void BuildPageLayout() => BuildContent();
-
-        protected override void DoRefreshPage()
+        private void LoadDesignTimePreview()
         {
-            SyncScrollRootWidth();
-            LoadDashboardData();
-        }
-
-        protected override void LoadDesignTimePreview()
-        {
-            AdminPageView.EnsureTheme();
-
             lblStockValue.Text = "128";
             lblOrdersValue.Text = "4";
             lblSalesValue.Text = "245,600";
@@ -118,463 +167,9 @@ namespace SmartMed.UI
             BindRecentGrid(_recentRows);
         }
 
-        private void BuildContent()
-        {
-            lblStockValue = new Label();
-            lblOrdersValue = new Label();
-            lblSalesValue = new Label();
-            lblCustomersValue = new Label();
-            txtSearch = new TextBox();
-            gridLowStock = CreateGrid();
-            gridExpiry = CreateGrid();
-            gridRecent = CreateGrid();
-            gridRecent.CellFormatting += GridRecent_CellFormatting;
-            gridRecent.CellContentClick += GridRecent_CellContentClick;
-
-            var root = new TableLayoutPanel
-            {
-                AutoSize = true,
-                AutoSizeMode = AutoSizeMode.GrowAndShrink,
-                ColumnCount = 1,
-                RowCount = 4,
-                MinimumSize = new Size(0, 720),
-                BackColor = UiTheme.AdminSurface
-            };
-            root.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100f));
-            root.RowStyles.Add(new RowStyle(SizeType.AutoSize));
-            root.RowStyles.Add(new RowStyle(SizeType.AutoSize));
-            root.RowStyles.Add(new RowStyle(SizeType.Absolute, 210f));
-            root.RowStyles.Add(new RowStyle(SizeType.Absolute, 320f));
-
-            root.Controls.Add(CreatePageHeader(), 0, 0);
-            root.Controls.Add(CreateStatsRow(), 0, 1);
-            root.Controls.Add(CreateAlertsRow(), 0, 2);
-            root.Controls.Add(CreateRecentActivityPanel(), 0, 3);
-
-            WireScrollRoot(root);
-        }
-
-        private Panel CreatePageHeader()
-        {
-            var header = new Panel
-            {
-                Dock = DockStyle.Top,
-                Height = 76,
-                Margin = new Padding(0, 0, 0, 24),
-                BackColor = UiTheme.AdminSurface
-            };
-
-            header.Controls.Add(new Label
-            {
-                Text = "Overview of pharmaceutical stock and fulfillment health.",
-                Font = UiTheme.UiFont,
-                ForeColor = UiTheme.AdminMuted,
-                Location = new Point(0, 44),
-                AutoSize = true,
-                BackColor = UiTheme.AdminSurface
-            });
-            header.Controls.Add(new Label
-            {
-                Text = "Operational Dashboard",
-                Font = UiTheme.FontAt(20f, bold: true),
-                ForeColor = UiTheme.PrimaryDark,
-                Location = new Point(0, 8),
-                AutoSize = true,
-                BackColor = UiTheme.AdminSurface
-            });
-
-            var actions = new FlowLayoutPanel
-            {
-                Dock = DockStyle.Right,
-                FlowDirection = FlowDirection.LeftToRight,
-                AutoSize = true,
-                WrapContents = false,
-                Padding = new Padding(0, 16, 0, 0),
-                BackColor = UiTheme.AdminSurface
-            };
-
-            txtSearch.Margin = new Padding(0);
-            UiTheme.StyleTextBox(txtSearch);
-
-            var searchWrap = CreateSearchBox();
-            _btnRefresh = CreateWinButton("Refresh", primary: false, width: 96);
-            _btnNewOrder = CreateWinButton("+ New Order", primary: true, width: 118);
-
-            actions.Controls.Add(searchWrap);
-            actions.Controls.Add(_btnRefresh);
-            actions.Controls.Add(_btnNewOrder);
-            header.Controls.Add(actions);
-            return header;
-        }
-
-        private Panel CreateSearchBox()
-        {
-            var wrap = new Panel
-            {
-                Width = 224,
-                Height = 30,
-                Margin = new Padding(0, 0, 10, 0),
-                BackColor = Color.White
-            };
-            wrap.Paint += (s, e) =>
-            {
-                var rect = wrap.ClientRectangle;
-                rect.Width -= 1;
-                rect.Height -= 1;
-                using (var pen = new Pen(UiTheme.AdminOutline))
-                    e.Graphics.DrawRectangle(pen, rect);
-            };
-
-            txtSearch.Dock = DockStyle.Fill;
-            txtSearch.BorderStyle = BorderStyle.None;
-            txtSearch.Margin = new Padding(28, 0, 8, 0);
-            wrap.Controls.Add(txtSearch);
-
-            var hint = new Label
-            {
-                Text = "Search ID...",
-                ForeColor = UiTheme.PlaceholderText,
-                BackColor = Color.White,
-                Bounds = new Rectangle(10, 0, 170, 30),
-                TextAlign = ContentAlignment.MiddleLeft,
-                Cursor = Cursors.IBeam
-            };
-            wrap.Controls.Add(hint);
-            hint.BringToFront();
-            txtSearch.GotFocus += (s, e) => hint.Visible = false;
-            txtSearch.LostFocus += (s, e) => hint.Visible = string.IsNullOrEmpty(txtSearch.Text);
-            wrap.Click += (s, e) => txtSearch.Focus();
-            hint.Click += (s, e) => txtSearch.Focus();
-            return wrap;
-        }
-
-        private Panel CreateStatsRow()
-        {
-            var statsRow = new TableLayoutPanel
-            {
-                Dock = DockStyle.Top,
-                Height = 108,
-                ColumnCount = 4,
-                RowCount = 1,
-                Margin = new Padding(0, 0, 0, 24),
-                BackColor = UiTheme.AdminSurface
-            };
-            for (var i = 0; i < 4; i++)
-                statsRow.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 25f));
-
-            statsRow.Controls.Add(CreateStatCard("Stock Items", lblStockValue, UiTheme.AdminTeal), 0, 0);
-            statsRow.Controls.Add(CreateStatCard("Pending Orders", lblOrdersValue, Color.FromArgb(184, 237, 226)), 1, 0);
-            statsRow.Controls.Add(CreateStatCard("Revenue (LKR)", lblSalesValue, Color.FromArgb(199, 234, 228)), 2, 0);
-            statsRow.Controls.Add(CreateStatCard("Active Users", lblCustomersValue, Color.FromArgb(171, 205, 200)), 3, 0);
-            return statsRow;
-        }
-
-        private static Panel CreateStatCard(string title, Label valueLabel, Color accent)
-        {
-            var card = new Panel
-            {
-                Dock = DockStyle.Fill,
-                Margin = new Padding(0, 0, 14, 0),
-                Padding = new Padding(16, 14, 14, 14),
-                BackColor = Color.White
-            };
-            card.Paint += (s, e) =>
-            {
-                var rect = card.ClientRectangle;
-                rect.Width -= 1;
-                rect.Height -= 1;
-                using (var pen = new Pen(UiTheme.AdminOutline))
-                    e.Graphics.DrawRectangle(pen, rect);
-                using (var brush = new SolidBrush(accent))
-                    e.Graphics.FillRectangle(brush, 0, 0, 4, rect.Height);
-            };
-
-            card.Controls.Add(new Label
-            {
-                Text = title.ToUpperInvariant(),
-                Font = UiTheme.FontAt(8.25f, semibold: true),
-                ForeColor = UiTheme.AdminMuted,
-                Dock = DockStyle.Top,
-                Height = 16,
-                BackColor = Color.White
-            });
-
-            valueLabel.Text = "0";
-            valueLabel.Font = UiTheme.FontAt(22f, bold: true);
-            valueLabel.ForeColor = UiTheme.PrimaryDark;
-            valueLabel.Dock = DockStyle.Fill;
-            valueLabel.TextAlign = ContentAlignment.MiddleLeft;
-            valueLabel.BackColor = Color.White;
-            card.Controls.Add(valueLabel);
-            return card;
-        }
-
-        private Panel CreateAlertsRow()
-        {
-            var alertsRow = new TableLayoutPanel
-            {
-                Dock = DockStyle.Fill,
-                ColumnCount = 2,
-                RowCount = 1,
-                Margin = new Padding(0, 0, 0, 24),
-                BackColor = UiTheme.AdminSurface
-            };
-            alertsRow.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50f));
-            alertsRow.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50f));
-
-            alertsRow.Controls.Add(CreateAlertTablePanel(
-                "Critical Alerts", Color.FromArgb(255, 245, 243), UiTheme.Danger, gridLowStock), 0, 0);
-
-            var expiryPanel = CreateAlertTablePanel(
-                "Expiry Warnings", Color.FromArgb(255, 243, 240), Color.FromArgb(104, 57, 61), gridExpiry);
-            expiryPanel.Margin = new Padding(14, 0, 0, 0);
-            alertsRow.Controls.Add(expiryPanel, 1, 0);
-            return alertsRow;
-        }
-
-        private static Panel CreateAlertTablePanel(string title, Color headerBg, Color headerText, DataGridView grid)
-        {
-            var outer = new Panel { Dock = DockStyle.Fill, BackColor = Color.White, Padding = new Padding(1) };
-            outer.Paint += (s, e) =>
-            {
-                var rect = outer.ClientRectangle;
-                rect.Width -= 1;
-                rect.Height -= 1;
-                using (var pen = new Pen(UiTheme.AdminOutline))
-                    e.Graphics.DrawRectangle(pen, rect);
-            };
-
-            var header = new Panel
-            {
-                Dock = DockStyle.Top,
-                Height = 32,
-                BackColor = headerBg,
-                Padding = new Padding(12, 8, 12, 4)
-            };
-            header.Controls.Add(new Label
-            {
-                Text = title.ToUpperInvariant(),
-                Font = UiTheme.FontAt(8.25f, semibold: true),
-                ForeColor = headerText,
-                Dock = DockStyle.Left,
-                AutoSize = true,
-                BackColor = headerBg
-            });
-
-            grid.Dock = DockStyle.Fill;
-            grid.CellFormatting += GridAlertStatus_CellFormatting;
-
-            var body = new Panel { Dock = DockStyle.Fill, BackColor = Color.White };
-            body.Controls.Add(grid);
-            outer.Controls.Add(body);
-            outer.Controls.Add(header);
-            return outer;
-        }
-
-        private Panel CreateRecentActivityPanel()
-        {
-            var outer = new Panel
-            {
-                Dock = DockStyle.Fill,
-                BackColor = Color.White,
-                Padding = new Padding(1)
-            };
-            outer.Paint += (s, e) =>
-            {
-                var rect = outer.ClientRectangle;
-                rect.Width -= 1;
-                rect.Height -= 1;
-                using (var pen = new Pen(UiTheme.AdminOutline))
-                    e.Graphics.DrawRectangle(pen, rect);
-            };
-
-            var header = new Panel
-            {
-                Dock = DockStyle.Top,
-                Height = 36,
-                BackColor = UiTheme.AdminSidebar,
-                Padding = new Padding(12, 8, 10, 4)
-            };
-            header.Controls.Add(new Label
-            {
-                Text = "RECENT FULFILLMENT ACTIVITY",
-                Font = UiTheme.FontAt(8.25f, semibold: true),
-                ForeColor = UiTheme.AdminMuted,
-                Dock = DockStyle.Left,
-                AutoSize = true,
-                BackColor = UiTheme.AdminSidebar
-            });
-
-            var headerActions = new FlowLayoutPanel
-            {
-                Dock = DockStyle.Right,
-                AutoSize = true,
-                FlowDirection = FlowDirection.LeftToRight,
-                BackColor = UiTheme.AdminSidebar
-            };
-            var btnFilter = CreateWinButton("Filter", false, 72);
-            btnFilter.Height = 28;
-            btnFilter.Click += (s, e) => txtSearch.Focus();
-            var btnPrint = CreateWinButton("Print", false, 72);
-            btnPrint.Height = 28;
-            btnPrint.Click += BtnPrintRecent_Click;
-            headerActions.Controls.Add(btnFilter);
-            headerActions.Controls.Add(btnPrint);
-            header.Controls.Add(headerActions);
-
-            gridRecent.Dock = DockStyle.Fill;
-            var body = new Panel { Dock = DockStyle.Fill, Padding = new Padding(0, 4, 0, 0), BackColor = Color.White };
-            body.Controls.Add(gridRecent);
-            outer.Controls.Add(body);
-            outer.Controls.Add(header);
-            return outer;
-        }
-
-        private static Button CreateWinButton(string text, bool primary, int width)
-        {
-            var btn = new Button
-            {
-                Text = text,
-                Width = width,
-                Height = 30,
-                FlatStyle = FlatStyle.Flat,
-                Font = UiTheme.UiFont,
-                Cursor = Cursors.Hand,
-                Margin = new Padding(0, 0, 10, 0)
-            };
-            btn.FlatAppearance.BorderSize = 1;
-            if (primary)
-            {
-                btn.BackColor = UiTheme.AdminTeal;
-                btn.ForeColor = Color.White;
-                btn.FlatAppearance.BorderColor = UiTheme.AdminTealDark;
-                btn.FlatAppearance.MouseOverBackColor = Color.FromArgb(59, 109, 100);
-            }
-            else
-            {
-                btn.BackColor = Color.FromArgb(238, 245, 244);
-                btn.ForeColor = UiTheme.AdminOnSurface;
-                btn.FlatAppearance.BorderColor = UiTheme.AdminOutline;
-                btn.FlatAppearance.MouseOverBackColor = Color.FromArgb(227, 234, 233);
-            }
-            btn.UseVisualStyleBackColor = false;
-            return btn;
-        }
-
-        private static DataGridView CreateGrid()
-        {
-            var grid = new DataGridView
-            {
-                ReadOnly = true,
-                AllowUserToAddRows = false,
-                AllowUserToDeleteRows = false,
-                RowHeadersVisible = false,
-                SelectionMode = DataGridViewSelectionMode.FullRowSelect,
-                AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill,
-                ScrollBars = ScrollBars.Vertical
-            };
-            UiTheme.ApplyClinicalGrid(grid);
-            return grid;
-        }
-
-        private static void GridAlertStatus_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
-        {
-            if (e.RowIndex < 0 || e.ColumnIndex < 0) return;
-            var grid = (DataGridView)sender;
-            if (grid.Columns[e.ColumnIndex].Name != "Status" && grid.Columns[e.ColumnIndex].Name != "DueDate")
-                return;
-
-            var value = e.Value?.ToString() ?? string.Empty;
-            if (grid.Columns[e.ColumnIndex].Name == "Status")
-            {
-                if (string.Equals(value, "CRITICAL", StringComparison.OrdinalIgnoreCase))
-                {
-                    e.CellStyle.ForeColor = UiTheme.Danger;
-                    e.CellStyle.BackColor = Color.FromArgb(255, 218, 214);
-                    e.CellStyle.Font = UiTheme.UiFontBold;
-                }
-                else if (string.Equals(value, "LOW", StringComparison.OrdinalIgnoreCase))
-                {
-                    e.CellStyle.ForeColor = Color.FromArgb(104, 57, 61);
-                    e.CellStyle.BackColor = Color.FromArgb(255, 218, 219);
-                    e.CellStyle.Font = UiTheme.UiFontBold;
-                }
-            }
-            else if (string.Equals(value, "EXPIRED", StringComparison.OrdinalIgnoreCase))
-            {
-                e.CellStyle.ForeColor = UiTheme.Danger;
-                e.CellStyle.Font = UiTheme.UiFontBold;
-            }
-        }
-
-        private void GridRecent_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
-        {
-            if (e.RowIndex < 0 || e.ColumnIndex < 0) return;
-            if (gridRecent.Columns[e.ColumnIndex].Name != "FulfillmentStatus") return;
-
-            var status = e.Value?.ToString() ?? string.Empty;
-            if (string.Equals(status, OrderService.StatusDelivered, StringComparison.OrdinalIgnoreCase))
-            {
-                e.CellStyle.BackColor = Color.FromArgb(184, 237, 226);
-                e.CellStyle.ForeColor = Color.FromArgb(27, 79, 71);
-                e.CellStyle.Font = UiTheme.UiFontBold;
-                e.Value = "FULFILLED";
-            }
-            else if (string.Equals(status, OrderService.StatusReadyForPickup, StringComparison.OrdinalIgnoreCase))
-            {
-                e.CellStyle.BackColor = Color.FromArgb(199, 234, 228);
-                e.CellStyle.ForeColor = UiTheme.AdminTeal;
-                e.CellStyle.Font = UiTheme.UiFontBold;
-                e.Value = "READY FOR PICKUP";
-            }
-            else if (string.Equals(status, OrderService.StatusPending, StringComparison.OrdinalIgnoreCase))
-            {
-                e.CellStyle.BackColor = Color.FromArgb(255, 218, 219);
-                e.CellStyle.ForeColor = Color.FromArgb(104, 57, 61);
-                e.CellStyle.Font = UiTheme.UiFontBold;
-                e.Value = "PENDING";
-            }
-        }
-
-        private void GridRecent_CellContentClick(object sender, DataGridViewCellEventArgs e)
-        {
-            if (e.RowIndex < 0 || gridRecent.Columns[e.ColumnIndex].Name != "Actions") return;
-            GoToAdminSection(AdminNavItem.Orders);
-        }
-
-        private void GoToAdminSection(AdminNavItem nav) =>
-            (FindForm() as AdminHostForm)?.NavigateTo(nav);
-
-        private void BtnPrintRecent_Click(object sender, EventArgs e)
-        {
-            if (gridRecent.Rows.Count == 0)
-            {
-                MessageBox.Show("No recent orders to print.", "Print", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                return;
-            }
-            try
-            {
-                ExportHelper.PrintGrid(gridRecent, "Recent Fulfillment Activity");
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message, "Print Failed", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-            }
-        }
-
-        private static void ShowComingSoon()
-        {
-            MessageBox.Show(
-                "This section is coming soon.",
-                "SmartMed",
-                MessageBoxButtons.OK,
-                MessageBoxIcon.Information);
-        }
-
         private void LoadDashboardData()
         {
-            if (IsDesignHost() || !_servicesReady)
-                return;
+            if (!_servicesReady) return;
 
             lblStockValue.Text = _medicines.GetAll().Count.ToString("N0");
             lblOrdersValue.Text = _orders.GetAll().Count(o => o.Status == OrderService.StatusPending).ToString("N0");
@@ -650,6 +245,105 @@ namespace SmartMed.UI
                 FlatStyle = FlatStyle.Flat
             });
             gridRecent.Columns["Actions"].DisplayIndex = gridRecent.Columns.Count - 1;
+        }
+
+        private static void GridAlertStatus_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
+        {
+            if (e.RowIndex < 0 || e.ColumnIndex < 0) return;
+            var grid = (DataGridView)sender;
+            if (grid.Columns[e.ColumnIndex].Name != "Status" && grid.Columns[e.ColumnIndex].Name != "DueDate")
+                return;
+
+            var value = e.Value?.ToString() ?? string.Empty;
+            if (grid.Columns[e.ColumnIndex].Name == "Status")
+            {
+                if (string.Equals(value, "CRITICAL", StringComparison.OrdinalIgnoreCase))
+                {
+                    e.CellStyle.ForeColor = UiTheme.Danger;
+                    e.CellStyle.BackColor = Color.FromArgb(255, 218, 214);
+                    e.CellStyle.Font = UiTheme.UiFontBold;
+                }
+                else if (string.Equals(value, "LOW", StringComparison.OrdinalIgnoreCase))
+                {
+                    e.CellStyle.ForeColor = Color.FromArgb(104, 57, 61);
+                    e.CellStyle.BackColor = Color.FromArgb(255, 218, 219);
+                    e.CellStyle.Font = UiTheme.UiFontBold;
+                }
+            }
+            else if (string.Equals(value, "EXPIRED", StringComparison.OrdinalIgnoreCase))
+            {
+                e.CellStyle.ForeColor = UiTheme.Danger;
+                e.CellStyle.Font = UiTheme.UiFontBold;
+            }
+        }
+
+        private void GridRecent_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
+        {
+            if (e.RowIndex < 0 || e.ColumnIndex < 0) return;
+            if (gridRecent.Columns[e.ColumnIndex].Name != "FulfillmentStatus") return;
+
+            var status = e.Value?.ToString() ?? string.Empty;
+            if (string.Equals(status, OrderService.StatusDelivered, StringComparison.OrdinalIgnoreCase))
+            {
+                e.CellStyle.BackColor = Color.FromArgb(184, 237, 226);
+                e.CellStyle.ForeColor = Color.FromArgb(27, 79, 71);
+                e.CellStyle.Font = UiTheme.UiFontBold;
+                e.Value = "FULFILLED";
+            }
+            else if (string.Equals(status, OrderService.StatusReadyForPickup, StringComparison.OrdinalIgnoreCase))
+            {
+                e.CellStyle.BackColor = Color.FromArgb(199, 234, 228);
+                e.CellStyle.ForeColor = UiTheme.AdminTeal;
+                e.CellStyle.Font = UiTheme.UiFontBold;
+                e.Value = "READY FOR PICKUP";
+            }
+            else if (string.Equals(status, OrderService.StatusPending, StringComparison.OrdinalIgnoreCase))
+            {
+                e.CellStyle.BackColor = Color.FromArgb(255, 218, 219);
+                e.CellStyle.ForeColor = Color.FromArgb(104, 57, 61);
+                e.CellStyle.Font = UiTheme.UiFontBold;
+                e.Value = "PENDING";
+            }
+        }
+
+        private void GridRecent_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+            if (e.RowIndex < 0 || gridRecent.Columns[e.ColumnIndex].Name != "Actions") return;
+            GoToAdminSection(AdminNavItem.Orders);
+        }
+
+        private void GoToAdminSection(AdminNavItem nav)
+        {
+            var host = FindForm() as AdminHostForm;
+            if (host == null)
+            {
+                for (Control parent = Parent; parent != null; parent = parent.Parent)
+                {
+                    if (parent is AdminHostForm adminHost)
+                    {
+                        host = adminHost;
+                        break;
+                    }
+                }
+            }
+            host?.NavigateTo(nav);
+        }
+
+        private void BtnPrintRecent_Click(object sender, EventArgs e)
+        {
+            if (gridRecent.Rows.Count == 0)
+            {
+                MessageBox.Show("No recent orders to print.", "Print", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return;
+            }
+            try
+            {
+                ExportHelper.PrintGrid(gridRecent, "Recent Fulfillment Activity");
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Print Failed", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
         }
 
         private static string FormatRelativeTime(DateTime orderDate)

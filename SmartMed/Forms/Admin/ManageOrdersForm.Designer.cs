@@ -11,7 +11,7 @@ namespace SmartMed.UI
             base.Dispose(disposing);
         }
 
-        #region Component Designer generated code
+        #region Windows Form Designer generated code
 
         private void InitializeComponent()
         {
@@ -20,9 +20,16 @@ namespace SmartMed.UI
             // ManageOrdersForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
             this.Name = "ManageOrdersForm";
-            this.Size = new System.Drawing.Size(1060, 720);
+                        this.ClientSize = new System.Drawing.Size(1060, 720);
+            this.ControlBox = false;
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
+            this.MaximizeBox = false;
+            this.MinimizeBox = false;
+            this.ShowIcon = false;
+            this.ShowInTaskbar = false;
+            this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;
             this.ResumeLayout(false);
         }
 

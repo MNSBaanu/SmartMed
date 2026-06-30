@@ -42,10 +42,8 @@ namespace SmartMed.UI
 
         private void ShowDesignPreview()
         {
-            panelContent.Controls.Clear();
-            panelContent.AutoScrollPosition = new Point(0, 0);
-            var preview = new CustomerDashboardForm { Dock = DockStyle.Fill };
-            panelContent.Controls.Add(preview);
+            var preview = new CustomerDashboardForm();
+            HostPageHelper.ShowInPanel(panelContent, preview);
             lblTitleBar.Text = "SmartMed Health Portal - Home";
             Text = "SmartMed - Home";
         }
@@ -78,12 +76,9 @@ namespace SmartMed.UI
             }
         }
 
-        private void ShowPage(Control page, string title)
+        private void ShowPage(Form page, string title)
         {
-            panelContent.Controls.Clear();
-            panelContent.AutoScrollPosition = new Point(0, 0);
-            page.Dock = DockStyle.Fill;
-            panelContent.Controls.Add(page);
+            HostPageHelper.ShowInPanel(panelContent, page);
             lblTitleBar.Text = $"SmartMed Health Portal - {title}";
             Text = $"SmartMed - {title}";
         }

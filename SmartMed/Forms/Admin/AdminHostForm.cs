@@ -44,10 +44,8 @@ namespace SmartMed.UI
 
         private void ShowDesignPreview()
         {
-            panelContent.Controls.Clear();
-            panelContent.AutoScrollPosition = new Point(0, 0);
-            var preview = new AdminDashboardForm { Dock = DockStyle.Fill };
-            panelContent.Controls.Add(preview);
+            var preview = new AdminDashboardForm();
+            HostPageHelper.ShowInPanel(panelContent, preview);
             UpdateTitleBar("Operational Dashboard");
         }
 
@@ -106,70 +104,50 @@ namespace SmartMed.UI
 
         private void ShowDashboard()
         {
-            panelContent.Controls.Clear();
-            panelContent.AutoScrollPosition = new Point(0, 0);
-
             if (_dashboard == null || _dashboard.IsDisposed)
                 _dashboard = new AdminDashboardForm();
 
-            _dashboard.Dock = DockStyle.Fill;
-            panelContent.Controls.Add(_dashboard);
+            HostPageHelper.ShowInPanel(panelContent, _dashboard);
             _dashboard.RefreshData();
             UpdateTitleBar("Operational Dashboard");
         }
 
         private void ShowMedicines()
         {
-            panelContent.Controls.Clear();
-            panelContent.AutoScrollPosition = new Point(0, 0);
-
             if (_medicinesPage == null || _medicinesPage.IsDisposed)
                 _medicinesPage = new ManageMedicinesForm();
 
-            _medicinesPage.Dock = DockStyle.Fill;
-            panelContent.Controls.Add(_medicinesPage);
+            HostPageHelper.ShowInPanel(panelContent, _medicinesPage);
             _medicinesPage.RefreshPage();
             UpdateTitleBar("Manage Medicines");
         }
 
         private void ShowCustomers()
         {
-            panelContent.Controls.Clear();
-            panelContent.AutoScrollPosition = new Point(0, 0);
-
             if (_customersPage == null || _customersPage.IsDisposed)
                 _customersPage = new ManageCustomersForm();
 
-            _customersPage.Dock = DockStyle.Fill;
-            panelContent.Controls.Add(_customersPage);
+            HostPageHelper.ShowInPanel(panelContent, _customersPage);
             _customersPage.RefreshPage();
             UpdateTitleBar("Manage Customers");
         }
 
         private void ShowOrders()
         {
-            panelContent.Controls.Clear();
-            panelContent.AutoScrollPosition = new Point(0, 0);
-
             if (_ordersPage == null || _ordersPage.IsDisposed)
                 _ordersPage = new ManageOrdersForm();
 
-            _ordersPage.Dock = DockStyle.Fill;
-            panelContent.Controls.Add(_ordersPage);
+            HostPageHelper.ShowInPanel(panelContent, _ordersPage);
             _ordersPage.RefreshPage();
             UpdateTitleBar("Manage Orders");
         }
 
         private void ShowReports()
         {
-            panelContent.Controls.Clear();
-            panelContent.AutoScrollPosition = new Point(0, 0);
-
             if (_reportsPage == null || _reportsPage.IsDisposed)
                 _reportsPage = new ReportsForm();
 
-            _reportsPage.Dock = DockStyle.Fill;
-            panelContent.Controls.Add(_reportsPage);
+            HostPageHelper.ShowInPanel(panelContent, _reportsPage);
             _reportsPage.RefreshPage();
             UpdateTitleBar("Generate Reports");
         }
