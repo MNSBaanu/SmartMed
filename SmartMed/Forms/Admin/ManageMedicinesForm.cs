@@ -15,31 +15,50 @@ namespace SmartMed.UI
             "Antibiotic", "Analgesic", "Antidiabetic", "Hypertension", "Antiviral", "Vitamin", "Other"
         };
 
-        private readonly MedicineService _medicines = new MedicineService();
+        private MedicineService _medicines;
+        private MedicineService _medicineRules;
+        private bool _servicesReady;
+        private bool _runtimeWired;
+        private bool _chromeApplied;
 
         private List<Medicine> _allMedicines = new List<Medicine>();
         private List<string> _expiryAlertLines = new List<string>();
         private int? _selectedId;
 
-        private Panel panelExpiryAlerts;
-        private Label lblExpirySummary;
-        private Button btnViewExpiryAlerts;
+        private MedicineService Rules =>
+            _servicesReady ? _medicines : (_medicineRules ?? (_medicineRules = new MedicineService()));
 
         public ManageMedicinesForm()
         {
             InitializeComponent();
+            if (!IsDesignHost())
+            {
+                _medicines = new MedicineService();
+                _servicesReady = true;
+            }
         }
 
-        protected override void BuildPageLayout() => BuildContent();
+        protected override bool PreferDesignTimePreview() => !_servicesReady || IsDesignHost();
 
-        protected override void DoRefreshPage()
+        protected override void OnLoad(EventArgs e)
         {
-            SyncScrollRootWidth();
-            LoadMedicines();
+            base.OnLoad(e);
+            ApplyViewChrome();
+            if (_servicesReady)
+                WireRuntimeBehavior();
         }
+
+        protected override void BuildPageLayout()
+        {
+            // Layout lives in ManageMedicinesForm.Designer.cs.
+        }
+
+        protected override void DoRefreshPage() => LoadMedicines();
 
         protected override void LoadDesignTimePreview()
         {
+            ApplyViewChrome();
+
             _allMedicines = DesignTimePreviewData.Medicines();
             RefreshCategoryFilter();
             BindGrid(_allMedicines);
@@ -47,254 +66,120 @@ namespace SmartMed.UI
             UpdateExpiryAlerts(_allMedicines);
         }
 
-        private void BuildContent()
+        private void ApplyViewChrome()
         {
-            var root = new TableLayoutPanel
-            {
-                AutoSize = true,
-                AutoSizeMode = AutoSizeMode.GrowAndShrink,
-                ColumnCount = 1,
-                RowCount = 5,
-                MinimumSize = new Size(0, 720)
-            };
-            root.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100f));
-            root.RowStyles.Add(new RowStyle(SizeType.AutoSize));
-            root.RowStyles.Add(new RowStyle(SizeType.AutoSize));
-            root.RowStyles.Add(new RowStyle(SizeType.AutoSize));
-            root.RowStyles.Add(new RowStyle(SizeType.Percent, 100f));
-            root.RowStyles.Add(new RowStyle(SizeType.AutoSize));
+            if (_chromeApplied) return;
+            _chromeApplied = true;
 
-            root.Controls.Add(CreatePageHeader(), 0, 0);
-            root.Controls.Add(CreateToolbar(), 0, 1);
-            root.Controls.Add(CreateExpiryAlertPanel(), 0, 2);
-            root.Controls.Add(CreateGridSection(), 0, 3);
-            root.Controls.Add(CreateStatsRow(), 0, 4);
+            AdminPageView.EnsureTheme();
+            AdminPageView.ApplyChrome(this);
 
-            WireScrollRoot(root);
-        }
-
-        private Panel CreatePageHeader() =>
-            AdminUiHelpers.CreatePageHeader(
-                "Manage Medicines",
-                "Update and monitor pharmaceutical inventory levels.",
-                actions =>
-                {
-                    var btnExport = AdminUiHelpers.CreateWinButton("Export", false, 96);
-                    btnExport.Click += BtnExport_Click;
-                    var btnPrint = AdminUiHelpers.CreateWinButton("Print", false, 96);
-                    btnPrint.Click += BtnPrint_Click;
-                    actions.Controls.Add(btnExport);
-                    actions.Controls.Add(btnPrint);
-                });
-
-        private Panel CreateExpiryAlertPanel()
-        {
-            panelExpiryAlerts = new Panel
-            {
-                Dock = DockStyle.Top,
-                Height = 40,
-                BackColor = Color.FromArgb(255, 248, 240),
-                Padding = new Padding(12, 8, 12, 8),
-                Margin = new Padding(0, 0, 0, 12)
-            };
-            panelExpiryAlerts.Paint += (s, e) =>
-            {
-                using (var pen = new Pen(Color.FromArgb(200, 120, 0)))
-                    e.Graphics.DrawRectangle(pen, 0, 0, panelExpiryAlerts.Width - 1, panelExpiryAlerts.Height - 1);
-            };
-
-            btnViewExpiryAlerts = new Button
-            {
-                Text = "View All Alerts",
-                Width = 130,
-                Height = 26,
-                Dock = DockStyle.Right,
-                Visible = false,
-                FlatStyle = FlatStyle.Flat,
-                BackColor = Color.White,
-                ForeColor = UiTheme.AdminTeal,
-                Cursor = Cursors.Hand
-            };
-            btnViewExpiryAlerts.FlatAppearance.BorderColor = UiTheme.AdminOutline;
-            btnViewExpiryAlerts.Click += BtnViewExpiryAlerts_Click;
-
-            lblExpirySummary = new Label
-            {
-                Dock = DockStyle.Fill,
-                ForeColor = Color.FromArgb(140, 70, 0),
-                Text = "Expiry alerts will appear after loading medicines.",
-                AutoSize = false,
-                TextAlign = ContentAlignment.MiddleLeft,
-                BackColor = panelExpiryAlerts.BackColor
-            };
-
-            panelExpiryAlerts.Controls.Add(lblExpirySummary);
-            panelExpiryAlerts.Controls.Add(btnViewExpiryAlerts);
-            return panelExpiryAlerts;
-        }
-
-        private Panel CreateStatsRow()
-        {
-            var statsRow = new TableLayoutPanel
-            {
-                Dock = DockStyle.Top,
-                Height = 108,
-                ColumnCount = 3,
-                RowCount = 1,
-                Margin = new Padding(0, 16, 0, 0)
-            };
-            for (var i = 0; i < 3; i++)
-                statsRow.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 33.33f));
-
-            lblTotalItems = new Label();
-            lblLowStock = new Label();
-            lblExpiringSoon = new Label();
-
-            statsRow.Controls.Add(AdminUiHelpers.CreateStatCard("Total Items", lblTotalItems, UiTheme.AdminTeal), 0, 0);
-            statsRow.Controls.Add(AdminUiHelpers.CreateStatCard("Low Stock", lblLowStock, UiTheme.Danger), 1, 0);
-            statsRow.Controls.Add(AdminUiHelpers.CreateStatCard("Compliance", lblExpiringSoon, Color.FromArgb(16, 185, 129)), 2, 0);
-            return statsRow;
-        }
-
-        private Panel CreateToolbar()
-        {
-            var panel = new Panel
-            {
-                Dock = DockStyle.Top,
-                Height = 44,
-                Margin = new Padding(0, 0, 0, 12),
-                BackColor = UiTheme.AdminSurface
-            };
-
-            btnAdd = AdminUiHelpers.CreateWinButton("+ Add Medicine", primary: true, width: 130);
-            btnAdd.Click += (s, e) => ShowMedicineDialog(null);
-
-            btnEdit = AdminUiHelpers.CreateWinButton("Edit", false, 72);
-            btnEdit.Click += (s, e) =>
-            {
-                if (!_selectedId.HasValue)
-                {
-                    MessageBox.Show("Select a medicine to edit.", "Manage Medicines",
-                        MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    return;
-                }
-                ShowMedicineDialog(_medicines.GetById(_selectedId.Value));
-            };
-
-            btnRemove = AdminUiHelpers.CreateWinButton("Remove", false, 84);
-            btnRemove.Click += BtnRemove_Click;
-
-            btnReload = AdminUiHelpers.CreateWinButton("Reload", false, 84);
-            btnReload.Click += (s, e) => RefreshPage();
-
-            var left = new FlowLayoutPanel
-            {
-                Dock = DockStyle.Left,
-                AutoSize = true,
-                FlowDirection = FlowDirection.LeftToRight,
-                WrapContents = false,
-                BackColor = UiTheme.AdminSurface
-            };
-            left.Controls.Add(btnAdd);
-            left.Controls.Add(btnEdit);
-            left.Controls.Add(btnRemove);
-            left.Controls.Add(btnReload);
-
-            txtSearch = new TextBox { Width = 160 };
+            UiTheme.ApplyClinicalGrid(gridMedicines);
             UiTheme.StyleTextBox(txtSearch);
-            txtSearch.TextChanged += (s, e) => ApplyFilters();
-
-            cmbCategory = new ComboBox { Width = 130, DropDownStyle = ComboBoxStyle.DropDownList };
-            UiTheme.StyleComboBox(cmbCategory);
-            cmbCategory.Items.Add("All categories");
-            cmbCategory.SelectedIndex = 0;
-            cmbCategory.SelectedIndexChanged += (s, e) => ApplyFilters();
-
-            txtMinPrice = new TextBox { Width = 72 };
-            txtMaxPrice = new TextBox { Width = 72 };
             UiTheme.StyleTextBox(txtMinPrice);
             UiTheme.StyleTextBox(txtMaxPrice);
-            txtMinPrice.TextChanged += (s, e) => ApplyFilters();
-            txtMaxPrice.TextChanged += (s, e) => ApplyFilters();
+            UiTheme.StyleComboBox(cmbCategory);
 
-            var right = new FlowLayoutPanel
-            {
-                Dock = DockStyle.Right,
-                AutoSize = true,
-                FlowDirection = FlowDirection.LeftToRight,
-                WrapContents = false,
-                BackColor = UiTheme.AdminSurface,
-                Padding = new Padding(0, 4, 0, 0)
-            };
-            right.Controls.Add(new Label
-            {
-                Text = "Name:",
-                AutoSize = true,
-                Margin = new Padding(0, 6, 4, 0),
-                ForeColor = UiTheme.AdminMuted,
-                BackColor = UiTheme.AdminSurface
-            });
-            right.Controls.Add(txtSearch);
-            right.Controls.Add(new Label
-            {
-                Text = "Category:",
-                AutoSize = true,
-                Margin = new Padding(8, 6, 4, 0),
-                ForeColor = UiTheme.AdminMuted,
-                BackColor = UiTheme.AdminSurface
-            });
-            right.Controls.Add(cmbCategory);
-            right.Controls.Add(new Label
-            {
-                Text = "Price:",
-                AutoSize = true,
-                Margin = new Padding(8, 6, 4, 0),
-                ForeColor = UiTheme.AdminMuted,
-                BackColor = UiTheme.AdminSurface
-            });
-            right.Controls.Add(txtMinPrice);
-            right.Controls.Add(txtMaxPrice);
+            WirePanelBorder(panelGridOuter);
+            WireExpiryPanelBorder(panelExpiryAlerts);
+            WireStatCard(panelStatTotal, UiTheme.AdminTeal);
+            WireStatCard(panelStatLow, UiTheme.Danger);
+            WireStatCard(panelStatCompliance, Color.FromArgb(16, 185, 129));
 
-            var btnClearSearch = AdminUiHelpers.CreateWinButton("Clear", false, 70);
-            btnClearSearch.Click += (s, e) =>
+            if (cmbCategory.Items.Count == 0)
             {
-                txtSearch.Clear();
+                cmbCategory.Items.Add("All categories");
                 cmbCategory.SelectedIndex = 0;
-                txtMinPrice.Clear();
-                txtMaxPrice.Clear();
-                ApplyFilters();
-            };
-            right.Controls.Add(btnClearSearch);
-
-            panel.Controls.Add(right);
-            panel.Controls.Add(left);
-            return panel;
+            }
         }
 
-        private Panel CreateGridSection()
+        private static void WirePanelBorder(Panel panel)
         {
-            gridMedicines = new DataGridView
+            if (panel == null || panel.Tag as string == "dash-border") return;
+            panel.Tag = "dash-border";
+            panel.Paint += (s, e) =>
             {
-                Dock = DockStyle.Fill,
-                ReadOnly = true,
-                AllowUserToAddRows = false,
-                AllowUserToDeleteRows = false,
-                RowHeadersVisible = false,
-                SelectionMode = DataGridViewSelectionMode.FullRowSelect,
-                MultiSelect = false,
-                AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill,
-                MinimumSize = new Size(0, 360)
+                var rect = panel.ClientRectangle;
+                rect.Width -= 1;
+                rect.Height -= 1;
+                using (var pen = new Pen(UiTheme.AdminOutline))
+                    e.Graphics.DrawRectangle(pen, rect);
             };
-            UiTheme.ApplyClinicalGrid(gridMedicines);
+        }
+
+        private static void WireExpiryPanelBorder(Panel panel)
+        {
+            if (panel == null || panel.Tag as string == "expiry-border") return;
+            panel.Tag = "expiry-border";
+            panel.Paint += (s, e) =>
+            {
+                using (var pen = new Pen(Color.FromArgb(200, 120, 0)))
+                    e.Graphics.DrawRectangle(pen, 0, 0, panel.Width - 1, panel.Height - 1);
+            };
+        }
+
+        private static void WireStatCard(Panel card, Color accent)
+        {
+            if (card == null || card.Tag as string == "dash-stat") return;
+            card.Tag = "dash-stat";
+            card.Paint += (s, e) =>
+            {
+                var rect = card.ClientRectangle;
+                rect.Width -= 1;
+                rect.Height -= 1;
+                using (var pen = new Pen(UiTheme.AdminOutline))
+                    e.Graphics.DrawRectangle(pen, rect);
+                using (var brush = new SolidBrush(accent))
+                    e.Graphics.FillRectangle(brush, 0, 0, 4, rect.Height);
+            };
+        }
+
+        private void WireRuntimeBehavior()
+        {
+            if (_runtimeWired) return;
+            _runtimeWired = true;
+
+            btnAdd.Click += (s, e) => ShowMedicineDialog(null);
+            btnEdit.Click += BtnEdit_Click;
+            btnRemove.Click += BtnRemove_Click;
+            btnReload.Click += (s, e) => RefreshPage();
+            btnExport.Click += BtnExport_Click;
+            btnPrint.Click += BtnPrint_Click;
+            btnViewExpiryAlerts.Click += BtnViewExpiryAlerts_Click;
+            btnClear.Click += BtnClear_Click;
+            txtSearch.TextChanged += (s, e) => ApplyFilters();
+            cmbCategory.SelectedIndexChanged += (s, e) => ApplyFilters();
+            txtMinPrice.TextChanged += (s, e) => ApplyFilters();
+            txtMaxPrice.TextChanged += (s, e) => ApplyFilters();
             gridMedicines.CellFormatting += GridMedicines_CellFormatting;
             gridMedicines.RowPrePaint += GridMedicines_RowPrePaint;
             gridMedicines.SelectionChanged += GridMedicines_SelectionChanged;
+        }
 
-            return AdminUiHelpers.CreateSectionPanel("Medicine Inventory", gridMedicines);
+        private void BtnEdit_Click(object sender, EventArgs e)
+        {
+            if (!_selectedId.HasValue)
+            {
+                MessageBox.Show("Select a medicine to edit.", "Manage Medicines",
+                    MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return;
+            }
+            ShowMedicineDialog(_medicines.GetById(_selectedId.Value));
+        }
+
+        private void BtnClear_Click(object sender, EventArgs e)
+        {
+            txtSearch.Clear();
+            cmbCategory.SelectedIndex = 0;
+            txtMinPrice.Clear();
+            txtMaxPrice.Clear();
+            ApplyFilters();
         }
 
         private void LoadMedicines()
         {
+            if (!_servicesReady) return;
+
             _allMedicines = _medicines.GetAll();
             RefreshCategoryFilter();
             ApplyFilters();
@@ -324,7 +209,9 @@ namespace SmartMed.UI
             decimal? minPrice = decimal.TryParse(txtMinPrice?.Text?.Trim(), out var min) ? min : (decimal?)null;
             decimal? maxPrice = decimal.TryParse(txtMaxPrice?.Text?.Trim(), out var max) ? max : (decimal?)null;
             var category = cmbCategory?.SelectedIndex > 0 ? cmbCategory.SelectedItem?.ToString() : null;
-            return _medicines.Search(txtSearch?.Text ?? string.Empty, category, minPrice, maxPrice);
+            if (_servicesReady)
+                return _medicines.Search(txtSearch?.Text ?? string.Empty, category, minPrice, maxPrice);
+            return SearchService.Search(_allMedicines, txtSearch?.Text ?? string.Empty, category, minPrice, maxPrice);
         }
 
         private void ApplyFilters()
@@ -346,7 +233,7 @@ namespace SmartMed.UI
                 Name = m.MedicineName,
                 m.Category,
                 Stock = m.StockQuantity,
-                Price = _medicines.GetEffectivePrice(m).ToString("N2"),
+                Price = Rules.GetEffectivePrice(m).ToString("N2"),
                 Expiry = m.ExpiryDate.ToString("yyyy-MM-dd"),
                 Rx = m.RequiresPrescription ? "Rx" : "—",
                 Discount = $"{m.DiscountPercent:N0}%",
@@ -367,10 +254,10 @@ namespace SmartMed.UI
 
         private string GetStatusLabel(Medicine m)
         {
-            var expiry = _medicines.CheckExpiry(m);
+            var expiry = Rules.CheckExpiry(m);
             if (expiry == MedicineService.ExpiryExpired) return "Expired";
             if (expiry == MedicineService.ExpiryExpiringSoon) return "Expiring Soon";
-            if (_medicines.IsLowStock(m)) return "Low Stock";
+            if (Rules.IsLowStock(m)) return "Low Stock";
             return "In Stock";
         }
 
@@ -390,16 +277,16 @@ namespace SmartMed.UI
         private void UpdateStats(List<Medicine> all)
         {
             lblTotalItems.Text = all.Count.ToString("N0");
-            lblLowStock.Text = all.Count(m => _medicines.IsLowStock(m)).ToString("N0");
-            lblExpiringSoon.Text = $"{_medicines.CompliancePercent(all):N1}%";
+            lblLowStock.Text = all.Count(m => Rules.IsLowStock(m)).ToString("N0");
+            lblExpiringSoon.Text = $"{Rules.CompliancePercent(all):N1}%";
         }
 
         private void UpdateExpiryAlerts(List<Medicine> all)
         {
             if (lblExpirySummary == null) return;
 
-            var expired = _medicines.CountExpired(all);
-            var expiring = _medicines.CountExpiringSoon(all);
+            var expired = Rules.CountExpired(all);
+            var expiring = Rules.CountExpiringSoon(all);
             _expiryAlertLines = BuildExpiryAlertLines(all);
 
             if (expired == 0 && expiring == 0)
@@ -421,11 +308,11 @@ namespace SmartMed.UI
 
         private List<string> BuildExpiryAlertLines(IEnumerable<Medicine> all) =>
             all
-                .Where(m => _medicines.CheckExpiry(m) != MedicineService.ExpiryValid)
+                .Where(m => Rules.CheckExpiry(m) != MedicineService.ExpiryValid)
                 .OrderBy(m => m.ExpiryDate)
                 .Select(m =>
                 {
-                    var status = _medicines.CheckExpiry(m) == MedicineService.ExpiryExpired
+                    var status = Rules.CheckExpiry(m) == MedicineService.ExpiryExpired
                         ? "Expired"
                         : "Expiring soon";
                     return $"{status} — {m.MedicineName} (exp. {m.ExpiryDate:yyyy-MM-dd})";
@@ -474,7 +361,7 @@ namespace SmartMed.UI
         private string FormatPromotionStatus(Medicine m)
         {
             if (!m.IsOnPromotion) return "No";
-            return _medicines.IsPromotionActive(m) ? "Active" : "Scheduled";
+            return Rules.IsPromotionActive(m) ? "Active" : "Scheduled";
         }
 
         private void BtnExport_Click(object sender, EventArgs e)
@@ -533,7 +420,7 @@ namespace SmartMed.UI
             if (item == null) return;
 
             var row = gridMedicines.Rows[e.RowIndex];
-            if (_medicines.CheckExpiry(item) == MedicineService.ExpiryExpired)
+            if (Rules.CheckExpiry(item) == MedicineService.ExpiryExpired)
             {
                 row.DefaultCellStyle.BackColor = Color.FromArgb(255, 230, 230);
                 row.DefaultCellStyle.ForeColor = Color.DarkRed;
@@ -555,7 +442,7 @@ namespace SmartMed.UI
             if (item == null) return;
 
             var columnName = gridMedicines.Columns[e.ColumnIndex].Name;
-            var expiryStatus = _medicines.CheckExpiry(item);
+            var expiryStatus = Rules.CheckExpiry(item);
 
             if (columnName == "Stock")
             {
