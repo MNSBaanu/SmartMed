@@ -8,8 +8,11 @@ namespace SmartMed.UI
 {
     public sealed partial class ReportsForm : AdminPageControl
     {
-        private readonly ReportService _reports = new ReportService();
-        private readonly CustomerService _customers = new CustomerService();
+        private ReportService _reports;
+        private CustomerService _customers;
+        private bool _servicesReady;
+        private bool _runtimeWired;
+        private bool _chromeApplied;
 
         private ReportTab _activeTab = ReportTab.SalesPerformance;
         private ReportPeriod _activePeriod = ReportPeriod.Month;
@@ -19,13 +22,37 @@ namespace SmartMed.UI
         public ReportsForm()
         {
             InitializeComponent();
+            if (!IsDesignHost())
+            {
+                _reports = new ReportService();
+                _customers = new CustomerService();
+                _servicesReady = true;
+            }
         }
 
-        protected override void BuildPageLayout() => BuildContent();
+        protected override bool PreferDesignTimePreview() => !_servicesReady || IsDesignHost();
+
+        protected override void OnLoad(EventArgs e)
+        {
+            base.OnLoad(e);
+            ApplyViewChrome();
+            if (_servicesReady)
+                WireRuntimeBehavior();
+            else
+            {
+                UpdateTabStyles();
+                UpdatePeriodStyles();
+                UpdateStatTitlesForTab();
+            }
+        }
+
+        protected override void BuildPageLayout()
+        {
+            // Layout lives in ReportsForm.Designer.cs.
+        }
 
         protected override void DoRefreshPage()
         {
-            SyncScrollRootWidth();
             if (_reportViewed)
                 LoadActiveReport();
             else
@@ -34,6 +61,11 @@ namespace SmartMed.UI
 
         protected override void LoadDesignTimePreview()
         {
+            ApplyViewChrome();
+            UpdateTabStyles();
+            UpdatePeriodStyles();
+            UpdateStatTitlesForTab();
+
             _currentReportTable = DesignTimePreviewData.SalesReportTable();
             UiTheme.SetGridDataSource(gridReport, _currentReportTable);
             UiTheme.BeautifyGridHeaders(gridReport);
@@ -46,286 +78,83 @@ namespace SmartMed.UI
             UpdateExportButtons();
         }
 
-        private void BuildContent()
+        private void ApplyViewChrome()
         {
-            var root = new TableLayoutPanel
-            {
-                AutoSize = true,
-                AutoSizeMode = AutoSizeMode.GrowAndShrink,
-                ColumnCount = 1,
-                RowCount = 7,
-                MinimumSize = new Size(0, 900)
-            };
-            root.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100f));
-            root.RowStyles.Add(new RowStyle(SizeType.AutoSize));
-            root.RowStyles.Add(new RowStyle(SizeType.AutoSize));
-            root.RowStyles.Add(new RowStyle(SizeType.AutoSize));
-            root.RowStyles.Add(new RowStyle(SizeType.AutoSize));
-            root.RowStyles.Add(new RowStyle(SizeType.AutoSize));
-            root.RowStyles.Add(new RowStyle(SizeType.Absolute, 320f));
-            root.RowStyles.Add(new RowStyle(SizeType.AutoSize));
+            if (_chromeApplied) return;
+            _chromeApplied = true;
 
-            root.Controls.Add(CreatePageHeader(), 0, 0);
-            root.Controls.Add(CreateStatsRow(), 0, 1);
-            root.Controls.Add(CreateTabBar(), 0, 2);
-            root.Controls.Add(CreatePeriodFilter(), 0, 3);
-            root.Controls.Add(CreateCustomerFilter(), 0, 4);
-            root.Controls.Add(CreateReportGridPanel(), 0, 5);
-            root.Controls.Add(CreateFooterBar(), 0, 6);
-            WireScrollRoot(root);
-        }
+            AdminPageView.EnsureTheme();
+            AdminPageView.ApplyChrome(this);
 
-        private Panel CreatePageHeader() =>
-            AdminUiHelpers.CreatePageHeader(
-                "Generate Reports",
-                "Completed sales, stock alerts, and customer order history for quick decisions.",
-                actions =>
-                {
-                    btnViewReport = AdminUiHelpers.CreateWinButton("View Report", true, 110);
-                    btnViewReport.Click += BtnViewReport_Click;
-                    btnExportCsv = AdminUiHelpers.CreateWinButton("Export CSV", false, 100);
-                    btnExportCsv.Click += BtnExportCsv_Click;
-                    btnExportPdf = AdminUiHelpers.CreateWinButton("Export PDF", false, 100);
-                    btnExportPdf.Click += BtnExportPdf_Click;
-                    actions.Controls.Add(btnViewReport);
-                    actions.Controls.Add(btnExportCsv);
-                    actions.Controls.Add(btnExportPdf);
-                    UpdateExportButtons();
-                });
-
-        private Panel CreateStatsRow()
-        {
-            var statsRow = new TableLayoutPanel
-            {
-                Dock = DockStyle.Top,
-                Height = 108,
-                ColumnCount = 4,
-                RowCount = 1,
-                Margin = new Padding(0, 0, 0, 24)
-            };
-            for (var i = 0; i < 4; i++)
-                statsRow.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 25f));
-
-            lblTotalRevenue = new Label();
-            lblTotalOrders = new Label();
-            lblLowStock = new Label();
-            lblOutstanding = new Label();
-
-            var card0 = AdminUiHelpers.CreateStatCard("Completed Revenue", lblTotalRevenue, UiTheme.AdminTeal);
-            lblStatTitleRevenue = GetStatTitleLabel(card0, lblTotalRevenue);
-            statsRow.Controls.Add(card0, 0, 0);
-
-            var card1 = AdminUiHelpers.CreateStatCard("Completed Orders", lblTotalOrders, Color.FromArgb(59, 130, 246));
-            lblStatTitleOrders = GetStatTitleLabel(card1, lblTotalOrders);
-            statsRow.Controls.Add(card1, 1, 0);
-
-            var card2 = AdminUiHelpers.CreateStatCard("Low Stock Items", lblLowStock, UiTheme.Danger);
-            lblStatTitleLowStock = GetStatTitleLabel(card2, lblLowStock);
-            statsRow.Controls.Add(card2, 2, 0);
-
-            var card3 = AdminUiHelpers.CreateStatCard("Outstanding", lblOutstanding, Color.FromArgb(16, 185, 129));
-            lblStatTitleOutstanding = GetStatTitleLabel(card3, lblOutstanding);
-            statsRow.Controls.Add(card3, 3, 0);
-
-            return statsRow;
-        }
-
-        private static Label GetStatTitleLabel(Panel card, Label valueLabel)
-        {
-            foreach (Control control in card.Controls)
-            {
-                if (control is Label lbl && !ReferenceEquals(lbl, valueLabel))
-                    return lbl;
-            }
-            return null;
-        }
-
-        private Panel CreateTabBar()
-        {
-            var bar = new Panel
-            {
-                Dock = DockStyle.Top,
-                Height = 48,
-                BackColor = UiTheme.AdminSidebar,
-                Padding = new Padding(8, 8, 8, 0),
-                Margin = new Padding(0, 0, 0, 8)
-            };
-
-            var tabs = new FlowLayoutPanel
-            {
-                Dock = DockStyle.Fill,
-                FlowDirection = FlowDirection.LeftToRight,
-                WrapContents = false,
-                AutoSize = true,
-                BackColor = UiTheme.AdminSidebar
-            };
-
-            btnSalesTab = CreateTabButton("Sales Performance", ReportTab.SalesPerformance);
-            btnInventoryTab = CreateTabButton("Medicine Inventory", ReportTab.MedicineInventory);
-            btnHistoryTab = CreateTabButton("Customer Order History", ReportTab.CustomerOrderHistory);
-
-            tabs.Controls.Add(btnSalesTab);
-            tabs.Controls.Add(btnInventoryTab);
-            tabs.Controls.Add(btnHistoryTab);
-            bar.Controls.Add(tabs);
-            UpdateTabStyles();
-            return bar;
-        }
-
-        private Button CreateTabButton(string text, ReportTab tab)
-        {
-            var btn = new Button
-            {
-                Text = text,
-                AutoSize = true,
-                Height = 32,
-                MinimumSize = new Size(120, 32),
-                Padding = new Padding(12, 0, 12, 0),
-                FlatStyle = FlatStyle.Flat,
-                Margin = new Padding(0, 0, 8, 0),
-                BackColor = UiTheme.AdminSidebar
-            };
-            btn.FlatAppearance.BorderSize = 0;
-            btn.Tag = tab;
-            btn.Click += (s, e) => SwitchTab(tab);
-            return btn;
-        }
-
-        private Panel CreatePeriodFilter()
-        {
-            panelPeriodFilter = new Panel
-            {
-                Dock = DockStyle.Top,
-                Height = 44,
-                Margin = new Padding(0, 0, 0, 8),
-                BackColor = UiTheme.AdminSurface
-            };
-
-            var lbl = new Label
-            {
-                Text = "Period:",
-                AutoSize = true,
-                Location = new Point(0, 12),
-                Font = UiTheme.UiFont,
-                BackColor = UiTheme.AdminSurface
-            };
-
-            var tabs = new FlowLayoutPanel
-            {
-                Location = new Point(56, 6),
-                AutoSize = true,
-                FlowDirection = FlowDirection.LeftToRight,
-                WrapContents = false,
-                BackColor = UiTheme.AdminSurface
-            };
-
-            btnWeekPeriod = CreatePeriodButton("Week", ReportPeriod.Week);
-            btnMonthPeriod = CreatePeriodButton("Month", ReportPeriod.Month);
-            btnYearPeriod = CreatePeriodButton("Year", ReportPeriod.Year);
-            tabs.Controls.Add(btnWeekPeriod);
-            tabs.Controls.Add(btnMonthPeriod);
-            tabs.Controls.Add(btnYearPeriod);
-
-            panelPeriodFilter.Controls.Add(tabs);
-            panelPeriodFilter.Controls.Add(lbl);
-            UpdatePeriodFilterVisibility();
-            UpdatePeriodStyles();
-            return panelPeriodFilter;
-        }
-
-        private Button CreatePeriodButton(string text, ReportPeriod period)
-        {
-            var btn = new Button
-            {
-                Text = text,
-                Width = 64,
-                Height = 28,
-                FlatStyle = FlatStyle.Flat,
-                Margin = new Padding(0, 0, 6, 0),
-                Font = UiTheme.UiFont
-            };
-            btn.FlatAppearance.BorderSize = 0;
-            btn.Tag = period;
-            btn.Click += (s, e) => SwitchPeriod(period);
-            return btn;
-        }
-
-        private Panel CreateCustomerFilter()
-        {
-            panelCustomerFilter = new Panel
-            {
-                Dock = DockStyle.Top,
-                Height = 44,
-                Visible = false,
-                Margin = new Padding(0, 0, 0, 8),
-                BackColor = UiTheme.AdminSurface
-            };
-
-            var lbl = new Label
-            {
-                Text = "Customer:",
-                AutoSize = true,
-                Location = new Point(0, 12),
-                BackColor = UiTheme.AdminSurface
-            };
-
-            cmbCustomer = new ComboBox
-            {
-                DropDownStyle = ComboBoxStyle.DropDownList,
-                Width = 320,
-                Location = new Point(72, 8)
-            };
-            UiTheme.StyleComboBox(cmbCustomer);
-            cmbCustomer.SelectedIndexChanged += (s, e) => ResetReportPreview();
-
-            panelCustomerFilter.Controls.Add(cmbCustomer);
-            panelCustomerFilter.Controls.Add(lbl);
-            return panelCustomerFilter;
-        }
-
-        private Panel CreateReportGridPanel()
-        {
-            gridReport = new DataGridView
-            {
-                ReadOnly = true,
-                AllowUserToAddRows = false,
-                AllowUserToDeleteRows = false,
-                RowHeadersVisible = false,
-                SelectionMode = DataGridViewSelectionMode.FullRowSelect,
-                AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill,
-                ScrollBars = ScrollBars.Both,
-                MinimumSize = new Size(0, 280)
-            };
             UiTheme.ApplyClinicalGrid(gridReport);
-            gridReport.CellFormatting += GridReport_CellFormatting;
+            UiTheme.StyleComboBox(cmbCustomer);
 
-            var outer = AdminUiHelpers.CreateSectionPanel("Report Preview", gridReport);
-            outer.Margin = new Padding(0, 0, 0, 8);
-            return outer;
+            WirePanelBorder(panelGridOuter);
+            WireStatCard(panelStatRevenue, UiTheme.AdminTeal);
+            WireStatCard(panelStatOrders, Color.FromArgb(59, 130, 246));
+            WireStatCard(panelStatLowStock, UiTheme.Danger);
+            WireStatCard(panelStatOutstanding, Color.FromArgb(16, 185, 129));
+
+            btnSalesTab.Tag = ReportTab.SalesPerformance;
+            btnInventoryTab.Tag = ReportTab.MedicineInventory;
+            btnHistoryTab.Tag = ReportTab.CustomerOrderHistory;
+            btnWeekPeriod.Tag = ReportPeriod.Week;
+            btnMonthPeriod.Tag = ReportPeriod.Month;
+            btnYearPeriod.Tag = ReportPeriod.Year;
+
+            UpdatePeriodFilterVisibility();
+            UpdateTabStyles();
+            UpdatePeriodStyles();
+            UpdateStatTitlesForTab();
+            UpdateExportButtons();
         }
 
-        private Panel CreateFooterBar()
+        private static void WirePanelBorder(Panel panel)
         {
-            lblFooterStatus = new Label
+            if (panel == null || panel.Tag as string == "dash-border") return;
+            panel.Tag = "dash-border";
+            panel.Paint += (s, e) =>
             {
-                Dock = DockStyle.Fill,
-                Height = 28,
-                TextAlign = ContentAlignment.MiddleLeft,
-                Padding = new Padding(12, 0, 0, 0),
-                BackColor = UiTheme.AdminSidebar,
-                ForeColor = UiTheme.AdminMuted,
-                Font = UiTheme.UiFont,
-                Text = "Select report type and filters, then click View Report."
-            };
-            lblFooterStatus.Paint += (s, e) =>
-            {
+                var rect = panel.ClientRectangle;
+                rect.Width -= 1;
+                rect.Height -= 1;
                 using (var pen = new Pen(UiTheme.AdminOutline))
-                    e.Graphics.DrawLine(pen, 0, 0, lblFooterStatus.Width, 0);
+                    e.Graphics.DrawRectangle(pen, rect);
             };
+        }
 
-            var wrap = new Panel { Dock = DockStyle.Top, Height = 28, BackColor = UiTheme.AdminSurface };
-            wrap.Controls.Add(lblFooterStatus);
-            return wrap;
+        private static void WireStatCard(Panel card, Color accent)
+        {
+            if (card == null || card.Tag as string == "dash-stat") return;
+            card.Tag = "dash-stat";
+            card.Paint += (s, e) =>
+            {
+                var rect = card.ClientRectangle;
+                rect.Width -= 1;
+                rect.Height -= 1;
+                using (var pen = new Pen(UiTheme.AdminOutline))
+                    e.Graphics.DrawRectangle(pen, rect);
+                using (var brush = new SolidBrush(accent))
+                    e.Graphics.FillRectangle(brush, 0, 0, 4, rect.Height);
+            };
+        }
+
+        private void WireRuntimeBehavior()
+        {
+            if (_runtimeWired) return;
+            _runtimeWired = true;
+
+            btnViewReport.Click += BtnViewReport_Click;
+            btnExportCsv.Click += BtnExportCsv_Click;
+            btnExportPdf.Click += BtnExportPdf_Click;
+            btnSalesTab.Click += (s, e) => SwitchTab(ReportTab.SalesPerformance);
+            btnInventoryTab.Click += (s, e) => SwitchTab(ReportTab.MedicineInventory);
+            btnHistoryTab.Click += (s, e) => SwitchTab(ReportTab.CustomerOrderHistory);
+            btnWeekPeriod.Click += (s, e) => SwitchPeriod(ReportPeriod.Week);
+            btnMonthPeriod.Click += (s, e) => SwitchPeriod(ReportPeriod.Month);
+            btnYearPeriod.Click += (s, e) => SwitchPeriod(ReportPeriod.Year);
+            cmbCustomer.SelectedIndexChanged += (s, e) => ResetReportPreview();
+            gridReport.CellFormatting += GridReport_CellFormatting;
         }
 
         private void SwitchTab(ReportTab tab)
@@ -449,6 +278,8 @@ namespace SmartMed.UI
 
         private void LoadActiveReport()
         {
+            if (!_servicesReady) return;
+
             try
             {
                 if (_activeTab == ReportTab.SalesPerformance)
@@ -531,6 +362,8 @@ namespace SmartMed.UI
 
         private void UpdateSummaryStats()
         {
+            if (!_servicesReady) return;
+
             if (_activeTab == ReportTab.MedicineInventory)
             {
                 var stock = _currentReportTable ?? _reports.GetStockReport();
