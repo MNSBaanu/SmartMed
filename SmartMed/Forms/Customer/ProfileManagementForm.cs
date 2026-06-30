@@ -8,117 +8,105 @@ namespace SmartMed.UI
 {
     public sealed partial class ProfileManagementForm : CustomerPageControl
     {
-        private readonly CustomerService _customers = new CustomerService();
-
-        private TextBox _txtName;
-        private TextBox _txtEmail;
-        private TextBox _txtPhone;
-        private TextBox _txtAddress;
+        private CustomerService _customers;
+        private bool _servicesReady;
+        private bool _runtimeWired;
+        private bool _chromeApplied;
 
         public ProfileManagementForm()
         {
             InitializeComponent();
+            if (!IsDesignHost())
+            {
+                _customers = new CustomerService();
+                _servicesReady = true;
+            }
         }
 
-        protected override void BuildPageLayout() => BuildContent();
+        protected override bool PreferDesignTimePreview() => !_servicesReady || IsDesignHost();
+
+        protected override void OnLoad(EventArgs e)
+        {
+            base.OnLoad(e);
+            ApplyViewChrome();
+            if (_servicesReady)
+                WireRuntimeBehavior();
+        }
+
+        protected override void BuildPageLayout()
+        {
+            // Layout lives in ProfileManagementForm.Designer.cs.
+        }
 
         protected override void DoRefreshPage() => LoadProfile();
 
         protected override void LoadDesignTimePreview()
         {
+            ApplyViewChrome();
+
             var customer = DesignTimePreviewData.SampleCustomer();
-            _txtName.Text = customer.Name;
-            _txtEmail.Text = customer.Email;
-            _txtPhone.Text = customer.Phone;
-            _txtAddress.Text = customer.Address;
+            txtName.Text = customer.Name;
+            txtEmail.Text = customer.Email;
+            txtPhone.Text = customer.Phone;
+            txtAddress.Text = customer.Address;
         }
 
-        private void BuildContent()
+        private void ApplyViewChrome()
         {
-            var root = new TableLayoutPanel
-            {
-                AutoSize = true,
-                ColumnCount = 1,
-                MinimumSize = new Size(0, 420)
-            };
-            root.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100f));
+            if (_chromeApplied) return;
+            _chromeApplied = true;
 
-            root.Controls.Add(AdminUiHelpers.CreatePageHeader("My Profile",
-                "Update your contact details and password."));
+            AdminPageView.EnsureTheme();
+            AdminPageView.ApplyChrome(this);
 
-            root.Controls.Add(new Label
-            {
-                Text = "PERSONAL DETAILS",
-                Font = UiTheme.FontAt(8.25f, semibold: true),
-                ForeColor = UiTheme.AdminMuted,
-                AutoSize = true,
-                Margin = new Padding(0, 8, 0, 4),
-                BackColor = UiTheme.AdminSurface
-            });
+            UiTheme.StyleTextBox(txtName);
+            UiTheme.StyleTextBox(txtEmail);
+            UiTheme.StyleTextBox(txtPhone);
+            UiTheme.StyleTextBox(txtAddress);
 
-            AddFieldRow(root, ValidationService.RequiredLabel("Full Name"), out _txtName, first: true);
-            AddFieldRow(root, ValidationService.RequiredLabel("Email"), out _txtEmail);
-            AddFieldRow(root, ValidationService.RequiredLabel("Phone"), out _txtPhone);
-            _txtPhone.MaxLength = 14;
-            AddFieldRow(root, ValidationService.RequiredLabel("Address"), out _txtAddress, multiline: true);
-
-            var actions = new FlowLayoutPanel
-            {
-                AutoSize = true,
-                Margin = new Padding(0, 16, 0, 0),
-                BackColor = UiTheme.AdminSurface
-            };
-
-            var btnSave = AdminUiHelpers.CreateWinButton("Save Profile", primary: true, width: 120, height: 32);
-            btnSave.Click += BtnSave_Click;
-            var btnPassword = AdminUiHelpers.CreateWinButton("Change Password", primary: false, width: 140, height: 32);
-            btnPassword.Click += (s, e) => ShowChangePasswordDialog();
-
-            actions.Controls.Add(btnSave);
-            actions.Controls.Add(btnPassword);
-            root.Controls.Add(actions);
-
-            WireScrollRoot(root);
+            WirePanelBorder(panelFormOuter);
         }
 
-        private static void AddFieldRow(TableLayoutPanel root, string labelText, out TextBox textBox,
-            bool first = false, bool multiline = false)
+        private static void WirePanelBorder(Panel panel)
         {
-            var label = new Label
+            if (panel == null || panel.Tag as string == "dash-border") return;
+            panel.Tag = "dash-border";
+            panel.Paint += (s, e) =>
             {
-                Text = labelText,
-                AutoSize = true,
-                Margin = new Padding(0, first ? 8 : 16, 0, 4),
-                ForeColor = UiTheme.AdminLabelText,
-                BackColor = UiTheme.AdminSurface
+                var rect = panel.ClientRectangle;
+                rect.Width -= 1;
+                rect.Height -= 1;
+                using (var pen = new Pen(UiTheme.AdminOutline))
+                    e.Graphics.DrawRectangle(pen, rect);
             };
-            root.Controls.Add(label);
+        }
 
-            textBox = new TextBox
-            {
-                Dock = DockStyle.Top,
-                Height = multiline ? 52 : 32,
-                Multiline = multiline,
-                ScrollBars = multiline ? ScrollBars.Vertical : ScrollBars.None
-            };
-            UiTheme.StyleTextBox(textBox);
-            root.Controls.Add(textBox);
+        private void WireRuntimeBehavior()
+        {
+            if (_runtimeWired) return;
+            _runtimeWired = true;
+
+            btnSaveProfile.Click += BtnSave_Click;
+            btnChangePassword.Click += (s, e) => ShowChangePasswordDialog();
         }
 
         private void LoadProfile()
         {
-            SyncScrollRootWidth();
-            var customer = Session.CurrentCustomer;
-            if (customer == null || _txtName == null) return;
+            if (!_servicesReady) return;
 
-            _txtName.Text = customer.Name;
-            _txtEmail.Text = customer.Email;
-            _txtPhone.Text = customer.Phone;
-            _txtAddress.Text = customer.Address;
+            var customer = Session.CurrentCustomer;
+            if (customer == null) return;
+
+            txtName.Text = customer.Name;
+            txtEmail.Text = customer.Email;
+            txtPhone.Text = customer.Phone;
+            txtAddress.Text = customer.Address;
         }
 
         private void BtnSave_Click(object sender, EventArgs e)
         {
+            if (!_servicesReady) return;
+
             try
             {
                 var customer = Session.CurrentCustomer;
@@ -128,10 +116,10 @@ namespace SmartMed.UI
                 var updated = new Customer
                 {
                     CustomerID = customer.CustomerID,
-                    Name = _txtName.Text.Trim(),
-                    Email = _txtEmail.Text.Trim(),
-                    Phone = _txtPhone.Text.Trim(),
-                    Address = _txtAddress.Text.Trim(),
+                    Name = txtName.Text.Trim(),
+                    Email = txtEmail.Text.Trim(),
+                    Phone = txtPhone.Text.Trim(),
+                    Address = txtAddress.Text.Trim(),
                     Password = customer.Password
                 };
                 _customers.UpdateProfile(updated);
@@ -148,6 +136,8 @@ namespace SmartMed.UI
 
         private void ShowChangePasswordDialog()
         {
+            if (!_servicesReady) return;
+
             using (var dlg = new Form
             {
                 Text = "Change Password",
