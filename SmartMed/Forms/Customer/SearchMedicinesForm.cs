@@ -8,144 +8,95 @@ namespace SmartMed.UI
 {
     public sealed partial class SearchMedicinesForm : CustomerPageControl
     {
-        private readonly MedicineService _medicines = new MedicineService();
+        private MedicineService _medicines;
+        private bool _servicesReady;
+        private bool _runtimeWired;
+        private bool _chromeApplied;
 
         public SearchMedicinesForm()
         {
             InitializeComponent();
+            if (!IsDesignHost())
+            {
+                _medicines = new MedicineService();
+                _servicesReady = true;
+            }
         }
 
-        protected override void BuildPageLayout() => BuildContent();
+        protected override bool PreferDesignTimePreview() => !_servicesReady || IsDesignHost();
 
-        protected override void DoRefreshPage()
+        protected override void OnLoad(EventArgs e)
         {
-            SyncScrollRootWidth();
-            Search();
+            base.OnLoad(e);
+            ApplyViewChrome();
+            if (_servicesReady)
+                WireRuntimeBehavior();
         }
+
+        protected override void BuildPageLayout()
+        {
+            // Layout lives in SearchMedicinesForm.Designer.cs.
+        }
+
+        protected override void DoRefreshPage() => Search();
 
         protected override void LoadDesignTimePreview()
         {
+            ApplyViewChrome();
+
             UiTheme.SetGridDataSource(grid, DesignTimePreviewData.SearchMedicineRows());
             if (grid.Columns.Contains("MedicineID"))
                 grid.Columns["MedicineID"].Visible = false;
             UiTheme.BeautifyGridHeaders(grid);
-            lblDetails.Text = "Amoxicillin 500mg | Antibiotic | LKR 427.50 | Stock: 12 | Rx: Yes | Discount: 5% | Promo: Active";
+            lblDetails.Text =
+                "Amoxicillin 500mg | Antibiotic | LKR 427.50 | Stock: 12 | Rx: Yes | Discount: 5% | Promo: Active";
         }
 
-        private void BuildContent()
+        private void ApplyViewChrome()
         {
-            lblDetails = new Label
-            {
-                Dock = DockStyle.Top,
-                Height = 48,
-                AutoSize = false,
-                Margin = new Padding(0, 0, 0, 12),
-                ForeColor = UiTheme.AdminMuted,
-                BackColor = UiTheme.AdminSurface
-            };
+            if (_chromeApplied) return;
+            _chromeApplied = true;
 
-            grid = new DataGridView
-            {
-                Dock = DockStyle.Top,
-                Height = 280,
-                ReadOnly = true,
-                AllowUserToAddRows = false,
-                AllowUserToDeleteRows = false,
-                RowHeadersVisible = false,
-                SelectionMode = DataGridViewSelectionMode.FullRowSelect,
-                AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill,
-                Margin = new Padding(0, 0, 0, 12)
-            };
+            AdminPageView.EnsureTheme();
+            AdminPageView.ApplyChrome(this);
+
             UiTheme.ApplyClinicalGrid(grid);
-            grid.SelectionChanged += Grid_SelectionChanged;
-
-            var root = new Panel
-            {
-                AutoSize = true,
-                MinimumSize = new Size(0, 420),
-                BackColor = UiTheme.AdminSurface
-            };
-
-            root.Controls.Add(CreateCartRow());
-            root.Controls.Add(lblDetails);
-            root.Controls.Add(grid);
-            root.Controls.Add(CreateFilterPanel());
-            root.Controls.Add(AdminUiHelpers.CreatePageHeader("Browse Medicines",
-                "Search the catalog and add items to your cart."));
-
-            WireScrollRoot(root);
-        }
-
-        private Panel CreateFilterPanel()
-        {
-            var filter = new FlowLayoutPanel
-            {
-                Dock = DockStyle.Top,
-                AutoSize = true,
-                WrapContents = true,
-                Margin = new Padding(0, 0, 0, 12),
-                BackColor = UiTheme.AdminSurface
-            };
-
-            txtName = new TextBox { Width = 140, Margin = new Padding(0, 0, 8, 0) };
-            txtCategory = new TextBox { Width = 120, Margin = new Padding(0, 0, 8, 0) };
-            txtMinPrice = new TextBox { Width = 80, Margin = new Padding(0, 0, 8, 0) };
-            txtMaxPrice = new TextBox { Width = 80, Margin = new Padding(0, 0, 8, 0) };
             UiTheme.StyleTextBox(txtName);
             UiTheme.StyleTextBox(txtCategory);
             UiTheme.StyleTextBox(txtMinPrice);
             UiTheme.StyleTextBox(txtMaxPrice);
 
-            var btnSearch = AdminUiHelpers.CreateWinButton("Search", true, 80);
-            btnSearch.Click += (s, e) => Search();
-
-            filter.Controls.Add(MakeFilterLabel("Name:"));
-            filter.Controls.Add(txtName);
-            filter.Controls.Add(MakeFilterLabel("Category:"));
-            filter.Controls.Add(txtCategory);
-            filter.Controls.Add(MakeFilterLabel("Min:"));
-            filter.Controls.Add(txtMinPrice);
-            filter.Controls.Add(MakeFilterLabel("Max:"));
-            filter.Controls.Add(txtMaxPrice);
-            filter.Controls.Add(btnSearch);
-            return filter;
+            WirePanelBorder(panelGridOuter);
         }
 
-        private Panel CreateCartRow()
+        private static void WirePanelBorder(Panel panel)
         {
-            var cartRow = new FlowLayoutPanel
+            if (panel == null || panel.Tag as string == "dash-border") return;
+            panel.Tag = "dash-border";
+            panel.Paint += (s, e) =>
             {
-                Dock = DockStyle.Top,
-                AutoSize = true,
-                Margin = new Padding(0, 12, 0, 0),
-                BackColor = UiTheme.AdminSurface
+                var rect = panel.ClientRectangle;
+                rect.Width -= 1;
+                rect.Height -= 1;
+                using (var pen = new Pen(UiTheme.AdminOutline))
+                    e.Graphics.DrawRectangle(pen, rect);
             };
-
-            numQty = new NumericUpDown { Minimum = 1, Maximum = 99, Value = 1, Width = 60, Margin = new Padding(0, 0, 8, 0) };
-            numQty.Font = UiTheme.UiFont;
-
-            var btnAdd = AdminUiHelpers.CreateWinButton("Add to Cart", true, 120);
-            btnAdd.Click += BtnAdd_Click;
-
-            cartRow.Controls.Add(MakeFilterLabel("Qty:"));
-            cartRow.Controls.Add(numQty);
-            cartRow.Controls.Add(btnAdd);
-            return cartRow;
         }
 
-        private static Label MakeFilterLabel(string text) =>
-            new Label
-            {
-                Text = text,
-                AutoSize = true,
-                Padding = new Padding(0, 6, 4, 0),
-                Margin = new Padding(0, 0, 4, 0),
-                ForeColor = UiTheme.AdminMuted,
-                BackColor = UiTheme.AdminSurface
-            };
+        private void WireRuntimeBehavior()
+        {
+            if (_runtimeWired) return;
+            _runtimeWired = true;
+
+            btnSearch.Click += (s, e) => Search();
+            btnAddToCart.Click += BtnAdd_Click;
+            grid.SelectionChanged += Grid_SelectionChanged;
+        }
 
         private void Search()
         {
+            if (!_servicesReady) return;
+
             decimal? min = decimal.TryParse(txtMinPrice?.Text, out var minVal) ? minVal : (decimal?)null;
             decimal? max = decimal.TryParse(txtMaxPrice?.Text, out var maxVal) ? maxVal : (decimal?)null;
 
@@ -179,12 +130,13 @@ namespace SmartMed.UI
             var rx = grid.CurrentRow.Cells["Rx"].Value?.ToString();
             var discount = grid.CurrentRow.Cells["Discount"].Value?.ToString();
             var promo = grid.CurrentRow.Cells["Promo"].Value?.ToString();
-            lblDetails.Text = $"{name} | {category} | {price} | Stock: {stock} | Rx: {rx} | Discount: {discount} | Promo: {promo}";
+            lblDetails.Text =
+                $"{name} | {category} | {price} | Stock: {stock} | Rx: {rx} | Discount: {discount} | Promo: {promo}";
         }
 
         private void BtnAdd_Click(object sender, EventArgs e)
         {
-            if (grid?.CurrentRow == null) return;
+            if (!_servicesReady || grid?.CurrentRow == null) return;
             try
             {
                 var id = Convert.ToInt32(grid.CurrentRow.Cells["MedicineID"].Value);
