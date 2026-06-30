@@ -133,80 +133,8 @@ namespace SmartMed.UI
         {
             if (!_servicesReady) return;
 
-            using (var dlg = new Form
-            {
-                Text = "Change Password",
-                FormBorderStyle = FormBorderStyle.FixedDialog,
-                StartPosition = FormStartPosition.CenterParent,
-                MinimizeBox = false,
-                MaximizeBox = false,
-                ClientSize = new Size(360, 240),
-                Font = UiTheme.UiFont,
-                BackColor = UiTheme.AdminSurface
-            })
-            {
-                var lblCurrent = new Label { Text = "Current Password:", Location = new Point(12, 16), AutoSize = true };
-                var txtCurrent = new TextBox
-                {
-                    Location = new Point(12, 36),
-                    Width = 330,
-                    UseSystemPasswordChar = true
-                };
-                UiTheme.StyleTextBox(txtCurrent);
-
-                var lblNew = new Label { Text = "New Password:", Location = new Point(12, 72), AutoSize = true };
-                var txtNew = new TextBox
-                {
-                    Location = new Point(12, 92),
-                    Width = 330,
-                    UseSystemPasswordChar = true
-                };
-                UiTheme.StyleTextBox(txtNew);
-
-                var lblConfirm = new Label { Text = "Confirm Password:", Location = new Point(12, 128), AutoSize = true };
-                var txtConfirm = new TextBox
-                {
-                    Location = new Point(12, 148),
-                    Width = 330,
-                    UseSystemPasswordChar = true
-                };
-                UiTheme.StyleTextBox(txtConfirm);
-
-                var btnSave = AdminUiHelpers.CreateWinButton("Save", primary: true, width: 80, height: 30);
-                btnSave.Location = new Point(180, 176);
-                btnSave.DialogResult = DialogResult.OK;
-                var btnCancel = AdminUiHelpers.CreateWinButton("Cancel", primary: false, width: 80, height: 30);
-                btnCancel.Location = new Point(266, 176);
-                btnCancel.DialogResult = DialogResult.Cancel;
-
-                dlg.Controls.AddRange(new Control[]
-                {
-                    lblCurrent, txtCurrent, lblNew, txtNew, lblConfirm, txtConfirm, btnSave, btnCancel
-                });
-                dlg.AcceptButton = btnSave;
-                dlg.CancelButton = btnCancel;
-
-                if (dlg.ShowDialog(FindForm()) != DialogResult.OK)
-                    return;
-
-                try
-                {
-                    if (!string.Equals(txtNew.Text, txtConfirm.Text, StringComparison.Ordinal))
-                        throw new ArgumentException("New passwords do not match.");
-
-                    var customer = Session.CurrentCustomer;
-                    if (customer == null)
-                        throw new InvalidOperationException("Please log in again.");
-
-                    _customers.ChangePassword(customer.CustomerID, txtCurrent.Text, txtNew.Text);
-                    customer.Password = txtNew.Text;
-                    MessageBox.Show("Password changed.", "Profile", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show(ex.Message, "Change Password", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                }
-            }
+            using (var dlg = new ChangePasswordForm(isAdmin: false))
+                dlg.ShowDialog(FindForm());
         }
     }
 }

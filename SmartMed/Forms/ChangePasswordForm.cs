@@ -1,80 +1,69 @@
 using System;
 using System.Drawing;
+using System.Drawing.Drawing2D;
 using System.Windows.Forms;
 using SmartMed.Services;
 
 namespace SmartMed.UI
 {
-    public sealed class ChangePasswordForm : Form
+    public sealed partial class ChangePasswordForm : Form
     {
         private readonly bool _isAdmin;
-        private readonly TextBox txtCurrent;
-        private readonly TextBox txtNew;
-        private readonly TextBox txtConfirm;
+
+        public ChangePasswordForm() : this(isAdmin: true)
+        {
+        }
 
         public ChangePasswordForm(bool isAdmin)
         {
             _isAdmin = isAdmin;
-            Text = "Change Password";
-            FormBorderStyle = FormBorderStyle.FixedDialog;
-            MaximizeBox = false;
-            MinimizeBox = false;
-            StartPosition = FormStartPosition.CenterParent;
-            ClientSize = new Size(392, 252);
-            BackColor = UiTheme.AdminSurface;
-            Font = UiTheme.UiFont;
-
-            var body = new Panel { Dock = DockStyle.Fill, AutoSize = true, BackColor = UiTheme.AdminSurface };
-
-            txtCurrent = new TextBox { Dock = DockStyle.Top, Margin = new Padding(0, 0, 0, 8) };
-            txtNew = new TextBox { Dock = DockStyle.Top, Margin = new Padding(0, 0, 0, 8) };
-            txtConfirm = new TextBox { Dock = DockStyle.Top, Margin = new Padding(0, 0, 0, 8) };
-
-            var buttons = new FlowLayoutPanel
-            {
-                Dock = DockStyle.Bottom,
-                AutoSize = true,
-                FlowDirection = FlowDirection.RightToLeft,
-                Padding = new Padding(0, 12, 0, 0),
-                BackColor = UiTheme.AdminSurface
-            };
-            var btnSave = new Button { Text = "Save", Width = 80, DialogResult = DialogResult.None, Margin = new Padding(8, 0, 0, 0) };
-            var btnCancel = new Button { Text = "Cancel", Width = 80, DialogResult = DialogResult.Cancel };
-            btnSave.Click += BtnSave_Click;
-            buttons.Controls.Add(btnCancel);
-            buttons.Controls.Add(btnSave);
-
-            body.Controls.Add(txtConfirm);
-            body.Controls.Add(MakeLabel("Confirm Password:"));
-            body.Controls.Add(txtNew);
-            body.Controls.Add(MakeLabel("New Password:"));
-            body.Controls.Add(txtCurrent);
-            body.Controls.Add(MakeLabel("Current Password:"));
-
-            Controls.Add(buttons);
-            Controls.Add(body);
-            AcceptButton = btnSave;
-            CancelButton = btnCancel;
-
-            UiTheme.ApplyFlatButton(btnSave, UiButtonStyle.Primary);
-            UiTheme.ApplyFlatButton(btnCancel, UiButtonStyle.Secondary);
-            UiTheme.StylePasswordBox(txtCurrent, masked: true);
-            UiTheme.StylePasswordBox(txtNew, masked: true);
-            UiTheme.StylePasswordBox(txtConfirm, masked: true);
-            UiTheme.EnableFontPropagation(this);
+            InitializeComponent();
+            DoubleBuffered = true;
+            ApplyViewChrome();
+            if (!DesignHostHelper.IsDesignHost(this))
+                WireRuntimeBehavior();
         }
 
-        private static Label MakeLabel(string text) =>
-            new Label
-            {
-                Text = text,
-                Dock = DockStyle.Top,
-                AutoSize = true,
-                Font = UiTheme.UiFont,
-                ForeColor = UiTheme.AdminMuted,
-                BackColor = UiTheme.AdminSurface,
-                Margin = new Padding(0, 0, 0, 4)
-            };
+        protected override void OnLoad(EventArgs e)
+        {
+            base.OnLoad(e);
+            ApplyViewChrome();
+        }
+
+        private void ApplyViewChrome()
+        {
+            AuthFormView.ApplyCardBorder(panelCard);
+            UiTheme.ApplyFlatButton(btnSave, UiButtonStyle.Primary);
+            UiTheme.ApplyFlatButton(btnCancel, UiButtonStyle.Secondary);
+
+            lblPageSubtitle.Text = _isAdmin
+                ? "Update your administrator credentials for the clinical management portal."
+                : "Enter your current password and choose a new secure password for your health portal account.";
+            lblCardTitle.Text = _isAdmin
+                ? "SmartMed \u2014 Administrator Security"
+                : "SmartMed \u2014 Account Security";
+        }
+
+        private void WireRuntimeBehavior()
+        {
+            UiTheme.WireClinicalPasswordTextBox(txtCurrent);
+            UiTheme.WireClinicalPasswordTextBox(txtNew);
+            UiTheme.WireClinicalPasswordTextBox(txtConfirm);
+        }
+
+        private void PanelMain_Paint(object sender, PaintEventArgs e)
+        {
+            var rect = panelMain.ClientRectangle;
+            if (rect.Width <= 0 || rect.Height <= 0) return;
+            using (var brush = new LinearGradientBrush(rect, Color.White, UiTheme.AdminSurface, 45f))
+                e.Graphics.FillRectangle(brush, rect);
+        }
+
+        private void BtnCancel_Click(object sender, EventArgs e)
+        {
+            DialogResult = DialogResult.Cancel;
+            Close();
+        }
 
         private void BtnSave_Click(object sender, EventArgs e)
         {
