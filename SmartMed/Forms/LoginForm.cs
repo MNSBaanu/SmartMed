@@ -12,17 +12,35 @@ namespace SmartMed.UI
         private const string DemoAdminPassword = "admin123";
         private const string DemoCustomerEmail = "customer@gmail.com";
         private const string DemoCustomerPassword = "Customer123";
+        private const string InvalidCredentialsMessage = "Invalid credentials.";
 
-        private readonly AuthService _auth = new AuthService();
+        private readonly AuthService _auth;
         private bool _passwordVisible;
 
         public event EventHandler LoginSucceeded;
+
+        static LoginForm()
+        {
+            try
+            {
+                UiTheme.Init();
+            }
+            catch
+            {
+                // Designer host may initialize fonts later.
+            }
+        }
 
         public LoginForm()
         {
             InitializeComponent();
             DoubleBuffered = true;
-            ApplyChrome();
+            HideErrorPanel();
+            if (!DesignHostHelper.IsDesignHost(this))
+            {
+                _auth = new AuthService();
+                WireRuntimeBehavior();
+            }
         }
 
         internal void ResetAfterLogout()
@@ -30,73 +48,46 @@ namespace SmartMed.UI
             txtUsername.Clear();
             txtPassword.Clear();
             _passwordVisible = false;
-            panelError.Visible = false;
+            HideErrorPanel();
             RestoreLoginAppearance();
         }
 
-        private void ApplyChrome()
+        private void HideErrorPanel()
         {
-            UiTheme.ApplyLoginForm(this, panelMain, panelLoginCard, lnkForgot);
-            LayoutLoginContent();
+            if (panelError == null || lblError == null) return;
 
-            panelTitleBar.BackColor = UiTheme.TitleBar;
-            lblTitleBarText.ForeColor = UiTheme.AdminLabelText;
-            lblTitleBarText.BackColor = UiTheme.TitleBar;
-            lblTitleBarText.Font = UiTheme.UiFont;
-            pnlTitleIcon.BackColor = UiTheme.PrimaryContainer;
-            lblTitleIcon.ForeColor = Color.White;
-            lblTitleIcon.BackColor = UiTheme.PrimaryContainer;
-            lblTitleIcon.Font = UiTheme.FontAt(7F, bold: true);
-
-            lblBrand.ForeColor = UiTheme.AdminTealDark;
-            lblBrand.Font = UiTheme.UiFontTitle;
-            lblBrand.BackColor = Color.White;
-            lblVersion.ForeColor = UiTheme.FooterText;
-            lblVersion.BackColor = Color.White;
-            lblVersion.Font = UiTheme.FontAt(8.25F);
-            lblAuthTitle.ForeColor = UiTheme.AdminOnSurface;
-            lblAuthTitle.Font = UiTheme.UiFontAuthTitle;
-            lblAuthTitle.BackColor = Color.White;
-            lblAuthSubtitle.ForeColor = UiTheme.AdminLabelText;
-            lblAuthSubtitle.BackColor = Color.White;
-            lblAuthSubtitle.Font = UiTheme.UiFont;
-
-            pnlBrandIcon.BackColor = UiTheme.PrimaryContainer;
-            lblBrandIcon.ForeColor = Color.White;
-            lblBrandIcon.BackColor = UiTheme.PrimaryContainer;
-            lblBrandIcon.Font = UiTheme.FontAt(24F, bold: true);
-
-            UiTheme.StyleClinicalFieldLabel(lblUsername);
-            UiTheme.StyleClinicalFieldLabel(lblPassword);
-            UiTheme.StyleClinicalTextBox(txtUsername, "Enter email or username");
-            UiTheme.StyleClinicalPasswordBox(txtPassword, "Enter your password");
-            txtPassword.GotFocus += (s, e) => SetPasswordVisible(_passwordVisible);
-            UiTheme.ApplyLoginButton(btnLogin);
-            UiTheme.ApplySecondaryButton(btnRegister);
-            UiTheme.ApplySecondaryButton(btnQuickAdmin);
-            UiTheme.ApplySecondaryButton(btnQuickCustomer);
-            UiTheme.StyleLinkButton(lnkForgot);
-
-            panelFooter.BackColor = UiTheme.AdminSurface;
-            lblSecurityLine.ForeColor = UiTheme.FooterText;
-            lblSecurityLine.BackColor = UiTheme.AdminSurface;
-            lblSecurityLine.Font = UiTheme.FontAt(8.25F);
-            lblCopyright.ForeColor = UiTheme.FooterText;
-            lblCopyright.BackColor = UiTheme.AdminSurface;
-            lblCopyright.Font = UiTheme.FontAt(8.25F);
-
-            panelError.BackColor = UiTheme.ErrorContainer;
             panelError.Visible = false;
-            lblError.ForeColor = UiTheme.ErrorOnContainer;
-            lblError.BackColor = UiTheme.ErrorContainer;
-            lblError.Font = UiTheme.FontAt(8.25F);
+            lblError.Text = string.Empty;
+            panelError.BackColor = Color.White;
+            lblError.ForeColor = Color.White;
+            lblError.BackColor = Color.White;
+        }
 
+        /// <summary>Runtime-only behavior. All layout, fonts, and colors come from LoginForm.Designer.cs.</summary>
+        private void WireRuntimeBehavior()
+        {
+            UiTheme.Init();
+            UiTheme.ApplyClinicalAuthCard(panelLoginCard);
+            UiTheme.WireClinicalPlaceholderTextBox(txtUsername, "Enter email or username");
+            UiTheme.WireClinicalPasswordField(pnlPasswordField, txtPassword, btnTogglePassword, "Enter your password");
+            txtPassword.GotFocus -= TxtPassword_ApplyMask;
+            txtPassword.GotFocus += TxtPassword_ApplyMask;
+
+            HideErrorPanel();
+            panelError.SendToBack();
+            lnkForgot.BringToFront();
             SetPasswordVisible(_passwordVisible);
         }
 
+        private void TxtPassword_ApplyMask(object sender, EventArgs e) =>
+            SetPasswordVisible(_passwordVisible);
+
         internal void RestoreLoginAppearance()
         {
-            ApplyChrome();
+            UiTheme.ResetClinicalPlaceholder(txtUsername, "Enter email or username");
+            UiTheme.ResetClinicalPlaceholder(txtPassword, "Enter your password");
+            _passwordVisible = false;
+            WireRuntimeBehavior();
             Show();
             WindowState = FormWindowState.Normal;
             BringToFront();
@@ -112,7 +103,7 @@ namespace SmartMed.UI
                 txtPassword.PasswordChar = visible ? '\0' : UiTheme.PasswordMaskChar;
             }
 
-            btnTogglePassword.Text = visible ? "Hide" : "Show";
+            UiTheme.SetPasswordToggleText(btnTogglePassword, visible);
         }
 
         private void PanelMain_Paint(object sender, PaintEventArgs e)
@@ -138,25 +129,6 @@ namespace SmartMed.UI
             if (e.KeyCode != Keys.Enter) return;
             e.SuppressKeyPress = true;
             PerformLogin();
-        }
-
-        private void PanelMain_Resize(object sender, EventArgs e) => LayoutLoginContent();
-
-        private void LayoutLoginContent()
-        {
-            if (panelLoginCard == null || panelMain == null || panelFooter == null) return;
-
-            const int gap = 20;
-            var totalHeight = panelLoginCard.Height + gap + panelFooter.Height;
-            var left = Math.Max(0, (panelMain.ClientSize.Width - panelLoginCard.Width) / 2);
-            var top = Math.Max(24, (panelMain.ClientSize.Height - totalHeight) / 2);
-
-            panelLoginCard.Left = left;
-            panelLoginCard.Top = top;
-
-            panelFooter.Width = panelLoginCard.Width;
-            panelFooter.Left = left;
-            panelFooter.Top = panelLoginCard.Bottom + gap;
         }
 
         private void LnkForgot_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
@@ -198,17 +170,17 @@ namespace SmartMed.UI
         {
             txtUsername.Text = identity;
             txtUsername.ForeColor = UiTheme.AdminOnSurface;
-            txtUsername.Tag = "clinical-input";
             txtPassword.Text = password;
             txtPassword.ForeColor = UiTheme.AdminOnSurface;
-            txtPassword.Tag = "clinical-input";
             SetPasswordVisible(_passwordVisible);
             PerformLogin();
         }
 
         private void PerformLogin()
         {
-            panelError.Visible = false;
+            if (_auth == null) return;
+
+            HideErrorPanel();
 
             try
             {
@@ -245,7 +217,7 @@ namespace SmartMed.UI
                     }
                 }
 
-                MessageBox.Show("Invalid credentials.", "Login", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show(InvalidCredentialsMessage, "Login", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
             catch (Exception ex)
             {
@@ -253,6 +225,12 @@ namespace SmartMed.UI
             }
         }
 
-        private void LoginForm_Load(object sender, EventArgs e) => txtUsername.Focus();
+        private void LoginForm_Load(object sender, EventArgs e)
+        {
+        }
+
+        private void lblBrandIcon_Click(object sender, EventArgs e)
+        {
+        }
     }
 }

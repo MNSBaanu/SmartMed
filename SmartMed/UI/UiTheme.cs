@@ -129,6 +129,9 @@ namespace SmartMed.UI
 
             TryLoadBundledFonts();
             if (_familyRegular == null)
+                TryResolveRegisteredFamily();
+
+            if (_familyRegular == null)
             {
                 throw new InvalidOperationException(
                     "Hanken Grotesk font files are required in Assets/Fonts (Regular, SemiBold, Bold).");
@@ -156,6 +159,36 @@ namespace SmartMed.UI
             _familyRegular = TryRegisterFamily("HankenGrotesk-Regular.ttf");
             _familySemiBold = TryRegisterFamily("HankenGrotesk-SemiBold.ttf");
             _familyBold = TryRegisterFamily("HankenGrotesk-Bold.ttf");
+        }
+
+        private static void TryResolveRegisteredFamily()
+        {
+            foreach (var family in FontFamily.Families)
+            {
+                if (!family.Name.Equals(FontFamilyName, StringComparison.OrdinalIgnoreCase))
+                    continue;
+
+                _familyRegular = family;
+                if (_familySemiBold == null)
+                    _familySemiBold = family;
+                if (_familyBold == null)
+                    _familyBold = family;
+                return;
+            }
+
+            try
+            {
+                var family = new FontFamily(FontFamilyName);
+                _familyRegular = family;
+                if (_familySemiBold == null)
+                    _familySemiBold = family;
+                if (_familyBold == null)
+                    _familyBold = family;
+            }
+            catch
+            {
+                // Family not registered on this machine.
+            }
         }
 
         private static FontFamily TryRegisterFamily(string fileName)
@@ -319,6 +352,30 @@ namespace SmartMed.UI
             textBox.PasswordChar = '\0';
         }
 
+        /// <summary>Placeholder behavior only — does not change bounds, fonts, or colors from Designer.cs.</summary>
+        public static void WireClinicalPlaceholderTextBox(TextBox textBox, string placeholder)
+        {
+            if (textBox == null) return;
+            if (textBox.Tag as string == "clinical-placeholder-wired")
+            {
+                ApplyPlaceholder(textBox, placeholder);
+                return;
+            }
+
+            textBox.Tag = "clinical-placeholder-wired";
+            textBox.AccessibleDescription = placeholder;
+            textBox.GotFocus += (s, e) => ClearPlaceholder(textBox);
+            textBox.LostFocus += (s, e) => ApplyPlaceholder(textBox, placeholder);
+            ApplyPlaceholder(textBox, placeholder);
+        }
+
+        public static void ResetClinicalPlaceholder(TextBox textBox, string placeholder)
+        {
+            if (textBox == null) return;
+            textBox.Tag = "clinical-placeholder-wired";
+            ApplyPlaceholder(textBox, placeholder);
+        }
+
         private static void ClearPlaceholder(TextBox textBox)
         {
             if (!IsPlaceholderActive(textBox))
@@ -354,19 +411,55 @@ namespace SmartMed.UI
             StyleClinicalTextBox(textBox, placeholder);
         }
 
-        public static void StylePasswordToggleButton(Button button)
+        public static void WireClinicalPasswordField(Panel shell, TextBox textBox, Button toggle, string placeholder)
+        {
+            if (shell == null || textBox == null) return;
+
+            if (shell.Tag as string != "clinical-password-shell")
+            {
+                shell.Tag = "clinical-password-shell";
+                shell.Paint += (s, e) =>
+                {
+                    var rect = shell.ClientRectangle;
+                    rect.Width -= 1;
+                    rect.Height -= 1;
+                    using (var pen = new Pen(AdminOutline))
+                        e.Graphics.DrawRectangle(pen, rect);
+                };
+            }
+
+            WireClinicalPlaceholderTextBox(textBox, placeholder);
+            SetPasswordToggleText(toggle, false);
+        }
+
+        public static void StyleClinicalPasswordToggleButton(Button button)
         {
             if (button == null) return;
             button.FlatStyle = FlatStyle.Flat;
-            button.Text = string.Empty;
+            button.Font = FontAt(FontSize, semibold: true);
             button.Cursor = Cursors.Hand;
             button.BackColor = InputBackground;
             button.ForeColor = LinkTeal;
             button.FlatAppearance.BorderSize = 0;
-            button.FlatAppearance.MouseOverBackColor = InputFocusBackground;
+            button.FlatAppearance.MouseOverBackColor = InputBackground;
+            button.FlatAppearance.MouseDownBackColor = InputBackground;
             button.UseVisualStyleBackColor = false;
-            button.ImageAlign = ContentAlignment.MiddleCenter;
             button.TabStop = false;
+            button.TextAlign = ContentAlignment.MiddleCenter;
+            button.Image = null;
+        }
+
+        public static void StylePasswordToggleButton(Button button)
+        {
+            StyleClinicalPasswordToggleButton(button);
+            button.Text = string.Empty;
+            button.ImageAlign = ContentAlignment.MiddleCenter;
+        }
+
+        public static void SetPasswordToggleText(Button button, bool visible)
+        {
+            if (button == null) return;
+            button.Text = visible ? "Hide" : "Show";
         }
 
         public static void SetPasswordToggleIcon(Button button, bool visible)

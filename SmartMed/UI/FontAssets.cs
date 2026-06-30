@@ -11,6 +11,7 @@ namespace SmartMed.UI
     {
         private const string ResourcePrefix = "SmartMed.Assets.Fonts.";
         private const uint FrPrivate = 0x10;
+        private const uint FrPublic = 0;
         private static readonly string[] BundledFontFiles =
         {
             "HankenGrotesk-Regular.ttf",
@@ -27,12 +28,13 @@ namespace SmartMed.UI
             if (_gdiRegistered) return;
             _gdiRegistered = true;
 
+            var flags = IsDesignHostProcess() ? FrPublic : FrPrivate;
             foreach (var fileName in BundledFontFiles)
             {
                 try
                 {
                     var path = GetFontFilePath(fileName);
-                    AddFontResourceEx(path, FrPrivate, IntPtr.Zero);
+                    AddFontResourceEx(path, flags, IntPtr.Zero);
                 }
                 catch
                 {
@@ -40,6 +42,10 @@ namespace SmartMed.UI
                 }
             }
         }
+
+        public static bool IsDesignHostProcess() =>
+            System.ComponentModel.LicenseManager.UsageMode ==
+            System.ComponentModel.LicenseUsageMode.Designtime;
 
         public static string GetFontFilePath(string fileName)
         {
@@ -78,7 +84,24 @@ namespace SmartMed.UI
 
         private static byte[] TryReadEmbedded(string fileName)
         {
-            var assembly = typeof(FontAssets).Assembly;
+            foreach (var assembly in new[]
+                     {
+                         typeof(FontAssets).Assembly,
+                         Assembly.GetExecutingAssembly(),
+                         Assembly.GetEntryAssembly()
+                     })
+            {
+                if (assembly == null) continue;
+                var bytes = TryReadEmbeddedFromAssembly(assembly, fileName);
+                if (bytes != null)
+                    return bytes;
+            }
+
+            return null;
+        }
+
+        private static byte[] TryReadEmbeddedFromAssembly(Assembly assembly, string fileName)
+        {
             var resourceName = ResourcePrefix + fileName;
             using (var stream = assembly.GetManifestResourceStream(resourceName))
             {
@@ -140,6 +163,21 @@ namespace SmartMed.UI
             catch
             {
                 // Ignore assembly path issues.
+            }
+
+            try
+            {
+                var codeBase = typeof(FontAssets).Assembly.CodeBase;
+                if (!string.IsNullOrEmpty(codeBase))
+                {
+                    var uri = new Uri(codeBase);
+                    var dir = Path.GetDirectoryName(uri.LocalPath);
+                    AddDir(Path.Combine(dir ?? string.Empty, "Assets", "Fonts"));
+                }
+            }
+            catch
+            {
+                // Ignore code-base path issues.
             }
 
             var cursor = AppDomain.CurrentDomain.BaseDirectory;
