@@ -62,7 +62,7 @@ namespace SmartMed.UI
             UpdateStatTitlesForTab();
 
             _currentReportTable = DesignTimePreviewData.SalesReportTable();
-            UiTheme.SetGridDataSource(gridReport, _currentReportTable);
+            BindReportGrid(_currentReportTable);
             UiTheme.BeautifyGridHeaders(gridReport);
             lblTotalRevenue.Text = "LKR 3,340.00";
             lblTotalOrders.Text = "2";
@@ -245,7 +245,10 @@ namespace SmartMed.UI
             _reportViewed = false;
             _currentReportTable = null;
             if (gridReport != null)
+            {
                 gridReport.DataSource = null;
+                gridReport.Columns.Clear();
+            }
             if (lblFooterStatus != null)
                 lblFooterStatus.Text = "Select report type and filters, then click View Report.";
             ClearSummaryStats();
@@ -303,18 +306,24 @@ namespace SmartMed.UI
         {
             var table = _reports.GetSalesReport(_activePeriod);
             _currentReportTable = table;
-            UiTheme.SetGridDataSource(gridReport, table);
-            UiTheme.BeautifyGridHeaders(gridReport);
+            BindReportGrid(table);
             lblFooterStatus.Text =
                 $"Items: {table.Rows.Count} | Completed sales only | {GetPeriodStatusText()} | {DateTime.Now:hh:mm tt | MMM dd, yyyy}";
+        }
+
+        private void BindReportGrid(DataTable table)
+        {
+            gridReport.AutoGenerateColumns = true;
+            gridReport.Columns.Clear();
+            UiTheme.SetGridDataSource(gridReport, table);
+            UiTheme.BeautifyGridHeaders(gridReport);
         }
 
         private void LoadInventoryReport()
         {
             var table = _reports.GetStockReport();
             _currentReportTable = table;
-            UiTheme.SetGridDataSource(gridReport, table);
-            UiTheme.BeautifyGridHeaders(gridReport);
+            BindReportGrid(table);
 
             var current = CountColumnValue(table, "InventoryStatus", "Current");
             var lowStock = CountColumnValue(table, "StockStatus", "Low Stock");
@@ -342,6 +351,7 @@ namespace SmartMed.UI
             {
                 _currentReportTable = null;
                 gridReport.DataSource = null;
+                gridReport.Columns.Clear();
                 lblFooterStatus.Text = "No customers available | Server Connected";
                 return;
             }
@@ -349,8 +359,7 @@ namespace SmartMed.UI
             var customerId = Convert.ToInt32(cmbCustomer.SelectedValue);
             var table = _reports.GetCustomerOrderHistory(customerId, _activePeriod);
             _currentReportTable = table;
-            UiTheme.SetGridDataSource(gridReport, table);
-            UiTheme.BeautifyGridHeaders(gridReport);
+            BindReportGrid(table);
             lblFooterStatus.Text =
                 $"Items: {table.Rows.Count} | Customer order history | {cmbCustomer.Text} | {GetPeriodStatusText()} | {DateTime.Now:hh:mm tt}";
         }
@@ -411,9 +420,11 @@ namespace SmartMed.UI
 
         private void GridReport_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
         {
-            if (_activeTab != ReportTab.MedicineInventory || e.RowIndex < 0 || gridReport == null) return;
+            if (_activeTab != ReportTab.MedicineInventory || e.RowIndex < 0) return;
+            if (_currentReportTable == null || !_currentReportTable.Columns.Contains("InventoryStatus")) return;
+            if (e.RowIndex >= _currentReportTable.Rows.Count) return;
 
-            var status = gridReport.Rows[e.RowIndex].Cells["InventoryStatus"]?.Value?.ToString();
+            var status = _currentReportTable.Rows[e.RowIndex]["InventoryStatus"]?.ToString();
             if (string.IsNullOrEmpty(status)) return;
 
             if (status == "Expired")
