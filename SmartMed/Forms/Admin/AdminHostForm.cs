@@ -80,8 +80,23 @@ namespace SmartMed.UI
 
         private void ApplySidebarChrome()
         {
-            UiTheme.StyleSidebarBrand(panelBrand, panelBrandIcon, lblBrandTitle, lblBrandSubtitle, customerPortal: false);
-            UiTheme.StyleSidebarProfileFooter(panelProfile, panelAvatar, lblProfileName, lblProfileRole);
+            UiTheme.ConfigureTopNavigation(
+                panelSidebar,
+                panelBrand,
+                panelProfile,
+                panelNavSpacer,
+                btnNavDashboard,
+                btnNavMedicines,
+                btnNavCustomers,
+                btnNavOrders,
+                btnNavReports);
+            UiTheme.StyleSidebarBrand(panelBrand, panelBrandIcon, lblBrandTitle, lblBrandSubtitle, customerPortal: false, topNav: true);
+            UiTheme.StyleSidebarProfileFooter(panelProfile, panelAvatar, lblProfileName, lblProfileRole, topNav: true);
+            StyleNavButton(btnNavDashboard, _activeNav == AdminNavItem.Overview);
+            StyleNavButton(btnNavMedicines, _activeNav == AdminNavItem.Medicines);
+            StyleNavButton(btnNavCustomers, _activeNav == AdminNavItem.Customers);
+            StyleNavButton(btnNavOrders, _activeNav == AdminNavItem.Orders);
+            StyleNavButton(btnNavReports, _activeNav == AdminNavItem.Reports);
         }
 
         private void ApplyProfileDisplay()

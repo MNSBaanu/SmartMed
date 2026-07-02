@@ -253,10 +253,10 @@ namespace SmartMed.UI
             this.panelSidebar.Controls.Add(this.btnNavBrowse);
             this.panelSidebar.Controls.Add(this.btnNavHome);
             this.panelSidebar.Controls.Add(this.panelBrand);
-            this.panelSidebar.Dock = System.Windows.Forms.DockStyle.Left;
+            this.panelSidebar.Dock = System.Windows.Forms.DockStyle.Top;
             this.panelSidebar.Location = new System.Drawing.Point(0, 56);
             this.panelSidebar.Name = "panelSidebar";
-            this.panelSidebar.Size = new System.Drawing.Size(260, 720);
+            this.panelSidebar.Size = new System.Drawing.Size(1280, 56);
             this.panelSidebar.TabIndex = 3;
             // 
             // panelSupport
@@ -406,9 +406,9 @@ namespace SmartMed.UI
             // 
             this.panelContent.AutoScroll = false;
             this.panelContent.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panelContent.Location = new System.Drawing.Point(260, 56);
+            this.panelContent.Location = new System.Drawing.Point(0, 112);
             this.panelContent.Name = "panelContent";
-            this.panelContent.Size = new System.Drawing.Size(1020, 720);
+            this.panelContent.Size = new System.Drawing.Size(1280, 664);
             this.panelContent.TabIndex = 4;
             // 
             // CustomerHostForm

@@ -266,10 +266,10 @@ namespace SmartMed.UI
             this.panelSidebar.Controls.Add(this.btnNavMedicines);
             this.panelSidebar.Controls.Add(this.btnNavDashboard);
             this.panelSidebar.Controls.Add(this.panelBrand);
-            this.panelSidebar.Dock = System.Windows.Forms.DockStyle.Left;
+            this.panelSidebar.Dock = System.Windows.Forms.DockStyle.Top;
             this.panelSidebar.Location = new System.Drawing.Point(0, 60);
             this.panelSidebar.Name = "panelSidebar";
-            this.panelSidebar.Size = new System.Drawing.Size(297, 767);
+            this.panelSidebar.Size = new System.Drawing.Size(1463, 56);
             this.panelSidebar.TabIndex = 3;
             // 
             // panelProfile
@@ -416,9 +416,9 @@ namespace SmartMed.UI
             // 
             this.panelContent.AutoScroll = false;
             this.panelContent.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panelContent.Location = new System.Drawing.Point(297, 60);
+            this.panelContent.Location = new System.Drawing.Point(0, 116);
             this.panelContent.Name = "panelContent";
-            this.panelContent.Size = new System.Drawing.Size(1166, 767);
+            this.panelContent.Size = new System.Drawing.Size(1463, 711);
             this.panelContent.TabIndex = 4;
             // 
             // AdminHostForm

@@ -813,6 +813,92 @@ namespace SmartMed.UI
                 : Color.FromArgb(232, 239, 238);
         }
 
+        public static void ConfigureTopNavigation(
+            Panel navBar,
+            Panel brand,
+            Panel trailing,
+            Panel spacer,
+            params Button[] navButtons)
+        {
+            if (navBar == null) return;
+
+            navBar.SuspendLayout();
+            navBar.Dock = DockStyle.Top;
+            navBar.Height = 56;
+
+            if (spacer != null)
+            {
+                spacer.Visible = false;
+                spacer.Dock = DockStyle.None;
+            }
+
+            FlowLayoutPanel flow = null;
+            foreach (Control c in navBar.Controls)
+            {
+                if (c is FlowLayoutPanel fp && string.Equals(c.Name, "flowNavButtons", StringComparison.Ordinal))
+                {
+                    flow = fp;
+                    break;
+                }
+            }
+
+            if (flow == null)
+            {
+                flow = new FlowLayoutPanel
+                {
+                    Name = "flowNavButtons",
+                    FlowDirection = FlowDirection.LeftToRight,
+                    WrapContents = false,
+                    AutoScroll = true,
+                    BackColor = AdminSidebar,
+                    Padding = new Padding(4, 0, 4, 0),
+                    Margin = Padding.Empty
+                };
+                navBar.Controls.Add(flow);
+            }
+
+            flow.SuspendLayout();
+            flow.Controls.Clear();
+            foreach (var btn in navButtons)
+            {
+                if (btn == null) continue;
+                btn.Parent = flow;
+                btn.Dock = DockStyle.None;
+                btn.AutoSize = false;
+                var textW = TextRenderer.MeasureText(btn.Text ?? string.Empty, UiFontBold).Width;
+                btn.Size = new Size(Math.Max(96, textW + 44), 40);
+                btn.Margin = new Padding(2, 8, 2, 8);
+            }
+            flow.ResumeLayout(false);
+
+            if (brand != null)
+            {
+                brand.Parent = navBar;
+                brand.Dock = DockStyle.Left;
+                brand.Width = 200;
+                brand.Height = 56;
+            }
+
+            if (trailing != null)
+            {
+                trailing.Parent = navBar;
+                trailing.Dock = DockStyle.Right;
+                trailing.Height = 56;
+                trailing.Width = trailing.Name.IndexOf("Support", StringComparison.OrdinalIgnoreCase) >= 0
+                    ? 132
+                    : 188;
+            }
+
+            flow.Dock = DockStyle.Fill;
+            navBar.Controls.SetChildIndex(flow, 0);
+            if (brand != null)
+                navBar.Controls.SetChildIndex(brand, navBar.Controls.Count - 1);
+            if (trailing != null)
+                navBar.Controls.SetChildIndex(trailing, navBar.Controls.Count - 1);
+
+            navBar.ResumeLayout(true);
+        }
+
         public static void StyleWinFormsNavButton(Button button, bool active)
         {
             if (button == null) return;
@@ -820,9 +906,10 @@ namespace SmartMed.UI
             button.FlatStyle = FlatStyle.Flat;
             button.FlatAppearance.BorderSize = 0;
             button.Height = Math.Max(button.Height, 40);
-            button.TextAlign = ContentAlignment.MiddleLeft;
-            button.Padding = new Padding(40, 0, 12, 0);
-            button.Margin = new Padding(12, 2, 12, 2);
+            var topNav = button.Parent is FlowLayoutPanel;
+            button.TextAlign = topNav ? ContentAlignment.MiddleCenter : ContentAlignment.MiddleLeft;
+            button.Padding = topNav ? new Padding(8, 0, 8, 0) : new Padding(40, 0, 12, 0);
+            button.Margin = topNav ? new Padding(2, 8, 2, 8) : new Padding(12, 2, 12, 2);
             button.Cursor = Cursors.Hand;
             button.UseVisualStyleBackColor = false;
             button.Font = active ? UiFontBold : UiFont;
@@ -851,44 +938,67 @@ namespace SmartMed.UI
         internal static void PaintNavButton(Button button, Graphics graphics)
         {
             var active = button.Tag is bool isActive && isActive;
+            var topNav = button.Parent is FlowLayoutPanel;
             graphics.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
 
             using (var clear = new SolidBrush(button.BackColor))
                 graphics.FillRectangle(clear, button.ClientRectangle);
 
-            var bounds = new Rectangle(12, 2, button.Width - 24, button.Height - 4);
+            var fore = active ? OnPrimaryContainer : button.ForeColor;
+            var font = active ? UiFontBold : UiFont;
+
+            if (topNav)
+            {
+                var bounds = button.ClientRectangle;
+                bounds.Inflate(-4, -6);
+                if (active)
+                {
+                    using (var fill = new SolidBrush(PrimaryContainer))
+                        graphics.FillRectangle(fill, bounds);
+                    using (var accent = new SolidBrush(PrimaryDark))
+                        graphics.FillRectangle(accent, bounds.Left, bounds.Bottom - 3, bounds.Width, 3);
+                }
+
+                var iconBounds = new Rectangle(bounds.Left + 6, bounds.Top, 22, bounds.Height);
+                TextRenderer.DrawText(graphics, GetNavGlyph(button.Name), font, iconBounds, fore,
+                    TextFormatFlags.HorizontalCenter | TextFormatFlags.VerticalCenter);
+                var textBounds = new Rectangle(bounds.Left + 28, bounds.Top, bounds.Width - 32, bounds.Height);
+                TextRenderer.DrawText(graphics, button.Text, font, textBounds, fore,
+                    TextFormatFlags.Left | TextFormatFlags.VerticalCenter);
+                return;
+            }
+
+            var sideBounds = new Rectangle(12, 2, button.Width - 24, button.Height - 4);
             if (active)
             {
                 using (var fill = new SolidBrush(PrimaryContainer))
-                    graphics.FillRectangle(fill, bounds);
+                    graphics.FillRectangle(fill, sideBounds);
                 using (var accent = new SolidBrush(PrimaryDark))
-                    graphics.FillRectangle(accent, bounds.Left, bounds.Top, 4, bounds.Height);
+                    graphics.FillRectangle(accent, sideBounds.Left, sideBounds.Top, 4, sideBounds.Height);
             }
 
-            var fore = active ? OnPrimaryContainer : button.ForeColor;
-            var font = active ? UiFontBold : UiFont;
-            var iconBounds = new Rectangle(bounds.Left + 12, bounds.Top, 24, bounds.Height);
-            TextRenderer.DrawText(graphics, GetNavGlyph(button.Name), font, iconBounds, fore,
+            var sideIconBounds = new Rectangle(sideBounds.Left + 12, sideBounds.Top, 24, sideBounds.Height);
+            TextRenderer.DrawText(graphics, GetNavGlyph(button.Name), font, sideIconBounds, fore,
                 TextFormatFlags.HorizontalCenter | TextFormatFlags.VerticalCenter);
-            var textBounds = new Rectangle(bounds.Left + 40, bounds.Top, bounds.Width - 44, bounds.Height);
-            TextRenderer.DrawText(graphics, button.Text, font, textBounds, fore,
+            var sideTextBounds = new Rectangle(sideBounds.Left + 40, sideBounds.Top, sideBounds.Width - 44, sideBounds.Height);
+            TextRenderer.DrawText(graphics, button.Text, font, sideTextBounds, fore,
                 TextFormatFlags.Left | TextFormatFlags.VerticalCenter);
         }
 
         private static void NavButton_LegacyPaint(object sender, PaintEventArgs e) =>
             PaintNavButton((Button)sender, e.Graphics);
 
-        public static void StyleSidebarBrand(Panel brand, Panel iconHost, Label title, Label subtitle, bool customerPortal)
+        public static void StyleSidebarBrand(Panel brand, Panel iconHost, Label title, Label subtitle, bool customerPortal, bool topNav = false)
         {
             if (brand == null) return;
             brand.BackColor = AdminSidebar;
-            brand.Padding = new Padding(24, 20, 24, 16);
-            brand.Height = 88;
+            brand.Padding = topNav ? new Padding(12, 8, 12, 8) : new Padding(24, 20, 24, 16);
+            brand.Height = topNav ? 56 : 88;
 
             if (iconHost != null)
             {
-                iconHost.Size = new Size(40, 40);
-                iconHost.Location = new Point(24, 20);
+                iconHost.Size = topNav ? new Size(32, 32) : new Size(40, 40);
+                iconHost.Location = topNav ? new Point(12, 12) : new Point(24, 20);
                 iconHost.BackColor = customerPortal ? AdminTeal : PrimaryContainer;
                 iconHost.Paint -= SidebarBrandIcon_Paint;
                 iconHost.Paint += SidebarBrandIcon_Paint;
@@ -902,7 +1012,7 @@ namespace SmartMed.UI
                 title.ForeColor = PrimaryDark;
                 title.BackColor = AdminSidebar;
                 title.AutoSize = true;
-                title.Location = new Point(72, 22);
+                title.Location = topNav ? new Point(52, 12) : new Point(72, 22);
             }
 
             if (subtitle != null)
@@ -912,58 +1022,59 @@ namespace SmartMed.UI
                 subtitle.ForeColor = OnSecondaryFixedVariant;
                 subtitle.BackColor = AdminSidebar;
                 subtitle.AutoSize = true;
-                subtitle.Location = new Point(72, 44);
+                subtitle.Location = topNav ? new Point(52, 30) : new Point(72, 44);
             }
         }
 
-        public static void StyleSidebarProfileFooter(Panel profile, Panel avatar, Label name, Label role)
+        public static void StyleSidebarProfileFooter(Panel profile, Panel avatar, Label name, Label role, bool topNav = false)
         {
             if (profile == null) return;
-            profile.BackColor = SurfaceContainer;
-            profile.Padding = new Padding(24, 16, 24, 16);
-            profile.Height = 72;
+            profile.BackColor = topNav ? AdminSidebar : SurfaceContainer;
+            profile.Padding = topNav ? new Padding(8, 8, 12, 8) : new Padding(24, 16, 24, 16);
+            profile.Height = topNav ? 56 : 72;
 
             if (avatar != null)
             {
                 avatar.Size = new Size(32, 32);
-                avatar.Location = new Point(24, 20);
+                avatar.Location = topNav ? new Point(8, 12) : new Point(24, 20);
             }
 
             if (name != null)
             {
                 name.Font = UiFontBold;
                 name.ForeColor = PrimaryDark;
-                name.BackColor = SurfaceContainer;
+                name.BackColor = topNav ? AdminSidebar : SurfaceContainer;
                 name.AutoSize = true;
-                name.Location = new Point(64, 20);
+                name.Location = topNav ? new Point(48, 12) : new Point(64, 20);
             }
 
             if (role != null)
             {
                 role.Font = FontAt(7.5F);
                 role.ForeColor = AdminMuted;
-                role.BackColor = SurfaceContainer;
+                role.BackColor = topNav ? AdminSidebar : SurfaceContainer;
                 role.AutoSize = true;
-                role.Location = new Point(64, 40);
+                role.Location = topNav ? new Point(48, 30) : new Point(64, 40);
                 role.Text = role.Text?.ToUpperInvariant() ?? string.Empty;
             }
         }
 
-        public static void StyleCustomerSupportPanel(Panel panel, Label heading, Label body, Button contact)
+        public static void StyleCustomerSupportPanel(Panel panel, Label heading, Label body, Button contact, bool topNav = false)
         {
             if (panel == null) return;
-            panel.BackColor = SecondaryContainer;
-            panel.Padding = new Padding(16);
-            panel.Margin = new Padding(16, 0, 16, 16);
+            panel.BackColor = topNav ? AdminSidebar : SecondaryContainer;
+            panel.Padding = topNav ? new Padding(8, 10, 12, 10) : new Padding(16);
+            panel.Margin = topNav ? Padding.Empty : new Padding(16, 0, 16, 16);
 
             if (heading != null)
             {
                 heading.Text = "Need Help?";
                 heading.Font = UiFontBold;
                 heading.ForeColor = OnSecondaryContainer;
-                heading.BackColor = SecondaryContainer;
+                heading.BackColor = topNav ? AdminSidebar : SecondaryContainer;
                 heading.AutoSize = true;
                 heading.Location = new Point(16, 16);
+                heading.Visible = !topNav;
             }
 
             if (body != null)
@@ -971,14 +1082,15 @@ namespace SmartMed.UI
                 body.Text = "Our clinical staff is online to assist you with prescriptions.";
                 body.Font = FontAt(8.25F);
                 body.ForeColor = OnSecondaryContainer;
-                body.BackColor = SecondaryContainer;
+                body.BackColor = topNav ? AdminSidebar : SecondaryContainer;
                 body.Location = new Point(16, 36);
                 body.Size = new Size(212, 36);
+                body.Visible = !topNav;
             }
 
             if (contact != null)
             {
-                contact.Text = "CONTACT US";
+                contact.Text = topNav ? "Help" : "CONTACT US";
                 contact.FlatStyle = FlatStyle.Flat;
                 contact.FlatAppearance.BorderSize = 0;
                 contact.BackColor = AdminTeal;
@@ -987,8 +1099,16 @@ namespace SmartMed.UI
                 contact.Cursor = Cursors.Hand;
                 contact.UseVisualStyleBackColor = false;
                 contact.FlatAppearance.MouseOverBackColor = AdminTealDark;
-                contact.Size = new Size(212, 32);
-                contact.Location = new Point(16, 76);
+                if (topNav)
+                {
+                    contact.Dock = DockStyle.Fill;
+                    contact.Margin = Padding.Empty;
+                }
+                else
+                {
+                    contact.Size = new Size(212, 32);
+                    contact.Location = new Point(16, 76);
+                }
             }
         }
 
