@@ -254,8 +254,8 @@ namespace SmartMed.UI
                 .ToList();
 
             UiTheme.SetGridDataSource(gridCustomers, pageRows);
-            if (gridCustomers.Columns.Contains("CustomerID"))
-                gridCustomers.Columns["CustomerID"].Visible = false;
+            if (gridCustomers.Columns.Contains("colCustomerID"))
+                gridCustomers.Columns["colCustomerID"].Visible = false;
             UiTheme.BeautifyGridHeaders(gridCustomers);
 
             lblPageInfo.Text = $"Page {_currentPage} of {totalPages}";
@@ -276,7 +276,7 @@ namespace SmartMed.UI
                 _selectedId = null;
                 return;
             }
-            var cell = gridCustomers.CurrentRow.Cells["CustomerID"];
+            var cell = gridCustomers.CurrentRow.Cells["colCustomerID"];
             _selectedId = cell?.Value != null ? Convert.ToInt32(cell.Value) : (int?)null;
         }
 
@@ -289,7 +289,7 @@ namespace SmartMed.UI
         private void GridCustomers_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
         {
             if (e.RowIndex < 0 || e.ColumnIndex < 0) return;
-            if (gridCustomers.Columns[e.ColumnIndex].Name != "Status") return;
+            if (gridCustomers.Columns[e.ColumnIndex].Name != "colStatus") return;
 
             var status = e.Value?.ToString() ?? "";
             if (string.Equals(status, "ACTIVE", StringComparison.OrdinalIgnoreCase))
