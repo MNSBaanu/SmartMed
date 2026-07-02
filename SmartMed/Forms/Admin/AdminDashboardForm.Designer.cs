@@ -25,9 +25,6 @@ namespace SmartMed.UI
             this.tableLayoutRoot = new System.Windows.Forms.TableLayoutPanel();
             this.panelHeader = new System.Windows.Forms.Panel();
             this.flowHeaderActions = new System.Windows.Forms.FlowLayoutPanel();
-            this.pnlSearchWrap = new System.Windows.Forms.Panel();
-            this.lblSearchHint = new System.Windows.Forms.Label();
-            this.txtSearch = new System.Windows.Forms.TextBox();
             this.btnRefresh = new System.Windows.Forms.Button();
             this.btnNewOrder = new System.Windows.Forms.Button();
             this.lblPageSubtitle = new System.Windows.Forms.Label();
@@ -78,14 +75,12 @@ namespace SmartMed.UI
             this.Timestamp = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.panelRecentHeader = new System.Windows.Forms.Panel();
             this.flowRecentHeaderActions = new System.Windows.Forms.FlowLayoutPanel();
-            this.btnFilter = new System.Windows.Forms.Button();
             this.btnPrint = new System.Windows.Forms.Button();
             this.lblRecentHeaderTitle = new System.Windows.Forms.Label();
             this.panelScrollHost.SuspendLayout();
             this.tableLayoutRoot.SuspendLayout();
             this.panelHeader.SuspendLayout();
             this.flowHeaderActions.SuspendLayout();
-            this.pnlSearchWrap.SuspendLayout();
             this.tableStatsRow.SuspendLayout();
             this.panelStatStock.SuspendLayout();
             this.panelStatOrders.SuspendLayout();
@@ -162,52 +157,15 @@ namespace SmartMed.UI
             // 
             this.flowHeaderActions.AutoSize = true;
             this.flowHeaderActions.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(244)))), ((int)(((byte)(251)))), ((int)(((byte)(250)))));
-            this.flowHeaderActions.Controls.Add(this.pnlSearchWrap);
             this.flowHeaderActions.Controls.Add(this.btnRefresh);
             this.flowHeaderActions.Controls.Add(this.btnNewOrder);
             this.flowHeaderActions.Dock = System.Windows.Forms.DockStyle.Right;
-            this.flowHeaderActions.Location = new System.Drawing.Point(533, 0);
+            this.flowHeaderActions.Location = new System.Drawing.Point(767, 0);
             this.flowHeaderActions.Name = "flowHeaderActions";
             this.flowHeaderActions.Padding = new System.Windows.Forms.Padding(0, 16, 0, 0);
-            this.flowHeaderActions.Size = new System.Drawing.Size(458, 76);
+            this.flowHeaderActions.Size = new System.Drawing.Size(224, 76);
             this.flowHeaderActions.TabIndex = 2;
             this.flowHeaderActions.WrapContents = false;
-            // 
-            // pnlSearchWrap
-            // 
-            this.pnlSearchWrap.BackColor = System.Drawing.Color.White;
-            this.pnlSearchWrap.Controls.Add(this.lblSearchHint);
-            this.pnlSearchWrap.Controls.Add(this.txtSearch);
-            this.pnlSearchWrap.Location = new System.Drawing.Point(0, 16);
-            this.pnlSearchWrap.Margin = new System.Windows.Forms.Padding(0, 0, 10, 0);
-            this.pnlSearchWrap.Name = "pnlSearchWrap";
-            this.pnlSearchWrap.Size = new System.Drawing.Size(224, 30);
-            this.pnlSearchWrap.TabIndex = 0;
-            // 
-            // lblSearchHint
-            // 
-            this.lblSearchHint.BackColor = System.Drawing.Color.White;
-            this.lblSearchHint.Cursor = System.Windows.Forms.Cursors.IBeam;
-            this.lblSearchHint.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F);
-            this.lblSearchHint.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(130)))), ((int)(((byte)(138)))), ((int)(((byte)(136)))));
-            this.lblSearchHint.Location = new System.Drawing.Point(10, 0);
-            this.lblSearchHint.Name = "lblSearchHint";
-            this.lblSearchHint.Size = new System.Drawing.Size(170, 30);
-            this.lblSearchHint.TabIndex = 1;
-            this.lblSearchHint.Text = "Search ID...";
-            this.lblSearchHint.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            // 
-            // txtSearch
-            // 
-            this.txtSearch.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.txtSearch.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.txtSearch.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F);
-            this.txtSearch.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(22)))), ((int)(((byte)(29)))), ((int)(((byte)(29)))));
-            this.txtSearch.Location = new System.Drawing.Point(0, 0);
-            this.txtSearch.Margin = new System.Windows.Forms.Padding(28, 0, 8, 0);
-            this.txtSearch.Name = "txtSearch";
-            this.txtSearch.Size = new System.Drawing.Size(224, 17);
-            this.txtSearch.TabIndex = 0;
             // 
             // btnRefresh
             // 
@@ -218,7 +176,7 @@ namespace SmartMed.UI
             this.btnRefresh.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnRefresh.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F);
             this.btnRefresh.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(22)))), ((int)(((byte)(29)))), ((int)(((byte)(29)))));
-            this.btnRefresh.Location = new System.Drawing.Point(234, 16);
+            this.btnRefresh.Location = new System.Drawing.Point(0, 16);
             this.btnRefresh.Margin = new System.Windows.Forms.Padding(0, 0, 10, 0);
             this.btnRefresh.Name = "btnRefresh";
             this.btnRefresh.Size = new System.Drawing.Size(96, 30);
@@ -235,7 +193,7 @@ namespace SmartMed.UI
             this.btnNewOrder.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnNewOrder.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F);
             this.btnNewOrder.ForeColor = System.Drawing.Color.White;
-            this.btnNewOrder.Location = new System.Drawing.Point(340, 16);
+            this.btnNewOrder.Location = new System.Drawing.Point(106, 16);
             this.btnNewOrder.Margin = new System.Windows.Forms.Padding(0);
             this.btnNewOrder.Name = "btnNewOrder";
             this.btnNewOrder.Size = new System.Drawing.Size(118, 30);
@@ -858,31 +816,13 @@ namespace SmartMed.UI
             // 
             this.flowRecentHeaderActions.AutoSize = true;
             this.flowRecentHeaderActions.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(238)))), ((int)(((byte)(245)))), ((int)(((byte)(244)))));
-            this.flowRecentHeaderActions.Controls.Add(this.btnFilter);
             this.flowRecentHeaderActions.Controls.Add(this.btnPrint);
             this.flowRecentHeaderActions.Dock = System.Windows.Forms.DockStyle.Right;
-            this.flowRecentHeaderActions.Location = new System.Drawing.Point(825, 8);
+            this.flowRecentHeaderActions.Location = new System.Drawing.Point(903, 8);
             this.flowRecentHeaderActions.Name = "flowRecentHeaderActions";
-            this.flowRecentHeaderActions.Size = new System.Drawing.Size(154, 24);
+            this.flowRecentHeaderActions.Size = new System.Drawing.Size(76, 24);
             this.flowRecentHeaderActions.TabIndex = 1;
             this.flowRecentHeaderActions.WrapContents = false;
-            // 
-            // btnFilter
-            // 
-            this.btnFilter.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(238)))), ((int)(((byte)(245)))), ((int)(((byte)(244)))));
-            this.btnFilter.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.btnFilter.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(193)))), ((int)(((byte)(200)))), ((int)(((byte)(198)))));
-            this.btnFilter.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(227)))), ((int)(((byte)(234)))), ((int)(((byte)(233)))));
-            this.btnFilter.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnFilter.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F);
-            this.btnFilter.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(22)))), ((int)(((byte)(29)))), ((int)(((byte)(29)))));
-            this.btnFilter.Location = new System.Drawing.Point(0, 0);
-            this.btnFilter.Margin = new System.Windows.Forms.Padding(0, 0, 10, 0);
-            this.btnFilter.Name = "btnFilter";
-            this.btnFilter.Size = new System.Drawing.Size(72, 28);
-            this.btnFilter.TabIndex = 0;
-            this.btnFilter.Text = "Filter";
-            this.btnFilter.UseVisualStyleBackColor = false;
             // 
             // btnPrint
             // 
@@ -893,7 +833,7 @@ namespace SmartMed.UI
             this.btnPrint.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnPrint.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F);
             this.btnPrint.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(22)))), ((int)(((byte)(29)))), ((int)(((byte)(29)))));
-            this.btnPrint.Location = new System.Drawing.Point(82, 0);
+            this.btnPrint.Location = new System.Drawing.Point(0, 0);
             this.btnPrint.Margin = new System.Windows.Forms.Padding(0);
             this.btnPrint.Name = "btnPrint";
             this.btnPrint.Size = new System.Drawing.Size(72, 28);
@@ -929,8 +869,6 @@ namespace SmartMed.UI
             this.panelHeader.ResumeLayout(false);
             this.panelHeader.PerformLayout();
             this.flowHeaderActions.ResumeLayout(false);
-            this.pnlSearchWrap.ResumeLayout(false);
-            this.pnlSearchWrap.PerformLayout();
             this.tableStatsRow.ResumeLayout(false);
             this.panelStatStock.ResumeLayout(false);
             this.panelStatOrders.ResumeLayout(false);
@@ -968,9 +906,6 @@ namespace SmartMed.UI
         private System.Windows.Forms.Label lblPageTitle;
         private System.Windows.Forms.Label lblPageSubtitle;
         private System.Windows.Forms.FlowLayoutPanel flowHeaderActions;
-        private System.Windows.Forms.Panel pnlSearchWrap;
-        private System.Windows.Forms.TextBox txtSearch;
-        private System.Windows.Forms.Label lblSearchHint;
         private System.Windows.Forms.Button btnRefresh;
         private System.Windows.Forms.Button btnNewOrder;
         private System.Windows.Forms.TableLayoutPanel tableStatsRow;
@@ -1014,7 +949,6 @@ namespace SmartMed.UI
         private System.Windows.Forms.Panel panelRecentHeader;
         private System.Windows.Forms.Label lblRecentHeaderTitle;
         private System.Windows.Forms.FlowLayoutPanel flowRecentHeaderActions;
-        private System.Windows.Forms.Button btnFilter;
         private System.Windows.Forms.Button btnPrint;
         private System.Windows.Forms.Panel panelRecentBody;
         private System.Windows.Forms.DataGridView gridRecent;

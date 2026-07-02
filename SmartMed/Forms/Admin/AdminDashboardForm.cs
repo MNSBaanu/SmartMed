@@ -56,9 +56,7 @@ namespace SmartMed.UI
             UiTheme.ApplyClinicalGrid(gridLowStock);
             UiTheme.ApplyClinicalGrid(gridExpiry);
             UiTheme.ApplyClinicalGrid(gridRecent);
-            UiTheme.StyleTextBox(txtSearch);
 
-            WirePanelBorder(pnlSearchWrap);
             WireStatCard(panelStatStock, UiTheme.AdminTeal, skipAccent: true);
             WireStatCard(panelStatOrders, Color.FromArgb(184, 237, 226), skipAccent: true);
             WireStatCard(panelStatSales, Color.FromArgb(199, 234, 228), skipAccent: true);
@@ -109,18 +107,11 @@ namespace SmartMed.UI
             if (_runtimeWired) return;
             _runtimeWired = true;
 
-            txtSearch.TextChanged += (s, e) => ApplyRecentSearch();
             btnRefresh.Click += (s, e) => LoadDashboardData();
             btnNewOrder.Click += (s, e) => GoToAdminSection(AdminNavItem.Orders);
-            btnFilter.Click += (s, e) => txtSearch.Focus();
             btnPrint.Click += BtnPrintRecent_Click;
             gridRecent.CellFormatting += GridRecent_CellFormatting;
             gridRecent.CellContentClick += GridRecent_CellContentClick;
-
-            txtSearch.GotFocus += (s, e) => lblSearchHint.Visible = false;
-            txtSearch.LostFocus += (s, e) => lblSearchHint.Visible = string.IsNullOrEmpty(txtSearch.Text);
-            pnlSearchWrap.Click += (s, e) => txtSearch.Focus();
-            lblSearchHint.Click += (s, e) => txtSearch.Focus();
         }
 
         protected override void LoadDesignTimePreview()
@@ -190,25 +181,7 @@ namespace SmartMed.UI
                 FulfillmentStatus = o.Status,
                 Timestamp = FormatRelativeTime(o.OrderDate)
             }).ToList();
-            ApplyRecentSearch();
-        }
-
-        private void ApplyRecentSearch()
-        {
-            if (_recentRows == null || _recentRows.Count == 0)
-            {
-                BindRecentGrid(_recentRows ?? new List<object>());
-                return;
-            }
-
-            var term = txtSearch?.Text?.Trim();
-            BindRecentGrid(string.IsNullOrWhiteSpace(term)
-                ? _recentRows
-                : _recentRows.Where(row =>
-                {
-                    var value = row.GetType().GetProperty("OrderRef")?.GetValue(row)?.ToString() ?? "";
-                    return value.IndexOf(term, StringComparison.OrdinalIgnoreCase) >= 0;
-                }).ToList());
+            BindRecentGrid(_recentRows);
         }
 
         private void BindRecentGrid(IEnumerable<object> rows)
