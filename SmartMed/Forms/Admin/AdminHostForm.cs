@@ -122,6 +122,7 @@ namespace SmartMed.UI
                 btnNavReports,
                 btnNavLogout);
             UiTheme.StyleSidebarBrand(panelBrand, panelBrandIcon, lblBrandTitle, lblBrandSubtitle, customerPortal: false, topNav: true);
+            panelBrand.Visible = false;
             UiTheme.StyleSidebarProfileFooter(panelProfile, panelAvatar, lblProfileName, lblProfileRole, topNav: true);
             StyleNavButton(btnNavDashboard, _activeNav == AdminNavItem.Overview);
             StyleNavButton(btnNavMedicines, _activeNav == AdminNavItem.Medicines);
@@ -137,8 +138,8 @@ namespace SmartMed.UI
             var displayName = DesignHostHelper.IsDesignHost(this)
                 ? "Administrator"
                 : (Session.CurrentAdmin?.Username ?? "Administrator");
-            lblProfileName.Text = displayName;
-            lblProfileRole.Text = "System Admin";
+            lblProfileName.Text = displayName.ToUpperInvariant();
+            lblProfileRole.Text = "SYSTEM ADMIN";
             WireProfileAvatar();
         }
 
