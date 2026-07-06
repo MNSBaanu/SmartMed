@@ -108,7 +108,7 @@ namespace SmartMed.UI
             _runtimeWired = true;
 
             btnRefresh.Click += (s, e) => LoadDashboardData();
-            btnNewOrder.Click += (s, e) => GoToAdminSection(AdminNavItem.Orders);
+            btnNewOrder.Click += (s, e) => GoToAdminSection(AdminHostForm.AdminNavItem.Orders);
             btnPrint.Click += BtnPrintRecent_Click;
             gridRecent.CellFormatting += GridRecent_CellFormatting;
             gridRecent.CellContentClick += GridRecent_CellContentClick;
@@ -268,10 +268,10 @@ namespace SmartMed.UI
         private void GridRecent_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
             if (e.RowIndex < 0 || gridRecent.Columns[e.ColumnIndex].Name != "Actions") return;
-            GoToAdminSection(AdminNavItem.Orders);
+            GoToAdminSection(AdminHostForm.AdminNavItem.Orders);
         }
 
-        private void GoToAdminSection(AdminNavItem nav)
+        private void GoToAdminSection(AdminHostForm.AdminNavItem nav)
         {
             var host = FindForm() as AdminHostForm;
             if (host == null)

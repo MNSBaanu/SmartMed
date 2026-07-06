@@ -7,6 +7,17 @@ namespace SmartMed.UI
 {
     public sealed partial class AdminHostForm : Form
     {
+        public class AdminNavItem
+        {
+            public string Key { get; }
+            private AdminNavItem(string key) => Key = key;
+            public static readonly AdminNavItem Overview = new AdminNavItem("Overview");
+            public static readonly AdminNavItem Medicines = new AdminNavItem("Medicines");
+            public static readonly AdminNavItem Customers = new AdminNavItem("Customers");
+            public static readonly AdminNavItem Orders = new AdminNavItem("Orders");
+            public static readonly AdminNavItem Reports = new AdminNavItem("Reports");
+        }
+
         private AdminDashboardForm _dashboard;
         private ManageMedicinesForm _medicinesPage;
         private ManageCustomersForm _customersPage;
