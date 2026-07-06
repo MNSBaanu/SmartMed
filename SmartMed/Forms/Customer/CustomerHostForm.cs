@@ -72,6 +72,7 @@ namespace SmartMed.UI
             UiTheme.ApplyFormFonts(this);
             UiTheme.ApplyAdminWinFormsShell(
                 this, panelTitleBar, panelMenuBar, panelSidebar, panelContent, panelStatusBar);
+            panelMenuBar.Visible = false;
             ApplySidebarChrome();
             ApplyWinControls();
         }
