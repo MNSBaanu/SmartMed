@@ -871,6 +871,11 @@ namespace SmartMed.UI
             }
             flow.ResumeLayout(false);
 
+            // Center nav buttons within the flow panel
+            flow.Resize -= FlowNavButtons_CenterResize;
+            flow.Resize += FlowNavButtons_CenterResize;
+            CenterFlowButtons(flow);
+
             if (brand != null)
             {
                 brand.Parent = navBar;
@@ -897,6 +902,22 @@ namespace SmartMed.UI
                 navBar.Controls.SetChildIndex(trailing, navBar.Controls.Count - 1);
 
             navBar.ResumeLayout(true);
+        }
+
+        private static void FlowNavButtons_CenterResize(object sender, EventArgs e)
+        {
+            if (sender is FlowLayoutPanel flow)
+                CenterFlowButtons(flow);
+        }
+
+        private static void CenterFlowButtons(FlowLayoutPanel flow)
+        {
+            int totalW = 0;
+            foreach (Control c in flow.Controls)
+                totalW += c.Width + c.Margin.Horizontal;
+
+            int leftPad = Math.Max(0, (flow.ClientSize.Width - totalW) / 2);
+            flow.Padding = new Padding(leftPad, 0, 0, 0);
         }
 
         public static void StyleWinFormsNavButton(Button button, bool active)

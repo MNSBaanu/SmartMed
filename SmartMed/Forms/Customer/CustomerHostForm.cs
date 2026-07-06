@@ -124,6 +124,7 @@ namespace SmartMed.UI
                 btnNavProfile,
                 btnNavLogout);
             UiTheme.StyleSidebarBrand(panelBrand, panelBrandIcon, lblBrandTitle, lblBrandSubtitle, customerPortal: true, topNav: true);
+            panelBrand.Visible = false;
             UiTheme.StyleCustomerSupportPanel(panelSupport, lblSupportHeading, lblSupportBody, btnSupportContact, topNav: true);
             StyleNavButton(btnNavHome, _activeNav == CustomerNavItem.Home);
             StyleNavButton(btnNavBrowse, _activeNav == CustomerNavItem.Browse);
