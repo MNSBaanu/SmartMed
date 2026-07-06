@@ -1,4 +1,5 @@
 using System;
+using System.Drawing;
 using System.Windows.Forms;
 
 namespace SmartMed.UI
@@ -33,9 +34,10 @@ namespace SmartMed.UI
 
             btnNavLogout = new SmartMed.UI.NavButton
             {
-                Text = "Logout",
+                Text = "LOGOUT",
                 Name = "btnNavLogout",
-                Cursor = Cursors.Hand
+                Cursor = Cursors.Hand,
+                Font = new Font(SystemFonts.DefaultFont.FontFamily, 11F, FontStyle.Bold)
             };
             btnNavLogout.Click += (s, e) =>
             {

@@ -36,9 +36,10 @@ namespace SmartMed.UI
 
             btnNavLogout = new SmartMed.UI.NavButton
             {
-                Text = "Logout",
+                Text = "LOGOUT",
                 Name = "btnNavLogout",
-                Cursor = Cursors.Hand
+                Cursor = Cursors.Hand,
+                Font = new Font(SystemFonts.DefaultFont.FontFamily, 11F, FontStyle.Bold)
             };
             btnNavLogout.Click += (s, e) =>
             {
@@ -128,6 +129,7 @@ namespace SmartMed.UI
             StyleNavButton(btnNavOrders, _activeNav == AdminNavItem.Orders);
             StyleNavButton(btnNavReports, _activeNav == AdminNavItem.Reports);
             StyleNavButton(btnNavLogout, false);
+            btnNavLogout.Font = new Font(SystemFonts.DefaultFont.FontFamily, 11F, FontStyle.Bold);
         }
 
         private void ApplyProfileDisplay()

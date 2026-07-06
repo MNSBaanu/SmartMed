@@ -912,7 +912,7 @@ namespace SmartMed.UI
             button.Margin = topNav ? new Padding(2, 8, 2, 8) : new Padding(12, 2, 12, 2);
             button.Cursor = Cursors.Hand;
             button.UseVisualStyleBackColor = false;
-            button.Font = FontAt(13F, bold: true);
+            button.Font = FontAt(11F, bold: true);
             button.Tag = active;
 
             if (active)
