@@ -71,7 +71,7 @@ namespace SmartMed.UI
             {
                 if (txtNew.Text != txtConfirm.Text)
                 {
-                    MessageBox.Show("New passwords do not match.", Text, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    SmartMedMessageBox.Show("New passwords do not match.", Text, MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     return;
                 }
 
@@ -93,13 +93,13 @@ namespace SmartMed.UI
                     Session.CurrentCustomer.Password = txtNew.Text;
                 }
 
-                MessageBox.Show("Password updated successfully.", Text, MessageBoxButtons.OK, MessageBoxIcon.Information);
+                SmartMedMessageBox.Show("Password updated successfully.", Text, MessageBoxButtons.OK, MessageBoxIcon.Information);
                 DialogResult = DialogResult.OK;
                 Close();
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message, Text, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                SmartMedMessageBox.Show(ex.Message, Text, MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
         }
     }

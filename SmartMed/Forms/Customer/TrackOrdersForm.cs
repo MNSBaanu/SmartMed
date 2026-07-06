@@ -142,7 +142,7 @@ namespace SmartMed.UI
 
             if (!System.IO.File.Exists(filePath))
             {
-                MessageBox.Show("Prescription file is no longer available on this device.", "Prescription",
+                SmartMedMessageBox.Show("Prescription file is no longer available on this device.", "Prescription",
                     MessageBoxButtons.OK, MessageBoxIcon.Information);
                 return;
             }
@@ -153,7 +153,7 @@ namespace SmartMed.UI
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Could not open prescription file.\n{ex.Message}", "Prescription",
+                SmartMedMessageBox.Show($"Could not open prescription file.\n{ex.Message}", "Prescription",
                     MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
         }
@@ -164,12 +164,12 @@ namespace SmartMed.UI
 
             if (!_selectedOrderId.HasValue)
             {
-                MessageBox.Show("Select a pending order to cancel.", "Cancel Order",
+                SmartMedMessageBox.Show("Select a pending order to cancel.", "Cancel Order",
                     MessageBoxButtons.OK, MessageBoxIcon.Information);
                 return;
             }
 
-            if (MessageBox.Show("Cancel this order and restore stock?", "Confirm Cancel",
+            if (SmartMedMessageBox.Show("Cancel this order and restore stock?", "Confirm Cancel",
                     MessageBoxButtons.YesNo, MessageBoxIcon.Question) != DialogResult.Yes)
                 return;
 
@@ -177,11 +177,11 @@ namespace SmartMed.UI
             {
                 _orders.CancelOrder(_selectedOrderId.Value, Session.CurrentCustomer.CustomerID);
                 RefreshOrders();
-                MessageBox.Show("Order cancelled.", "Cancel Order", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                SmartMedMessageBox.Show("Order cancelled.", "Cancel Order", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message, "Cancel Failed", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                SmartMedMessageBox.Show(ex.Message, "Cancel Failed", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
         }
 
@@ -202,12 +202,12 @@ namespace SmartMed.UI
                 try
                 {
                     _orders.ExportCustomerOrderHistoryToCsv(customer.CustomerID, dialog.FileName);
-                    MessageBox.Show("Order history exported to CSV.", "Export",
+                    SmartMedMessageBox.Show("Order history exported to CSV.", "Export",
                         MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show(ex.Message, "Export Failed", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    SmartMedMessageBox.Show(ex.Message, "Export Failed", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 }
             }
         }
@@ -229,12 +229,12 @@ namespace SmartMed.UI
                 try
                 {
                     _orders.ExportCustomerOrderHistoryToPdf(customer.CustomerID, dialog.FileName, customer.Name);
-                    MessageBox.Show("Order history exported to PDF.", "Export",
+                    SmartMedMessageBox.Show("Order history exported to PDF.", "Export",
                         MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show(ex.Message, "Export Failed", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    SmartMedMessageBox.Show(ex.Message, "Export Failed", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 }
             }
         }

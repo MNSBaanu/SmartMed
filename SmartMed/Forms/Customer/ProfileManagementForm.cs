@@ -121,11 +121,11 @@ namespace SmartMed.UI
                 Session.CurrentCustomer = _customers.GetById(customer.CustomerID);
                 (FindForm() as CustomerHostForm)?.RefreshProfileDisplay();
 
-                MessageBox.Show("Profile updated.", "Profile", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                SmartMedMessageBox.Show("Profile updated.", "Profile", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message, "Profile", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                SmartMedMessageBox.Show(ex.Message, "Profile", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
         }
 

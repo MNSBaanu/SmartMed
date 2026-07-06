@@ -162,12 +162,12 @@ namespace SmartMed.UI
                 _prescriptionPath = null;
                 txtPrescriptionPath.Clear();
                 RefreshCart();
-                MessageBox.Show($"Order placed successfully. Reference #SM-{orderId:D4}", "Order",
+                SmartMedMessageBox.Show($"Order placed successfully. Reference #SM-{orderId:D4}", "Order",
                     MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message, "Order Failed", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                SmartMedMessageBox.Show(ex.Message, "Order Failed", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
         }
     }

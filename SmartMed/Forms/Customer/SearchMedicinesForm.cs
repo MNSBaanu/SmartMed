@@ -145,11 +145,11 @@ namespace SmartMed.UI
                 var message = offer != "—"
                     ? $"{medicine.MedicineName} added to cart.\n{offer}"
                     : $"{medicine.MedicineName} added to cart.";
-                MessageBox.Show(message, "Cart", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                SmartMedMessageBox.Show(message, "Cart", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message, "Cart", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                SmartMedMessageBox.Show(ex.Message, "Cart", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
         }
     }

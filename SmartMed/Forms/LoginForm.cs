@@ -168,7 +168,7 @@ namespace SmartMed.UI
 
         private void LnkForgot_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            MessageBox.Show(
+            SmartMedMessageBox.Show(
                 "Please contact your pharmacy administrator to reset your password.",
                 "Forgot Password",
                 MessageBoxButtons.OK,
@@ -226,7 +226,7 @@ namespace SmartMed.UI
 
                 if (ValidationService.IsNullOrWhiteSpace(identity) || ValidationService.IsNullOrWhiteSpace(password))
                 {
-                    MessageBox.Show("Email/username and password are required.", "Login",
+                    SmartMedMessageBox.Show("Email/username and password are required.", "Login",
                         MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     return;
                 }
@@ -252,11 +252,11 @@ namespace SmartMed.UI
                     }
                 }
 
-                MessageBox.Show(InvalidCredentialsMessage, "Login", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                SmartMedMessageBox.Show(InvalidCredentialsMessage, "Login", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message, "Login Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                SmartMedMessageBox.Show(ex.Message, "Login Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
         }
 

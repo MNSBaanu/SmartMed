@@ -41,7 +41,7 @@ namespace SmartMed.UI
             };
             btnNavLogout.Click += (s, e) =>
             {
-                if (MessageBox.Show("Are you sure you want to log out?", "Logout", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+                if (SmartMedMessageBox.Show("Are you sure you want to log out?", "Logout", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
                 {
                     SmartMedApplicationContext.Current?.ShowLoginAfterLogout();
                 }
@@ -234,7 +234,7 @@ namespace SmartMed.UI
 
         private void BtnSupportContact_Click(object sender, EventArgs e)
         {
-            MessageBox.Show(
+            SmartMedMessageBox.Show(
                 "A member of our clinical team will contact you shortly.",
                 "SmartMed Support",
                 MessageBoxButtons.OK,

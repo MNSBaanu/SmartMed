@@ -43,7 +43,7 @@ namespace SmartMed.UI
             };
             btnNavLogout.Click += (s, e) =>
             {
-                if (MessageBox.Show("Are you sure you want to log out?", "Logout", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+                if (SmartMedMessageBox.Show("Are you sure you want to log out?", "Logout", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
                 {
                     SmartMedApplicationContext.Current?.ShowLoginAfterLogout();
                 }
@@ -313,7 +313,7 @@ namespace SmartMed.UI
 
         private static void ShowComingSoon()
         {
-            MessageBox.Show(
+            SmartMedMessageBox.Show(
                 "This section is coming soon.",
                 "SmartMed",
                 MessageBoxButtons.OK,

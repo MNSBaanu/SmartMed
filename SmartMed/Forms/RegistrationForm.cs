@@ -93,7 +93,7 @@ namespace SmartMed.UI
             {
                 if (!chkTerms.Checked)
                 {
-                    MessageBox.Show("Please accept the terms of service to continue.", "Registration",
+                    SmartMedMessageBox.Show("Please accept the terms of service to continue.", "Registration",
                         MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     return;
                 }
@@ -102,7 +102,7 @@ namespace SmartMed.UI
                 var confirm = txtConfirm.Text.Trim();
                 if (password != confirm)
                 {
-                    MessageBox.Show("Passwords do not match.", "Registration",
+                    SmartMedMessageBox.Show("Passwords do not match.", "Registration",
                         MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     return;
                 }
@@ -121,7 +121,7 @@ namespace SmartMed.UI
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message, "Registration Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                SmartMedMessageBox.Show(ex.Message, "Registration Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
         }
 
