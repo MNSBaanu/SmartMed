@@ -126,12 +126,12 @@ namespace SmartMed.UI
             if (_runtimeWired) return;
             _runtimeWired = true;
 
-            btnBrowseMedicines.Click += (s, e) => Navigate(CustomerNavItem.Browse);
-            btnViewCart.Click += (s, e) => Navigate(CustomerNavItem.Cart);
+            btnBrowseMedicines.Click += (s, e) => Navigate(CustomerHostForm.CustomerNavItem.Browse);
+            btnViewCart.Click += (s, e) => Navigate(CustomerHostForm.CustomerNavItem.Cart);
             btnChangePassword.Click += (s, e) => ShowChangePassword();
         }
 
-        private void Navigate(CustomerNavItem item) =>
+        private void Navigate(CustomerHostForm.CustomerNavItem item) =>
             (FindForm() as CustomerHostForm)?.NavigateTo(item);
 
         private void ShowChangePassword()
