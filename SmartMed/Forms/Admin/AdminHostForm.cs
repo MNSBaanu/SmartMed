@@ -17,10 +17,27 @@ namespace SmartMed.UI
         private bool _chromeApplied;
         private bool _runtimeWired;
         private bool _avatarWired;
+        private SmartMed.UI.NavButton btnNavLogout;
 
         public AdminHostForm()
         {
             InitializeComponent();
+
+            btnNavLogout = new SmartMed.UI.NavButton
+            {
+                Text = "Logout",
+                Name = "btnNavLogout",
+                Cursor = Cursors.Hand
+            };
+            btnNavLogout.Click += (s, e) =>
+            {
+                if (MessageBox.Show("Are you sure you want to log out?", "Logout", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+                {
+                    SmartMedApplicationContext.Current?.ShowLoginAfterLogout();
+                }
+            };
+            panelSidebar.Controls.Add(btnNavLogout);
+
             DoubleBuffered = true;
             ApplyViewChrome();
 
@@ -89,7 +106,8 @@ namespace SmartMed.UI
                 btnNavMedicines,
                 btnNavCustomers,
                 btnNavOrders,
-                btnNavReports);
+                btnNavReports,
+                btnNavLogout);
             UiTheme.StyleSidebarBrand(panelBrand, panelBrandIcon, lblBrandTitle, lblBrandSubtitle, customerPortal: false, topNav: true);
             UiTheme.StyleSidebarProfileFooter(panelProfile, panelAvatar, lblProfileName, lblProfileRole, topNav: true);
             StyleNavButton(btnNavDashboard, _activeNav == AdminNavItem.Overview);
@@ -97,6 +115,7 @@ namespace SmartMed.UI
             StyleNavButton(btnNavCustomers, _activeNav == AdminNavItem.Customers);
             StyleNavButton(btnNavOrders, _activeNav == AdminNavItem.Orders);
             StyleNavButton(btnNavReports, _activeNav == AdminNavItem.Reports);
+            StyleNavButton(btnNavLogout, false);
         }
 
         private void ApplyProfileDisplay()

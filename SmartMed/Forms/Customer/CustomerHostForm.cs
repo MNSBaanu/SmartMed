@@ -14,10 +14,27 @@ namespace SmartMed.UI
         private readonly Timer _clockTimer = new Timer { Interval = 30000 };
         private bool _chromeApplied;
         private bool _runtimeWired;
+        private SmartMed.UI.NavButton btnNavLogout;
 
         public CustomerHostForm()
         {
             InitializeComponent();
+
+            btnNavLogout = new SmartMed.UI.NavButton
+            {
+                Text = "Logout",
+                Name = "btnNavLogout",
+                Cursor = Cursors.Hand
+            };
+            btnNavLogout.Click += (s, e) =>
+            {
+                if (MessageBox.Show("Are you sure you want to log out?", "Logout", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+                {
+                    SmartMedApplicationContext.Current?.ShowLoginAfterLogout();
+                }
+            };
+            panelSidebar.Controls.Add(btnNavLogout);
+
             DoubleBuffered = true;
             ApplyViewChrome();
 
@@ -90,7 +107,8 @@ namespace SmartMed.UI
                 btnNavBrowse,
                 btnNavCart,
                 btnNavOrders,
-                btnNavProfile);
+                btnNavProfile,
+                btnNavLogout);
             UiTheme.StyleSidebarBrand(panelBrand, panelBrandIcon, lblBrandTitle, lblBrandSubtitle, customerPortal: true, topNav: true);
             UiTheme.StyleCustomerSupportPanel(panelSupport, lblSupportHeading, lblSupportBody, btnSupportContact, topNav: true);
             StyleNavButton(btnNavHome, _activeNav == CustomerNavItem.Home);
@@ -98,6 +116,7 @@ namespace SmartMed.UI
             StyleNavButton(btnNavCart, _activeNav == CustomerNavItem.Cart);
             StyleNavButton(btnNavOrders, _activeNav == CustomerNavItem.Orders);
             StyleNavButton(btnNavProfile, _activeNav == CustomerNavItem.Profile);
+            StyleNavButton(btnNavLogout, false);
         }
 
         private void ApplyWinControls()

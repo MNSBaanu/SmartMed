@@ -818,9 +818,9 @@ namespace SmartMed.UI
             this.flowRecentHeaderActions.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(238)))), ((int)(((byte)(245)))), ((int)(((byte)(244)))));
             this.flowRecentHeaderActions.Controls.Add(this.btnPrint);
             this.flowRecentHeaderActions.Dock = System.Windows.Forms.DockStyle.Right;
-            this.flowRecentHeaderActions.Location = new System.Drawing.Point(903, 8);
+            this.flowRecentHeaderActions.Location = new System.Drawing.Point(907, 8);
             this.flowRecentHeaderActions.Name = "flowRecentHeaderActions";
-            this.flowRecentHeaderActions.Size = new System.Drawing.Size(76, 24);
+            this.flowRecentHeaderActions.Size = new System.Drawing.Size(72, 24);
             this.flowRecentHeaderActions.TabIndex = 1;
             this.flowRecentHeaderActions.WrapContents = false;
             // 
