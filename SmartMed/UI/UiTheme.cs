@@ -865,8 +865,8 @@ namespace SmartMed.UI
                 btn.Parent = flow;
                 btn.Dock = DockStyle.None;
                 btn.AutoSize = false;
-                var textW = TextRenderer.MeasureText(btn.Text ?? string.Empty, UiFontBold).Width;
-                btn.Size = new Size(Math.Max(96, textW + 44), 40);
+                var textW = TextRenderer.MeasureText((btn.Text ?? string.Empty).ToUpperInvariant(), FontAt(13F, bold: true)).Width;
+                btn.Size = new Size(Math.Max(120, textW + 40), 40);
                 btn.Margin = new Padding(2, 8, 2, 8);
             }
             flow.ResumeLayout(false);
@@ -912,7 +912,7 @@ namespace SmartMed.UI
             button.Margin = topNav ? new Padding(2, 8, 2, 8) : new Padding(12, 2, 12, 2);
             button.Cursor = Cursors.Hand;
             button.UseVisualStyleBackColor = false;
-            button.Font = active ? UiFontBold : UiFont;
+            button.Font = FontAt(13F, bold: true);
             button.Tag = active;
 
             if (active)
@@ -945,7 +945,7 @@ namespace SmartMed.UI
                 graphics.FillRectangle(clear, button.ClientRectangle);
 
             var fore = active ? OnPrimaryContainer : button.ForeColor;
-            var font = active ? UiFontBold : UiFont;
+            var font = button.Font;
 
             if (topNav)
             {
@@ -959,12 +959,8 @@ namespace SmartMed.UI
                         graphics.FillRectangle(accent, bounds.Left, bounds.Bottom - 3, bounds.Width, 3);
                 }
 
-                var iconBounds = new Rectangle(bounds.Left + 6, bounds.Top, 22, bounds.Height);
-                TextRenderer.DrawText(graphics, GetNavGlyph(button.Name), font, iconBounds, fore,
+                TextRenderer.DrawText(graphics, button.Text.ToUpperInvariant(), font, bounds, fore,
                     TextFormatFlags.HorizontalCenter | TextFormatFlags.VerticalCenter);
-                var textBounds = new Rectangle(bounds.Left + 28, bounds.Top, bounds.Width - 32, bounds.Height);
-                TextRenderer.DrawText(graphics, button.Text, font, textBounds, fore,
-                    TextFormatFlags.Left | TextFormatFlags.VerticalCenter);
                 return;
             }
 
@@ -977,12 +973,8 @@ namespace SmartMed.UI
                     graphics.FillRectangle(accent, sideBounds.Left, sideBounds.Top, 4, sideBounds.Height);
             }
 
-            var sideIconBounds = new Rectangle(sideBounds.Left + 12, sideBounds.Top, 24, sideBounds.Height);
-            TextRenderer.DrawText(graphics, GetNavGlyph(button.Name), font, sideIconBounds, fore,
+            TextRenderer.DrawText(graphics, button.Text.ToUpperInvariant(), font, sideBounds, fore,
                 TextFormatFlags.HorizontalCenter | TextFormatFlags.VerticalCenter);
-            var sideTextBounds = new Rectangle(sideBounds.Left + 40, sideBounds.Top, sideBounds.Width - 44, sideBounds.Height);
-            TextRenderer.DrawText(graphics, button.Text, font, sideTextBounds, fore,
-                TextFormatFlags.Left | TextFormatFlags.VerticalCenter);
         }
 
         private static void NavButton_LegacyPaint(object sender, PaintEventArgs e) =>
