@@ -76,7 +76,6 @@ namespace SmartMed.UI
             UiTheme.StyleComboBox(cmbCategory);
 
             WirePanelBorder(panelGridOuter);
-            WireExpiryPanelBorder(panelExpiryAlerts);
             WireStatCard(panelStatTotal, UiTheme.AdminTeal);
             WireStatCard(panelStatLow, UiTheme.Danger);
             WireStatCard(panelStatCompliance, Color.FromArgb(16, 185, 129));
@@ -99,17 +98,6 @@ namespace SmartMed.UI
                 rect.Height -= 1;
                 using (var pen = new Pen(UiTheme.AdminOutline))
                     e.Graphics.DrawRectangle(pen, rect);
-            };
-        }
-
-        private static void WireExpiryPanelBorder(Panel panel)
-        {
-            if (panel == null || panel.Tag as string == "expiry-border") return;
-            panel.Tag = "expiry-border";
-            panel.Paint += (s, e) =>
-            {
-                using (var pen = new Pen(Color.FromArgb(200, 120, 0)))
-                    e.Graphics.DrawRectangle(pen, 0, 0, panel.Width - 1, panel.Height - 1);
             };
         }
 
@@ -139,9 +127,9 @@ namespace SmartMed.UI
             btnRemove.Click += BtnRemove_Click;
             btnReload.Click += (s, e) => RefreshPage();
             btnExport.Click += BtnExport_Click;
-            btnPrint.Click += BtnPrint_Click;
             btnViewExpiryAlerts.Click += BtnViewExpiryAlerts_Click;
             btnClear.Click += BtnClear_Click;
+            UiTheme.WireClinicalPlaceholderTextBox(txtSearch, "Search");
             txtSearch.TextChanged += (s, e) => ApplyFilters();
             cmbCategory.SelectedIndexChanged += (s, e) => ApplyFilters();
             txtMinPrice.TextChanged += (s, e) => ApplyFilters();
@@ -164,7 +152,7 @@ namespace SmartMed.UI
 
         private void BtnClear_Click(object sender, EventArgs e)
         {
-            txtSearch.Clear();
+            UiTheme.ResetClinicalPlaceholder(txtSearch, "Search");
             cmbCategory.SelectedIndex = 0;
             txtMinPrice.Clear();
             txtMaxPrice.Clear();
@@ -205,8 +193,8 @@ namespace SmartMed.UI
             decimal? maxPrice = decimal.TryParse(txtMaxPrice?.Text?.Trim(), out var max) ? max : (decimal?)null;
             var category = cmbCategory?.SelectedIndex > 0 ? cmbCategory.SelectedItem?.ToString() : null;
             if (_servicesReady)
-                return _medicines.Search(txtSearch?.Text ?? string.Empty, category, minPrice, maxPrice);
-            return SearchService.Search(_allMedicines, txtSearch?.Text ?? string.Empty, category, minPrice, maxPrice);
+                return _medicines.Search(UiTheme.ReadTextBoxValue(txtSearch), category, minPrice, maxPrice);
+            return SearchService.Search(_allMedicines, UiTheme.ReadTextBoxValue(txtSearch), category, minPrice, maxPrice);
         }
 
         private void ApplyFilters()
@@ -278,27 +266,14 @@ namespace SmartMed.UI
 
         private void UpdateExpiryAlerts(List<Medicine> all)
         {
-            if (lblExpirySummary == null) return;
+            if (btnViewExpiryAlerts == null) return;
 
-            var expired = Rules.CountExpired(all);
-            var expiring = Rules.CountExpiringSoon(all);
             _expiryAlertLines = BuildExpiryAlertLines(all);
-
-            if (expired == 0 && expiring == 0)
-            {
-                lblExpirySummary.Text = "No expiry alerts. All medicines are within safe expiry dates.";
-                lblExpirySummary.ForeColor = Color.FromArgb(0, 100, 0);
-                btnViewExpiryAlerts.Visible = false;
-                return;
-            }
-
-            var parts = new List<string>();
-            if (expired > 0) parts.Add($"{expired} expired");
-            if (expiring > 0) parts.Add($"{expiring} expiring within 30 days");
-            lblExpirySummary.Text = string.Join(" · ", parts);
-            lblExpirySummary.ForeColor = expired > 0 ? Color.DarkRed : Color.FromArgb(140, 70, 0);
-            btnViewExpiryAlerts.Text = $"View All Alerts ({_expiryAlertLines.Count})";
-            btnViewExpiryAlerts.Visible = true;
+            var count = _expiryAlertLines.Count;
+            btnViewExpiryAlerts.Text = $"Alerts ({count})";
+            btnViewExpiryAlerts.ForeColor = count > 0
+                ? Color.FromArgb(180, 70, 0)
+                : Color.FromArgb(53, 103, 94);
         }
 
         private List<string> BuildExpiryAlertLines(IEnumerable<Medicine> all) =>
@@ -316,7 +291,12 @@ namespace SmartMed.UI
 
         private void BtnViewExpiryAlerts_Click(object sender, EventArgs e)
         {
-            if (_expiryAlertLines.Count == 0) return;
+            if (_expiryAlertLines.Count == 0)
+            {
+                MessageBox.Show("No expiry alerts. All medicines are within safe expiry dates.",
+                    "Expiry Alerts", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return;
+            }
 
             using (var dlg = new Form
             {
@@ -379,19 +359,6 @@ namespace SmartMed.UI
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message, "Export Failed", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-            }
-        }
-
-        private void BtnPrint_Click(object sender, EventArgs e)
-        {
-            try
-            {
-                var items = GetFilteredMedicines();
-                _medicines.PrintInventory(items, "SmartMed — Medicine Inventory");
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message, "Print Failed", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
         }
 

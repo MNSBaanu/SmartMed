@@ -20,7 +20,8 @@ namespace SmartMed.UI
             this.panelHeader = new System.Windows.Forms.Panel();
             this.flowHeaderActions = new System.Windows.Forms.FlowLayoutPanel();
             this.btnExport = new System.Windows.Forms.Button();
-            this.btnPrint = new System.Windows.Forms.Button();
+            this.btnAdd = new System.Windows.Forms.Button();
+            this.btnViewExpiryAlerts = new System.Windows.Forms.Button();
             this.lblPageSubtitle = new System.Windows.Forms.Label();
             this.lblPageTitle = new System.Windows.Forms.Label();
             this.panelToolbar = new System.Windows.Forms.Panel();
@@ -29,22 +30,19 @@ namespace SmartMed.UI
             this.txtMaxPrice = new System.Windows.Forms.TextBox();
             this.txtMinPrice = new System.Windows.Forms.TextBox();
             this.lblPriceLabel = new System.Windows.Forms.Label();
-            this.cmbCategory = new System.Windows.Forms.ComboBox();
-            this.lblCategoryLabel = new System.Windows.Forms.Label();
-            this.txtSearch = new System.Windows.Forms.TextBox();
-            this.lblNameLabel = new System.Windows.Forms.Label();
             this.flowToolbarLeft = new System.Windows.Forms.FlowLayoutPanel();
-            this.btnAdd = new System.Windows.Forms.Button();
             this.btnEdit = new System.Windows.Forms.Button();
             this.btnRemove = new System.Windows.Forms.Button();
             this.btnReload = new System.Windows.Forms.Button();
-            this.panelExpiryAlerts = new System.Windows.Forms.Panel();
-            this.lblExpirySummary = new System.Windows.Forms.Label();
-            this.btnViewExpiryAlerts = new System.Windows.Forms.Button();
             this.panelGridOuter = new System.Windows.Forms.Panel();
             this.panelGridBody = new System.Windows.Forms.Panel();
             this.gridMedicines = new System.Windows.Forms.DataGridView();
             this.panelGridHeader = new System.Windows.Forms.Panel();
+            this.flowGridFilters = new System.Windows.Forms.FlowLayoutPanel();
+            this.lblCategoryLabel = new System.Windows.Forms.Label();
+            this.cmbCategory = new System.Windows.Forms.ComboBox();
+            this.lblSearchLabel = new System.Windows.Forms.Label();
+            this.txtSearch = new System.Windows.Forms.TextBox();
             this.lblGridTitle = new System.Windows.Forms.Label();
             this.tableStatsRow = new System.Windows.Forms.TableLayoutPanel();
             this.panelStatTotal = new System.Windows.Forms.Panel();
@@ -63,11 +61,11 @@ namespace SmartMed.UI
             this.panelToolbar.SuspendLayout();
             this.flowToolbarRight.SuspendLayout();
             this.flowToolbarLeft.SuspendLayout();
-            this.panelExpiryAlerts.SuspendLayout();
             this.panelGridOuter.SuspendLayout();
             this.panelGridBody.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.gridMedicines)).BeginInit();
             this.panelGridHeader.SuspendLayout();
+            this.flowGridFilters.SuspendLayout();
             this.tableStatsRow.SuspendLayout();
             this.panelStatTotal.SuspendLayout();
             this.panelStatLow.SuspendLayout();
@@ -96,26 +94,24 @@ namespace SmartMed.UI
             this.tableLayoutRoot.Controls.Add(this.panelHeader, 0, 0);
             this.tableLayoutRoot.Controls.Add(this.tableStatsRow, 0, 1);
             this.tableLayoutRoot.Controls.Add(this.panelToolbar, 0, 2);
-            this.tableLayoutRoot.Controls.Add(this.panelExpiryAlerts, 0, 3);
-            this.tableLayoutRoot.Controls.Add(this.panelGridOuter, 0, 4);
+            this.tableLayoutRoot.Controls.Add(this.panelGridOuter, 0, 3);
             this.tableLayoutRoot.Dock = System.Windows.Forms.DockStyle.Top;
             this.tableLayoutRoot.Location = new System.Drawing.Point(24, 24);
             this.tableLayoutRoot.MinimumSize = new System.Drawing.Size(0, 720);
             this.tableLayoutRoot.Name = "tableLayoutRoot";
-            this.tableLayoutRoot.RowCount = 5;
+            this.tableLayoutRoot.RowCount = 4;
             this.tableLayoutRoot.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutRoot.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutRoot.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutRoot.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutRoot.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutRoot.Size = new System.Drawing.Size(1012, 720);
             this.tableLayoutRoot.TabIndex = 0;
             // 
             // panelHeader
             // 
             this.panelHeader.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(244)))), ((int)(((byte)(251)))), ((int)(((byte)(250)))));
-            this.panelHeader.Controls.Add(this.flowHeaderActions);
             this.panelHeader.Controls.Add(this.lblPageSubtitle);
+            this.panelHeader.Controls.Add(this.flowHeaderActions);
             this.panelHeader.Controls.Add(this.lblPageTitle);
             this.panelHeader.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panelHeader.Location = new System.Drawing.Point(0, 0);
@@ -126,17 +122,19 @@ namespace SmartMed.UI
             // 
             // flowHeaderActions
             // 
+            this.flowHeaderActions.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.flowHeaderActions.AutoSize = true;
+            this.flowHeaderActions.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.flowHeaderActions.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(244)))), ((int)(((byte)(251)))), ((int)(((byte)(250)))));
             this.flowHeaderActions.Controls.Add(this.btnExport);
-            this.flowHeaderActions.Controls.Add(this.btnPrint);
-            this.flowHeaderActions.Dock = System.Windows.Forms.DockStyle.Right;
+            this.flowHeaderActions.Controls.Add(this.btnAdd);
+            this.flowHeaderActions.Controls.Add(this.btnViewExpiryAlerts);
             this.flowHeaderActions.FlowDirection = System.Windows.Forms.FlowDirection.LeftToRight;
-            this.flowHeaderActions.Location = new System.Drawing.Point(820, 0);
+            this.flowHeaderActions.Location = new System.Drawing.Point(560, 8);
             this.flowHeaderActions.Name = "flowHeaderActions";
-            this.flowHeaderActions.Padding = new System.Windows.Forms.Padding(0, 16, 0, 0);
-            this.flowHeaderActions.Size = new System.Drawing.Size(192, 46);
+            this.flowHeaderActions.Size = new System.Drawing.Size(452, 36);
             this.flowHeaderActions.TabIndex = 2;
+            this.flowHeaderActions.WrapContents = false;
             // 
             // btnExport
             // 
@@ -146,7 +144,7 @@ namespace SmartMed.UI
             this.btnExport.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnExport.Font = new System.Drawing.Font("Hanken Grotesk", 9F);
             this.btnExport.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(22)))), ((int)(((byte)(29)))), ((int)(((byte)(29)))));
-            this.btnExport.Location = new System.Drawing.Point(0, 16);
+            this.btnExport.Location = new System.Drawing.Point(0, 3);
             this.btnExport.Margin = new System.Windows.Forms.Padding(0, 0, 10, 0);
             this.btnExport.Name = "btnExport";
             this.btnExport.Size = new System.Drawing.Size(96, 30);
@@ -154,20 +152,37 @@ namespace SmartMed.UI
             this.btnExport.Text = "Export";
             this.btnExport.UseVisualStyleBackColor = false;
             // 
-            // btnPrint
+            // btnAdd
             // 
-            this.btnPrint.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(238)))), ((int)(((byte)(245)))), ((int)(((byte)(244)))));
-            this.btnPrint.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.btnPrint.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(193)))), ((int)(((byte)(200)))), ((int)(((byte)(198)))));
-            this.btnPrint.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnPrint.Font = new System.Drawing.Font("Hanken Grotesk", 9F);
-            this.btnPrint.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(22)))), ((int)(((byte)(29)))), ((int)(((byte)(29)))));
-            this.btnPrint.Location = new System.Drawing.Point(106, 16);
-            this.btnPrint.Name = "btnPrint";
-            this.btnPrint.Size = new System.Drawing.Size(96, 30);
-            this.btnPrint.TabIndex = 1;
-            this.btnPrint.Text = "Print";
-            this.btnPrint.UseVisualStyleBackColor = false;
+            this.btnAdd.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(53)))), ((int)(((byte)(103)))), ((int)(((byte)(94)))));
+            this.btnAdd.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.btnAdd.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(27)))), ((int)(((byte)(79)))), ((int)(((byte)(71)))));
+            this.btnAdd.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnAdd.Font = new System.Drawing.Font("Hanken Grotesk", 9F);
+            this.btnAdd.ForeColor = System.Drawing.Color.White;
+            this.btnAdd.Location = new System.Drawing.Point(106, 3);
+            this.btnAdd.Margin = new System.Windows.Forms.Padding(0, 0, 10, 0);
+            this.btnAdd.Name = "btnAdd";
+            this.btnAdd.Size = new System.Drawing.Size(130, 30);
+            this.btnAdd.TabIndex = 1;
+            this.btnAdd.Text = "+ Add Medicine";
+            this.btnAdd.UseVisualStyleBackColor = false;
+            // 
+            // btnViewExpiryAlerts
+            // 
+            this.btnViewExpiryAlerts.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(238)))), ((int)(((byte)(245)))), ((int)(((byte)(244)))));
+            this.btnViewExpiryAlerts.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.btnViewExpiryAlerts.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(193)))), ((int)(((byte)(200)))), ((int)(((byte)(198)))));
+            this.btnViewExpiryAlerts.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnViewExpiryAlerts.Font = new System.Drawing.Font("Hanken Grotesk", 9F);
+            this.btnViewExpiryAlerts.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(53)))), ((int)(((byte)(103)))), ((int)(((byte)(94)))));
+            this.btnViewExpiryAlerts.Location = new System.Drawing.Point(246, 3);
+            this.btnViewExpiryAlerts.Margin = new System.Windows.Forms.Padding(0);
+            this.btnViewExpiryAlerts.Name = "btnViewExpiryAlerts";
+            this.btnViewExpiryAlerts.Size = new System.Drawing.Size(116, 30);
+            this.btnViewExpiryAlerts.TabIndex = 2;
+            this.btnViewExpiryAlerts.Text = "Alerts (0)";
+            this.btnViewExpiryAlerts.UseVisualStyleBackColor = false;
             // 
             // lblPageSubtitle
             // 
@@ -199,7 +214,7 @@ namespace SmartMed.UI
             this.panelToolbar.Controls.Add(this.flowToolbarRight);
             this.panelToolbar.Controls.Add(this.flowToolbarLeft);
             this.panelToolbar.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panelToolbar.Location = new System.Drawing.Point(0, 96);
+            this.panelToolbar.Location = new System.Drawing.Point(0, 220);
             this.panelToolbar.Margin = new System.Windows.Forms.Padding(0, 0, 0, 12);
             this.panelToolbar.Name = "panelToolbar";
             this.panelToolbar.Size = new System.Drawing.Size(1012, 44);
@@ -209,20 +224,16 @@ namespace SmartMed.UI
             // 
             this.flowToolbarRight.AutoSize = true;
             this.flowToolbarRight.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(244)))), ((int)(((byte)(251)))), ((int)(((byte)(250)))));
-            this.flowToolbarRight.Controls.Add(this.lblNameLabel);
-            this.flowToolbarRight.Controls.Add(this.txtSearch);
-            this.flowToolbarRight.Controls.Add(this.lblCategoryLabel);
-            this.flowToolbarRight.Controls.Add(this.cmbCategory);
             this.flowToolbarRight.Controls.Add(this.lblPriceLabel);
             this.flowToolbarRight.Controls.Add(this.txtMinPrice);
             this.flowToolbarRight.Controls.Add(this.txtMaxPrice);
             this.flowToolbarRight.Controls.Add(this.btnClear);
             this.flowToolbarRight.Dock = System.Windows.Forms.DockStyle.Right;
             this.flowToolbarRight.FlowDirection = System.Windows.Forms.FlowDirection.LeftToRight;
-            this.flowToolbarRight.Location = new System.Drawing.Point(404, 0);
+            this.flowToolbarRight.Location = new System.Drawing.Point(678, 0);
             this.flowToolbarRight.Name = "flowToolbarRight";
             this.flowToolbarRight.Padding = new System.Windows.Forms.Padding(0, 4, 0, 0);
-            this.flowToolbarRight.Size = new System.Drawing.Size(608, 30);
+            this.flowToolbarRight.Size = new System.Drawing.Size(334, 30);
             this.flowToolbarRight.TabIndex = 1;
             // 
             // btnClear
@@ -233,7 +244,7 @@ namespace SmartMed.UI
             this.btnClear.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnClear.Font = new System.Drawing.Font("Hanken Grotesk", 9F);
             this.btnClear.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(22)))), ((int)(((byte)(29)))), ((int)(((byte)(29)))));
-            this.btnClear.Location = new System.Drawing.Point(538, 4);
+            this.btnClear.Location = new System.Drawing.Point(264, 4);
             this.btnClear.Name = "btnClear";
             this.btnClear.Size = new System.Drawing.Size(70, 30);
             this.btnClear.TabIndex = 7;
@@ -243,7 +254,7 @@ namespace SmartMed.UI
             // txtMaxPrice
             // 
             this.txtMaxPrice.Font = new System.Drawing.Font("Hanken Grotesk", 9F);
-            this.txtMaxPrice.Location = new System.Drawing.Point(466, 4);
+            this.txtMaxPrice.Location = new System.Drawing.Point(192, 4);
             this.txtMaxPrice.Name = "txtMaxPrice";
             this.txtMaxPrice.Size = new System.Drawing.Size(72, 25);
             this.txtMaxPrice.TabIndex = 6;
@@ -251,7 +262,7 @@ namespace SmartMed.UI
             // txtMinPrice
             // 
             this.txtMinPrice.Font = new System.Drawing.Font("Hanken Grotesk", 9F);
-            this.txtMinPrice.Location = new System.Drawing.Point(394, 4);
+            this.txtMinPrice.Location = new System.Drawing.Point(120, 4);
             this.txtMinPrice.Name = "txtMinPrice";
             this.txtMinPrice.Size = new System.Drawing.Size(72, 25);
             this.txtMinPrice.TabIndex = 5;
@@ -262,64 +273,17 @@ namespace SmartMed.UI
             this.lblPriceLabel.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(244)))), ((int)(((byte)(251)))), ((int)(((byte)(250)))));
             this.lblPriceLabel.Font = new System.Drawing.Font("Hanken Grotesk", 9F);
             this.lblPriceLabel.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(65)))), ((int)(((byte)(72)))), ((int)(((byte)(71)))));
-            this.lblPriceLabel.Location = new System.Drawing.Point(354, 10);
-            this.lblPriceLabel.Margin = new System.Windows.Forms.Padding(8, 6, 4, 0);
+            this.lblPriceLabel.Location = new System.Drawing.Point(80, 10);
+            this.lblPriceLabel.Margin = new System.Windows.Forms.Padding(12, 6, 4, 0);
             this.lblPriceLabel.Name = "lblPriceLabel";
             this.lblPriceLabel.Size = new System.Drawing.Size(40, 18);
             this.lblPriceLabel.TabIndex = 4;
             this.lblPriceLabel.Text = "Price:";
             // 
-            // cmbCategory
-            // 
-            this.cmbCategory.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cmbCategory.Font = new System.Drawing.Font("Hanken Grotesk", 9F);
-            this.cmbCategory.FormattingEnabled = true;
-            this.cmbCategory.Items.AddRange(new object[] {
-            "All categories"});
-            this.cmbCategory.Location = new System.Drawing.Point(224, 4);
-            this.cmbCategory.Name = "cmbCategory";
-            this.cmbCategory.Size = new System.Drawing.Size(130, 26);
-            this.cmbCategory.TabIndex = 3;
-            // 
-            // lblCategoryLabel
-            // 
-            this.lblCategoryLabel.AutoSize = true;
-            this.lblCategoryLabel.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(244)))), ((int)(((byte)(251)))), ((int)(((byte)(250)))));
-            this.lblCategoryLabel.Font = new System.Drawing.Font("Hanken Grotesk", 9F);
-            this.lblCategoryLabel.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(65)))), ((int)(((byte)(72)))), ((int)(((byte)(71)))));
-            this.lblCategoryLabel.Location = new System.Drawing.Point(156, 10);
-            this.lblCategoryLabel.Margin = new System.Windows.Forms.Padding(8, 6, 4, 0);
-            this.lblCategoryLabel.Name = "lblCategoryLabel";
-            this.lblCategoryLabel.Size = new System.Drawing.Size(68, 18);
-            this.lblCategoryLabel.TabIndex = 2;
-            this.lblCategoryLabel.Text = "Category:";
-            // 
-            // txtSearch
-            // 
-            this.txtSearch.Font = new System.Drawing.Font("Hanken Grotesk", 9F);
-            this.txtSearch.Location = new System.Drawing.Point(52, 4);
-            this.txtSearch.Name = "txtSearch";
-            this.txtSearch.Size = new System.Drawing.Size(160, 25);
-            this.txtSearch.TabIndex = 1;
-            // 
-            // lblNameLabel
-            // 
-            this.lblNameLabel.AutoSize = true;
-            this.lblNameLabel.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(244)))), ((int)(((byte)(251)))), ((int)(((byte)(250)))));
-            this.lblNameLabel.Font = new System.Drawing.Font("Hanken Grotesk", 9F);
-            this.lblNameLabel.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(65)))), ((int)(((byte)(72)))), ((int)(((byte)(71)))));
-            this.lblNameLabel.Location = new System.Drawing.Point(0, 10);
-            this.lblNameLabel.Margin = new System.Windows.Forms.Padding(0, 6, 4, 0);
-            this.lblNameLabel.Name = "lblNameLabel";
-            this.lblNameLabel.Size = new System.Drawing.Size(48, 18);
-            this.lblNameLabel.TabIndex = 0;
-            this.lblNameLabel.Text = "Name:";
-            // 
             // flowToolbarLeft
             // 
             this.flowToolbarLeft.AutoSize = true;
             this.flowToolbarLeft.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(244)))), ((int)(((byte)(251)))), ((int)(((byte)(250)))));
-            this.flowToolbarLeft.Controls.Add(this.btnAdd);
             this.flowToolbarLeft.Controls.Add(this.btnEdit);
             this.flowToolbarLeft.Controls.Add(this.btnRemove);
             this.flowToolbarLeft.Controls.Add(this.btnReload);
@@ -327,24 +291,8 @@ namespace SmartMed.UI
             this.flowToolbarLeft.FlowDirection = System.Windows.Forms.FlowDirection.LeftToRight;
             this.flowToolbarLeft.Location = new System.Drawing.Point(0, 0);
             this.flowToolbarLeft.Name = "flowToolbarLeft";
-            this.flowToolbarLeft.Size = new System.Drawing.Size(404, 30);
+            this.flowToolbarLeft.Size = new System.Drawing.Size(266, 30);
             this.flowToolbarLeft.TabIndex = 0;
-            // 
-            // btnAdd
-            // 
-            this.btnAdd.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(53)))), ((int)(((byte)(103)))), ((int)(((byte)(94)))));
-            this.btnAdd.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.btnAdd.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(27)))), ((int)(((byte)(79)))), ((int)(((byte)(71)))));
-            this.btnAdd.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnAdd.Font = new System.Drawing.Font("Hanken Grotesk", 9F);
-            this.btnAdd.ForeColor = System.Drawing.Color.White;
-            this.btnAdd.Location = new System.Drawing.Point(0, 0);
-            this.btnAdd.Margin = new System.Windows.Forms.Padding(0, 0, 10, 0);
-            this.btnAdd.Name = "btnAdd";
-            this.btnAdd.Size = new System.Drawing.Size(130, 30);
-            this.btnAdd.TabIndex = 0;
-            this.btnAdd.Text = "+ Add Medicine";
-            this.btnAdd.UseVisualStyleBackColor = false;
             // 
             // btnEdit
             // 
@@ -354,7 +302,7 @@ namespace SmartMed.UI
             this.btnEdit.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnEdit.Font = new System.Drawing.Font("Hanken Grotesk", 9F);
             this.btnEdit.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(22)))), ((int)(((byte)(29)))), ((int)(((byte)(29)))));
-            this.btnEdit.Location = new System.Drawing.Point(140, 0);
+            this.btnEdit.Location = new System.Drawing.Point(0, 0);
             this.btnEdit.Margin = new System.Windows.Forms.Padding(0, 0, 10, 0);
             this.btnEdit.Name = "btnEdit";
             this.btnEdit.Size = new System.Drawing.Size(72, 30);
@@ -370,7 +318,7 @@ namespace SmartMed.UI
             this.btnRemove.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnRemove.Font = new System.Drawing.Font("Hanken Grotesk", 9F);
             this.btnRemove.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(22)))), ((int)(((byte)(29)))), ((int)(((byte)(29)))));
-            this.btnRemove.Location = new System.Drawing.Point(222, 0);
+            this.btnRemove.Location = new System.Drawing.Point(82, 0);
             this.btnRemove.Margin = new System.Windows.Forms.Padding(0, 0, 10, 0);
             this.btnRemove.Name = "btnRemove";
             this.btnRemove.Size = new System.Drawing.Size(84, 30);
@@ -386,55 +334,12 @@ namespace SmartMed.UI
             this.btnReload.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnReload.Font = new System.Drawing.Font("Hanken Grotesk", 9F);
             this.btnReload.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(22)))), ((int)(((byte)(29)))), ((int)(((byte)(29)))));
-            this.btnReload.Location = new System.Drawing.Point(316, 0);
+            this.btnReload.Location = new System.Drawing.Point(176, 0);
             this.btnReload.Name = "btnReload";
             this.btnReload.Size = new System.Drawing.Size(84, 30);
             this.btnReload.TabIndex = 3;
             this.btnReload.Text = "Reload";
             this.btnReload.UseVisualStyleBackColor = false;
-            // 
-            // panelExpiryAlerts
-            // 
-            this.panelExpiryAlerts.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(248)))), ((int)(((byte)(240)))));
-            this.panelExpiryAlerts.Controls.Add(this.lblExpirySummary);
-            this.panelExpiryAlerts.Controls.Add(this.btnViewExpiryAlerts);
-            this.panelExpiryAlerts.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panelExpiryAlerts.Location = new System.Drawing.Point(0, 152);
-            this.panelExpiryAlerts.Margin = new System.Windows.Forms.Padding(0, 0, 0, 12);
-            this.panelExpiryAlerts.Name = "panelExpiryAlerts";
-            this.panelExpiryAlerts.Padding = new System.Windows.Forms.Padding(12, 8, 12, 8);
-            this.panelExpiryAlerts.Size = new System.Drawing.Size(1012, 40);
-            this.panelExpiryAlerts.TabIndex = 2;
-            // 
-            // lblExpirySummary
-            // 
-            this.lblExpirySummary.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(248)))), ((int)(((byte)(240)))));
-            this.lblExpirySummary.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lblExpirySummary.Font = new System.Drawing.Font("Hanken Grotesk", 9F);
-            this.lblExpirySummary.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(100)))), ((int)(((byte)(0)))));
-            this.lblExpirySummary.Location = new System.Drawing.Point(12, 8);
-            this.lblExpirySummary.Name = "lblExpirySummary";
-            this.lblExpirySummary.Size = new System.Drawing.Size(858, 24);
-            this.lblExpirySummary.TabIndex = 0;
-            this.lblExpirySummary.Text = "No expiry alerts. All medicines are within safe expiry dates.";
-            this.lblExpirySummary.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            // 
-            // btnViewExpiryAlerts
-            // 
-            this.btnViewExpiryAlerts.BackColor = System.Drawing.Color.White;
-            this.btnViewExpiryAlerts.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.btnViewExpiryAlerts.Dock = System.Windows.Forms.DockStyle.Right;
-            this.btnViewExpiryAlerts.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(193)))), ((int)(((byte)(200)))), ((int)(((byte)(198)))));
-            this.btnViewExpiryAlerts.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnViewExpiryAlerts.Font = new System.Drawing.Font("Hanken Grotesk", 9F);
-            this.btnViewExpiryAlerts.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(53)))), ((int)(((byte)(103)))), ((int)(((byte)(94)))));
-            this.btnViewExpiryAlerts.Location = new System.Drawing.Point(870, 8);
-            this.btnViewExpiryAlerts.Name = "btnViewExpiryAlerts";
-            this.btnViewExpiryAlerts.Size = new System.Drawing.Size(130, 26);
-            this.btnViewExpiryAlerts.TabIndex = 1;
-            this.btnViewExpiryAlerts.Text = "View All Alerts";
-            this.btnViewExpiryAlerts.UseVisualStyleBackColor = false;
-            this.btnViewExpiryAlerts.Visible = false;
             // 
             // panelGridOuter
             // 
@@ -442,7 +347,7 @@ namespace SmartMed.UI
             this.panelGridOuter.Controls.Add(this.panelGridBody);
             this.panelGridOuter.Controls.Add(this.panelGridHeader);
             this.panelGridOuter.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panelGridOuter.Location = new System.Drawing.Point(0, 204);
+            this.panelGridOuter.Location = new System.Drawing.Point(0, 276);
             this.panelGridOuter.Margin = new System.Windows.Forms.Padding(0, 0, 0, 16);
             this.panelGridOuter.Name = "panelGridOuter";
             this.panelGridOuter.Padding = new System.Windows.Forms.Padding(1);
@@ -454,7 +359,7 @@ namespace SmartMed.UI
             this.panelGridBody.BackColor = System.Drawing.Color.White;
             this.panelGridBody.Controls.Add(this.gridMedicines);
             this.panelGridBody.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panelGridBody.Location = new System.Drawing.Point(1, 37);
+            this.panelGridBody.Location = new System.Drawing.Point(1, 41);
             this.panelGridBody.Name = "panelGridBody";
             this.panelGridBody.Padding = new System.Windows.Forms.Padding(0, 4, 0, 0);
             this.panelGridBody.Size = new System.Drawing.Size(1010, 354);
@@ -484,13 +389,78 @@ namespace SmartMed.UI
             // panelGridHeader
             // 
             this.panelGridHeader.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(238)))), ((int)(((byte)(245)))), ((int)(((byte)(244)))));
+            this.panelGridHeader.Controls.Add(this.flowGridFilters);
             this.panelGridHeader.Controls.Add(this.lblGridTitle);
             this.panelGridHeader.Dock = System.Windows.Forms.DockStyle.Top;
             this.panelGridHeader.Location = new System.Drawing.Point(1, 1);
             this.panelGridHeader.Name = "panelGridHeader";
-            this.panelGridHeader.Padding = new System.Windows.Forms.Padding(12, 8, 10, 4);
-            this.panelGridHeader.Size = new System.Drawing.Size(1010, 36);
+            this.panelGridHeader.Padding = new System.Windows.Forms.Padding(12, 6, 10, 4);
+            this.panelGridHeader.Size = new System.Drawing.Size(1010, 40);
             this.panelGridHeader.TabIndex = 0;
+            // 
+            // flowGridFilters
+            // 
+            this.flowGridFilters.AutoSize = true;
+            this.flowGridFilters.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(238)))), ((int)(((byte)(245)))), ((int)(((byte)(244)))));
+            this.flowGridFilters.Controls.Add(this.lblCategoryLabel);
+            this.flowGridFilters.Controls.Add(this.cmbCategory);
+            this.flowGridFilters.Controls.Add(this.lblSearchLabel);
+            this.flowGridFilters.Controls.Add(this.txtSearch);
+            this.flowGridFilters.Dock = System.Windows.Forms.DockStyle.Right;
+            this.flowGridFilters.FlowDirection = System.Windows.Forms.FlowDirection.LeftToRight;
+            this.flowGridFilters.Location = new System.Drawing.Point(498, 6);
+            this.flowGridFilters.Name = "flowGridFilters";
+            this.flowGridFilters.Padding = new System.Windows.Forms.Padding(0, 2, 0, 0);
+            this.flowGridFilters.Size = new System.Drawing.Size(502, 30);
+            this.flowGridFilters.TabIndex = 2;
+            // 
+            // lblCategoryLabel
+            // 
+            this.lblCategoryLabel.AutoSize = true;
+            this.lblCategoryLabel.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(238)))), ((int)(((byte)(245)))), ((int)(((byte)(244)))));
+            this.lblCategoryLabel.Font = new System.Drawing.Font("Hanken Grotesk", 9F);
+            this.lblCategoryLabel.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(65)))), ((int)(((byte)(72)))), ((int)(((byte)(71)))));
+            this.lblCategoryLabel.Location = new System.Drawing.Point(0, 6);
+            this.lblCategoryLabel.Margin = new System.Windows.Forms.Padding(0, 6, 4, 0);
+            this.lblCategoryLabel.Name = "lblCategoryLabel";
+            this.lblCategoryLabel.Size = new System.Drawing.Size(68, 18);
+            this.lblCategoryLabel.TabIndex = 0;
+            this.lblCategoryLabel.Text = "Category:";
+            // 
+            // cmbCategory
+            // 
+            this.cmbCategory.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmbCategory.Font = new System.Drawing.Font("Hanken Grotesk", 9F);
+            this.cmbCategory.FormattingEnabled = true;
+            this.cmbCategory.Items.AddRange(new object[] {
+            "All categories"});
+            this.cmbCategory.Location = new System.Drawing.Point(72, 2);
+            this.cmbCategory.Margin = new System.Windows.Forms.Padding(0, 2, 12, 0);
+            this.cmbCategory.Name = "cmbCategory";
+            this.cmbCategory.Size = new System.Drawing.Size(130, 26);
+            this.cmbCategory.TabIndex = 1;
+            // 
+            // lblSearchLabel
+            // 
+            this.lblSearchLabel.AutoSize = true;
+            this.lblSearchLabel.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(238)))), ((int)(((byte)(245)))), ((int)(((byte)(244)))));
+            this.lblSearchLabel.Font = new System.Drawing.Font("Hanken Grotesk", 9F);
+            this.lblSearchLabel.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(65)))), ((int)(((byte)(72)))), ((int)(((byte)(71)))));
+            this.lblSearchLabel.Location = new System.Drawing.Point(217, 6);
+            this.lblSearchLabel.Margin = new System.Windows.Forms.Padding(3, 6, 4, 0);
+            this.lblSearchLabel.Name = "lblSearchLabel";
+            this.lblSearchLabel.Size = new System.Drawing.Size(50, 18);
+            this.lblSearchLabel.TabIndex = 2;
+            this.lblSearchLabel.Text = "Search:";
+            // 
+            // txtSearch
+            // 
+            this.txtSearch.Font = new System.Drawing.Font("Hanken Grotesk", 9F);
+            this.txtSearch.Location = new System.Drawing.Point(271, 2);
+            this.txtSearch.Margin = new System.Windows.Forms.Padding(0, 2, 0, 0);
+            this.txtSearch.Name = "txtSearch";
+            this.txtSearch.Size = new System.Drawing.Size(220, 25);
+            this.txtSearch.TabIndex = 3;
             // 
             // lblGridTitle
             // 
@@ -498,7 +468,7 @@ namespace SmartMed.UI
             this.lblGridTitle.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(238)))), ((int)(((byte)(245)))), ((int)(((byte)(244)))));
             this.lblGridTitle.Font = new System.Drawing.Font("Hanken Grotesk", 8.25F, System.Drawing.FontStyle.Bold);
             this.lblGridTitle.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(22)))), ((int)(((byte)(29)))), ((int)(((byte)(29)))));
-            this.lblGridTitle.Location = new System.Drawing.Point(12, 10);
+            this.lblGridTitle.Location = new System.Drawing.Point(12, 12);
             this.lblGridTitle.Name = "lblGridTitle";
             this.lblGridTitle.Size = new System.Drawing.Size(128, 16);
             this.lblGridTitle.TabIndex = 0;
@@ -658,17 +628,19 @@ namespace SmartMed.UI
             this.panelHeader.ResumeLayout(false);
             this.panelHeader.PerformLayout();
             this.flowHeaderActions.ResumeLayout(false);
+            this.flowHeaderActions.PerformLayout();
             this.panelToolbar.ResumeLayout(false);
             this.panelToolbar.PerformLayout();
             this.flowToolbarRight.ResumeLayout(false);
             this.flowToolbarRight.PerformLayout();
             this.flowToolbarLeft.ResumeLayout(false);
-            this.panelExpiryAlerts.ResumeLayout(false);
             this.panelGridOuter.ResumeLayout(false);
             this.panelGridBody.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.gridMedicines)).EndInit();
             this.panelGridHeader.ResumeLayout(false);
             this.panelGridHeader.PerformLayout();
+            this.flowGridFilters.ResumeLayout(false);
+            this.flowGridFilters.PerformLayout();
             this.tableStatsRow.ResumeLayout(false);
             this.panelStatTotal.ResumeLayout(false);
             this.panelStatLow.ResumeLayout(false);
@@ -683,7 +655,8 @@ namespace SmartMed.UI
         private System.Windows.Forms.Panel panelHeader;
         private System.Windows.Forms.FlowLayoutPanel flowHeaderActions;
         private System.Windows.Forms.Button btnExport;
-        private System.Windows.Forms.Button btnPrint;
+        private System.Windows.Forms.Button btnAdd;
+        private System.Windows.Forms.Button btnViewExpiryAlerts;
         private System.Windows.Forms.Label lblPageSubtitle;
         private System.Windows.Forms.Label lblPageTitle;
         private System.Windows.Forms.Panel panelToolbar;
@@ -692,22 +665,19 @@ namespace SmartMed.UI
         private System.Windows.Forms.TextBox txtMaxPrice;
         private System.Windows.Forms.TextBox txtMinPrice;
         private System.Windows.Forms.Label lblPriceLabel;
-        private System.Windows.Forms.ComboBox cmbCategory;
-        private System.Windows.Forms.Label lblCategoryLabel;
-        private System.Windows.Forms.TextBox txtSearch;
-        private System.Windows.Forms.Label lblNameLabel;
         private System.Windows.Forms.FlowLayoutPanel flowToolbarLeft;
-        private System.Windows.Forms.Button btnAdd;
         private System.Windows.Forms.Button btnEdit;
         private System.Windows.Forms.Button btnRemove;
         private System.Windows.Forms.Button btnReload;
-        private System.Windows.Forms.Panel panelExpiryAlerts;
-        private System.Windows.Forms.Label lblExpirySummary;
-        private System.Windows.Forms.Button btnViewExpiryAlerts;
         private System.Windows.Forms.Panel panelGridOuter;
         private System.Windows.Forms.Panel panelGridBody;
         private System.Windows.Forms.DataGridView gridMedicines;
         private System.Windows.Forms.Panel panelGridHeader;
+        private System.Windows.Forms.FlowLayoutPanel flowGridFilters;
+        private System.Windows.Forms.Label lblCategoryLabel;
+        private System.Windows.Forms.ComboBox cmbCategory;
+        private System.Windows.Forms.Label lblSearchLabel;
+        private System.Windows.Forms.TextBox txtSearch;
         private System.Windows.Forms.Label lblGridTitle;
         private System.Windows.Forms.TableLayoutPanel tableStatsRow;
         private System.Windows.Forms.Panel panelStatTotal;
