@@ -94,10 +94,10 @@ namespace SmartMed.UI
             this.tableLayoutRoot.ColumnCount = 1;
             this.tableLayoutRoot.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tableLayoutRoot.Controls.Add(this.panelHeader, 0, 0);
-            this.tableLayoutRoot.Controls.Add(this.panelToolbar, 0, 1);
-            this.tableLayoutRoot.Controls.Add(this.panelExpiryAlerts, 0, 2);
-            this.tableLayoutRoot.Controls.Add(this.panelGridOuter, 0, 3);
-            this.tableLayoutRoot.Controls.Add(this.tableStatsRow, 0, 4);
+            this.tableLayoutRoot.Controls.Add(this.tableStatsRow, 0, 1);
+            this.tableLayoutRoot.Controls.Add(this.panelToolbar, 0, 2);
+            this.tableLayoutRoot.Controls.Add(this.panelExpiryAlerts, 0, 3);
+            this.tableLayoutRoot.Controls.Add(this.panelGridOuter, 0, 4);
             this.tableLayoutRoot.Dock = System.Windows.Forms.DockStyle.Top;
             this.tableLayoutRoot.Location = new System.Drawing.Point(24, 24);
             this.tableLayoutRoot.MinimumSize = new System.Drawing.Size(0, 720);
@@ -514,8 +514,8 @@ namespace SmartMed.UI
             this.tableStatsRow.Controls.Add(this.panelStatLow, 1, 0);
             this.tableStatsRow.Controls.Add(this.panelStatCompliance, 2, 0);
             this.tableStatsRow.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableStatsRow.Location = new System.Drawing.Point(0, 612);
-            this.tableStatsRow.Margin = new System.Windows.Forms.Padding(0, 16, 0, 0);
+            this.tableStatsRow.Location = new System.Drawing.Point(0, 96);
+            this.tableStatsRow.Margin = new System.Windows.Forms.Padding(0, 0, 0, 16);
             this.tableStatsRow.Name = "tableStatsRow";
             this.tableStatsRow.RowCount = 1;
             this.tableStatsRow.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));

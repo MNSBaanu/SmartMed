@@ -180,7 +180,7 @@ namespace SmartMed.UI
             this.lblMenuInventory.Name = "lblMenuInventory";
             this.lblMenuInventory.Size = new System.Drawing.Size(61, 16);
             this.lblMenuInventory.TabIndex = 3;
-            this.lblMenuInventory.Text = "Inventory";
+            this.lblMenuInventory.Text = "Medicine";
             // 
             // lblMenuView
             // 
@@ -359,7 +359,7 @@ namespace SmartMed.UI
             this.btnNavMedicines.Name = "btnNavMedicines";
             this.btnNavMedicines.Size = new System.Drawing.Size(1672, 46);
             this.btnNavMedicines.TabIndex = 2;
-            this.btnNavMedicines.Text = "Inventory";
+            this.btnNavMedicines.Text = "Medicine";
             this.btnNavMedicines.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.btnNavMedicines.UseVisualStyleBackColor = false;
             this.btnNavMedicines.Click += new System.EventHandler(this.BtnNavMedicines_Click);
