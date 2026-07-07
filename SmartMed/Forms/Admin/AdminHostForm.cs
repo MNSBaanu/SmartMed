@@ -41,13 +41,7 @@ namespace SmartMed.UI
                 Cursor = Cursors.Hand,
                 Font = new Font(SystemFonts.DefaultFont.FontFamily, 11F, FontStyle.Bold)
             };
-            btnNavLogout.Click += (s, e) =>
-            {
-                if (SmartMedMessageBox.Show("Are you sure you want to log out?", "Logout", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
-                {
-                    SmartMedApplicationContext.Current?.ShowLoginAfterLogout();
-                }
-            };
+            btnNavLogout.Click += (s, e) => Logout();
             panelSidebar.Controls.Add(btnNavLogout);
 
             DoubleBuffered = true;
@@ -329,10 +323,17 @@ namespace SmartMed.UI
                 : FormWindowState.Maximized;
         }
 
-        private void BtnWinClose_Click(object sender, EventArgs e) => Logout();
+        private void BtnWinClose_Click(object sender, EventArgs e)
+        {
+            _clockTimer.Stop();
+            Close();
+        }
 
         private void Logout()
         {
+            if (SmartMedMessageBox.Show("Are you sure you want to log out?", "Logout", MessageBoxButtons.YesNo, MessageBoxIcon.Question) != DialogResult.Yes)
+                return;
+
             _clockTimer.Stop();
             SmartMedApplicationContext.Current?.ShowLoginAfterLogout();
         }

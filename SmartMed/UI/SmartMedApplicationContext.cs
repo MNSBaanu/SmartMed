@@ -49,22 +49,23 @@ namespace SmartMed.UI
                 return;
 
             login.LoginSucceeded -= OnLoginSucceeded;
+            login.FormClosed -= OnLoginFormClosed;
 
             if (Session.IsAdminLoggedIn)
             {
-                login.Hide();
                 var adminHost = new AdminHostForm();
                 adminHost.FormClosed += OnMainFormClosed;
                 MainForm = adminHost;
                 adminHost.Show();
+                login.Close();
                 return;
             }
 
-            login.Hide();
             var customerHost = new CustomerHostForm();
             customerHost.FormClosed += OnMainFormClosed;
             MainForm = customerHost;
             customerHost.Show();
+            login.Close();
         }
 
         private void OnLoginFormClosed(object sender, FormClosedEventArgs e)

@@ -236,7 +236,6 @@ namespace SmartMed.UI
                 {
                     Session.CurrentAdmin = admin;
                     LoginSucceeded?.Invoke(this, EventArgs.Empty);
-                    Close();
                     return;
                 }
 
@@ -247,7 +246,6 @@ namespace SmartMed.UI
                     {
                         Session.CurrentCustomer = customer;
                         LoginSucceeded?.Invoke(this, EventArgs.Empty);
-                        Close();
                         return;
                     }
                 }
