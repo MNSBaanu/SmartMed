@@ -50,7 +50,7 @@ namespace SmartMed.UI
             this.btnPagePrev = new System.Windows.Forms.Button();
             this.lblPageInfo = new System.Windows.Forms.Label();
             this.btnPageNext = new System.Windows.Forms.Button();
-            this.flowStats = new System.Windows.Forms.FlowLayoutPanel();
+            this.tableStatsRow = new System.Windows.Forms.TableLayoutPanel();
             this.panelStatVolume = new System.Windows.Forms.Panel();
             this.lblVolume = new System.Windows.Forms.Label();
             this.lblStatVolumeTitle = new System.Windows.Forms.Label();
@@ -75,7 +75,7 @@ namespace SmartMed.UI
             ((System.ComponentModel.ISupportInitialize)(this.gridOrders)).BeginInit();
             this.panelFooter.SuspendLayout();
             this.flowPager.SuspendLayout();
-            this.flowStats.SuspendLayout();
+            this.tableStatsRow.SuspendLayout();
             this.panelStatVolume.SuspendLayout();
             this.panelStatAvg.SuspendLayout();
             this.panelStatFlags.SuspendLayout();
@@ -101,14 +101,16 @@ namespace SmartMed.UI
             this.tableLayoutRoot.ColumnCount = 1;
             this.tableLayoutRoot.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tableLayoutRoot.Controls.Add(this.panelHeader, 0, 0);
-            this.tableLayoutRoot.Controls.Add(this.panelFilterOuter, 0, 1);
-            this.tableLayoutRoot.Controls.Add(this.panelGridOuter, 0, 2);
-            this.tableLayoutRoot.Controls.Add(this.panelFooter, 0, 3);
+            this.tableLayoutRoot.Controls.Add(this.tableStatsRow, 0, 1);
+            this.tableLayoutRoot.Controls.Add(this.panelFilterOuter, 0, 2);
+            this.tableLayoutRoot.Controls.Add(this.panelGridOuter, 0, 3);
+            this.tableLayoutRoot.Controls.Add(this.panelFooter, 0, 4);
             this.tableLayoutRoot.Dock = System.Windows.Forms.DockStyle.Top;
             this.tableLayoutRoot.Location = new System.Drawing.Point(24, 24);
             this.tableLayoutRoot.MinimumSize = new System.Drawing.Size(0, 700);
             this.tableLayoutRoot.Name = "tableLayoutRoot";
-            this.tableLayoutRoot.RowCount = 4;
+            this.tableLayoutRoot.RowCount = 5;
+            this.tableLayoutRoot.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutRoot.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutRoot.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutRoot.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
@@ -158,7 +160,7 @@ namespace SmartMed.UI
             this.panelFilterOuter.Controls.Add(this.flowFilterMain);
             this.panelFilterOuter.Controls.Add(this.lblFilterBadge);
             this.panelFilterOuter.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panelFilterOuter.Location = new System.Drawing.Point(0, 92);
+            this.panelFilterOuter.Location = new System.Drawing.Point(0, 200);
             this.panelFilterOuter.Margin = new System.Windows.Forms.Padding(0, 0, 0, 16);
             this.panelFilterOuter.Name = "panelFilterOuter";
             this.panelFilterOuter.Padding = new System.Windows.Forms.Padding(16, 20, 16, 16);
@@ -409,7 +411,7 @@ namespace SmartMed.UI
             this.panelGridOuter.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(193)))), ((int)(((byte)(200)))), ((int)(((byte)(198)))));
             this.panelGridOuter.Controls.Add(this.gridOrders);
             this.panelGridOuter.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panelGridOuter.Location = new System.Drawing.Point(0, 248);
+            this.panelGridOuter.Location = new System.Drawing.Point(0, 356);
             this.panelGridOuter.Margin = new System.Windows.Forms.Padding(0, 0, 0, 16);
             this.panelGridOuter.Name = "panelGridOuter";
             this.panelGridOuter.Padding = new System.Windows.Forms.Padding(1);
@@ -462,12 +464,12 @@ namespace SmartMed.UI
             // 
             this.panelFooter.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(244)))), ((int)(((byte)(251)))), ((int)(((byte)(250)))));
             this.panelFooter.Controls.Add(this.flowPager);
-            this.panelFooter.Controls.Add(this.flowStats);
-            this.panelFooter.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panelFooter.Location = new System.Drawing.Point(0, 628);
+            this.panelFooter.Dock = System.Windows.Forms.DockStyle.Top;
+            this.panelFooter.Location = new System.Drawing.Point(0, 672);
+            this.panelFooter.Margin = new System.Windows.Forms.Padding(0, 16, 0, 0);
             this.panelFooter.Name = "panelFooter";
-            this.panelFooter.Size = new System.Drawing.Size(1012, 72);
-            this.panelFooter.TabIndex = 3;
+            this.panelFooter.Size = new System.Drawing.Size(1012, 48);
+            this.panelFooter.TabIndex = 4;
             // 
             // flowPager
             // 
@@ -480,8 +482,8 @@ namespace SmartMed.UI
             this.flowPager.FlowDirection = System.Windows.Forms.FlowDirection.LeftToRight;
             this.flowPager.Location = new System.Drawing.Point(829, 0);
             this.flowPager.Name = "flowPager";
-            this.flowPager.Padding = new System.Windows.Forms.Padding(8, 4, 0, 0);
-            this.flowPager.Size = new System.Drawing.Size(183, 72);
+            this.flowPager.Padding = new System.Windows.Forms.Padding(8, 8, 0, 0);
+            this.flowPager.Size = new System.Drawing.Size(183, 48);
             this.flowPager.TabIndex = 1;
             // 
             // btnPagePrev
@@ -492,7 +494,7 @@ namespace SmartMed.UI
             this.btnPagePrev.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnPagePrev.Font = new System.Drawing.Font("Hanken Grotesk", 9F);
             this.btnPagePrev.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(22)))), ((int)(((byte)(29)))), ((int)(((byte)(29)))));
-            this.btnPagePrev.Location = new System.Drawing.Point(8, 4);
+            this.btnPagePrev.Location = new System.Drawing.Point(8, 8);
             this.btnPagePrev.Name = "btnPagePrev";
             this.btnPagePrev.Size = new System.Drawing.Size(36, 32);
             this.btnPagePrev.TabIndex = 0;
@@ -520,48 +522,54 @@ namespace SmartMed.UI
             this.btnPageNext.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnPageNext.Font = new System.Drawing.Font("Hanken Grotesk", 9F);
             this.btnPageNext.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(22)))), ((int)(((byte)(29)))), ((int)(((byte)(29)))));
-            this.btnPageNext.Location = new System.Drawing.Point(135, 4);
+            this.btnPageNext.Location = new System.Drawing.Point(135, 8);
             this.btnPageNext.Name = "btnPageNext";
             this.btnPageNext.Size = new System.Drawing.Size(36, 32);
             this.btnPageNext.TabIndex = 2;
             this.btnPageNext.Text = ">";
             this.btnPageNext.UseVisualStyleBackColor = false;
             // 
-            // flowStats
+            // tableStatsRow
             // 
-            this.flowStats.AutoSize = true;
-            this.flowStats.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(244)))), ((int)(((byte)(251)))), ((int)(((byte)(250)))));
-            this.flowStats.Controls.Add(this.panelStatVolume);
-            this.flowStats.Controls.Add(this.panelStatAvg);
-            this.flowStats.Controls.Add(this.panelStatFlags);
-            this.flowStats.Dock = System.Windows.Forms.DockStyle.Left;
-            this.flowStats.FlowDirection = System.Windows.Forms.FlowDirection.LeftToRight;
-            this.flowStats.Location = new System.Drawing.Point(0, 0);
-            this.flowStats.Name = "flowStats";
-            this.flowStats.Size = new System.Drawing.Size(414, 56);
-            this.flowStats.TabIndex = 0;
+            this.tableStatsRow.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(244)))), ((int)(((byte)(251)))), ((int)(((byte)(250)))));
+            this.tableStatsRow.ColumnCount = 3;
+            this.tableStatsRow.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 33.33F));
+            this.tableStatsRow.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 33.33F));
+            this.tableStatsRow.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 33.34F));
+            this.tableStatsRow.Controls.Add(this.panelStatVolume, 0, 0);
+            this.tableStatsRow.Controls.Add(this.panelStatAvg, 1, 0);
+            this.tableStatsRow.Controls.Add(this.panelStatFlags, 2, 0);
+            this.tableStatsRow.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tableStatsRow.Location = new System.Drawing.Point(0, 92);
+            this.tableStatsRow.Margin = new System.Windows.Forms.Padding(0, 0, 0, 16);
+            this.tableStatsRow.Name = "tableStatsRow";
+            this.tableStatsRow.RowCount = 1;
+            this.tableStatsRow.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableStatsRow.Size = new System.Drawing.Size(1012, 108);
+            this.tableStatsRow.TabIndex = 1;
             // 
             // panelStatVolume
             // 
             this.panelStatVolume.BackColor = System.Drawing.Color.White;
             this.panelStatVolume.Controls.Add(this.lblVolume);
             this.panelStatVolume.Controls.Add(this.lblStatVolumeTitle);
+            this.panelStatVolume.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panelStatVolume.Location = new System.Drawing.Point(0, 0);
-            this.panelStatVolume.Margin = new System.Windows.Forms.Padding(0, 0, 12, 0);
+            this.panelStatVolume.Margin = new System.Windows.Forms.Padding(0, 0, 14, 0);
             this.panelStatVolume.Name = "panelStatVolume";
-            this.panelStatVolume.Padding = new System.Windows.Forms.Padding(12, 8, 8, 8);
-            this.panelStatVolume.Size = new System.Drawing.Size(130, 56);
+            this.panelStatVolume.Padding = new System.Windows.Forms.Padding(16, 14, 14, 14);
+            this.panelStatVolume.Size = new System.Drawing.Size(323, 108);
             this.panelStatVolume.TabIndex = 0;
             // 
             // lblVolume
             // 
             this.lblVolume.BackColor = System.Drawing.Color.White;
             this.lblVolume.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lblVolume.Font = new System.Drawing.Font("Hanken Grotesk", 16F, System.Drawing.FontStyle.Bold);
+            this.lblVolume.Font = new System.Drawing.Font("Hanken Grotesk", 22F, System.Drawing.FontStyle.Bold);
             this.lblVolume.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(24)))), ((int)(((byte)(22)))));
-            this.lblVolume.Location = new System.Drawing.Point(12, 22);
+            this.lblVolume.Location = new System.Drawing.Point(16, 30);
             this.lblVolume.Name = "lblVolume";
-            this.lblVolume.Size = new System.Drawing.Size(110, 26);
+            this.lblVolume.Size = new System.Drawing.Size(293, 48);
             this.lblVolume.TabIndex = 1;
             this.lblVolume.Text = "2";
             this.lblVolume.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -572,9 +580,9 @@ namespace SmartMed.UI
             this.lblStatVolumeTitle.Dock = System.Windows.Forms.DockStyle.Top;
             this.lblStatVolumeTitle.Font = new System.Drawing.Font("Hanken Grotesk", 7.5F, System.Drawing.FontStyle.Bold);
             this.lblStatVolumeTitle.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(65)))), ((int)(((byte)(72)))), ((int)(((byte)(71)))));
-            this.lblStatVolumeTitle.Location = new System.Drawing.Point(12, 8);
+            this.lblStatVolumeTitle.Location = new System.Drawing.Point(16, 14);
             this.lblStatVolumeTitle.Name = "lblStatVolumeTitle";
-            this.lblStatVolumeTitle.Size = new System.Drawing.Size(110, 14);
+            this.lblStatVolumeTitle.Size = new System.Drawing.Size(293, 16);
             this.lblStatVolumeTitle.TabIndex = 0;
             this.lblStatVolumeTitle.Text = "VOLUME";
             // 
@@ -583,22 +591,23 @@ namespace SmartMed.UI
             this.panelStatAvg.BackColor = System.Drawing.Color.White;
             this.panelStatAvg.Controls.Add(this.lblAvgTime);
             this.panelStatAvg.Controls.Add(this.lblStatAvgTitle);
-            this.panelStatAvg.Location = new System.Drawing.Point(142, 0);
-            this.panelStatAvg.Margin = new System.Windows.Forms.Padding(0, 0, 12, 0);
+            this.panelStatAvg.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panelStatAvg.Location = new System.Drawing.Point(337, 0);
+            this.panelStatAvg.Margin = new System.Windows.Forms.Padding(0, 0, 14, 0);
             this.panelStatAvg.Name = "panelStatAvg";
-            this.panelStatAvg.Padding = new System.Windows.Forms.Padding(12, 8, 8, 8);
-            this.panelStatAvg.Size = new System.Drawing.Size(130, 56);
+            this.panelStatAvg.Padding = new System.Windows.Forms.Padding(16, 14, 14, 14);
+            this.panelStatAvg.Size = new System.Drawing.Size(323, 108);
             this.panelStatAvg.TabIndex = 1;
             // 
             // lblAvgTime
             // 
             this.lblAvgTime.BackColor = System.Drawing.Color.White;
             this.lblAvgTime.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lblAvgTime.Font = new System.Drawing.Font("Hanken Grotesk", 16F, System.Drawing.FontStyle.Bold);
+            this.lblAvgTime.Font = new System.Drawing.Font("Hanken Grotesk", 22F, System.Drawing.FontStyle.Bold);
             this.lblAvgTime.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(24)))), ((int)(((byte)(22)))));
-            this.lblAvgTime.Location = new System.Drawing.Point(12, 22);
+            this.lblAvgTime.Location = new System.Drawing.Point(16, 30);
             this.lblAvgTime.Name = "lblAvgTime";
-            this.lblAvgTime.Size = new System.Drawing.Size(110, 26);
+            this.lblAvgTime.Size = new System.Drawing.Size(293, 48);
             this.lblAvgTime.TabIndex = 1;
             this.lblAvgTime.Text = "—";
             this.lblAvgTime.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -609,9 +618,9 @@ namespace SmartMed.UI
             this.lblStatAvgTitle.Dock = System.Windows.Forms.DockStyle.Top;
             this.lblStatAvgTitle.Font = new System.Drawing.Font("Hanken Grotesk", 7.5F, System.Drawing.FontStyle.Bold);
             this.lblStatAvgTitle.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(65)))), ((int)(((byte)(72)))), ((int)(((byte)(71)))));
-            this.lblStatAvgTitle.Location = new System.Drawing.Point(12, 8);
+            this.lblStatAvgTitle.Location = new System.Drawing.Point(16, 14);
             this.lblStatAvgTitle.Name = "lblStatAvgTitle";
-            this.lblStatAvgTitle.Size = new System.Drawing.Size(110, 14);
+            this.lblStatAvgTitle.Size = new System.Drawing.Size(293, 16);
             this.lblStatAvgTitle.TabIndex = 0;
             this.lblStatAvgTitle.Text = "AVG TIME";
             // 
@@ -620,21 +629,22 @@ namespace SmartMed.UI
             this.panelStatFlags.BackColor = System.Drawing.Color.White;
             this.panelStatFlags.Controls.Add(this.lblFlags);
             this.panelStatFlags.Controls.Add(this.lblStatFlagsTitle);
-            this.panelStatFlags.Location = new System.Drawing.Point(284, 0);
+            this.panelStatFlags.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panelStatFlags.Location = new System.Drawing.Point(674, 0);
             this.panelStatFlags.Name = "panelStatFlags";
-            this.panelStatFlags.Padding = new System.Windows.Forms.Padding(12, 8, 8, 8);
-            this.panelStatFlags.Size = new System.Drawing.Size(130, 56);
+            this.panelStatFlags.Padding = new System.Windows.Forms.Padding(16, 14, 14, 14);
+            this.panelStatFlags.Size = new System.Drawing.Size(338, 108);
             this.panelStatFlags.TabIndex = 2;
             // 
             // lblFlags
             // 
             this.lblFlags.BackColor = System.Drawing.Color.White;
             this.lblFlags.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lblFlags.Font = new System.Drawing.Font("Hanken Grotesk", 16F, System.Drawing.FontStyle.Bold);
+            this.lblFlags.Font = new System.Drawing.Font("Hanken Grotesk", 22F, System.Drawing.FontStyle.Bold);
             this.lblFlags.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(24)))), ((int)(((byte)(22)))));
-            this.lblFlags.Location = new System.Drawing.Point(12, 22);
+            this.lblFlags.Location = new System.Drawing.Point(16, 30);
             this.lblFlags.Name = "lblFlags";
-            this.lblFlags.Size = new System.Drawing.Size(110, 26);
+            this.lblFlags.Size = new System.Drawing.Size(308, 48);
             this.lblFlags.TabIndex = 1;
             this.lblFlags.Text = "00";
             this.lblFlags.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -645,9 +655,9 @@ namespace SmartMed.UI
             this.lblStatFlagsTitle.Dock = System.Windows.Forms.DockStyle.Top;
             this.lblStatFlagsTitle.Font = new System.Drawing.Font("Hanken Grotesk", 7.5F, System.Drawing.FontStyle.Bold);
             this.lblStatFlagsTitle.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(65)))), ((int)(((byte)(72)))), ((int)(((byte)(71)))));
-            this.lblStatFlagsTitle.Location = new System.Drawing.Point(12, 8);
+            this.lblStatFlagsTitle.Location = new System.Drawing.Point(16, 14);
             this.lblStatFlagsTitle.Name = "lblStatFlagsTitle";
-            this.lblStatFlagsTitle.Size = new System.Drawing.Size(110, 14);
+            this.lblStatFlagsTitle.Size = new System.Drawing.Size(308, 16);
             this.lblStatFlagsTitle.TabIndex = 0;
             this.lblStatFlagsTitle.Text = "FLAGS";
             // 
@@ -694,7 +704,7 @@ namespace SmartMed.UI
             this.panelFooter.PerformLayout();
             this.flowPager.ResumeLayout(false);
             this.flowPager.PerformLayout();
-            this.flowStats.ResumeLayout(false);
+            this.tableStatsRow.ResumeLayout(false);
             this.panelStatVolume.ResumeLayout(false);
             this.panelStatAvg.ResumeLayout(false);
             this.panelStatFlags.ResumeLayout(false);
@@ -735,7 +745,7 @@ namespace SmartMed.UI
         private System.Windows.Forms.Button btnPagePrev;
         private System.Windows.Forms.Label lblPageInfo;
         private System.Windows.Forms.Button btnPageNext;
-        private System.Windows.Forms.FlowLayoutPanel flowStats;
+        private System.Windows.Forms.TableLayoutPanel tableStatsRow;
         private System.Windows.Forms.Panel panelStatVolume;
         private System.Windows.Forms.Label lblVolume;
         private System.Windows.Forms.Label lblStatVolumeTitle;
