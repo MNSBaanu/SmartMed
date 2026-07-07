@@ -52,7 +52,7 @@ namespace SmartMed.UI
                 ShowInTaskbar = false;
                 BackColor = UiTheme.AdminSurface;
                 Font = UiTheme.UiFont;
-                Padding = new Padding(24);
+                Padding = new Padding(0);
 
                 var iconPanel = CreateIconPanel(icon);
                 var lblBody = new Label
@@ -62,7 +62,7 @@ namespace SmartMed.UI
                     ForeColor = UiTheme.AdminOnSurface,
                     AutoSize = true,
                     MaximumSize = new Size(360, 0),
-                    Padding = new Padding(0, 4, 0, 4)
+                    Padding = new Padding(0, 2, 0, 2)
                 };
 
                 var contentPanel = new FlowLayoutPanel
@@ -71,7 +71,7 @@ namespace SmartMed.UI
                     AutoSize = true,
                     AutoSizeMode = AutoSizeMode.GrowAndShrink,
                     WrapContents = false,
-                    Padding = new Padding(24, 20, 24, 12),
+                    Padding = new Padding(20, 14, 20, 8),
                     BackColor = UiTheme.AdminSurface
                 };
 
@@ -85,7 +85,7 @@ namespace SmartMed.UI
                     AutoSize = true,
                     AutoSizeMode = AutoSizeMode.GrowAndShrink,
                     WrapContents = false,
-                    Padding = new Padding(16, 8, 16, 16),
+                    Padding = new Padding(12, 4, 12, 12),
                     Dock = DockStyle.Bottom,
                     BackColor = UiTheme.AdminSurface
                 };
@@ -97,17 +97,16 @@ namespace SmartMed.UI
                 Controls.Add(buttonPanel);
 
                 // Size the form
-                int w = Math.Max(contentPanel.PreferredSize.Width, buttonPanel.PreferredSize.Width) + 16;
-                int h = contentPanel.PreferredSize.Height + buttonPanel.PreferredSize.Height + 16;
-                ClientSize = new Size(Math.Max(320, Math.Min(w, 500)), Math.Max(150, Math.Min(h, 400)));
+                int w = Math.Max(contentPanel.PreferredSize.Width, buttonPanel.PreferredSize.Width) + 8;
+                int h = contentPanel.PreferredSize.Height + buttonPanel.PreferredSize.Height + 8;
+                ClientSize = new Size(Math.Max(300, Math.Min(w, 500)), Math.Max(110, Math.Min(h, 320)));
             }
 
             protected override void OnShown(EventArgs e)
             {
                 base.OnShown(e);
-                // Re-measure after layout
-                int w = Math.Max(320, Math.Min(PreferredSize.Width + 16, 500));
-                int h = Math.Max(150, Math.Min(PreferredSize.Height + 16, 400));
+                int w = Math.Max(300, Math.Min(PreferredSize.Width + 8, 500));
+                int h = Math.Max(110, Math.Min(PreferredSize.Height + 8, 320));
                 ClientSize = new Size(w, h);
             }
 
@@ -143,15 +142,15 @@ namespace SmartMed.UI
 
                 var panel = new Panel
                 {
-                    Size = new Size(40, 40),
-                    Margin = new Padding(0, 4, 12, 0),
+                    Size = new Size(32, 32),
+                    Margin = new Padding(0, 2, 10, 0),
                     BackColor = Color.Transparent
                 };
                 panel.Paint += (s, e) =>
                 {
                     e.Graphics.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
                     using (var brush = new SolidBrush(Color.FromArgb(30, colour)))
-                        e.Graphics.FillEllipse(brush, 0, 0, 39, 39);
+                        e.Graphics.FillEllipse(brush, 0, 0, 31, 31);
                     TextRenderer.DrawText(e.Graphics, symbol, UiTheme.UiFontBold,
                         panel.ClientRectangle, colour,
                         TextFormatFlags.HorizontalCenter | TextFormatFlags.VerticalCenter);
@@ -203,8 +202,8 @@ namespace SmartMed.UI
                     DialogResult = result,
                     Font = UiTheme.UiFontSemibold ?? UiTheme.UiFont,
                     FlatStyle = FlatStyle.Flat,
-                    Size = new Size(100, 36),
-                    Margin = new Padding(6, 0, 6, 0),
+                    Size = new Size(92, 30),
+                    Margin = new Padding(4, 0, 4, 0),
                     Cursor = Cursors.Hand
                 };
 
