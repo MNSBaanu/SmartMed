@@ -680,6 +680,9 @@ namespace SmartMed.UI
             foreach (DataGridViewColumn col in grid.Columns)
             {
                 if (col.Name == "Actions") continue;
+                if (col.Name.StartsWith("col", StringComparison.OrdinalIgnoreCase) && col.Name.Length > 3)
+                    continue;
+
                 col.HeaderText = SplitCamelCase(col.Name);
             }
         }

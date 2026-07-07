@@ -32,8 +32,6 @@ namespace SmartMed.UI
             this.txtSearch = new System.Windows.Forms.TextBox();
             this.flowToolbarLeft = new System.Windows.Forms.FlowLayoutPanel();
             this.btnAdd = new System.Windows.Forms.Button();
-            this.btnEdit = new System.Windows.Forms.Button();
-            this.btnRemove = new System.Windows.Forms.Button();
             this.btnReload = new System.Windows.Forms.Button();
             this.panelGridOuter = new System.Windows.Forms.Panel();
             this.panelGridInner = new System.Windows.Forms.Panel();
@@ -262,13 +260,11 @@ namespace SmartMed.UI
             this.flowToolbarLeft.AutoSize = true;
             this.flowToolbarLeft.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(244)))), ((int)(((byte)(251)))), ((int)(((byte)(250)))));
             this.flowToolbarLeft.Controls.Add(this.btnAdd);
-            this.flowToolbarLeft.Controls.Add(this.btnEdit);
-            this.flowToolbarLeft.Controls.Add(this.btnRemove);
             this.flowToolbarLeft.Controls.Add(this.btnReload);
             this.flowToolbarLeft.Dock = System.Windows.Forms.DockStyle.Left;
             this.flowToolbarLeft.Location = new System.Drawing.Point(0, 0);
             this.flowToolbarLeft.Name = "flowToolbarLeft";
-            this.flowToolbarLeft.Size = new System.Drawing.Size(400, 44);
+            this.flowToolbarLeft.Size = new System.Drawing.Size(234, 44);
             this.flowToolbarLeft.TabIndex = 0;
             this.flowToolbarLeft.WrapContents = false;
             // 
@@ -289,40 +285,6 @@ namespace SmartMed.UI
             this.btnAdd.Text = "+ Add Customer";
             this.btnAdd.UseVisualStyleBackColor = false;
             // 
-            // btnEdit
-            // 
-            this.btnEdit.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(238)))), ((int)(((byte)(245)))), ((int)(((byte)(244)))));
-            this.btnEdit.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.btnEdit.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(193)))), ((int)(((byte)(200)))), ((int)(((byte)(198)))));
-            this.btnEdit.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(227)))), ((int)(((byte)(234)))), ((int)(((byte)(233)))));
-            this.btnEdit.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnEdit.Font = new System.Drawing.Font("Hanken Grotesk", 9F);
-            this.btnEdit.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(22)))), ((int)(((byte)(29)))), ((int)(((byte)(29)))));
-            this.btnEdit.Location = new System.Drawing.Point(140, 0);
-            this.btnEdit.Margin = new System.Windows.Forms.Padding(0, 0, 10, 0);
-            this.btnEdit.Name = "btnEdit";
-            this.btnEdit.Size = new System.Drawing.Size(72, 30);
-            this.btnEdit.TabIndex = 1;
-            this.btnEdit.Text = "Edit";
-            this.btnEdit.UseVisualStyleBackColor = false;
-            // 
-            // btnRemove
-            // 
-            this.btnRemove.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(238)))), ((int)(((byte)(245)))), ((int)(((byte)(244)))));
-            this.btnRemove.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.btnRemove.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(193)))), ((int)(((byte)(200)))), ((int)(((byte)(198)))));
-            this.btnRemove.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(227)))), ((int)(((byte)(234)))), ((int)(((byte)(233)))));
-            this.btnRemove.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnRemove.Font = new System.Drawing.Font("Hanken Grotesk", 9F);
-            this.btnRemove.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(22)))), ((int)(((byte)(29)))), ((int)(((byte)(29)))));
-            this.btnRemove.Location = new System.Drawing.Point(222, 0);
-            this.btnRemove.Margin = new System.Windows.Forms.Padding(0, 0, 10, 0);
-            this.btnRemove.Name = "btnRemove";
-            this.btnRemove.Size = new System.Drawing.Size(84, 30);
-            this.btnRemove.TabIndex = 2;
-            this.btnRemove.Text = "Remove";
-            this.btnRemove.UseVisualStyleBackColor = false;
-            // 
             // btnReload
             // 
             this.btnReload.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(238)))), ((int)(((byte)(245)))), ((int)(((byte)(244)))));
@@ -332,7 +294,7 @@ namespace SmartMed.UI
             this.btnReload.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnReload.Font = new System.Drawing.Font("Hanken Grotesk", 9F);
             this.btnReload.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(22)))), ((int)(((byte)(29)))), ((int)(((byte)(29)))));
-            this.btnReload.Location = new System.Drawing.Point(316, 0);
+            this.btnReload.Location = new System.Drawing.Point(140, 0);
             this.btnReload.Margin = new System.Windows.Forms.Padding(0);
             this.btnReload.Name = "btnReload";
             this.btnReload.Size = new System.Drawing.Size(84, 30);
@@ -792,8 +754,6 @@ namespace SmartMed.UI
         private System.Windows.Forms.Panel panelToolbar;
         private System.Windows.Forms.FlowLayoutPanel flowToolbarLeft;
         private System.Windows.Forms.Button btnAdd;
-        private System.Windows.Forms.Button btnEdit;
-        private System.Windows.Forms.Button btnRemove;
         private System.Windows.Forms.Button btnReload;
         private System.Windows.Forms.FlowLayoutPanel flowToolbarRight;
         private System.Windows.Forms.Label lblSearchLabel;

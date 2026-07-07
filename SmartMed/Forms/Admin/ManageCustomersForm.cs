@@ -143,8 +143,6 @@ namespace SmartMed.UI
             _runtimeWired = true;
 
             btnAdd.Click += (s, e) => ShowCustomerDialog(null);
-            btnEdit.Click += BtnEdit_Click;
-            btnRemove.Click += BtnRemove_Click;
             btnReload.Click += (s, e) => RefreshPage();
             txtSearch.TextChanged += (s, e) => ApplyFilters();
             btnExport.Click += BtnExport_Click;
@@ -152,18 +150,36 @@ namespace SmartMed.UI
             btnPagePrev.Click += (s, e) => ChangePage(-1);
             btnPageNext.Click += (s, e) => ChangePage(1);
             gridCustomers.CellFormatting += GridCustomers_CellFormatting;
+            gridCustomers.CellContentClick += GridCustomers_CellContentClick;
             gridCustomers.SelectionChanged += GridCustomers_SelectionChanged;
         }
 
-        private void BtnEdit_Click(object sender, EventArgs e)
+        private void EditCustomer(int customerId)
         {
-            if (!_selectedId.HasValue)
-            {
-                MessageBox.Show("Select a customer to edit.", "Manage Customers",
-                    MessageBoxButtons.OK, MessageBoxIcon.Information);
+            var customer = _customers?.GetById(customerId);
+            if (customer == null) return;
+            _selectedId = customerId;
+            ShowCustomerDialog(customer);
+        }
+
+        private void RemoveCustomer(int customerId)
+        {
+            if (MessageBox.Show("Remove this customer record?", "Confirm Remove",
+                    MessageBoxButtons.YesNo, MessageBoxIcon.Warning) != DialogResult.Yes)
                 return;
+
+            try
+            {
+                _customers.Delete(customerId);
+                _selectedId = null;
+                RefreshPage();
+                MessageBox.Show("Customer removed.", "SmartMed",
+                    MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
-            ShowCustomerDialog(_customers.GetById(_selectedId.Value));
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Remove Failed", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
         }
 
         private void LoadCustomers()
@@ -257,10 +273,49 @@ namespace SmartMed.UI
             if (gridCustomers.Columns.Contains("colCustomerID"))
                 gridCustomers.Columns["colCustomerID"].Visible = false;
             UiTheme.BeautifyGridHeaders(gridCustomers);
+            EnsureGridActionColumns();
 
             lblPageInfo.Text = $"Page {_currentPage} of {totalPages}";
             btnPagePrev.Enabled = _currentPage > 1;
             btnPageNext.Enabled = _currentPage < totalPages;
+        }
+
+        private void EnsureGridActionColumns()
+        {
+            AddOrConfigureButtonColumn("Edit", "Edit", 68);
+            AddOrConfigureButtonColumn("Remove", "Remove", 80);
+
+            if (gridCustomers.Columns.Contains("Edit"))
+                gridCustomers.Columns["Edit"].DisplayIndex = gridCustomers.Columns.Count - 2;
+            if (gridCustomers.Columns.Contains("Remove"))
+                gridCustomers.Columns["Remove"].DisplayIndex = gridCustomers.Columns.Count - 1;
+        }
+
+        private void AddOrConfigureButtonColumn(string name, string text, int width)
+        {
+            if (gridCustomers.Columns[name] is DataGridViewButtonColumn existing)
+            {
+                existing.HeaderText = text;
+                existing.Text = text;
+                existing.Width = width;
+                existing.MinimumWidth = width;
+                return;
+            }
+
+            if (gridCustomers.Columns.Contains(name))
+                gridCustomers.Columns.Remove(name);
+
+            gridCustomers.Columns.Add(new DataGridViewButtonColumn
+            {
+                Name = name,
+                HeaderText = text,
+                Text = text,
+                UseColumnTextForButtonValue = true,
+                Width = width,
+                MinimumWidth = width,
+                FlatStyle = FlatStyle.Flat,
+                AutoSizeMode = DataGridViewAutoSizeColumnMode.None
+            });
         }
 
         private void ChangePage(int delta)
@@ -286,10 +341,45 @@ namespace SmartMed.UI
             gridCustomers.ClearSelection();
         }
 
+        private void GridCustomers_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+            if (e.RowIndex < 0 || !_servicesReady) return;
+
+            var colName = gridCustomers.Columns[e.ColumnIndex].Name;
+            if (colName != "Edit" && colName != "Remove") return;
+
+            var idCell = gridCustomers.Rows[e.RowIndex].Cells["colCustomerID"];
+            if (idCell?.Value == null) return;
+
+            var id = Convert.ToInt32(idCell.Value);
+            if (colName == "Edit")
+                EditCustomer(id);
+            else
+                RemoveCustomer(id);
+        }
+
         private void GridCustomers_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
         {
             if (e.RowIndex < 0 || e.ColumnIndex < 0) return;
-            if (gridCustomers.Columns[e.ColumnIndex].Name != "colStatus") return;
+
+            var columnName = gridCustomers.Columns[e.ColumnIndex].Name;
+            if (columnName == "Edit")
+            {
+                e.CellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
+                e.CellStyle.ForeColor = UiTheme.AdminTeal;
+                e.CellStyle.Font = UiTheme.UiFontBold;
+                return;
+            }
+
+            if (columnName == "Remove")
+            {
+                e.CellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
+                e.CellStyle.ForeColor = UiTheme.Danger;
+                e.CellStyle.Font = UiTheme.UiFontBold;
+                return;
+            }
+
+            if (columnName != "colStatus") return;
 
             var status = e.Value?.ToString() ?? "";
             if (string.Equals(status, "ACTIVE", StringComparison.OrdinalIgnoreCase))
@@ -303,33 +393,6 @@ namespace SmartMed.UI
                 e.CellStyle.BackColor = Color.FromArgb(232, 239, 238);
                 e.CellStyle.ForeColor = UiTheme.AdminMuted;
                 e.CellStyle.Font = UiTheme.UiFontBold;
-            }
-        }
-
-        private void BtnRemove_Click(object sender, EventArgs e)
-        {
-            if (!_selectedId.HasValue)
-            {
-                MessageBox.Show("Select a customer to remove.", "Manage Customers",
-                    MessageBoxButtons.OK, MessageBoxIcon.Information);
-                return;
-            }
-
-            if (MessageBox.Show("Remove this customer record?", "Confirm Remove",
-                    MessageBoxButtons.YesNo, MessageBoxIcon.Warning) != DialogResult.Yes)
-                return;
-
-            try
-            {
-                _customers.Delete(_selectedId.Value);
-                ClearSelection();
-                RefreshPage();
-                MessageBox.Show("Customer removed.", "SmartMed",
-                    MessageBoxButtons.OK, MessageBoxIcon.Information);
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message, "Remove Failed", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
         }
 
