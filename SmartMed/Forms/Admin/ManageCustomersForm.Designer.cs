@@ -106,14 +106,16 @@ namespace SmartMed.UI
             this.tableLayoutRoot.ColumnCount = 1;
             this.tableLayoutRoot.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tableLayoutRoot.Controls.Add(this.panelHeader, 0, 0);
-            this.tableLayoutRoot.Controls.Add(this.panelToolbar, 0, 1);
-            this.tableLayoutRoot.Controls.Add(this.panelGridOuter, 0, 2);
-            this.tableLayoutRoot.Controls.Add(this.panelFooter, 0, 3);
+            this.tableLayoutRoot.Controls.Add(this.tableStatsRow, 0, 1);
+            this.tableLayoutRoot.Controls.Add(this.panelToolbar, 0, 2);
+            this.tableLayoutRoot.Controls.Add(this.panelGridOuter, 0, 3);
+            this.tableLayoutRoot.Controls.Add(this.panelFooter, 0, 4);
             this.tableLayoutRoot.Dock = System.Windows.Forms.DockStyle.Top;
             this.tableLayoutRoot.Location = new System.Drawing.Point(24, 24);
             this.tableLayoutRoot.MinimumSize = new System.Drawing.Size(0, 680);
             this.tableLayoutRoot.Name = "tableLayoutRoot";
-            this.tableLayoutRoot.RowCount = 4;
+            this.tableLayoutRoot.RowCount = 5;
+            this.tableLayoutRoot.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutRoot.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutRoot.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutRoot.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
@@ -212,7 +214,7 @@ namespace SmartMed.UI
             this.panelToolbar.Controls.Add(this.flowToolbarRight);
             this.panelToolbar.Controls.Add(this.flowToolbarLeft);
             this.panelToolbar.Dock = System.Windows.Forms.DockStyle.Top;
-            this.panelToolbar.Location = new System.Drawing.Point(0, 100);
+            this.panelToolbar.Location = new System.Drawing.Point(0, 220);
             this.panelToolbar.Margin = new System.Windows.Forms.Padding(0, 0, 0, 12);
             this.panelToolbar.Name = "panelToolbar";
             this.panelToolbar.Size = new System.Drawing.Size(1012, 44);
@@ -343,7 +345,7 @@ namespace SmartMed.UI
             this.panelGridOuter.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(193)))), ((int)(((byte)(200)))), ((int)(((byte)(198)))));
             this.panelGridOuter.Controls.Add(this.panelGridInner);
             this.panelGridOuter.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panelGridOuter.Location = new System.Drawing.Point(0, 156);
+            this.panelGridOuter.Location = new System.Drawing.Point(0, 276);
             this.panelGridOuter.Margin = new System.Windows.Forms.Padding(0, 0, 0, 16);
             this.panelGridOuter.Name = "panelGridOuter";
             this.panelGridOuter.Padding = new System.Windows.Forms.Padding(1);
@@ -507,13 +509,12 @@ namespace SmartMed.UI
             // 
             this.panelFooter.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(244)))), ((int)(((byte)(251)))), ((int)(((byte)(250)))));
             this.panelFooter.Controls.Add(this.flowPager);
-            this.panelFooter.Controls.Add(this.tableStatsRow);
             this.panelFooter.Dock = System.Windows.Forms.DockStyle.Top;
-            this.panelFooter.Location = new System.Drawing.Point(0, 588);
+            this.panelFooter.Location = new System.Drawing.Point(0, 648);
             this.panelFooter.Margin = new System.Windows.Forms.Padding(0, 16, 0, 0);
             this.panelFooter.Name = "panelFooter";
-            this.panelFooter.Size = new System.Drawing.Size(1012, 108);
-            this.panelFooter.TabIndex = 3;
+            this.panelFooter.Size = new System.Drawing.Size(1012, 48);
+            this.panelFooter.TabIndex = 4;
             // 
             // flowPager
             // 
@@ -525,8 +526,8 @@ namespace SmartMed.UI
             this.flowPager.Dock = System.Windows.Forms.DockStyle.Right;
             this.flowPager.Location = new System.Drawing.Point(833, 0);
             this.flowPager.Name = "flowPager";
-            this.flowPager.Padding = new System.Windows.Forms.Padding(8, 38, 0, 0);
-            this.flowPager.Size = new System.Drawing.Size(179, 108);
+            this.flowPager.Padding = new System.Windows.Forms.Padding(8, 8, 0, 0);
+            this.flowPager.Size = new System.Drawing.Size(179, 48);
             this.flowPager.TabIndex = 1;
             this.flowPager.WrapContents = false;
             // 
@@ -539,7 +540,7 @@ namespace SmartMed.UI
             this.btnPagePrev.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnPagePrev.Font = new System.Drawing.Font("Hanken Grotesk", 9F);
             this.btnPagePrev.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(22)))), ((int)(((byte)(29)))), ((int)(((byte)(29)))));
-            this.btnPagePrev.Location = new System.Drawing.Point(8, 38);
+            this.btnPagePrev.Location = new System.Drawing.Point(8, 8);
             this.btnPagePrev.Margin = new System.Windows.Forms.Padding(0);
             this.btnPagePrev.Name = "btnPagePrev";
             this.btnPagePrev.Size = new System.Drawing.Size(36, 32);
@@ -581,19 +582,20 @@ namespace SmartMed.UI
             // 
             this.tableStatsRow.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(244)))), ((int)(((byte)(251)))), ((int)(((byte)(250)))));
             this.tableStatsRow.ColumnCount = 3;
-            this.tableStatsRow.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
-            this.tableStatsRow.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
-            this.tableStatsRow.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
+            this.tableStatsRow.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 33.33F));
+            this.tableStatsRow.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 33.33F));
+            this.tableStatsRow.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 33.34F));
             this.tableStatsRow.Controls.Add(this.panelStatTotal, 0, 0);
             this.tableStatsRow.Controls.Add(this.panelStatActive, 1, 0);
             this.tableStatsRow.Controls.Add(this.panelStatInactive, 2, 0);
-            this.tableStatsRow.Dock = System.Windows.Forms.DockStyle.Left;
-            this.tableStatsRow.Location = new System.Drawing.Point(0, 0);
+            this.tableStatsRow.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tableStatsRow.Location = new System.Drawing.Point(0, 96);
+            this.tableStatsRow.Margin = new System.Windows.Forms.Padding(0, 0, 0, 16);
             this.tableStatsRow.Name = "tableStatsRow";
             this.tableStatsRow.RowCount = 1;
             this.tableStatsRow.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableStatsRow.Size = new System.Drawing.Size(520, 108);
-            this.tableStatsRow.TabIndex = 0;
+            this.tableStatsRow.Size = new System.Drawing.Size(1012, 108);
+            this.tableStatsRow.TabIndex = 1;
             // 
             // panelStatTotal
             // 
