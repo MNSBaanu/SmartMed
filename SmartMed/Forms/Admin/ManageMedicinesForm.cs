@@ -74,6 +74,9 @@ namespace SmartMed.UI
             UiTheme.StyleTextBox(txtMinPrice);
             UiTheme.StyleTextBox(txtMaxPrice);
             UiTheme.StyleComboBox(cmbCategory);
+            cmbCategory.FlatStyle = FlatStyle.Standard;
+            UiTheme.ApplyFlatButton(btnSearch, UiButtonStyle.Primary);
+            UiTheme.ApplyFlatButton(btnClear, UiButtonStyle.Secondary);
 
             WirePanelBorder(panelGridOuter);
             WireStatCard(panelStatTotal, UiTheme.AdminTeal);
@@ -123,40 +126,40 @@ namespace SmartMed.UI
             _runtimeWired = true;
 
             btnAdd.Click += (s, e) => ShowMedicineDialog(null);
-            btnEdit.Click += BtnEdit_Click;
-            btnRemove.Click += BtnRemove_Click;
-            btnReload.Click += (s, e) => RefreshPage();
             btnExport.Click += BtnExport_Click;
             btnViewExpiryAlerts.Click += BtnViewExpiryAlerts_Click;
             btnClear.Click += BtnClear_Click;
             UiTheme.WireClinicalPlaceholderTextBox(txtSearch, "Search");
+            UiTheme.WireClinicalPlaceholderTextBox(txtMinPrice, "Min");
+            UiTheme.WireClinicalPlaceholderTextBox(txtMaxPrice, "Max");
+            btnSearch.Click += (s, e) => ApplyFilters();
+            txtSearch.KeyDown += TxtSearch_KeyDown;
             txtSearch.TextChanged += (s, e) => ApplyFilters();
             cmbCategory.SelectedIndexChanged += (s, e) => ApplyFilters();
             txtMinPrice.TextChanged += (s, e) => ApplyFilters();
             txtMaxPrice.TextChanged += (s, e) => ApplyFilters();
             gridMedicines.CellFormatting += GridMedicines_CellFormatting;
+            gridMedicines.CellContentClick += GridMedicines_CellContentClick;
             gridMedicines.RowPrePaint += GridMedicines_RowPrePaint;
             gridMedicines.SelectionChanged += GridMedicines_SelectionChanged;
-        }
-
-        private void BtnEdit_Click(object sender, EventArgs e)
-        {
-            if (!_selectedId.HasValue)
-            {
-                MessageBox.Show("Select a medicine to edit.", "Manage Medicines",
-                    MessageBoxButtons.OK, MessageBoxIcon.Information);
-                return;
-            }
-            ShowMedicineDialog(_medicines.GetById(_selectedId.Value));
         }
 
         private void BtnClear_Click(object sender, EventArgs e)
         {
             UiTheme.ResetClinicalPlaceholder(txtSearch, "Search");
             cmbCategory.SelectedIndex = 0;
-            txtMinPrice.Clear();
-            txtMaxPrice.Clear();
+            UiTheme.ResetClinicalPlaceholder(txtMinPrice, "Min");
+            UiTheme.ResetClinicalPlaceholder(txtMaxPrice, "Max");
             ApplyFilters();
+        }
+
+        private void TxtSearch_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+            {
+                e.SuppressKeyPress = true;
+                ApplyFilters();
+            }
         }
 
         private void LoadMedicines()
@@ -189,8 +192,8 @@ namespace SmartMed.UI
 
         private List<Medicine> GetFilteredMedicines()
         {
-            decimal? minPrice = decimal.TryParse(txtMinPrice?.Text?.Trim(), out var min) ? min : (decimal?)null;
-            decimal? maxPrice = decimal.TryParse(txtMaxPrice?.Text?.Trim(), out var max) ? max : (decimal?)null;
+            decimal? minPrice = decimal.TryParse(UiTheme.ReadTextBoxValue(txtMinPrice), out var min) ? min : (decimal?)null;
+            decimal? maxPrice = decimal.TryParse(UiTheme.ReadTextBoxValue(txtMaxPrice), out var max) ? max : (decimal?)null;
             var category = cmbCategory?.SelectedIndex > 0 ? cmbCategory.SelectedItem?.ToString() : null;
             if (_servicesReady)
                 return _medicines.Search(UiTheme.ReadTextBoxValue(txtSearch), category, minPrice, maxPrice);
@@ -230,9 +233,48 @@ namespace SmartMed.UI
             if (gridMedicines.Columns.Contains("MedicineID"))
                 gridMedicines.Columns["MedicineID"].Visible = false;
             UiTheme.BeautifyGridHeaders(gridMedicines);
+            EnsureGridActionColumns();
 
             if (keepId.HasValue)
                 SelectGridRowById(keepId.Value);
+        }
+
+        private void EnsureGridActionColumns()
+        {
+            AddOrConfigureButtonColumn("Edit", "Edit", 68);
+            AddOrConfigureButtonColumn("Remove", "Remove", 80);
+
+            if (gridMedicines.Columns.Contains("Edit"))
+                gridMedicines.Columns["Edit"].DisplayIndex = gridMedicines.Columns.Count - 2;
+            if (gridMedicines.Columns.Contains("Remove"))
+                gridMedicines.Columns["Remove"].DisplayIndex = gridMedicines.Columns.Count - 1;
+        }
+
+        private void AddOrConfigureButtonColumn(string name, string text, int width)
+        {
+            if (gridMedicines.Columns[name] is DataGridViewButtonColumn existing)
+            {
+                existing.HeaderText = text;
+                existing.Text = text;
+                existing.Width = width;
+                existing.MinimumWidth = width;
+                return;
+            }
+
+            if (gridMedicines.Columns.Contains(name))
+                gridMedicines.Columns.Remove(name);
+
+            gridMedicines.Columns.Add(new DataGridViewButtonColumn
+            {
+                Name = name,
+                HeaderText = text,
+                Text = text,
+                UseColumnTextForButtonValue = true,
+                Width = width,
+                MinimumWidth = width,
+                FlatStyle = FlatStyle.Flat,
+                AutoSizeMode = DataGridViewAutoSizeColumnMode.None
+            });
         }
 
         private string GetStatusLabel(Medicine m)
@@ -362,6 +404,51 @@ namespace SmartMed.UI
             }
         }
 
+        private void GridMedicines_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+            if (e.RowIndex < 0 || !_servicesReady) return;
+
+            var colName = gridMedicines.Columns[e.ColumnIndex].Name;
+            if (colName != "Edit" && colName != "Remove") return;
+
+            var idCell = gridMedicines.Rows[e.RowIndex].Cells["MedicineID"];
+            if (idCell?.Value == null) return;
+
+            var id = Convert.ToInt32(idCell.Value);
+            if (colName == "Edit")
+                EditMedicine(id);
+            else
+                RemoveMedicine(id);
+        }
+
+        private void EditMedicine(int medicineId)
+        {
+            var medicine = _medicines?.GetById(medicineId);
+            if (medicine == null) return;
+            _selectedId = medicineId;
+            ShowMedicineDialog(medicine);
+        }
+
+        private void RemoveMedicine(int medicineId)
+        {
+            if (MessageBox.Show("Remove this medicine from inventory?", "Confirm Remove",
+                    MessageBoxButtons.YesNo, MessageBoxIcon.Warning) != DialogResult.Yes)
+                return;
+
+            try
+            {
+                _medicines.Delete(medicineId);
+                _selectedId = null;
+                RefreshPage();
+                MessageBox.Show("Medicine removed.", "SmartMed",
+                    MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Remove Failed", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
+        }
+
         private void GridMedicines_SelectionChanged(object sender, EventArgs e)
         {
             if (gridMedicines.CurrentRow == null || gridMedicines.CurrentRow.IsNewRow)
@@ -466,32 +553,17 @@ namespace SmartMed.UI
                 e.CellStyle.ForeColor = expiryStatus == MedicineService.ExpiryExpired ? Color.DarkRed : Color.DarkOrange;
                 e.CellStyle.Font = UiTheme.UiFontBold;
             }
-        }
-
-        private void BtnRemove_Click(object sender, EventArgs e)
-        {
-            if (!_selectedId.HasValue)
+            else if (columnName == "Edit")
             {
-                MessageBox.Show("Select a medicine to remove.", "Manage Medicines",
-                    MessageBoxButtons.OK, MessageBoxIcon.Information);
-                return;
+                e.CellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
+                e.CellStyle.ForeColor = UiTheme.AdminTeal;
+                e.CellStyle.Font = UiTheme.UiFontBold;
             }
-
-            if (MessageBox.Show("Remove this medicine from inventory?", "Confirm Remove",
-                    MessageBoxButtons.YesNo, MessageBoxIcon.Warning) != DialogResult.Yes)
-                return;
-
-            try
+            else if (columnName == "Remove")
             {
-                _medicines.Delete(_selectedId.Value);
-                _selectedId = null;
-                RefreshPage();
-                MessageBox.Show("Medicine removed.", "SmartMed",
-                    MessageBoxButtons.OK, MessageBoxIcon.Information);
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message, "Remove Failed", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                e.CellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
+                e.CellStyle.ForeColor = UiTheme.Danger;
+                e.CellStyle.Font = UiTheme.UiFontBold;
             }
         }
 

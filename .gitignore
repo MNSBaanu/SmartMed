@@ -6,6 +6,7 @@
 # Build output
 [Bb]in/
 [Oo]bj/
+_build_out/
 
 # NuGet
 packages/
