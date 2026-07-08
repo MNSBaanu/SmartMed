@@ -12,7 +12,6 @@ namespace SmartMed.UI
         private bool _servicesReady;
         private bool _runtimeWired;
         private bool _chromeApplied;
-        private string _prescriptionPath;
 
         public PlaceOrderForm()
         {
@@ -55,7 +54,6 @@ namespace SmartMed.UI
             AdminPageView.ApplyChrome(this);
 
             UiTheme.ApplyClinicalGrid(gridCart);
-            UiTheme.StyleTextBox(txtPrescriptionPath);
 
             WirePanelBorder(panelGridOuter);
         }
@@ -86,7 +84,7 @@ namespace SmartMed.UI
                 RefreshCart();
             };
             btnPlaceOrder.Click += BtnPlace_Click;
-            btnUploadPrescription.Click += BtnBrowse_Click;
+            gridCart.CellContentClick += GridCart_CellContentClick;
         }
 
         private void RefreshCart()
@@ -107,7 +105,8 @@ namespace SmartMed.UI
                 l.PromoDisplay,
                 Applied = l.OfferDisplay,
                 Subtotal = $"LKR {l.Subtotal:N2}",
-                Rx = l.RequiresPrescription ? "Yes" : "No"
+                Rx = l.RequiresPrescription ? "Yes" : "No",
+                Prescription = l.PrescriptionDisplay
             }).ToList());
             BeautifyCartGrid();
             lblTotal.Text = $"Total: LKR {CartService.Total:N2} ({CartService.ItemCount} items)";
@@ -123,10 +122,39 @@ namespace SmartMed.UI
             if (gridCart.Columns.Contains("PromoDisplay"))
                 gridCart.Columns["PromoDisplay"].HeaderText = "Promo";
             UiTheme.BeautifyGridHeaders(gridCart);
+
+            if (!gridCart.Columns.Contains("UploadBtn"))
+            {
+                gridCart.Columns.Add(new DataGridViewButtonColumn
+                {
+                    Name = "UploadBtn",
+                    HeaderText = "",
+                    Text = "Upload Rx",
+                    UseColumnTextForButtonValue = true,
+                    Width = 110,
+                    AutoSizeMode = DataGridViewAutoSizeColumnMode.None
+                });
+            }
+
+            foreach (DataGridViewRow row in gridCart.Rows)
+            {
+                if (row.IsNewRow) continue;
+                var isRx = string.Equals(row.Cells["Rx"].Value?.ToString(), "Yes", StringComparison.OrdinalIgnoreCase);
+                var cell = row.Cells["UploadBtn"] as DataGridViewButtonCell;
+                if (cell != null)
+                    cell.Value = isRx ? "Upload Rx" : string.Empty;
+            }
         }
 
-        private void BtnBrowse_Click(object sender, EventArgs e)
+        private void GridCart_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
+            if (e.RowIndex < 0 || e.ColumnIndex < 0) return;
+            if (gridCart.Columns[e.ColumnIndex].Name != "UploadBtn") return;
+
+            var row = gridCart.Rows[e.RowIndex];
+            if (!string.Equals(row.Cells["Rx"].Value?.ToString(), "Yes", StringComparison.OrdinalIgnoreCase))
+                return;
+
             using (var dialog = new OpenFileDialog
             {
                 Filter = "Prescription files|*.pdf;*.jpg;*.jpeg;*.png;*.bmp|All files|*.*",
@@ -134,8 +162,9 @@ namespace SmartMed.UI
             })
             {
                 if (dialog.ShowDialog(FindForm()) != DialogResult.OK) return;
-                _prescriptionPath = dialog.FileName;
-                txtPrescriptionPath.Text = _prescriptionPath;
+                var id = Convert.ToInt32(row.Cells["MedicineID"].Value);
+                CartService.SetPrescription(id, dialog.FileName);
+                RefreshCart();
             }
         }
 
@@ -157,10 +186,13 @@ namespace SmartMed.UI
                 if (customer == null)
                     throw new InvalidOperationException("Please log in again.");
 
-                var orderId = _orders.PlaceOrder(customer.CustomerID, CartService.Items, _prescriptionPath);
+                var missing = CartService.MissingPrescriptions.Select(l => l.MedicineName).ToList();
+                if (missing.Count > 0)
+                    throw new InvalidOperationException(
+                        "Upload a prescription for: " + string.Join(", ", missing));
+
+                var orderId = _orders.PlaceOrder(customer.CustomerID, CartService.Items, CartService.FirstPrescriptionPath);
                 CartService.Clear();
-                _prescriptionPath = null;
-                txtPrescriptionPath.Clear();
                 RefreshCart();
                 SmartMedMessageBox.Show($"Order placed successfully. Reference #SM-{orderId:D4}", "Order",
                     MessageBoxButtons.OK, MessageBoxIcon.Information);

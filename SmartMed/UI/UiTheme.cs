@@ -1106,7 +1106,7 @@ namespace SmartMed.UI
 
             if (contact != null)
             {
-                contact.Text = topNav ? "Help" : "CONTACT US";
+                contact.Text = topNav ? "CONTACT" : "CONTACT US";
                 contact.FlatStyle = FlatStyle.Flat;
                 contact.FlatAppearance.BorderSize = 0;
                 contact.BackColor = AdminTeal;

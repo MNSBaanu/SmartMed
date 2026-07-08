@@ -15,11 +15,15 @@ namespace SmartMed.Services
         public decimal DiscountPercent { get; set; }
         public bool PromoApplied { get; set; }
         public bool RequiresPrescription { get; set; }
+        public string PrescriptionPath { get; set; }
         public decimal Subtotal => UnitPrice * Quantity;
 
         public string DiscountDisplay => DiscountPercent > 0 ? $"{DiscountPercent:N0}%" : "—";
         public string PromoDisplay => PromoApplied ? "Active" : "—";
         public string OfferDisplay => PromoApplied ? $"{DiscountPercent:N0}% promo applied" : "—";
+        public string PrescriptionDisplay => !RequiresPrescription
+            ? "—"
+            : string.IsNullOrWhiteSpace(PrescriptionPath) ? "Required" : System.IO.Path.GetFileName(PrescriptionPath);
     }
 
     public static class CartService
@@ -33,6 +37,19 @@ namespace SmartMed.Services
         public static decimal Total => Lines.Sum(l => l.Subtotal);
 
         public static bool RequiresPrescription => Lines.Any(l => l.RequiresPrescription);
+
+        public static IEnumerable<CartLine> MissingPrescriptions =>
+            Lines.Where(l => l.RequiresPrescription && string.IsNullOrWhiteSpace(l.PrescriptionPath));
+
+        public static string FirstPrescriptionPath =>
+            Lines.FirstOrDefault(l => l.RequiresPrescription && !string.IsNullOrWhiteSpace(l.PrescriptionPath))?.PrescriptionPath;
+
+        public static void SetPrescription(int medicineId, string path)
+        {
+            var line = Lines.FirstOrDefault(l => l.MedicineID == medicineId);
+            if (line != null)
+                line.PrescriptionPath = path;
+        }
 
         public static void Clear() => Lines.Clear();
 

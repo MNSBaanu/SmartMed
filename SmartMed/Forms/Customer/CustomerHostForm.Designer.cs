@@ -145,7 +145,7 @@ namespace SmartMed.UI
             this.lblMenuHelp.Name = "lblMenuHelp";
             this.lblMenuHelp.Size = new System.Drawing.Size(32, 15);
             this.lblMenuHelp.TabIndex = 5;
-            this.lblMenuHelp.Text = "Help";
+            this.lblMenuHelp.Text = "CONTACT";
             // 
             // lblMenuAccount
             // 

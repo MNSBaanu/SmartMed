@@ -31,9 +31,6 @@ namespace SmartMed.UI
             this.btnPlaceOrder = new System.Windows.Forms.Button();
             this.lblTotal = new System.Windows.Forms.Label();
             this.lblRxNote = new System.Windows.Forms.Label();
-            this.flowRxRow = new System.Windows.Forms.FlowLayoutPanel();
-            this.txtPrescriptionPath = new System.Windows.Forms.TextBox();
-            this.btnUploadPrescription = new System.Windows.Forms.Button();
             this.panelScrollHost.SuspendLayout();
             this.tableLayoutRoot.SuspendLayout();
             this.panelHeader.SuspendLayout();
@@ -42,7 +39,6 @@ namespace SmartMed.UI
             ((System.ComponentModel.ISupportInitialize)(this.gridCart)).BeginInit();
             this.panelGridHeader.SuspendLayout();
             this.flowActions.SuspendLayout();
-            this.flowRxRow.SuspendLayout();
             this.SuspendLayout();
             // 
             // panelScrollHost
@@ -67,14 +63,12 @@ namespace SmartMed.UI
             this.tableLayoutRoot.Controls.Add(this.flowActions, 0, 2);
             this.tableLayoutRoot.Controls.Add(this.lblTotal, 0, 3);
             this.tableLayoutRoot.Controls.Add(this.lblRxNote, 0, 4);
-            this.tableLayoutRoot.Controls.Add(this.flowRxRow, 0, 5);
             this.tableLayoutRoot.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutRoot.Location = new System.Drawing.Point(24, 24);
             this.tableLayoutRoot.Name = "tableLayoutRoot";
-            this.tableLayoutRoot.RowCount = 6;
+            this.tableLayoutRoot.RowCount = 5;
             this.tableLayoutRoot.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutRoot.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutRoot.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutRoot.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutRoot.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutRoot.RowStyles.Add(new System.Windows.Forms.RowStyle());
@@ -273,45 +267,6 @@ namespace SmartMed.UI
             this.lblRxNote.Text = "Rx medicines require a prescription upload.";
             this.lblRxNote.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
-            // flowRxRow
-            // 
-            this.flowRxRow.AutoSize = true;
-            this.flowRxRow.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(244)))), ((int)(((byte)(251)))), ((int)(((byte)(250)))));
-            this.flowRxRow.Controls.Add(this.txtPrescriptionPath);
-            this.flowRxRow.Controls.Add(this.btnUploadPrescription);
-            this.flowRxRow.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.flowRxRow.Location = new System.Drawing.Point(0, 520);
-            this.flowRxRow.Margin = new System.Windows.Forms.Padding(0, 12, 0, 0);
-            this.flowRxRow.Name = "flowRxRow";
-            this.flowRxRow.Size = new System.Drawing.Size(1012, 30);
-            this.flowRxRow.TabIndex = 5;
-            this.flowRxRow.WrapContents = false;
-            // 
-            // txtPrescriptionPath
-            // 
-            this.txtPrescriptionPath.Font = new System.Drawing.Font("Hanken Grotesk", 9F);
-            this.txtPrescriptionPath.Location = new System.Drawing.Point(0, 3);
-            this.txtPrescriptionPath.Margin = new System.Windows.Forms.Padding(0, 0, 8, 0);
-            this.txtPrescriptionPath.Name = "txtPrescriptionPath";
-            this.txtPrescriptionPath.ReadOnly = true;
-            this.txtPrescriptionPath.Size = new System.Drawing.Size(360, 25);
-            this.txtPrescriptionPath.TabIndex = 0;
-            // 
-            // btnUploadPrescription
-            // 
-            this.btnUploadPrescription.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(238)))), ((int)(((byte)(245)))), ((int)(((byte)(244)))));
-            this.btnUploadPrescription.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.btnUploadPrescription.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(193)))), ((int)(((byte)(200)))), ((int)(((byte)(198)))));
-            this.btnUploadPrescription.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnUploadPrescription.Font = new System.Drawing.Font("Hanken Grotesk", 9F);
-            this.btnUploadPrescription.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(22)))), ((int)(((byte)(29)))), ((int)(((byte)(29)))));
-            this.btnUploadPrescription.Location = new System.Drawing.Point(368, 0);
-            this.btnUploadPrescription.Name = "btnUploadPrescription";
-            this.btnUploadPrescription.Size = new System.Drawing.Size(150, 30);
-            this.btnUploadPrescription.TabIndex = 1;
-            this.btnUploadPrescription.Text = "Upload Prescription";
-            this.btnUploadPrescription.UseVisualStyleBackColor = false;
-            // 
             // PlaceOrderForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
@@ -341,8 +296,6 @@ namespace SmartMed.UI
             this.panelGridHeader.ResumeLayout(false);
             this.panelGridHeader.PerformLayout();
             this.flowActions.ResumeLayout(false);
-            this.flowRxRow.ResumeLayout(false);
-            this.flowRxRow.PerformLayout();
             this.ResumeLayout(false);
         }
 
@@ -364,8 +317,5 @@ namespace SmartMed.UI
         private System.Windows.Forms.Button btnPlaceOrder;
         private System.Windows.Forms.Label lblTotal;
         private System.Windows.Forms.Label lblRxNote;
-        private System.Windows.Forms.FlowLayoutPanel flowRxRow;
-        private System.Windows.Forms.TextBox txtPrescriptionPath;
-        private System.Windows.Forms.Button btnUploadPrescription;
     }
 }
