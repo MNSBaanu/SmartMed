@@ -48,6 +48,9 @@ namespace SmartMed.UI
             UiTheme.WireClinicalPlaceholderTextBox(txtAddress, "Enter your home address");
             UiTheme.WireClinicalPasswordTextBox(txtPassword);
             UiTheme.WireClinicalPasswordTextBox(txtConfirm);
+
+            UiTheme.EnableFieldNavigation(btnRegister,
+                txtFullName, txtEmail, txtPhone, txtAddress, txtPassword, txtConfirm);
         }
 
         private void LayoutRegistrationContent()

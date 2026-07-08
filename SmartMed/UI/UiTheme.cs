@@ -44,6 +44,91 @@ namespace SmartMed.UI
         public static readonly Color ErrorContainer = Color.FromArgb(255, 218, 214);
         public static readonly Color Error = Color.FromArgb(186, 26, 26);
         public static readonly Color ErrorOnContainer = Color.FromArgb(147, 0, 10);
+
+        /// <summary>
+        /// Wires Enter / Up / Down keyboard navigation across an ordered set of input
+        /// fields. Enter (and Down) moves to the next field; Up moves to the previous.
+        /// Pressing Enter on the last field invokes <paramref name="submit"/>.
+        /// Up/Down are only intercepted for single-line text boxes so combo boxes,
+        /// date pickers and numeric spinners keep their native arrow behavior.
+        /// </summary>
+        public static void EnableFieldNavigation(Control submit, params Control[] fields)
+        {
+            if (fields == null) return;
+
+            for (int i = 0; i < fields.Length; i++)
+            {
+                var field = fields[i];
+                if (field == null) continue;
+                int index = i;
+
+                // Claim Enter/Up/Down as input keys so the form's AcceptButton does not
+                // consume Enter as a dialog key before our KeyDown handler runs.
+                field.PreviewKeyDown += (s, e) =>
+                {
+                    if (field is ComboBox cb && cb.DroppedDown) return;
+                    if (e.KeyCode == Keys.Enter ||
+                        (IsSingleLineTextBox(field) && (e.KeyCode == Keys.Up || e.KeyCode == Keys.Down)))
+                        e.IsInputKey = true;
+                };
+
+                field.KeyDown += (s, e) =>
+                {
+                    if (e.KeyCode == Keys.Enter)
+                    {
+                        if (field is ComboBox cb && cb.DroppedDown) return;
+                        e.SuppressKeyPress = true;
+                        e.Handled = true;
+                        MoveToNextField(index, fields, submit);
+                    }
+                    else if (e.KeyCode == Keys.Down && IsSingleLineTextBox(field))
+                    {
+                        e.SuppressKeyPress = true;
+                        e.Handled = true;
+                        FocusFieldFrom(index + 1, 1, fields);
+                    }
+                    else if (e.KeyCode == Keys.Up && IsSingleLineTextBox(field))
+                    {
+                        e.SuppressKeyPress = true;
+                        e.Handled = true;
+                        FocusFieldFrom(index - 1, -1, fields);
+                    }
+                };
+            }
+        }
+
+        private static bool IsSingleLineTextBox(Control control) =>
+            control is TextBox tb && !tb.Multiline;
+
+        private static void MoveToNextField(int index, Control[] fields, Control submit)
+        {
+            for (int j = index + 1; j < fields.Length; j++)
+            {
+                if (TryFocus(fields[j])) return;
+            }
+
+            if (submit is Button btn && btn.Enabled && btn.Visible)
+                btn.PerformClick();
+        }
+
+        private static void FocusFieldFrom(int start, int step, Control[] fields)
+        {
+            for (int j = start; j >= 0 && j < fields.Length; j += step)
+            {
+                if (TryFocus(fields[j])) return;
+            }
+        }
+
+        private static bool TryFocus(Control control)
+        {
+            if (control == null || !control.Enabled || !control.Visible || !control.CanFocus)
+                return false;
+
+            control.Focus();
+            if (control is TextBox tb)
+                tb.SelectAll();
+            return true;
+        }
         public static readonly Color Danger = Color.FromArgb(186, 26, 26);
         public static readonly Color Success = Color.FromArgb(16, 185, 129);
         public static readonly Color GridHeaderText = Color.FromArgb(48, 56, 55);

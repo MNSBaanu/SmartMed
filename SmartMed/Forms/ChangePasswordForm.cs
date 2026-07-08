@@ -49,6 +49,8 @@ namespace SmartMed.UI
             UiTheme.WireClinicalPasswordTextBox(txtCurrent);
             UiTheme.WireClinicalPasswordTextBox(txtNew);
             UiTheme.WireClinicalPasswordTextBox(txtConfirm);
+
+            UiTheme.EnableFieldNavigation(btnSave, txtCurrent, txtNew, txtConfirm);
         }
 
         private void PanelMain_Paint(object sender, PaintEventArgs e)

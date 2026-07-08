@@ -83,6 +83,8 @@ namespace SmartMed.UI
 
             btnSaveProfile.Click += BtnSave_Click;
             btnChangePassword.Click += (s, e) => ShowChangePasswordDialog();
+
+            UiTheme.EnableFieldNavigation(btnSaveProfile, txtName, txtEmail, txtPhone, txtAddress);
         }
 
         private void LoadProfile()

@@ -457,6 +457,8 @@ namespace SmartMed.UI
                 dlg.AcceptButton = btnSave;
                 dlg.CancelButton = btnCancel;
 
+                UiTheme.EnableFieldNavigation(btnSave, txtName, txtEmail, txtPhone, txtAddress);
+
                 if (dlg.ShowDialog(FindForm()) != DialogResult.OK)
                     return;
 
