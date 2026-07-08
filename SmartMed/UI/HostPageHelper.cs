@@ -9,16 +9,29 @@ namespace SmartMed.UI
         {
             if (host == null || page == null) return;
 
-            host.Controls.Clear();
-            host.AutoScrollPosition = Point.Empty;
+            host.SuspendLayout();
+            try
+            {
+                UiTheme.EnableDoubleBuffer(host);
 
-            page.TopLevel = false;
-            page.FormBorderStyle = FormBorderStyle.None;
-            page.Dock = DockStyle.Fill;
-            page.ShowInTaskbar = false;
+                host.Controls.Clear();
+                host.AutoScrollPosition = Point.Empty;
 
-            host.Controls.Add(page);
-            page.Show();
+                page.Visible = false;
+                page.TopLevel = false;
+                page.FormBorderStyle = FormBorderStyle.None;
+                page.Dock = DockStyle.Fill;
+                page.ShowInTaskbar = false;
+
+                host.Controls.Add(page);
+                page.PerformLayout();
+                page.Show();
+                page.Visible = true;
+            }
+            finally
+            {
+                host.ResumeLayout(true);
+            }
         }
     }
 }

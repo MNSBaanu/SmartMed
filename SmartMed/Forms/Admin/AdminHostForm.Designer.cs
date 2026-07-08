@@ -424,14 +424,14 @@ namespace SmartMed.UI
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1672, 910);
+            this.ClientSize = new System.Drawing.Size(1280, 800);
             this.Controls.Add(this.panelContent);
             this.Controls.Add(this.panelSidebar);
             this.Controls.Add(this.panelStatusBar);
             this.Controls.Add(this.panelMenuBar);
             this.Controls.Add(this.panelTitleBar);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
-            this.MinimumSize = new System.Drawing.Size(1337, 729);
+            this.MinimumSize = new System.Drawing.Size(1024, 640);
             this.Name = "AdminHostForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "SmartMed - Operational Dashboard";

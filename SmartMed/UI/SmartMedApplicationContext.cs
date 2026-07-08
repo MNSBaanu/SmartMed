@@ -26,21 +26,51 @@ namespace SmartMed.UI
             if (previous != null)
                 previous.FormClosed -= OnMainFormClosed;
 
-            ShowLogin(isAfterLogout: true);
+            ShowLogin(isAfterLogout: true, source: previous);
             previous?.Close();
             _handingOffToLogin = false;
         }
 
-        private void ShowLogin(bool isAfterLogout)
+        private void ShowLogin(bool isAfterLogout, Form source = null)
         {
             var login = new LoginForm();
             if (isAfterLogout)
                 login.ResetAfterLogout();
 
+            CopyWindowStateAndSize(source, login);
+
             login.LoginSucceeded += OnLoginSucceeded;
             login.FormClosed += OnLoginFormClosed;
             MainForm = login;
             login.Show();
+        }
+
+        // Keep the window state/size consistent when switching between the
+        // login screen and the admin/customer shells (maximized stays maximized,
+        // normal keeps the same bounds). Applied before the target form is shown.
+        private static void CopyWindowStateAndSize(Form source, Form target)
+        {
+            if (source == null || target == null)
+                return;
+
+            target.StartPosition = FormStartPosition.Manual;
+
+            if (source.WindowState == FormWindowState.Maximized)
+            {
+                var restore = source.RestoreBounds;
+                if (restore.Width > 0 && restore.Height > 0)
+                {
+                    target.Location = restore.Location;
+                    target.Size = restore.Size;
+                }
+                target.WindowState = FormWindowState.Maximized;
+            }
+            else if (source.WindowState == FormWindowState.Normal)
+            {
+                target.WindowState = FormWindowState.Normal;
+                target.Location = source.Location;
+                target.Size = source.Size;
+            }
         }
 
         private void OnLoginSucceeded(object sender, EventArgs e)
@@ -54,6 +84,7 @@ namespace SmartMed.UI
             if (Session.IsAdminLoggedIn)
             {
                 var adminHost = new AdminHostForm();
+                CopyWindowStateAndSize(login, adminHost);
                 adminHost.FormClosed += OnMainFormClosed;
                 MainForm = adminHost;
                 adminHost.Show();
@@ -62,6 +93,7 @@ namespace SmartMed.UI
             }
 
             var customerHost = new CustomerHostForm();
+            CopyWindowStateAndSize(login, customerHost);
             customerHost.FormClosed += OnMainFormClosed;
             MainForm = customerHost;
             customerHost.Show();

@@ -444,11 +444,11 @@ namespace SmartMed.UI
             this.AcceptButton = this.btnLogin;
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(244)))), ((int)(((byte)(251)))), ((int)(((byte)(250)))));
-            this.ClientSize = new System.Drawing.Size(720, 700);
+            this.ClientSize = new System.Drawing.Size(1280, 800);
             this.Controls.Add(this.panelMain);
             this.Controls.Add(this.panelTitleBar);
             this.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F);
-            this.MinimumSize = new System.Drawing.Size(640, 580);
+            this.MinimumSize = new System.Drawing.Size(1024, 640);
             this.Name = "LoginForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "SmartMed ? Clinical Login";
