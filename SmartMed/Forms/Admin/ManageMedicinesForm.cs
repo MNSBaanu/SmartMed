@@ -218,6 +218,7 @@ namespace SmartMed.UI
                 ID = $"#M-{m.MedicineID:D4}",
                 Name = m.MedicineName,
                 m.Category,
+                Dosage = m.Dosage,
                 Stock = m.StockQuantity,
                 Price = Rules.GetEffectivePrice(m).ToString("N2"),
                 Expiry = m.ExpiryDate.ToString("yyyy-MM-dd"),
@@ -661,7 +662,6 @@ namespace SmartMed.UI
                 var btnSave = AdminUiHelpers.CreateWinButton(isEdit ? "Update" : "Add", true, 88);
                 btnSave.Left = 284;
                 btnSave.Top = 480;
-                btnSave.DialogResult = DialogResult.OK;
                 var btnCancel = AdminUiHelpers.CreateWinButton("Cancel", false, 88);
                 btnCancel.Left = 378;
                 btnCancel.Top = 480;
@@ -675,28 +675,34 @@ namespace SmartMed.UI
                     txtName, cmbCat, txtDosage, txtPrice, txtStock, dtpExpiry,
                     txtSupplier, txtDiscount, chkRx, chkPromo, dtpPromoStart, dtpPromoEnd);
 
-                if (dlg.ShowDialog(FindForm()) != DialogResult.OK)
-                    return;
-
-                try
+                // Validate and save inside the dialog so it stays open (and keeps the
+                // entered values) when validation fails, instead of closing on OK first.
+                btnSave.Click += (s, e) =>
                 {
-                    var medicine = ReadDialogFields(existing?.MedicineID ?? 0, txtName, cmbCat, txtDosage,
-                        txtPrice, txtStock, dtpExpiry, txtSupplier, txtDiscount, chkRx, chkPromo,
-                        dtpPromoStart, dtpPromoEnd);
+                    try
+                    {
+                        var medicine = ReadDialogFields(existing?.MedicineID ?? 0, txtName, cmbCat, txtDosage,
+                            txtPrice, txtStock, dtpExpiry, txtSupplier, txtDiscount, chkRx, chkPromo,
+                            dtpPromoStart, dtpPromoEnd);
 
-                    if (isEdit)
-                        _medicines.Update(medicine);
-                    else
-                        _medicines.Add(medicine);
+                        if (isEdit)
+                            _medicines.Update(medicine);
+                        else
+                            _medicines.Add(medicine);
 
-                    RefreshPage();
-                    MessageBox.Show(isEdit ? "Medicine updated." : "Medicine added.", "SmartMed",
-                        MessageBoxButtons.OK, MessageBoxIcon.Information);
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show(ex.Message, "Save Failed", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                }
+                        RefreshPage();
+                        dlg.DialogResult = DialogResult.OK;
+                        dlg.Close();
+                        MessageBox.Show(isEdit ? "Medicine updated." : "Medicine added.", "SmartMed",
+                            MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show(ex.Message, "Save Failed", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    }
+                };
+
+                dlg.ShowDialog(FindForm());
             }
         }
 

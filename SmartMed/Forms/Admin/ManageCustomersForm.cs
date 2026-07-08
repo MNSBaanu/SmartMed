@@ -447,7 +447,6 @@ namespace SmartMed.UI
                 var btnSave = AdminUiHelpers.CreateWinButton(isEdit ? "Update" : "Add", true, 88);
                 btnSave.Left = 224;
                 btnSave.Top = 262;
-                btnSave.DialogResult = DialogResult.OK;
                 var btnCancel = AdminUiHelpers.CreateWinButton("Cancel", false, 88);
                 btnCancel.Left = 318;
                 btnCancel.Top = 262;
@@ -459,32 +458,38 @@ namespace SmartMed.UI
 
                 UiTheme.EnableFieldNavigation(btnSave, txtName, txtEmail, txtPhone, txtAddress);
 
-                if (dlg.ShowDialog(FindForm()) != DialogResult.OK)
-                    return;
-
-                var customer = new Customer
+                // Validate/save inside the dialog so it stays open and keeps the entered
+                // values when validation fails, instead of closing on OK first.
+                btnSave.Click += (s, e) =>
                 {
-                    CustomerID = isEdit ? existing.CustomerID : 0,
-                    Name = txtName.Text.Trim(),
-                    Email = txtEmail.Text.Trim(),
-                    Phone = txtPhone.Text.Trim(),
-                    Address = txtAddress.Text.Trim()
+                    var customer = new Customer
+                    {
+                        CustomerID = isEdit ? existing.CustomerID : 0,
+                        Name = txtName.Text.Trim(),
+                        Email = txtEmail.Text.Trim(),
+                        Phone = txtPhone.Text.Trim(),
+                        Address = txtAddress.Text.Trim()
+                    };
+
+                    try
+                    {
+                        if (isEdit)
+                            _customers.Update(customer);
+                        else
+                            _customers.Add(customer);
+                        RefreshPage();
+                        dlg.DialogResult = DialogResult.OK;
+                        dlg.Close();
+                        MessageBox.Show(isEdit ? "Customer updated." : "Customer added.", "SmartMed",
+                            MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show(ex.Message, "Save Failed", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    }
                 };
 
-                try
-                {
-                    if (isEdit)
-                        _customers.Update(customer);
-                    else
-                        _customers.Add(customer);
-                    RefreshPage();
-                    MessageBox.Show(isEdit ? "Customer updated." : "Customer added.", "SmartMed",
-                        MessageBoxButtons.OK, MessageBoxIcon.Information);
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show(ex.Message, "Save Failed", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                }
+                dlg.ShowDialog(FindForm());
             }
         }
 
