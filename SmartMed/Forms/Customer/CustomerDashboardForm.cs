@@ -11,7 +11,6 @@ namespace SmartMed.UI
         private OrderService _orders;
         private MedicineService _medicines;
         private bool _servicesReady;
-        private bool _runtimeWired;
         private bool _chromeApplied;
 
         public CustomerDashboardForm()
@@ -31,8 +30,6 @@ namespace SmartMed.UI
         {
             base.OnLoad(e);
             ApplyViewChrome();
-            if (_servicesReady)
-                WireRuntimeBehavior();
         }
 
         protected override void DoRefreshPage()
@@ -121,23 +118,5 @@ namespace SmartMed.UI
             };
         }
 
-        private void WireRuntimeBehavior()
-        {
-            if (_runtimeWired) return;
-            _runtimeWired = true;
-
-            btnBrowseMedicines.Click += (s, e) => Navigate(CustomerHostForm.CustomerNavItem.Browse);
-            btnViewCart.Click += (s, e) => Navigate(CustomerHostForm.CustomerNavItem.Cart);
-            btnChangePassword.Click += (s, e) => ShowChangePassword();
-        }
-
-        private void Navigate(CustomerHostForm.CustomerNavItem item) =>
-            (FindForm() as CustomerHostForm)?.NavigateTo(item);
-
-        private void ShowChangePassword()
-        {
-            using (var dlg = new ChangePasswordForm(isAdmin: false))
-                dlg.ShowDialog(FindForm());
-        }
     }
 }

@@ -35,10 +35,6 @@ namespace SmartMed.UI
             this.gridRecent = new System.Windows.Forms.DataGridView();
             this.panelGridHeader = new System.Windows.Forms.Panel();
             this.lblGridTitle = new System.Windows.Forms.Label();
-            this.flowActions = new System.Windows.Forms.FlowLayoutPanel();
-            this.btnBrowseMedicines = new System.Windows.Forms.Button();
-            this.btnViewCart = new System.Windows.Forms.Button();
-            this.btnChangePassword = new System.Windows.Forms.Button();
             this.panelScrollHost.SuspendLayout();
             this.tableLayoutRoot.SuspendLayout();
             this.panelHeader.SuspendLayout();
@@ -50,7 +46,6 @@ namespace SmartMed.UI
             this.panelGridBody.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.gridRecent)).BeginInit();
             this.panelGridHeader.SuspendLayout();
-            this.flowActions.SuspendLayout();
             this.SuspendLayout();
             // 
             // panelScrollHost
@@ -75,13 +70,11 @@ namespace SmartMed.UI
             this.tableLayoutRoot.Controls.Add(this.panelHeader, 0, 0);
             this.tableLayoutRoot.Controls.Add(this.tableStatsRow, 0, 1);
             this.tableLayoutRoot.Controls.Add(this.panelGridOuter, 0, 2);
-            this.tableLayoutRoot.Controls.Add(this.flowActions, 0, 3);
             this.tableLayoutRoot.Dock = System.Windows.Forms.DockStyle.Top;
             this.tableLayoutRoot.Location = new System.Drawing.Point(24, 24);
             this.tableLayoutRoot.MinimumSize = new System.Drawing.Size(0, 520);
             this.tableLayoutRoot.Name = "tableLayoutRoot";
-            this.tableLayoutRoot.RowCount = 4;
-            this.tableLayoutRoot.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableLayoutRoot.RowCount = 3;
             this.tableLayoutRoot.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutRoot.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutRoot.RowStyles.Add(new System.Windows.Forms.RowStyle());
@@ -321,68 +314,6 @@ namespace SmartMed.UI
             this.lblGridTitle.TabIndex = 0;
             this.lblGridTitle.Text = "Recent Orders";
             // 
-            // flowActions
-            // 
-            this.flowActions.AutoSize = true;
-            this.flowActions.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(244)))), ((int)(((byte)(251)))), ((int)(((byte)(250)))));
-            this.flowActions.Controls.Add(this.btnBrowseMedicines);
-            this.flowActions.Controls.Add(this.btnViewCart);
-            this.flowActions.Controls.Add(this.btnChangePassword);
-            this.flowActions.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.flowActions.Location = new System.Drawing.Point(0, 476);
-            this.flowActions.Margin = new System.Windows.Forms.Padding(0, 8, 0, 0);
-            this.flowActions.Name = "flowActions";
-            this.flowActions.Size = new System.Drawing.Size(1012, 44);
-            this.flowActions.TabIndex = 3;
-            this.flowActions.WrapContents = false;
-            // 
-            // btnBrowseMedicines
-            // 
-            this.btnBrowseMedicines.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(238)))), ((int)(((byte)(245)))), ((int)(((byte)(244)))));
-            this.btnBrowseMedicines.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.btnBrowseMedicines.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(193)))), ((int)(((byte)(200)))), ((int)(((byte)(198)))));
-            this.btnBrowseMedicines.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnBrowseMedicines.Font = new System.Drawing.Font("Hanken Grotesk", 9F);
-            this.btnBrowseMedicines.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(22)))), ((int)(((byte)(29)))), ((int)(((byte)(29)))));
-            this.btnBrowseMedicines.Location = new System.Drawing.Point(0, 0);
-            this.btnBrowseMedicines.Margin = new System.Windows.Forms.Padding(0, 0, 10, 0);
-            this.btnBrowseMedicines.Name = "btnBrowseMedicines";
-            this.btnBrowseMedicines.Size = new System.Drawing.Size(160, 30);
-            this.btnBrowseMedicines.TabIndex = 0;
-            this.btnBrowseMedicines.Text = "Browse Medicines";
-            this.btnBrowseMedicines.UseVisualStyleBackColor = false;
-            // 
-            // btnViewCart
-            // 
-            this.btnViewCart.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(53)))), ((int)(((byte)(103)))), ((int)(((byte)(94)))));
-            this.btnViewCart.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.btnViewCart.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(27)))), ((int)(((byte)(79)))), ((int)(((byte)(71)))));
-            this.btnViewCart.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnViewCart.Font = new System.Drawing.Font("Hanken Grotesk", 9F);
-            this.btnViewCart.ForeColor = System.Drawing.Color.White;
-            this.btnViewCart.Location = new System.Drawing.Point(170, 0);
-            this.btnViewCart.Margin = new System.Windows.Forms.Padding(0, 0, 10, 0);
-            this.btnViewCart.Name = "btnViewCart";
-            this.btnViewCart.Size = new System.Drawing.Size(160, 30);
-            this.btnViewCart.TabIndex = 1;
-            this.btnViewCart.Text = "View Cart";
-            this.btnViewCart.UseVisualStyleBackColor = false;
-            // 
-            // btnChangePassword
-            // 
-            this.btnChangePassword.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(238)))), ((int)(((byte)(245)))), ((int)(((byte)(244)))));
-            this.btnChangePassword.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.btnChangePassword.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(193)))), ((int)(((byte)(200)))), ((int)(((byte)(198)))));
-            this.btnChangePassword.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnChangePassword.Font = new System.Drawing.Font("Hanken Grotesk", 9F);
-            this.btnChangePassword.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(22)))), ((int)(((byte)(29)))), ((int)(((byte)(29)))));
-            this.btnChangePassword.Location = new System.Drawing.Point(340, 0);
-            this.btnChangePassword.Name = "btnChangePassword";
-            this.btnChangePassword.Size = new System.Drawing.Size(160, 30);
-            this.btnChangePassword.TabIndex = 2;
-            this.btnChangePassword.Text = "Change Password";
-            this.btnChangePassword.UseVisualStyleBackColor = false;
-            // 
             // CustomerDashboardForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
@@ -415,7 +346,6 @@ namespace SmartMed.UI
             ((System.ComponentModel.ISupportInitialize)(this.gridRecent)).EndInit();
             this.panelGridHeader.ResumeLayout(false);
             this.panelGridHeader.PerformLayout();
-            this.flowActions.ResumeLayout(false);
             this.ResumeLayout(false);
         }
 
@@ -441,9 +371,5 @@ namespace SmartMed.UI
         private System.Windows.Forms.DataGridView gridRecent;
         private System.Windows.Forms.Panel panelGridHeader;
         private System.Windows.Forms.Label lblGridTitle;
-        private System.Windows.Forms.FlowLayoutPanel flowActions;
-        private System.Windows.Forms.Button btnBrowseMedicines;
-        private System.Windows.Forms.Button btnViewCart;
-        private System.Windows.Forms.Button btnChangePassword;
     }
 }
