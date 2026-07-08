@@ -59,8 +59,6 @@ namespace SmartMed.UI
             // 
             // tableLayoutRoot
             // 
-            this.tableLayoutRoot.AutoSize = true;
-            this.tableLayoutRoot.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.tableLayoutRoot.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(244)))), ((int)(((byte)(251)))), ((int)(((byte)(250)))));
             this.tableLayoutRoot.ColumnCount = 1;
             this.tableLayoutRoot.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
@@ -70,13 +68,12 @@ namespace SmartMed.UI
             this.tableLayoutRoot.Controls.Add(this.lblTotal, 0, 3);
             this.tableLayoutRoot.Controls.Add(this.lblRxNote, 0, 4);
             this.tableLayoutRoot.Controls.Add(this.flowRxRow, 0, 5);
-            this.tableLayoutRoot.Dock = System.Windows.Forms.DockStyle.Top;
+            this.tableLayoutRoot.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutRoot.Location = new System.Drawing.Point(24, 24);
-            this.tableLayoutRoot.MinimumSize = new System.Drawing.Size(0, 400);
             this.tableLayoutRoot.Name = "tableLayoutRoot";
             this.tableLayoutRoot.RowCount = 6;
             this.tableLayoutRoot.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutRoot.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableLayoutRoot.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tableLayoutRoot.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutRoot.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutRoot.RowStyles.Add(new System.Windows.Forms.RowStyle());

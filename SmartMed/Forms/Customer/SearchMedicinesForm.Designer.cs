@@ -35,11 +35,6 @@ namespace SmartMed.UI
             this.grid = new System.Windows.Forms.DataGridView();
             this.panelGridHeader = new System.Windows.Forms.Panel();
             this.lblGridTitle = new System.Windows.Forms.Label();
-            this.lblDetails = new System.Windows.Forms.Label();
-            this.flowCartRow = new System.Windows.Forms.FlowLayoutPanel();
-            this.lblQty = new System.Windows.Forms.Label();
-            this.numQty = new System.Windows.Forms.NumericUpDown();
-            this.btnAddToCart = new System.Windows.Forms.Button();
             this.panelScrollHost.SuspendLayout();
             this.tableLayoutRoot.SuspendLayout();
             this.panelHeader.SuspendLayout();
@@ -48,8 +43,6 @@ namespace SmartMed.UI
             this.panelGridBody.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.grid)).BeginInit();
             this.panelGridHeader.SuspendLayout();
-            this.flowCartRow.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numQty)).BeginInit();
             this.SuspendLayout();
             // 
             // panelScrollHost
@@ -66,26 +59,19 @@ namespace SmartMed.UI
             // 
             // tableLayoutRoot
             // 
-            this.tableLayoutRoot.AutoSize = true;
-            this.tableLayoutRoot.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.tableLayoutRoot.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(244)))), ((int)(((byte)(251)))), ((int)(((byte)(250)))));
             this.tableLayoutRoot.ColumnCount = 1;
             this.tableLayoutRoot.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tableLayoutRoot.Controls.Add(this.panelHeader, 0, 0);
             this.tableLayoutRoot.Controls.Add(this.flowFilter, 0, 1);
             this.tableLayoutRoot.Controls.Add(this.panelGridOuter, 0, 2);
-            this.tableLayoutRoot.Controls.Add(this.lblDetails, 0, 3);
-            this.tableLayoutRoot.Controls.Add(this.flowCartRow, 0, 4);
-            this.tableLayoutRoot.Dock = System.Windows.Forms.DockStyle.Top;
+            this.tableLayoutRoot.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutRoot.Location = new System.Drawing.Point(24, 24);
-            this.tableLayoutRoot.MinimumSize = new System.Drawing.Size(0, 420);
             this.tableLayoutRoot.Name = "tableLayoutRoot";
-            this.tableLayoutRoot.RowCount = 5;
+            this.tableLayoutRoot.RowCount = 3;
             this.tableLayoutRoot.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutRoot.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutRoot.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutRoot.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutRoot.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableLayoutRoot.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tableLayoutRoot.Size = new System.Drawing.Size(1012, 420);
             this.tableLayoutRoot.TabIndex = 0;
             // 
@@ -285,7 +271,7 @@ namespace SmartMed.UI
             this.grid.GridColor = System.Drawing.Color.FromArgb(((int)(((byte)(238)))), ((int)(((byte)(245)))), ((int)(((byte)(244)))));
             this.grid.Location = new System.Drawing.Point(0, 4);
             this.grid.Name = "grid";
-            this.grid.ReadOnly = true;
+            this.grid.ReadOnly = false;
             this.grid.RowHeadersVisible = false;
             this.grid.RowTemplate.Height = 36;
             this.grid.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
@@ -314,87 +300,6 @@ namespace SmartMed.UI
             this.lblGridTitle.Size = new System.Drawing.Size(108, 16);
             this.lblGridTitle.TabIndex = 0;
             this.lblGridTitle.Text = "Medicine Catalog";
-            // 
-            // lblDetails
-            // 
-            this.lblDetails.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(244)))), ((int)(((byte)(251)))), ((int)(((byte)(250)))));
-            this.lblDetails.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lblDetails.Font = new System.Drawing.Font("Hanken Grotesk", 9F);
-            this.lblDetails.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(65)))), ((int)(((byte)(72)))), ((int)(((byte)(71)))));
-            this.lblDetails.Location = new System.Drawing.Point(0, 464);
-            this.lblDetails.Margin = new System.Windows.Forms.Padding(0, 0, 0, 12);
-            this.lblDetails.Name = "lblDetails";
-            this.lblDetails.Size = new System.Drawing.Size(1012, 48);
-            this.lblDetails.TabIndex = 3;
-            this.lblDetails.Text = "Amoxicillin 500mg | Antibiotic | LKR 427.50 | Stock: 12 | Rx: Yes | Discount: 5% | Promo: Active";
-            this.lblDetails.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            // 
-            // flowCartRow
-            // 
-            this.flowCartRow.AutoSize = true;
-            this.flowCartRow.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(244)))), ((int)(((byte)(251)))), ((int)(((byte)(250)))));
-            this.flowCartRow.Controls.Add(this.lblQty);
-            this.flowCartRow.Controls.Add(this.numQty);
-            this.flowCartRow.Controls.Add(this.btnAddToCart);
-            this.flowCartRow.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.flowCartRow.Location = new System.Drawing.Point(0, 524);
-            this.flowCartRow.Margin = new System.Windows.Forms.Padding(0, 12, 0, 0);
-            this.flowCartRow.Name = "flowCartRow";
-            this.flowCartRow.Size = new System.Drawing.Size(1012, 30);
-            this.flowCartRow.TabIndex = 4;
-            this.flowCartRow.WrapContents = false;
-            // 
-            // lblQty
-            // 
-            this.lblQty.AutoSize = true;
-            this.lblQty.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(244)))), ((int)(((byte)(251)))), ((int)(((byte)(250)))));
-            this.lblQty.Font = new System.Drawing.Font("Hanken Grotesk", 9F);
-            this.lblQty.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(65)))), ((int)(((byte)(72)))), ((int)(((byte)(71)))));
-            this.lblQty.Location = new System.Drawing.Point(0, 8);
-            this.lblQty.Margin = new System.Windows.Forms.Padding(0, 6, 4, 0);
-            this.lblQty.Name = "lblQty";
-            this.lblQty.Size = new System.Drawing.Size(30, 18);
-            this.lblQty.TabIndex = 0;
-            this.lblQty.Text = "Qty:";
-            // 
-            // numQty
-            // 
-            this.numQty.Font = new System.Drawing.Font("Hanken Grotesk", 9F);
-            this.numQty.Location = new System.Drawing.Point(34, 3);
-            this.numQty.Margin = new System.Windows.Forms.Padding(0, 0, 8, 0);
-            this.numQty.Maximum = new decimal(new int[] {
-            99,
-            0,
-            0,
-            0});
-            this.numQty.Minimum = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
-            this.numQty.Name = "numQty";
-            this.numQty.Size = new System.Drawing.Size(60, 25);
-            this.numQty.TabIndex = 1;
-            this.numQty.Value = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
-            // 
-            // btnAddToCart
-            // 
-            this.btnAddToCart.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(53)))), ((int)(((byte)(103)))), ((int)(((byte)(94)))));
-            this.btnAddToCart.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.btnAddToCart.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(27)))), ((int)(((byte)(79)))), ((int)(((byte)(71)))));
-            this.btnAddToCart.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnAddToCart.Font = new System.Drawing.Font("Hanken Grotesk", 9F);
-            this.btnAddToCart.ForeColor = System.Drawing.Color.White;
-            this.btnAddToCart.Location = new System.Drawing.Point(102, 0);
-            this.btnAddToCart.Name = "btnAddToCart";
-            this.btnAddToCart.Size = new System.Drawing.Size(120, 30);
-            this.btnAddToCart.TabIndex = 2;
-            this.btnAddToCart.Text = "Add to Cart";
-            this.btnAddToCart.UseVisualStyleBackColor = false;
             // 
             // SearchMedicinesForm
             // 
@@ -426,9 +331,6 @@ namespace SmartMed.UI
             ((System.ComponentModel.ISupportInitialize)(this.grid)).EndInit();
             this.panelGridHeader.ResumeLayout(false);
             this.panelGridHeader.PerformLayout();
-            this.flowCartRow.ResumeLayout(false);
-            this.flowCartRow.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numQty)).EndInit();
             this.ResumeLayout(false);
         }
 
@@ -454,10 +356,5 @@ namespace SmartMed.UI
         private System.Windows.Forms.DataGridView grid;
         private System.Windows.Forms.Panel panelGridHeader;
         private System.Windows.Forms.Label lblGridTitle;
-        private System.Windows.Forms.Label lblDetails;
-        private System.Windows.Forms.FlowLayoutPanel flowCartRow;
-        private System.Windows.Forms.Label lblQty;
-        private System.Windows.Forms.NumericUpDown numQty;
-        private System.Windows.Forms.Button btnAddToCart;
     }
 }
