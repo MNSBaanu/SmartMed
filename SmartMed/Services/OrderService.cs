@@ -138,6 +138,10 @@ namespace SmartMed.Services
                 throw new ArgumentException("Payment status is required.");
 
             var orderId = _orders.CreateOrder(customerId, orderItems, paymentMethod, paymentStatus, paymentReference);
+
+            foreach (var item in orderItems)
+                _medicines.ReduceStock(item.MedicineID, item.Quantity);
+
             if (requiresRx)
                 _prescriptions.SavePrescription(customerId, orderId, prescriptionSourcePath);
 

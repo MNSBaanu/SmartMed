@@ -219,7 +219,7 @@ namespace SmartMed.UI
 
             try
             {
-                CartService.ReleaseAll(new MedicineService());
+                CartService.Unload();
                 Session.Clear();
 
                 var identity = UiTheme.ReadTextBoxValue(txtUsername);
@@ -246,6 +246,7 @@ namespace SmartMed.UI
                     if (customer != null)
                     {
                         Session.CurrentCustomer = customer;
+                        CartService.LoadForCustomer(customer.CustomerID, new MedicineService());
                         LoginSucceeded?.Invoke(this, EventArgs.Empty);
                         return;
                     }

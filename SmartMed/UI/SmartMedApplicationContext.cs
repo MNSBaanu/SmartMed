@@ -19,7 +19,7 @@ namespace SmartMed.UI
 
         public void ShowLoginAfterLogout()
         {
-            CartService.ReleaseAll(new MedicineService());
+            CartService.Unload();
             Session.Clear();
             _handingOffToLogin = true;
 

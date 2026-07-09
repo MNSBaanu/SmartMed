@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using SmartMed.Data;
 using SmartMed.Models;
 
 namespace SmartMed.Services
@@ -29,6 +30,8 @@ namespace SmartMed.Services
     public static class CartService
     {
         private static readonly List<CartLine> Lines = new List<CartLine>();
+        private static readonly CartRepository Repository = new CartRepository();
+        private static int? _customerId;
 
         public static IReadOnlyList<CartLine> Items => Lines;
 
@@ -44,30 +47,75 @@ namespace SmartMed.Services
         public static string FirstPrescriptionPath =>
             Lines.FirstOrDefault(l => l.RequiresPrescription && !string.IsNullOrWhiteSpace(l.PrescriptionPath))?.PrescriptionPath;
 
-        public static void SetPrescription(int medicineId, string path)
+        public static void LoadForCustomer(int customerId, MedicineService medicines)
         {
-            var line = Lines.FirstOrDefault(l => l.MedicineID == medicineId);
-            if (line != null)
-                line.PrescriptionPath = path;
-        }
+            if (customerId <= 0)
+                throw new ArgumentException("Customer is required.");
+            if (medicines == null)
+                throw new ArgumentNullException(nameof(medicines));
 
-        public static void Clear(MedicineService medicines, bool restoreStock = true)
-        {
-            if (restoreStock && medicines != null)
+            _customerId = customerId;
+            Lines.Clear();
+
+            foreach (var stored in Repository.GetByCustomer(customerId))
             {
-                foreach (var line in Lines.ToList())
-                    medicines.RestoreStock(line.MedicineID, line.Quantity);
+                var fresh = medicines.GetById(stored.MedicineID);
+                if (fresh == null)
+                    continue;
+
+                try
+                {
+                    medicines.ValidateForCustomerPurchase(fresh);
+                }
+                catch
+                {
+                    continue;
+                }
+
+                if (stored.Quantity > fresh.StockQuantity)
+                    stored.Quantity = fresh.StockQuantity;
+
+                if (stored.Quantity <= 0)
+                    continue;
+
+                Lines.Add(BuildLine(fresh, stored.Quantity, stored.PrescriptionPath, medicines));
             }
 
+            Persist();
+        }
+
+        public static void Unload()
+        {
+            _customerId = null;
             Lines.Clear();
         }
 
-        public static void ReleaseAll(MedicineService medicines) => Clear(medicines, restoreStock: true);
+        public static void SetPrescription(int medicineId, string path)
+        {
+            var line = Lines.FirstOrDefault(l => l.MedicineID == medicineId);
+            if (line == null) return;
 
-        public static void Discard() => Lines.Clear();
+            line.PrescriptionPath = path;
+            Persist();
+        }
+
+        public static void Clear(MedicineService medicines = null)
+        {
+            Lines.Clear();
+            if (_customerId.HasValue)
+                Repository.Clear(_customerId.Value);
+        }
+
+        public static void ReleaseAll(MedicineService medicines) => Unload();
+
+        public static void Discard()
+        {
+            Clear();
+        }
 
         public static void Add(Medicine medicine, int quantity, MedicineService medicines)
         {
+            EnsureCustomerLoaded();
             if (medicines == null)
                 throw new ArgumentNullException(nameof(medicines));
             if (quantity <= 0)
@@ -83,40 +131,23 @@ namespace SmartMed.Services
             if (newTotal > fresh.StockQuantity)
                 throw new InvalidOperationException("Quantity exceeds available stock.");
 
-            medicines.ReduceStock(medicine.MedicineID, quantity);
+            var promoApplied = medicines.IsPromotionActive(fresh);
+            var unitPrice = medicines.GetEffectivePrice(fresh);
 
-            try
+            if (existing != null)
             {
-                var promoApplied = medicines.IsPromotionActive(fresh);
-                var unitPrice = medicines.GetEffectivePrice(fresh);
-
-                if (existing != null)
-                {
-                    existing.Quantity += quantity;
-                    existing.UnitPrice = unitPrice;
-                    existing.ListPrice = fresh.Price;
-                    existing.DiscountPercent = fresh.DiscountPercent;
-                    existing.PromoApplied = promoApplied;
-                    return;
-                }
-
-                Lines.Add(new CartLine
-                {
-                    MedicineID = fresh.MedicineID,
-                    MedicineName = fresh.MedicineName,
-                    Quantity = quantity,
-                    UnitPrice = unitPrice,
-                    ListPrice = fresh.Price,
-                    DiscountPercent = fresh.DiscountPercent,
-                    PromoApplied = promoApplied,
-                    RequiresPrescription = fresh.RequiresPrescription
-                });
+                existing.Quantity += quantity;
+                existing.UnitPrice = unitPrice;
+                existing.ListPrice = fresh.Price;
+                existing.DiscountPercent = fresh.DiscountPercent;
+                existing.PromoApplied = promoApplied;
             }
-            catch
+            else
             {
-                medicines.RestoreStock(medicine.MedicineID, quantity);
-                throw;
+                Lines.Add(BuildLine(fresh, quantity, null, medicines));
             }
+
+            Persist();
         }
 
         public static void Remove(int medicineId, MedicineService medicines)
@@ -124,8 +155,8 @@ namespace SmartMed.Services
             var line = Lines.FirstOrDefault(l => l.MedicineID == medicineId);
             if (line == null) return;
 
-            medicines?.RestoreStock(medicineId, line.Quantity);
             Lines.Remove(line);
+            Persist();
         }
 
         public static void UpdateQuantity(int medicineId, int quantity, MedicineService medicines)
@@ -139,30 +170,58 @@ namespace SmartMed.Services
                 return;
             }
 
-            if (medicines == null)
-            {
-                line.Quantity = quantity;
-                return;
-            }
-
-            var delta = quantity - line.Quantity;
-            if (delta == 0) return;
-
-            if (delta > 0)
+            if (medicines != null)
             {
                 var fresh = medicines.GetById(medicineId);
                 if (fresh == null)
                     throw new InvalidOperationException("Medicine not found.");
-                if (delta > fresh.StockQuantity)
+                if (quantity > fresh.StockQuantity)
                     throw new InvalidOperationException("Quantity exceeds available stock.");
-                medicines.ReduceStock(medicineId, delta);
-            }
-            else
-            {
-                medicines.RestoreStock(medicineId, -delta);
+
+                var promoApplied = medicines.IsPromotionActive(fresh);
+                line.UnitPrice = medicines.GetEffectivePrice(fresh);
+                line.ListPrice = fresh.Price;
+                line.DiscountPercent = fresh.DiscountPercent;
+                line.PromoApplied = promoApplied;
             }
 
             line.Quantity = quantity;
+            Persist();
+        }
+
+        private static CartLine BuildLine(Medicine fresh, int quantity, string prescriptionPath, MedicineService medicines)
+        {
+            return new CartLine
+            {
+                MedicineID = fresh.MedicineID,
+                MedicineName = fresh.MedicineName,
+                Quantity = quantity,
+                UnitPrice = medicines.GetEffectivePrice(fresh),
+                ListPrice = fresh.Price,
+                DiscountPercent = fresh.DiscountPercent,
+                PromoApplied = medicines.IsPromotionActive(fresh),
+                RequiresPrescription = fresh.RequiresPrescription,
+                PrescriptionPath = prescriptionPath
+            };
+        }
+
+        private static void EnsureCustomerLoaded()
+        {
+            if (!_customerId.HasValue)
+                throw new InvalidOperationException("Please log in again to use your cart.");
+        }
+
+        private static void Persist()
+        {
+            if (!_customerId.HasValue)
+                return;
+
+            Repository.SaveAll(_customerId.Value, Lines.Select(l => new CartRepository.StoredCartLine
+            {
+                MedicineID = l.MedicineID,
+                Quantity = l.Quantity,
+                PrescriptionPath = l.PrescriptionPath
+            }).ToList());
         }
     }
 }

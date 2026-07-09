@@ -79,4 +79,16 @@ CREATE TABLE Prescription (
     CONSTRAINT FK_Prescription_Order FOREIGN KEY (OrderID) REFERENCES [Order](OrderID)
 );
 
+CREATE TABLE CartItem (
+    CartItemID       INT IDENTITY(1,1) PRIMARY KEY,
+    CustomerID       INT NOT NULL,
+    MedicineID       INT NOT NULL,
+    Quantity         INT NOT NULL CHECK (Quantity > 0),
+    PrescriptionPath NVARCHAR(255) NULL,
+    AddedAt          DATETIME NOT NULL DEFAULT GETDATE(),
+    CONSTRAINT FK_CartItem_Customer FOREIGN KEY (CustomerID) REFERENCES Customer(CustomerID),
+    CONSTRAINT FK_CartItem_Medicine FOREIGN KEY (MedicineID) REFERENCES Medicine(MedicineID),
+    CONSTRAINT UQ_CartItem_Customer_Medicine UNIQUE (CustomerID, MedicineID)
+);
+
 GO
