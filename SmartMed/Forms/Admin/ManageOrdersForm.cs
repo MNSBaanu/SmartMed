@@ -21,6 +21,8 @@ namespace SmartMed.UI
         private List<OrderRow> _filteredRows = new List<OrderRow>();
         private int _currentPage = 1;
         private int? _selectedOrderId;
+        private bool _suppressGridEvents;
+        private string _statusEditOriginal;
 
         public ManageOrdersForm()
         {
@@ -61,8 +63,9 @@ namespace SmartMed.UI
                     TotalAmount = "LKR 1,250.00",
                     Status = OrderService.StatusPending,
                     RawStatus = OrderService.StatusPending,
-                    RxStatus = "Approved",
-                    Prescription = "Uploaded",
+                    RxStatus = PrescriptionService.StatusPending,
+                    Prescription = "rx_jane.pdf",
+                    HasPrescription = true,
                     OrderDateValue = now.AddDays(-1),
                     IsNew = true
                 },
@@ -72,12 +75,28 @@ namespace SmartMed.UI
                     OrderRef = "#ORD-0002",
                     CustomerName = "Kamal Silva",
                     CustomerRef = "PAT-002-02",
+                    OrderDate = now.AddDays(-2).ToString("MMM dd, yyyy HH:mm"),
+                    TotalAmount = "LKR 640.00",
+                    Status = OrderService.StatusReadyForPickup,
+                    RawStatus = OrderService.StatusReadyForPickup,
+                    RxStatus = PrescriptionService.StatusVerified,
+                    Prescription = "rx_kamal.pdf",
+                    HasPrescription = true,
+                    OrderDateValue = now.AddDays(-2)
+                },
+                new OrderRow
+                {
+                    OrderID = 3,
+                    OrderRef = "#ORD-0003",
+                    CustomerName = "Nimali Jay",
+                    CustomerRef = "PAT-003-03",
                     OrderDate = now.AddDays(-3).ToString("MMM dd, yyyy HH:mm"),
                     TotalAmount = "LKR 890.00",
                     Status = OrderService.StatusDelivered,
                     RawStatus = OrderService.StatusDelivered,
                     RxStatus = "—",
                     Prescription = "—",
+                    HasPrescription = false,
                     OrderDateValue = now.AddDays(-3)
                 }
             };
@@ -175,6 +194,11 @@ namespace SmartMed.UI
             btnPageNext.Click += (s, e) => ChangePage(1);
             gridOrders.CellFormatting += GridOrders_CellFormatting;
             gridOrders.CellContentClick += GridOrders_CellContentClick;
+            gridOrders.CellClick += GridOrders_CellClick;
+            gridOrders.CellValueChanged += GridOrders_CellValueChanged;
+            gridOrders.EditingControlShowing += GridOrders_EditingControlShowing;
+            gridOrders.CurrentCellDirtyStateChanged += GridOrders_CurrentCellDirtyStateChanged;
+            gridOrders.DataError += GridOrders_DataError;
             gridOrders.SelectionChanged += GridOrders_SelectionChanged;
 
             AdminOrderAlerts.AlertsChanged += (s, e) =>
@@ -219,6 +243,7 @@ namespace SmartMed.UI
                 RawStatus = order.Status,
                 RxStatus = rxStatus,
                 Prescription = _orders.GetPrescriptionDisplay(order.OrderID),
+                HasPrescription = _orders.OrderHasPrescription(order.OrderID),
                 OrderDateValue = order.OrderDate,
                 IsNew = AdminOrderAlerts.IsNew(order)
             };
@@ -272,22 +297,29 @@ namespace SmartMed.UI
             var pageRows = _filteredRows
                 .Skip((_currentPage - 1) * PageSize)
                 .Take(PageSize)
-                .Select(r => new
+                .Select(r => new OrderGridRow
                 {
-                    r.OrderID,
-                    r.OrderRef,
+                    OrderID = r.OrderID,
+                    OrderRef = r.OrderRef,
                     Customer = $"{r.CustomerName} ({r.CustomerRef})",
-                    r.OrderDate,
-                    r.TotalAmount,
-                    r.Status,
-                    View = "View",
-                    Edit = "Edit"
+                    OrderDate = r.OrderDate,
+                    TotalAmount = r.TotalAmount,
+                    Prescription = r.Prescription,
+                    RxStatus = r.RxStatus,
+                    Status = r.RawStatus,
+                    Verify = CanReviewRx(r) ? "Verify" : string.Empty,
+                    Reject = CanReviewRx(r) ? "Reject" : string.Empty,
+                    Cancel = CanCancelOrder(r) ? "Cancel" : string.Empty,
+                    View = "View"
                 })
                 .ToList();
 
+            _suppressGridEvents = true;
             UiTheme.SetGridDataSource(gridOrders, pageRows);
+            _suppressGridEvents = false;
             HideInternalColumns();
             UiTheme.BeautifyGridHeaders(gridOrders);
+            EnsureGridColumns();
 
             if (gridOrders.Columns.Contains("Customer"))
                 gridOrders.Columns["Customer"].DefaultCellStyle.WrapMode = DataGridViewTriState.False;
@@ -301,6 +333,224 @@ namespace SmartMed.UI
         {
             if (gridOrders.Columns.Contains("OrderID"))
                 gridOrders.Columns["OrderID"].Visible = false;
+        }
+
+        private static bool CanReviewRx(OrderRow row) =>
+            row != null
+            && row.HasPrescription
+            && string.Equals(row.RxStatus, PrescriptionService.StatusPending, StringComparison.OrdinalIgnoreCase);
+
+        private static bool CanCancelOrder(OrderRow row) =>
+            row != null
+            && string.Equals(row.RawStatus, OrderService.StatusPending, StringComparison.OrdinalIgnoreCase);
+
+        private void EnsureGridColumns()
+        {
+            if (gridOrders.Columns.Contains("Edit"))
+                gridOrders.Columns.Remove("Edit");
+
+            gridOrders.ReadOnly = false;
+            foreach (DataGridViewColumn col in gridOrders.Columns)
+                col.ReadOnly = true;
+
+            EnsureStatusComboColumn();
+            ConfigureActionButtonColumn("Verify", "Verify", 72);
+            ConfigureActionButtonColumn("Reject", "Reject", 72);
+            ConfigureActionButtonColumn("Cancel", "Cancel", 72);
+            ConfigureActionButtonColumn("View", "View", 64);
+
+            if (gridOrders.Columns.Contains("Prescription"))
+            {
+                var col = gridOrders.Columns["Prescription"];
+                col.HeaderText = "Prescription";
+                col.MinimumWidth = 96;
+            }
+
+            if (gridOrders.Columns.Contains("RxStatus"))
+            {
+                var col = gridOrders.Columns["RxStatus"];
+                col.HeaderText = "Rx Status";
+                col.MinimumWidth = 88;
+            }
+
+            SetDisplayIndex("OrderRef", 0);
+            SetDisplayIndex("Customer", 1);
+            SetDisplayIndex("OrderDate", 2);
+            SetDisplayIndex("TotalAmount", 3);
+            SetDisplayIndex("Prescription", 4);
+            SetDisplayIndex("RxStatus", 5);
+            SetDisplayIndex("Status", 6);
+            SetDisplayIndex("Verify", 7);
+            SetDisplayIndex("Reject", 8);
+            SetDisplayIndex("Cancel", 9);
+            SetDisplayIndex("View", 10);
+        }
+
+        private void SetDisplayIndex(string columnName, int displayIndex)
+        {
+            if (gridOrders.Columns.Contains(columnName))
+                gridOrders.Columns[columnName].DisplayIndex = displayIndex;
+        }
+
+        private void EnsureStatusComboColumn()
+        {
+            const string name = "Status";
+            DataGridViewComboBoxColumn comboCol;
+
+            if (gridOrders.Columns[name] is DataGridViewComboBoxColumn existingCombo)
+            {
+                comboCol = existingCombo;
+            }
+            else
+            {
+                var textCol = gridOrders.Columns[name];
+                var displayIndex = textCol?.DisplayIndex ?? 6;
+                var width = textCol?.Width ?? 120;
+                if (textCol != null)
+                    gridOrders.Columns.Remove(name);
+
+                comboCol = new DataGridViewComboBoxColumn
+                {
+                    Name = name,
+                    HeaderText = "Status",
+                    DataPropertyName = name,
+                    DisplayStyle = DataGridViewComboBoxDisplayStyle.Nothing,
+                    FlatStyle = FlatStyle.Flat,
+                    Width = width,
+                    MinimumWidth = 100,
+                    AutoSizeMode = DataGridViewAutoSizeColumnMode.None
+                };
+                gridOrders.Columns.Add(comboCol);
+                comboCol.DisplayIndex = displayIndex;
+            }
+
+            comboCol.ReadOnly = false;
+            comboCol.ValueType = typeof(string);
+            comboCol.Items.Clear();
+            comboCol.Items.Add(OrderService.StatusPending);
+            comboCol.Items.Add(OrderService.StatusReadyForPickup);
+            comboCol.Items.Add(OrderService.StatusDelivered);
+        }
+
+        private void ConfigureActionButtonColumn(string name, string headerText, int width)
+        {
+            var displayIndex = gridOrders.Columns.Contains(name)
+                ? gridOrders.Columns[name].DisplayIndex
+                : gridOrders.Columns.Count;
+
+            if (gridOrders.Columns[name] is DataGridViewButtonColumn buttonCol)
+            {
+                buttonCol.HeaderText = headerText;
+                buttonCol.DataPropertyName = name;
+                buttonCol.UseColumnTextForButtonValue = false;
+                buttonCol.FlatStyle = FlatStyle.Flat;
+                buttonCol.Width = width;
+                buttonCol.MinimumWidth = width;
+                buttonCol.AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
+                buttonCol.ReadOnly = true;
+                return;
+            }
+
+            if (gridOrders.Columns.Contains(name))
+                gridOrders.Columns.Remove(name);
+
+            buttonCol = new DataGridViewButtonColumn
+            {
+                Name = name,
+                HeaderText = headerText,
+                DataPropertyName = name,
+                UseColumnTextForButtonValue = false,
+                FlatStyle = FlatStyle.Flat,
+                Width = width,
+                MinimumWidth = width,
+                AutoSizeMode = DataGridViewAutoSizeColumnMode.None,
+                ReadOnly = true
+            };
+            gridOrders.Columns.Add(buttonCol);
+            buttonCol.DisplayIndex = displayIndex;
+        }
+
+        private OrderRow GetOrderRow(int rowIndex)
+        {
+            if (rowIndex < 0 || rowIndex >= gridOrders.Rows.Count) return null;
+            var orderIdCell = gridOrders.Rows[rowIndex].Cells["OrderID"];
+            if (orderIdCell?.Value == null) return null;
+            var orderId = Convert.ToInt32(orderIdCell.Value);
+            return _filteredRows.FirstOrDefault(r => r.OrderID == orderId);
+        }
+
+        private void GridOrders_CurrentCellDirtyStateChanged(object sender, EventArgs e)
+        {
+            if (gridOrders.IsCurrentCellDirty
+                && gridOrders.CurrentCell is DataGridViewComboBoxCell)
+            {
+                gridOrders.CommitEdit(DataGridViewDataErrorContexts.Commit);
+            }
+        }
+
+        private void GridOrders_EditingControlShowing(object sender, DataGridViewEditingControlShowingEventArgs e)
+        {
+            if (gridOrders.CurrentCell?.OwningColumn?.Name != "Status") return;
+            if (!(e.Control is ComboBox combo)) return;
+
+            UiTheme.StyleComboBox(combo);
+
+            var row = GetOrderRow(gridOrders.CurrentCell.RowIndex);
+            if (row == null) return;
+
+            _statusEditOriginal = row.RawStatus;
+            combo.DataSource = null;
+            combo.Items.Clear();
+            combo.Items.Add(row.RawStatus);
+            foreach (var status in OrderService.GetAllowedNextStatuses(row.RawStatus))
+            {
+                if (!combo.Items.Contains(status))
+                    combo.Items.Add(status);
+            }
+            combo.SelectedItem = row.RawStatus;
+        }
+
+        private void GridOrders_DataError(object sender, DataGridViewDataErrorEventArgs e)
+        {
+            if (e.ColumnIndex < 0 || e.RowIndex < 0) return;
+            if (gridOrders.Columns[e.ColumnIndex].Name != "Status") return;
+            e.ThrowException = false;
+        }
+
+        private void GridOrders_CellValueChanged(object sender, DataGridViewCellEventArgs e)
+        {
+            if (_suppressGridEvents || e.RowIndex < 0 || !_servicesReady) return;
+            if (gridOrders.Columns[e.ColumnIndex].Name != "Status") return;
+
+            var orderId = Convert.ToInt32(gridOrders.Rows[e.RowIndex].Cells["OrderID"].Value);
+            var newStatus = gridOrders.Rows[e.RowIndex].Cells["Status"].Value?.ToString();
+            if (string.IsNullOrWhiteSpace(newStatus) || newStatus == _statusEditOriginal)
+                return;
+
+            try
+            {
+                _orders.UpdateStatus(orderId, newStatus);
+                LoadOrders();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Update Failed", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                _suppressGridEvents = true;
+                gridOrders.Rows[e.RowIndex].Cells["Status"].Value = _statusEditOriginal;
+                _suppressGridEvents = false;
+            }
+        }
+
+        private void GridOrders_CellClick(object sender, DataGridViewCellEventArgs e)
+        {
+            if (e.RowIndex < 0 || !_servicesReady) return;
+            if (gridOrders.Columns[e.ColumnIndex].Name != "Prescription") return;
+
+            var row = GetOrderRow(e.RowIndex);
+            if (row?.HasPrescription != true) return;
+
+            var orderId = Convert.ToInt32(gridOrders.Rows[e.RowIndex].Cells["OrderID"].Value);
+            OpenPrescription(orderId);
         }
 
         private void UpdateStats()
@@ -352,18 +602,13 @@ namespace SmartMed.UI
         {
             if (e.RowIndex < 0 || e.ColumnIndex < 0) return;
 
+            var columnName = gridOrders.Columns[e.ColumnIndex].Name;
+            var row = GetOrderRow(e.RowIndex);
+
             if (UiTheme.IsSelectedRow(gridOrders, e.RowIndex))
             {
                 UiTheme.ApplySelectedRowCellStyle(e.CellStyle);
                 return;
-            }
-
-            var orderIdCell = gridOrders.Rows[e.RowIndex].Cells["OrderID"];
-            OrderRow row = null;
-            if (orderIdCell?.Value != null)
-            {
-                var orderId = Convert.ToInt32(orderIdCell.Value);
-                row = _filteredRows.FirstOrDefault(r => r.OrderID == orderId);
             }
 
             if (row?.IsNew == true)
@@ -372,45 +617,169 @@ namespace SmartMed.UI
                 e.CellStyle.Font = UiTheme.UiFontBold;
             }
 
-            if (gridOrders.Columns[e.ColumnIndex].Name != "Status") return;
+            if (columnName == "Prescription")
+            {
+                var file = e.Value?.ToString() ?? string.Empty;
+                if (row?.HasPrescription == true && file != "—" && !string.IsNullOrWhiteSpace(file))
+                {
+                    e.CellStyle.ForeColor = UiTheme.AdminTeal;
+                    e.CellStyle.Font = UiTheme.UiFontBold;
+                }
+                return;
+            }
 
-            var status = e.Value?.ToString() ?? "";
-            if (string.Equals(status, OrderService.StatusPending, StringComparison.OrdinalIgnoreCase)
-                || status == "Flagged")
+            if (columnName == "RxStatus")
             {
-                e.CellStyle.BackColor = Color.FromArgb(255, 218, 214);
-                e.CellStyle.ForeColor = Color.FromArgb(104, 57, 61);
-                e.CellStyle.Font = UiTheme.UiFontBold;
-                if (status == OrderService.StatusPending)
-                    e.Value = "Pending";
+                var rx = e.Value?.ToString() ?? string.Empty;
+                if (string.Equals(rx, PrescriptionService.StatusVerified, StringComparison.OrdinalIgnoreCase))
+                {
+                    e.CellStyle.BackColor = Color.FromArgb(220, 245, 238);
+                    e.CellStyle.ForeColor = Color.FromArgb(27, 79, 71);
+                    e.CellStyle.Font = UiTheme.UiFontBold;
+                }
+                else if (string.Equals(rx, PrescriptionService.StatusRejected, StringComparison.OrdinalIgnoreCase))
+                {
+                    e.CellStyle.BackColor = Color.FromArgb(254, 226, 226);
+                    e.CellStyle.ForeColor = Color.FromArgb(153, 27, 27);
+                    e.CellStyle.Font = UiTheme.UiFontBold;
+                }
+                else if (string.Equals(rx, PrescriptionService.StatusPending, StringComparison.OrdinalIgnoreCase))
+                {
+                    e.CellStyle.BackColor = Color.FromArgb(255, 243, 205);
+                    e.CellStyle.ForeColor = Color.FromArgb(140, 70, 0);
+                    e.CellStyle.Font = UiTheme.UiFontBold;
+                }
+                return;
             }
-            else if (string.Equals(status, OrderService.StatusReadyForPickup, StringComparison.OrdinalIgnoreCase)
-                     || string.Equals(status, "Ready", StringComparison.OrdinalIgnoreCase))
+
+            if (columnName == "Status")
             {
-                e.CellStyle.BackColor = Color.FromArgb(199, 234, 228);
-                e.CellStyle.ForeColor = UiTheme.AdminTeal;
-                e.CellStyle.Font = UiTheme.UiFontBold;
-                e.Value = "Ready";
+                var status = e.Value?.ToString() ?? string.Empty;
+                if (row != null && row.Status == "Flagged")
+                {
+                    e.CellStyle.BackColor = Color.FromArgb(255, 218, 214);
+                    e.CellStyle.ForeColor = Color.FromArgb(104, 57, 61);
+                    e.CellStyle.Font = UiTheme.UiFontBold;
+                    return;
+                }
+
+                if (string.Equals(status, OrderService.StatusPending, StringComparison.OrdinalIgnoreCase))
+                {
+                    e.CellStyle.BackColor = Color.FromArgb(255, 243, 205);
+                    e.CellStyle.ForeColor = Color.FromArgb(140, 70, 0);
+                    e.CellStyle.Font = UiTheme.UiFontBold;
+                }
+                else if (string.Equals(status, OrderService.StatusReadyForPickup, StringComparison.OrdinalIgnoreCase))
+                {
+                    e.CellStyle.BackColor = Color.FromArgb(199, 234, 228);
+                    e.CellStyle.ForeColor = UiTheme.AdminTeal;
+                    e.CellStyle.Font = UiTheme.UiFontBold;
+                }
+                else if (string.Equals(status, OrderService.StatusDelivered, StringComparison.OrdinalIgnoreCase))
+                {
+                    e.CellStyle.BackColor = Color.FromArgb(184, 237, 226);
+                    e.CellStyle.ForeColor = Color.FromArgb(27, 79, 71);
+                    e.CellStyle.Font = UiTheme.UiFontBold;
+                }
+                return;
             }
-            else if (string.Equals(status, OrderService.StatusDelivered, StringComparison.OrdinalIgnoreCase))
+
+            if (columnName == "Verify" || columnName == "Reject" || columnName == "Cancel" || columnName == "View")
             {
-                e.CellStyle.BackColor = Color.FromArgb(184, 237, 226);
-                e.CellStyle.ForeColor = Color.FromArgb(27, 79, 71);
+                var text = e.Value?.ToString() ?? string.Empty;
+                if (string.IsNullOrEmpty(text))
+                {
+                    e.Value = string.Empty;
+                    return;
+                }
+
+                e.CellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
                 e.CellStyle.Font = UiTheme.UiFontBold;
+                e.CellStyle.ForeColor = columnName == "Verify" || columnName == "View"
+                    ? UiTheme.AdminTeal
+                    : UiTheme.Danger;
+                return;
             }
         }
 
         private void GridOrders_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
-            if (e.RowIndex < 0) return;
+            if (e.RowIndex < 0 || !_servicesReady) return;
+
             var colName = gridOrders.Columns[e.ColumnIndex].Name;
-            if (colName != "View" && colName != "Edit") return;
+            if (colName != "View" && colName != "Verify" && colName != "Reject" && colName != "Cancel")
+                return;
+
+            var cellValue = gridOrders.Rows[e.RowIndex].Cells[colName].Value?.ToString();
+            if (string.IsNullOrEmpty(cellValue)) return;
 
             var orderId = Convert.ToInt32(gridOrders.Rows[e.RowIndex].Cells["OrderID"].Value);
+            var row = GetOrderRow(e.RowIndex);
+
             if (colName == "View")
+            {
                 ShowOrderDetails(orderId);
-            else
-                ShowStatusEditor(orderId);
+                return;
+            }
+
+            if (colName == "Verify")
+            {
+                if (!CanReviewRx(row)) return;
+                try
+                {
+                    _orders.VerifyPrescription(orderId);
+                    LoadOrders();
+                    MessageBox.Show("Prescription verified.", "SmartMed",
+                        MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message, "Verify Failed", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                }
+                return;
+            }
+
+            if (colName == "Reject")
+            {
+                if (!CanReviewRx(row)) return;
+                if (MessageBox.Show(
+                        "Reject this prescription? The order cannot move forward until a valid prescription is provided.",
+                        "Reject Prescription", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) != DialogResult.Yes)
+                    return;
+
+                try
+                {
+                    _orders.RejectPrescription(orderId);
+                    LoadOrders();
+                    MessageBox.Show("Prescription rejected.", "SmartMed",
+                        MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message, "Reject Failed", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                }
+                return;
+            }
+
+            if (colName == "Cancel")
+            {
+                if (!CanCancelOrder(row)) return;
+                if (MessageBox.Show("Cancel this order and restore stock?", "Confirm Cancel",
+                        MessageBoxButtons.YesNo, MessageBoxIcon.Warning) != DialogResult.Yes)
+                    return;
+
+                try
+                {
+                    _orders.CancelOrderAsAdmin(orderId);
+                    LoadOrders();
+                    MessageBox.Show("Order cancelled and stock restored.", "SmartMed",
+                        MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message, "Cancel Failed", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                }
+            }
         }
 
         private void ShowOrderDetails(int orderId)
@@ -445,171 +814,6 @@ namespace SmartMed.UI
 
             if (result == DialogResult.Yes)
                 OpenPrescription(orderId);
-        }
-
-        private void ShowStatusEditor(int orderId)
-        {
-            var order = _orders.GetById(orderId);
-            if (order == null) return;
-
-            var nextStatuses = OrderService.GetAllowedNextStatuses(order.Status);
-            if (nextStatuses.Count == 0)
-            {
-                MessageBox.Show("This order cannot be updated further.", "Manage Orders",
-                    MessageBoxButtons.OK, MessageBoxIcon.Information);
-                return;
-            }
-
-            using (var dlg = new Form
-            {
-                Text = $"Update Order #ORD-{orderId:D4}",
-                FormBorderStyle = FormBorderStyle.FixedDialog,
-                StartPosition = FormStartPosition.CenterParent,
-                ClientSize = new Size(400, 200),
-                MaximizeBox = false,
-                MinimizeBox = false,
-                Font = UiTheme.UiFont,
-                BackColor = UiTheme.AdminSurface
-            })
-            {
-                var cmb = new ComboBox
-                {
-                    DropDownStyle = ComboBoxStyle.DropDownList,
-                    Left = 16,
-                    Top = 48,
-                    Width = 320
-                };
-                UiTheme.StyleComboBox(cmb);
-                foreach (var status in nextStatuses)
-                    cmb.Items.Add(status);
-                cmb.SelectedIndex = 0;
-
-                dlg.Controls.Add(new Label
-                {
-                    Text = $"Current status: {order.Status}",
-                    Left = 16,
-                    Top = 16,
-                    AutoSize = true,
-                    ForeColor = UiTheme.AdminOnSurface,
-                    BackColor = UiTheme.AdminSurface
-                });
-                dlg.Controls.Add(new Label
-                {
-                    Text = "New status:",
-                    Left = 16,
-                    Top = 30,
-                    AutoSize = true,
-                    ForeColor = UiTheme.AdminMuted,
-                    BackColor = UiTheme.AdminSurface
-                });
-                dlg.Controls.Add(cmb);
-
-                var btnRx = AdminUiHelpers.CreateWinButton("View Rx", false, 90);
-                btnRx.Left = 16;
-                btnRx.Top = 100;
-                btnRx.Click += (s, e) => OpenPrescription(orderId);
-
-                var btnVerify = AdminUiHelpers.CreateWinButton("Verify Rx", true, 90);
-                btnVerify.Left = 112;
-                btnVerify.Top = 100;
-                btnVerify.Click += (s, e) =>
-                {
-                    try
-                    {
-                        _orders.VerifyPrescription(orderId);
-                        MessageBox.Show("Prescription verified.", "SmartMed");
-                    }
-                    catch (Exception ex)
-                    {
-                        MessageBox.Show(ex.Message, "Verify Failed", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                    }
-                };
-
-                var btnReject = AdminUiHelpers.CreateWinButton("Reject Rx", false, 90);
-                btnReject.Left = 208;
-                btnReject.Top = 100;
-                btnReject.Click += (s, e) =>
-                {
-                    if (MessageBox.Show(
-                            "Reject this prescription? The order cannot move forward until a valid prescription is provided.",
-                            "Reject Prescription", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) != DialogResult.Yes)
-                        return;
-
-                    try
-                    {
-                        _orders.RejectPrescription(orderId);
-                        MessageBox.Show("Prescription rejected.", "SmartMed");
-                    }
-                    catch (Exception ex)
-                    {
-                        MessageBox.Show(ex.Message, "Reject Failed", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                    }
-                };
-
-                var btnSave = AdminUiHelpers.CreateWinButton("Update", true, 90);
-                btnSave.Left = 246;
-                btnSave.Top = 140;
-                btnSave.DialogResult = DialogResult.OK;
-                var btnClose = AdminUiHelpers.CreateWinButton("Close", false, 90);
-                btnClose.Left = 150;
-                btnClose.Top = 140;
-                btnClose.DialogResult = DialogResult.Cancel;
-
-                dlg.Controls.Add(btnRx);
-                dlg.Controls.Add(btnVerify);
-                dlg.Controls.Add(btnReject);
-                dlg.Controls.Add(btnSave);
-                dlg.Controls.Add(btnClose);
-                dlg.AcceptButton = btnSave;
-                dlg.CancelButton = btnClose;
-
-                if (order.Status == OrderService.StatusPending)
-                {
-                    var btnCancelOrder = AdminUiHelpers.CreateWinButton("Cancel Order", false, 110);
-                    btnCancelOrder.Left = 16;
-                    btnCancelOrder.Top = 140;
-                    btnCancelOrder.Click += (s, e) =>
-                    {
-                        if (MessageBox.Show("Cancel this order and restore stock?", "Confirm Cancel",
-                                MessageBoxButtons.YesNo, MessageBoxIcon.Warning) != DialogResult.Yes)
-                            return;
-
-                        try
-                        {
-                            _orders.CancelOrderAsAdmin(orderId);
-                            dlg.DialogResult = DialogResult.Cancel;
-                            dlg.Close();
-                            LoadOrders();
-                            MessageBox.Show("Order cancelled and stock restored.", "SmartMed",
-                                MessageBoxButtons.OK, MessageBoxIcon.Information);
-                        }
-                        catch (Exception ex)
-                        {
-                            MessageBox.Show(ex.Message, "Cancel Failed", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                        }
-                    };
-                    dlg.Controls.Add(btnCancelOrder);
-                    dlg.ClientSize = new Size(400, 220);
-                    btnSave.Top = 160;
-                    btnClose.Top = 160;
-                    btnCancelOrder.Top = 160;
-                }
-
-                if (dlg.ShowDialog(FindForm()) != DialogResult.OK || cmb.SelectedItem == null)
-                    return;
-
-                try
-                {
-                    _orders.UpdateStatus(orderId, cmb.SelectedItem.ToString());
-                    LoadOrders();
-                    MessageBox.Show("Order status updated.", "SmartMed",
-                        MessageBoxButtons.OK, MessageBoxIcon.Information);
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show(ex.Message, "Update Failed", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                }
-            }
         }
 
         private void OpenPrescription(int orderId)
@@ -668,6 +872,22 @@ namespace SmartMed.UI
             }
         }
 
+        private sealed class OrderGridRow
+        {
+            public int OrderID { get; set; }
+            public string OrderRef { get; set; }
+            public string Customer { get; set; }
+            public string OrderDate { get; set; }
+            public string TotalAmount { get; set; }
+            public string Prescription { get; set; }
+            public string RxStatus { get; set; }
+            public string Status { get; set; }
+            public string Verify { get; set; }
+            public string Reject { get; set; }
+            public string Cancel { get; set; }
+            public string View { get; set; }
+        }
+
         private sealed class OrderRow
         {
             public int OrderID { get; set; }
@@ -681,6 +901,7 @@ namespace SmartMed.UI
             public string RawStatus { get; set; }
             public string RxStatus { get; set; }
             public string Prescription { get; set; }
+            public bool HasPrescription { get; set; }
             public bool IsNew { get; set; }
         }
     }
