@@ -50,41 +50,35 @@ namespace SmartMed.UI
             ApplyViewChrome();
 
             var sample = DesignTimePreviewData.SampleCustomer();
-            _allRows = new List<CustomerRow>
+            _allRows = new List<CustomerRow>();
+            for (var i = 1; i <= 15; i++)
             {
-                new CustomerRow
+                var active = i % 3 != 0;
+                _allRows.Add(new CustomerRow
                 {
-                    CustomerID = sample.CustomerID,
-                    CustomerRef = "#SM-01001",
-                    Name = sample.Name,
-                    ContactInfo = $"{sample.Email} / {sample.Phone}",
-                    LastOrder = DateTime.Today.AddDays(-14).ToString("yyyy-MM-dd"),
-                    OrderCount = 3,
-                    ActivityStatus = "ACTIVE",
-                    AccountStatus = "ENABLED",
-                    Customer = sample
-                },
-                new CustomerRow
-                {
-                    CustomerID = 1002,
-                    CustomerRef = "#SM-01002",
-                    Name = "Kamal Silva",
-                    ContactInfo = "kamal@example.com / 0779876543",
-                    LastOrder = "—",
-                    OrderCount = 0,
-                    ActivityStatus = "INACTIVE",
-                    AccountStatus = "DISABLED",
-                    Customer = new Customer
-                    {
-                        CustomerID = 1002,
-                        Name = "Kamal Silva",
-                        Email = "kamal@example.com",
-                        Phone = "0779876543",
-                        Address = "45 Galle Road, Colombo",
-                        IsActive = false
-                    }
-                }
-            };
+                    CustomerID = 1000 + i,
+                    CustomerRef = $"#SM-{1000 + i:D5}",
+                    Name = i == 1 ? sample.Name : $"Customer {i}",
+                    ContactInfo = i == 1
+                        ? $"{sample.Email} / {sample.Phone}"
+                        : $"user{i}@example.com / 077{i:D7}",
+                    LastOrder = active ? DateTime.Today.AddDays(-i * 5).ToString("yyyy-MM-dd") : "—",
+                    OrderCount = active ? i % 5 : 0,
+                    ActivityStatus = active ? "ACTIVE" : "INACTIVE",
+                    AccountStatus = active ? "ENABLED" : "DISABLED",
+                    Customer = i == 1
+                        ? sample
+                        : new Customer
+                        {
+                            CustomerID = 1000 + i,
+                            Name = $"Customer {i}",
+                            Email = $"user{i}@example.com",
+                            Phone = $"077{i:D7}",
+                            Address = $"{i} Main Street",
+                            IsActive = active
+                        }
+                });
+            }
             _filteredRows = _allRows;
             BindPage();
             UpdateStats();
@@ -99,13 +93,25 @@ namespace SmartMed.UI
             AdminPageView.ApplyChrome(this);
 
             UiTheme.ApplyClinicalGrid(gridCustomers);
-            gridCustomers.ScrollBars = ScrollBars.Vertical;
+            ConfigureGridScrolling();
             UiTheme.StyleTextBox(txtSearch);
 
             WirePanelBorder(panelGridOuter);
             WireStatCard(panelStatTotal, UiTheme.AdminTeal);
             WireStatCard(panelStatActive, Color.FromArgb(16, 185, 129));
             WireStatCard(panelStatInactive, UiTheme.AdminMuted);
+        }
+
+        private void ConfigureGridScrolling()
+        {
+            panelScrollHost.AutoScroll = false;
+            panelGridBody.AutoScroll = false;
+
+            gridCustomers.AutoSize = false;
+            gridCustomers.Dock = DockStyle.Fill;
+            gridCustomers.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.None;
+            gridCustomers.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+            gridCustomers.ScrollBars = ScrollBars.Both;
         }
 
         private static void WirePanelBorder(Panel panel)
@@ -290,6 +296,9 @@ namespace SmartMed.UI
                 gridCustomers.Columns["colCustomerID"].Visible = false;
             UiTheme.BeautifyGridHeaders(gridCustomers);
             EnsureGridActionColumns();
+
+            if (gridCustomers.Rows.Count > 0)
+                gridCustomers.FirstDisplayedScrollingRowIndex = 0;
 
             lblPageInfo.Text = pageRows.Count == 1
                 ? "1 customer"

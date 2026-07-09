@@ -83,7 +83,7 @@ namespace SmartMed.UI
             // 
             // panelScrollHost
             // 
-            this.panelScrollHost.AutoScroll = true;
+            this.panelScrollHost.AutoScroll = false;
             this.panelScrollHost.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(244)))), ((int)(((byte)(251)))), ((int)(((byte)(250)))));
             this.panelScrollHost.Controls.Add(this.tableLayoutRoot);
             this.panelScrollHost.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -337,6 +337,7 @@ namespace SmartMed.UI
             dataGridViewCellStyle1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(250)))), ((int)(((byte)(252)))), ((int)(((byte)(252)))));
             this.gridCustomers.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle1;
             this.gridCustomers.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
+            this.gridCustomers.AutoSizeRowsMode = System.Windows.Forms.DataGridViewAutoSizeRowsMode.None;
             this.gridCustomers.BackgroundColor = System.Drawing.Color.White;
             this.gridCustomers.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.gridCustomers.CellBorderStyle = System.Windows.Forms.DataGridViewCellBorderStyle.SingleHorizontal;
@@ -375,7 +376,7 @@ namespace SmartMed.UI
             this.gridCustomers.RowHeadersVisible = false;
             this.gridCustomers.RowHeadersWidth = 51;
             this.gridCustomers.RowTemplate.Height = 36;
-            this.gridCustomers.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.gridCustomers.ScrollBars = System.Windows.Forms.ScrollBars.Both;
             this.gridCustomers.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.gridCustomers.Size = new System.Drawing.Size(1010, 358);
             this.gridCustomers.TabIndex = 0;
