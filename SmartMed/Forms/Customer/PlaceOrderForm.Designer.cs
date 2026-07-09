@@ -97,7 +97,7 @@ namespace SmartMed.UI
             this.lblPageSubtitle.Name = "lblPageSubtitle";
             this.lblPageSubtitle.Size = new System.Drawing.Size(380, 18);
             this.lblPageSubtitle.TabIndex = 1;
-            this.lblPageSubtitle.Text = "Review items, upload prescriptions, and place your order.";
+            this.lblPageSubtitle.Text = "Review items, upload prescriptions, and complete payment.";
             // 
             // lblPageTitle
             // 
@@ -234,9 +234,9 @@ namespace SmartMed.UI
             this.btnPlaceOrder.ForeColor = System.Drawing.Color.White;
             this.btnPlaceOrder.Location = new System.Drawing.Point(250, 0);
             this.btnPlaceOrder.Name = "btnPlaceOrder";
-            this.btnPlaceOrder.Size = new System.Drawing.Size(120, 30);
+            this.btnPlaceOrder.Size = new System.Drawing.Size(150, 30);
             this.btnPlaceOrder.TabIndex = 2;
-            this.btnPlaceOrder.Text = "Place Order";
+            this.btnPlaceOrder.Text = "Proceed to Payment";
             this.btnPlaceOrder.UseVisualStyleBackColor = false;
             // 
             // lblTotal

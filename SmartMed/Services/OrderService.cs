@@ -97,7 +97,8 @@ namespace SmartMed.Services
             return "Invalid order status transition.";
         }
 
-        public int PlaceOrder(int customerId, IReadOnlyList<CartLine> cart, string prescriptionSourcePath)
+        public int PlaceOrder(int customerId, IReadOnlyList<CartLine> cart, string prescriptionSourcePath,
+            string paymentMethod, string paymentStatus, string paymentReference)
         {
             if (customerId <= 0)
                 throw new ArgumentException("Customer is required.");
@@ -131,7 +132,12 @@ namespace SmartMed.Services
             if (requiresRx && ValidationService.IsNullOrWhiteSpace(prescriptionSourcePath))
                 throw new InvalidOperationException("Upload a prescription for Rx medicines before placing the order.");
 
-            var orderId = _orders.CreateOrder(customerId, orderItems);
+            if (ValidationService.IsNullOrWhiteSpace(paymentMethod))
+                throw new ArgumentException("Payment method is required.");
+            if (ValidationService.IsNullOrWhiteSpace(paymentStatus))
+                throw new ArgumentException("Payment status is required.");
+
+            var orderId = _orders.CreateOrder(customerId, orderItems, paymentMethod, paymentStatus, paymentReference);
             if (requiresRx)
                 _prescriptions.SavePrescription(customerId, orderId, prescriptionSourcePath);
 

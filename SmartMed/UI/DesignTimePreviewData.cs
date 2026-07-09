@@ -126,8 +126,8 @@ namespace SmartMed.UI
 
         public static object[] TrackOrderRows() => new object[]
         {
-            new { OrderID = 1, OrderRef = "#SM-0001", OrderDate = DateTime.Today.AddDays(-1).ToString("MMM dd, yyyy hh:mm tt"), Status = OrderService.StatusPending, Total = "LKR 1,250.00", Prescription = "Uploaded" },
-            new { OrderID = 2, OrderRef = "#SM-0002", OrderDate = DateTime.Today.AddDays(-4).ToString("MMM dd, yyyy hh:mm tt"), Status = OrderService.StatusDelivered, Total = "LKR 890.00", Prescription = "—" }
+            new { OrderID = 1, OrderRef = "#SM-0001", OrderDate = DateTime.Today.AddDays(-1).ToString("MMM dd, yyyy hh:mm tt"), Status = OrderService.StatusPending, Total = "LKR 1,250.00", Payment = "Card (Paid) — CARD-4242", Prescription = "Uploaded" },
+            new { OrderID = 2, OrderRef = "#SM-0002", OrderDate = DateTime.Today.AddDays(-4).ToString("MMM dd, yyyy hh:mm tt"), Status = OrderService.StatusDelivered, Total = "LKR 890.00", Payment = "Cash on Pickup (Pay on Pickup)", Prescription = "—" }
         };
 
         public static object[] TrackOrderItemRows() => new object[]

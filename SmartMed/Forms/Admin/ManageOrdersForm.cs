@@ -420,11 +420,14 @@ namespace SmartMed.UI
                 $"Date: {order.OrderDate:MMM dd, yyyy HH:mm}",
                 $"Status: {order.Status}",
                 $"Total: LKR {order.TotalAmount:N2}",
+                $"Payment: {order.PaymentMethod} ({order.PaymentStatus})",
                 $"Prescription: {_orders.GetPrescriptionDisplay(orderId)}",
                 $"Rx Status: {_orders.GetPrescriptionStatusDisplay(orderId)}",
                 "",
                 "Line items:"
             };
+            if (!string.IsNullOrWhiteSpace(order.PaymentReference))
+                lines.Insert(7, $"Payment Ref: {order.PaymentReference}");
             foreach (var item in items)
                 lines.Add($"  • {item.MedicineName} x{item.Quantity} — LKR {item.Subtotal:N2}");
 

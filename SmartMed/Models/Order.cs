@@ -10,6 +10,9 @@ namespace SmartMed.Models
         public DateTime OrderDate { get; set; }
         public string Status { get; set; }
         public decimal TotalAmount { get; set; }
+        public string PaymentMethod { get; set; }
+        public string PaymentStatus { get; set; }
+        public string PaymentReference { get; set; }
 
         public void CalculateTotal() { }
         public void UpdateStatus(string status) { }

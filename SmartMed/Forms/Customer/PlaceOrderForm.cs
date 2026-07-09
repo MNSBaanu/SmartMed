@@ -284,16 +284,36 @@ namespace SmartMed.UI
                 if (customer == null)
                     throw new InvalidOperationException("Please log in again.");
 
+                if (CartService.ItemCount == 0)
+                    throw new InvalidOperationException("Your cart is empty.");
+
                 var missing = CartService.MissingPrescriptions.Select(l => l.MedicineName).ToList();
                 if (missing.Count > 0)
                     throw new InvalidOperationException(
                         "Upload a prescription for: " + string.Join(", ", missing));
 
-                var orderId = _orders.PlaceOrder(customer.CustomerID, CartService.Items, CartService.FirstPrescriptionPath);
+                PaymentResult payment;
+                using (var paymentDialog = new PaymentCheckoutDialog(CartService.Total))
+                {
+                    if (paymentDialog.ShowDialog(FindForm()) != DialogResult.OK || paymentDialog.Result == null)
+                        return;
+                    payment = paymentDialog.Result;
+                }
+
+                var orderId = _orders.PlaceOrder(
+                    customer.CustomerID,
+                    CartService.Items,
+                    CartService.FirstPrescriptionPath,
+                    payment.Method,
+                    payment.Status,
+                    payment.Reference);
                 CartService.Discard();
                 RefreshCart();
-                SmartMedMessageBox.Show($"Order placed successfully. Reference #SM-{orderId:D4}", "Order",
-                    MessageBoxButtons.OK, MessageBoxIcon.Information);
+                SmartMedMessageBox.Show(
+                    $"Order placed successfully. Reference #SM-{orderId:D4}\nPayment: {payment.Method} ({payment.Status})",
+                    "Order",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Information);
             }
             catch (Exception ex)
             {

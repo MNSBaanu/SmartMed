@@ -50,6 +50,9 @@ CREATE TABLE [Order] (
     OrderDate    DATETIME NOT NULL DEFAULT GETDATE(),
     Status       NVARCHAR(30) NOT NULL,
     TotalAmount  DECIMAL(10,2) NOT NULL CHECK (TotalAmount >= 0),
+    PaymentMethod   NVARCHAR(30) NOT NULL DEFAULT 'Cash on Pickup',
+    PaymentStatus   NVARCHAR(30) NOT NULL DEFAULT 'Pay on Pickup',
+    PaymentReference NVARCHAR(50) NULL,
     CONSTRAINT FK_Order_Customer FOREIGN KEY (CustomerID) REFERENCES Customer(CustomerID),
     CONSTRAINT CK_Order_Status CHECK (Status IN ('Pending', 'Ready for Pickup', 'Delivered'))
 );

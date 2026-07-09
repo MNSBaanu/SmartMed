@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 using SmartMed.Models;
+using SmartMed.Services;
 
 namespace SmartMed.Data
 {
@@ -12,7 +13,8 @@ namespace SmartMed.Data
         {
             var list = new List<Order>();
             var table = DatabaseHelper.ExecuteQuery(
-                @"SELECT o.OrderID, o.CustomerID, c.FullName AS CustomerName, o.OrderDate, o.Status, o.TotalAmount
+                @"SELECT o.OrderID, o.CustomerID, c.FullName AS CustomerName, o.OrderDate, o.Status, o.TotalAmount,
+                         o.PaymentMethod, o.PaymentStatus, o.PaymentReference
                   FROM [Order] o INNER JOIN Customer c ON o.CustomerID = c.CustomerID
                   ORDER BY o.OrderDate DESC");
             foreach (DataRow row in table.Rows)
@@ -23,7 +25,8 @@ namespace SmartMed.Data
         public Order GetById(int orderId)
         {
             var table = DatabaseHelper.ExecuteQuery(
-                @"SELECT o.OrderID, o.CustomerID, c.FullName AS CustomerName, o.OrderDate, o.Status, o.TotalAmount
+                @"SELECT o.OrderID, o.CustomerID, c.FullName AS CustomerName, o.OrderDate, o.Status, o.TotalAmount,
+                         o.PaymentMethod, o.PaymentStatus, o.PaymentReference
                   FROM [Order] o INNER JOIN Customer c ON o.CustomerID = c.CustomerID
                   WHERE o.OrderID=@id",
                 new SqlParameter("@id", orderId));
@@ -35,7 +38,8 @@ namespace SmartMed.Data
         {
             var list = new List<Order>();
             var table = DatabaseHelper.ExecuteQuery(
-                @"SELECT o.OrderID, o.CustomerID, c.FullName AS CustomerName, o.OrderDate, o.Status, o.TotalAmount
+                @"SELECT o.OrderID, o.CustomerID, c.FullName AS CustomerName, o.OrderDate, o.Status, o.TotalAmount,
+                         o.PaymentMethod, o.PaymentStatus, o.PaymentReference
                   FROM [Order] o INNER JOIN Customer c ON o.CustomerID = c.CustomerID
                   WHERE o.CustomerID=@cid ORDER BY o.OrderDate DESC",
                 new SqlParameter("@cid", customerId));
@@ -58,17 +62,20 @@ namespace SmartMed.Data
             return list;
         }
 
-        public int CreateOrder(int customerId, List<OrderItem> items)
+        public int CreateOrder(int customerId, List<OrderItem> items, string paymentMethod, string paymentStatus, string paymentReference)
         {
             decimal total = 0;
             foreach (var item in items)
                 total += item.Subtotal;
 
             DatabaseHelper.ExecuteNonQuery(
-                @"INSERT INTO [Order] (CustomerID, OrderDate, Status, TotalAmount)
-                  VALUES (@cid, GETDATE(), 'Pending', @total)",
+                @"INSERT INTO [Order] (CustomerID, OrderDate, Status, TotalAmount, PaymentMethod, PaymentStatus, PaymentReference)
+                  VALUES (@cid, GETDATE(), 'Pending', @total, @pm, @ps, @pref)",
                 new SqlParameter("@cid", customerId),
-                new SqlParameter("@total", total));
+                new SqlParameter("@total", total),
+                new SqlParameter("@pm", paymentMethod),
+                new SqlParameter("@ps", paymentStatus),
+                new SqlParameter("@pref", (object)paymentReference ?? DBNull.Value));
 
             int orderId = Convert.ToInt32(DatabaseHelper.ExecuteScalar("SELECT MAX(OrderID) FROM [Order]"));
 
@@ -194,7 +201,16 @@ namespace SmartMed.Data
                 CustomerName = row["CustomerName"].ToString(),
                 OrderDate = Convert.ToDateTime(row["OrderDate"]),
                 Status = row["Status"].ToString(),
-                TotalAmount = Convert.ToDecimal(row["TotalAmount"])
+                TotalAmount = Convert.ToDecimal(row["TotalAmount"]),
+                PaymentMethod = row.Table.Columns.Contains("PaymentMethod") && row["PaymentMethod"] != DBNull.Value
+                    ? row["PaymentMethod"].ToString()
+                    : PaymentService.MethodCashOnPickup,
+                PaymentStatus = row.Table.Columns.Contains("PaymentStatus") && row["PaymentStatus"] != DBNull.Value
+                    ? row["PaymentStatus"].ToString()
+                    : PaymentService.StatusPayOnPickup,
+                PaymentReference = row.Table.Columns.Contains("PaymentReference") && row["PaymentReference"] != DBNull.Value
+                    ? row["PaymentReference"].ToString()
+                    : null
             };
         }
 

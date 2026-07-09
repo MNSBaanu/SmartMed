@@ -2,6 +2,7 @@ using System;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
+using SmartMed.Models;
 using SmartMed.Services;
 
 namespace SmartMed.UI
@@ -105,6 +106,7 @@ namespace SmartMed.UI
                 OrderDate = o.OrderDate.ToString("MMM dd, yyyy hh:mm tt"),
                 o.Status,
                 Total = $"LKR {o.TotalAmount:N2}",
+                Payment = FormatPayment(o),
                 Prescription = _orders.GetPrescriptionDisplay(o.OrderID)
             }).ToList());
             if (gridOrders.Columns.Contains("OrderID"))
@@ -237,6 +239,15 @@ namespace SmartMed.UI
                     SmartMedMessageBox.Show(ex.Message, "Export Failed", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 }
             }
+        }
+
+        private static string FormatPayment(Order order)
+        {
+            if (order == null) return "—";
+            var summary = $"{order.PaymentMethod} ({order.PaymentStatus})";
+            return string.IsNullOrWhiteSpace(order.PaymentReference)
+                ? summary
+                : $"{summary} — {order.PaymentReference}";
         }
     }
 }
