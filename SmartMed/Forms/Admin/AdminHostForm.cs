@@ -29,21 +29,10 @@ namespace SmartMed.UI
         private bool _chromeApplied;
         private bool _runtimeWired;
         private bool _avatarWired;
-        private SmartMed.UI.NavButton btnNavLogout;
 
         public AdminHostForm()
         {
             InitializeComponent();
-
-            btnNavLogout = new SmartMed.UI.NavButton
-            {
-                Text = "LOGOUT",
-                Name = "btnNavLogout",
-                Cursor = Cursors.Hand,
-                Font = new Font(SystemFonts.DefaultFont.FontFamily, 11F, FontStyle.Bold)
-            };
-            btnNavLogout.Click += (s, e) => Logout();
-            panelSidebar.Controls.Add(btnNavLogout);
 
             DoubleBuffered = true;
             ApplyViewChrome();
@@ -70,8 +59,7 @@ namespace SmartMed.UI
 
             UiTheme.ApplyFormFonts(this);
             UiTheme.ApplyAdminWinFormsShell(
-                this, panelTitleBar, panelMenuBar, panelSidebar, panelContent, panelStatusBar);
-            panelMenuBar.Visible = false;
+                this, panelTitleBar, null, panelSidebar, panelContent, panelStatusBar);
             ApplySidebarChrome();
             ApplyWinControls();
             ApplyProfileDisplay();
@@ -83,7 +71,6 @@ namespace SmartMed.UI
             _runtimeWired = true;
 
             WireProfileActions();
-            WireMenuBar();
 
             SetActiveNav(AdminNavItem.Overview);
             ShowDashboard();
@@ -143,17 +130,15 @@ namespace SmartMed.UI
         {
             UiTheme.ConfigureTopNavigation(
                 panelSidebar,
-                panelBrand,
+                null,
                 panelProfile,
-                panelNavSpacer,
+                null,
                 btnNavDashboard,
                 btnNavMedicines,
                 btnNavCustomers,
                 btnNavOrders,
                 btnNavReports,
                 btnNavLogout);
-            UiTheme.StyleSidebarBrand(panelBrand, panelBrandIcon, lblBrandTitle, lblBrandSubtitle, customerPortal: false, topNav: true);
-            panelBrand.Visible = false;
             UiTheme.StyleSidebarProfileFooter(panelProfile, panelAvatar, lblProfileName, lblProfileRole, topNav: true);
             StyleNavButton(btnNavDashboard, _activeNav == AdminNavItem.Overview);
             StyleNavButton(btnNavMedicines, _activeNav == AdminNavItem.Medicines);
@@ -213,15 +198,6 @@ namespace SmartMed.UI
             UiTheme.StyleWindowControlButton(btnWinMinimize);
             UiTheme.StyleWindowControlButton(btnWinMaximize);
             UiTheme.StyleWindowControlButton(btnWinClose, isClose: true);
-        }
-
-        private void WireMenuBar()
-        {
-            foreach (Control c in panelMenuBar.Controls)
-            {
-                if (c is Label lbl)
-                    lbl.Click += (s, e) => ShowComingSoon();
-            }
         }
 
         private void ShowDashboard()
@@ -342,14 +318,7 @@ namespace SmartMed.UI
             ShowReports();
         }
 
-        private static void ShowComingSoon()
-        {
-            SmartMedMessageBox.Show(
-                "This section is coming soon.",
-                "SmartMed",
-                MessageBoxButtons.OK,
-                MessageBoxIcon.Information);
-        }
+        private void BtnNavLogout_Click(object sender, EventArgs e) => Logout();
 
         private void BtnWinMinimize_Click(object sender, EventArgs e) => WindowState = FormWindowState.Minimized;
 

@@ -130,7 +130,7 @@ namespace SmartMed.UI
             this.tableLayoutRoot.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutRoot.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 210F));
             this.tableLayoutRoot.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutRoot.Size = new System.Drawing.Size(991, 762);
+            this.tableLayoutRoot.Size = new System.Drawing.Size(1012, 672);
             this.tableLayoutRoot.TabIndex = 0;
             // 
             // panelHeader
@@ -143,7 +143,7 @@ namespace SmartMed.UI
             this.panelHeader.Location = new System.Drawing.Point(0, 0);
             this.panelHeader.Margin = new System.Windows.Forms.Padding(0, 0, 0, 24);
             this.panelHeader.Name = "panelHeader";
-            this.panelHeader.Size = new System.Drawing.Size(991, 76);
+            this.panelHeader.Size = new System.Drawing.Size(1012, 76);
             this.panelHeader.TabIndex = 0;
             // 
             // flowHeaderActions
@@ -153,7 +153,7 @@ namespace SmartMed.UI
             this.flowHeaderActions.Controls.Add(this.btnRefresh);
             this.flowHeaderActions.Controls.Add(this.btnNewOrder);
             this.flowHeaderActions.Dock = System.Windows.Forms.DockStyle.Right;
-            this.flowHeaderActions.Location = new System.Drawing.Point(767, 0);
+            this.flowHeaderActions.Location = new System.Drawing.Point(788, 0);
             this.flowHeaderActions.Name = "flowHeaderActions";
             this.flowHeaderActions.Padding = new System.Windows.Forms.Padding(0, 16, 0, 0);
             this.flowHeaderActions.Size = new System.Drawing.Size(224, 76);
@@ -236,7 +236,7 @@ namespace SmartMed.UI
             this.tableStatsRow.Name = "tableStatsRow";
             this.tableStatsRow.RowCount = 1;
             this.tableStatsRow.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableStatsRow.Size = new System.Drawing.Size(991, 108);
+            this.tableStatsRow.Size = new System.Drawing.Size(1012, 108);
             this.tableStatsRow.TabIndex = 1;
             // 
             // panelStatStock
@@ -249,7 +249,7 @@ namespace SmartMed.UI
             this.panelStatStock.Margin = new System.Windows.Forms.Padding(0, 0, 14, 0);
             this.panelStatStock.Name = "panelStatStock";
             this.panelStatStock.Padding = new System.Windows.Forms.Padding(16, 14, 14, 14);
-            this.panelStatStock.Size = new System.Drawing.Size(233, 108);
+            this.panelStatStock.Size = new System.Drawing.Size(239, 108);
             this.panelStatStock.TabIndex = 0;
             // 
             // lblStockValue
@@ -260,7 +260,7 @@ namespace SmartMed.UI
             this.lblStockValue.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(24)))), ((int)(((byte)(22)))));
             this.lblStockValue.Location = new System.Drawing.Point(16, 30);
             this.lblStockValue.Name = "lblStockValue";
-            this.lblStockValue.Size = new System.Drawing.Size(203, 64);
+            this.lblStockValue.Size = new System.Drawing.Size(209, 64);
             this.lblStockValue.TabIndex = 1;
             this.lblStockValue.Text = "128";
             this.lblStockValue.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -273,7 +273,7 @@ namespace SmartMed.UI
             this.lblStatStockTitle.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(65)))), ((int)(((byte)(72)))), ((int)(((byte)(71)))));
             this.lblStatStockTitle.Location = new System.Drawing.Point(16, 14);
             this.lblStatStockTitle.Name = "lblStatStockTitle";
-            this.lblStatStockTitle.Size = new System.Drawing.Size(203, 16);
+            this.lblStatStockTitle.Size = new System.Drawing.Size(209, 16);
             this.lblStatStockTitle.TabIndex = 0;
             this.lblStatStockTitle.Text = "STOCK ITEMS";
             // 
@@ -283,11 +283,11 @@ namespace SmartMed.UI
             this.panelStatOrders.Controls.Add(this.lblOrdersValue);
             this.panelStatOrders.Controls.Add(this.lblStatOrdersTitle);
             this.panelStatOrders.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panelStatOrders.Location = new System.Drawing.Point(247, 0);
+            this.panelStatOrders.Location = new System.Drawing.Point(253, 0);
             this.panelStatOrders.Margin = new System.Windows.Forms.Padding(0, 0, 14, 0);
             this.panelStatOrders.Name = "panelStatOrders";
             this.panelStatOrders.Padding = new System.Windows.Forms.Padding(16, 14, 14, 14);
-            this.panelStatOrders.Size = new System.Drawing.Size(233, 108);
+            this.panelStatOrders.Size = new System.Drawing.Size(239, 108);
             this.panelStatOrders.TabIndex = 1;
             // 
             // lblOrdersValue
@@ -298,7 +298,7 @@ namespace SmartMed.UI
             this.lblOrdersValue.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(24)))), ((int)(((byte)(22)))));
             this.lblOrdersValue.Location = new System.Drawing.Point(16, 30);
             this.lblOrdersValue.Name = "lblOrdersValue";
-            this.lblOrdersValue.Size = new System.Drawing.Size(203, 64);
+            this.lblOrdersValue.Size = new System.Drawing.Size(209, 64);
             this.lblOrdersValue.TabIndex = 1;
             this.lblOrdersValue.Text = "4";
             this.lblOrdersValue.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -311,7 +311,7 @@ namespace SmartMed.UI
             this.lblStatOrdersTitle.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(65)))), ((int)(((byte)(72)))), ((int)(((byte)(71)))));
             this.lblStatOrdersTitle.Location = new System.Drawing.Point(16, 14);
             this.lblStatOrdersTitle.Name = "lblStatOrdersTitle";
-            this.lblStatOrdersTitle.Size = new System.Drawing.Size(203, 16);
+            this.lblStatOrdersTitle.Size = new System.Drawing.Size(209, 16);
             this.lblStatOrdersTitle.TabIndex = 0;
             this.lblStatOrdersTitle.Text = "PENDING ORDERS";
             // 
@@ -321,11 +321,11 @@ namespace SmartMed.UI
             this.panelStatSales.Controls.Add(this.lblSalesValue);
             this.panelStatSales.Controls.Add(this.lblStatSalesTitle);
             this.panelStatSales.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panelStatSales.Location = new System.Drawing.Point(494, 0);
+            this.panelStatSales.Location = new System.Drawing.Point(506, 0);
             this.panelStatSales.Margin = new System.Windows.Forms.Padding(0, 0, 14, 0);
             this.panelStatSales.Name = "panelStatSales";
             this.panelStatSales.Padding = new System.Windows.Forms.Padding(16, 14, 14, 14);
-            this.panelStatSales.Size = new System.Drawing.Size(233, 108);
+            this.panelStatSales.Size = new System.Drawing.Size(239, 108);
             this.panelStatSales.TabIndex = 2;
             // 
             // lblSalesValue
@@ -336,7 +336,7 @@ namespace SmartMed.UI
             this.lblSalesValue.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(24)))), ((int)(((byte)(22)))));
             this.lblSalesValue.Location = new System.Drawing.Point(16, 30);
             this.lblSalesValue.Name = "lblSalesValue";
-            this.lblSalesValue.Size = new System.Drawing.Size(203, 64);
+            this.lblSalesValue.Size = new System.Drawing.Size(209, 64);
             this.lblSalesValue.TabIndex = 1;
             this.lblSalesValue.Text = "245,600";
             this.lblSalesValue.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -349,7 +349,7 @@ namespace SmartMed.UI
             this.lblStatSalesTitle.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(65)))), ((int)(((byte)(72)))), ((int)(((byte)(71)))));
             this.lblStatSalesTitle.Location = new System.Drawing.Point(16, 14);
             this.lblStatSalesTitle.Name = "lblStatSalesTitle";
-            this.lblStatSalesTitle.Size = new System.Drawing.Size(203, 16);
+            this.lblStatSalesTitle.Size = new System.Drawing.Size(209, 16);
             this.lblStatSalesTitle.TabIndex = 0;
             this.lblStatSalesTitle.Text = "REVENUE (LKR)";
             // 
@@ -359,11 +359,11 @@ namespace SmartMed.UI
             this.panelStatUsers.Controls.Add(this.lblCustomersValue);
             this.panelStatUsers.Controls.Add(this.lblStatUsersTitle);
             this.panelStatUsers.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panelStatUsers.Location = new System.Drawing.Point(741, 0);
+            this.panelStatUsers.Location = new System.Drawing.Point(759, 0);
             this.panelStatUsers.Margin = new System.Windows.Forms.Padding(0);
             this.panelStatUsers.Name = "panelStatUsers";
             this.panelStatUsers.Padding = new System.Windows.Forms.Padding(16, 14, 14, 14);
-            this.panelStatUsers.Size = new System.Drawing.Size(250, 108);
+            this.panelStatUsers.Size = new System.Drawing.Size(253, 108);
             this.panelStatUsers.TabIndex = 3;
             // 
             // lblCustomersValue
@@ -374,7 +374,7 @@ namespace SmartMed.UI
             this.lblCustomersValue.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(24)))), ((int)(((byte)(22)))));
             this.lblCustomersValue.Location = new System.Drawing.Point(16, 30);
             this.lblCustomersValue.Name = "lblCustomersValue";
-            this.lblCustomersValue.Size = new System.Drawing.Size(220, 64);
+            this.lblCustomersValue.Size = new System.Drawing.Size(223, 64);
             this.lblCustomersValue.TabIndex = 1;
             this.lblCustomersValue.Text = "86";
             this.lblCustomersValue.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -387,7 +387,7 @@ namespace SmartMed.UI
             this.lblStatUsersTitle.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(65)))), ((int)(((byte)(72)))), ((int)(((byte)(71)))));
             this.lblStatUsersTitle.Location = new System.Drawing.Point(16, 14);
             this.lblStatUsersTitle.Name = "lblStatUsersTitle";
-            this.lblStatUsersTitle.Size = new System.Drawing.Size(220, 16);
+            this.lblStatUsersTitle.Size = new System.Drawing.Size(223, 16);
             this.lblStatUsersTitle.TabIndex = 0;
             this.lblStatUsersTitle.Text = "ACTIVE USERS";
             // 
@@ -405,7 +405,7 @@ namespace SmartMed.UI
             this.tableAlertsRow.Name = "tableAlertsRow";
             this.tableAlertsRow.RowCount = 1;
             this.tableAlertsRow.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableAlertsRow.Size = new System.Drawing.Size(991, 186);
+            this.tableAlertsRow.Size = new System.Drawing.Size(1012, 186);
             this.tableAlertsRow.TabIndex = 2;
             // 
             // panelLowStockOuter
@@ -417,7 +417,7 @@ namespace SmartMed.UI
             this.panelLowStockOuter.Margin = new System.Windows.Forms.Padding(0);
             this.panelLowStockOuter.Name = "panelLowStockOuter";
             this.panelLowStockOuter.Padding = new System.Windows.Forms.Padding(1);
-            this.panelLowStockOuter.Size = new System.Drawing.Size(495, 186);
+            this.panelLowStockOuter.Size = new System.Drawing.Size(506, 186);
             this.panelLowStockOuter.TabIndex = 0;
             // 
             // panelLowStockInner
@@ -428,7 +428,7 @@ namespace SmartMed.UI
             this.panelLowStockInner.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panelLowStockInner.Location = new System.Drawing.Point(1, 1);
             this.panelLowStockInner.Name = "panelLowStockInner";
-            this.panelLowStockInner.Size = new System.Drawing.Size(493, 184);
+            this.panelLowStockInner.Size = new System.Drawing.Size(504, 184);
             this.panelLowStockInner.TabIndex = 0;
             // 
             // panelLowStockBody
@@ -438,7 +438,7 @@ namespace SmartMed.UI
             this.panelLowStockBody.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panelLowStockBody.Location = new System.Drawing.Point(0, 32);
             this.panelLowStockBody.Name = "panelLowStockBody";
-            this.panelLowStockBody.Size = new System.Drawing.Size(493, 152);
+            this.panelLowStockBody.Size = new System.Drawing.Size(504, 152);
             this.panelLowStockBody.TabIndex = 1;
             // 
             // gridLowStock
@@ -482,7 +482,7 @@ namespace SmartMed.UI
             this.gridLowStock.RowHeadersWidth = 51;
             this.gridLowStock.RowTemplate.Height = 36;
             this.gridLowStock.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.gridLowStock.Size = new System.Drawing.Size(493, 152);
+            this.gridLowStock.Size = new System.Drawing.Size(504, 152);
             this.gridLowStock.TabIndex = 0;
             // 
             // MedicineName
@@ -517,7 +517,7 @@ namespace SmartMed.UI
             this.panelLowStockHeader.Location = new System.Drawing.Point(0, 0);
             this.panelLowStockHeader.Name = "panelLowStockHeader";
             this.panelLowStockHeader.Padding = new System.Windows.Forms.Padding(12, 8, 12, 4);
-            this.panelLowStockHeader.Size = new System.Drawing.Size(493, 32);
+            this.panelLowStockHeader.Size = new System.Drawing.Size(504, 32);
             this.panelLowStockHeader.TabIndex = 0;
             // 
             // lblLowStockHeaderTitle
@@ -538,11 +538,11 @@ namespace SmartMed.UI
             this.panelExpiryOuter.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(193)))), ((int)(((byte)(200)))), ((int)(((byte)(198)))));
             this.panelExpiryOuter.Controls.Add(this.panelExpiryInner);
             this.panelExpiryOuter.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panelExpiryOuter.Location = new System.Drawing.Point(509, 0);
+            this.panelExpiryOuter.Location = new System.Drawing.Point(520, 0);
             this.panelExpiryOuter.Margin = new System.Windows.Forms.Padding(14, 0, 0, 0);
             this.panelExpiryOuter.Name = "panelExpiryOuter";
             this.panelExpiryOuter.Padding = new System.Windows.Forms.Padding(1);
-            this.panelExpiryOuter.Size = new System.Drawing.Size(482, 186);
+            this.panelExpiryOuter.Size = new System.Drawing.Size(492, 186);
             this.panelExpiryOuter.TabIndex = 1;
             // 
             // panelExpiryInner
@@ -553,7 +553,7 @@ namespace SmartMed.UI
             this.panelExpiryInner.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panelExpiryInner.Location = new System.Drawing.Point(1, 1);
             this.panelExpiryInner.Name = "panelExpiryInner";
-            this.panelExpiryInner.Size = new System.Drawing.Size(480, 184);
+            this.panelExpiryInner.Size = new System.Drawing.Size(490, 184);
             this.panelExpiryInner.TabIndex = 0;
             // 
             // panelExpiryBody
@@ -563,7 +563,7 @@ namespace SmartMed.UI
             this.panelExpiryBody.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panelExpiryBody.Location = new System.Drawing.Point(0, 32);
             this.panelExpiryBody.Name = "panelExpiryBody";
-            this.panelExpiryBody.Size = new System.Drawing.Size(480, 152);
+            this.panelExpiryBody.Size = new System.Drawing.Size(490, 152);
             this.panelExpiryBody.TabIndex = 1;
             // 
             // gridExpiry
@@ -607,7 +607,7 @@ namespace SmartMed.UI
             this.gridExpiry.RowHeadersWidth = 51;
             this.gridExpiry.RowTemplate.Height = 36;
             this.gridExpiry.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.gridExpiry.Size = new System.Drawing.Size(480, 152);
+            this.gridExpiry.Size = new System.Drawing.Size(490, 152);
             this.gridExpiry.TabIndex = 0;
             // 
             // BatchId
@@ -642,7 +642,7 @@ namespace SmartMed.UI
             this.panelExpiryHeader.Location = new System.Drawing.Point(0, 0);
             this.panelExpiryHeader.Name = "panelExpiryHeader";
             this.panelExpiryHeader.Padding = new System.Windows.Forms.Padding(12, 8, 12, 4);
-            this.panelExpiryHeader.Size = new System.Drawing.Size(480, 32);
+            this.panelExpiryHeader.Size = new System.Drawing.Size(490, 32);
             this.panelExpiryHeader.TabIndex = 0;
             // 
             // lblExpiryHeaderTitle
@@ -667,7 +667,7 @@ namespace SmartMed.UI
             this.panelRecentOuter.Margin = new System.Windows.Forms.Padding(0);
             this.panelRecentOuter.Name = "panelRecentOuter";
             this.panelRecentOuter.Padding = new System.Windows.Forms.Padding(1);
-            this.panelRecentOuter.Size = new System.Drawing.Size(991, 320);
+            this.panelRecentOuter.Size = new System.Drawing.Size(1012, 230);
             this.panelRecentOuter.TabIndex = 3;
             // 
             // panelRecentInner
@@ -678,7 +678,7 @@ namespace SmartMed.UI
             this.panelRecentInner.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panelRecentInner.Location = new System.Drawing.Point(1, 1);
             this.panelRecentInner.Name = "panelRecentInner";
-            this.panelRecentInner.Size = new System.Drawing.Size(989, 318);
+            this.panelRecentInner.Size = new System.Drawing.Size(1010, 228);
             this.panelRecentInner.TabIndex = 0;
             // 
             // panelRecentBody
@@ -689,7 +689,7 @@ namespace SmartMed.UI
             this.panelRecentBody.Location = new System.Drawing.Point(0, 36);
             this.panelRecentBody.Name = "panelRecentBody";
             this.panelRecentBody.Padding = new System.Windows.Forms.Padding(0, 4, 0, 0);
-            this.panelRecentBody.Size = new System.Drawing.Size(989, 282);
+            this.panelRecentBody.Size = new System.Drawing.Size(1010, 192);
             this.panelRecentBody.TabIndex = 1;
             // 
             // gridRecent
@@ -718,7 +718,7 @@ namespace SmartMed.UI
             this.gridRecent.RowHeadersWidth = 51;
             this.gridRecent.RowTemplate.Height = 36;
             this.gridRecent.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.gridRecent.Size = new System.Drawing.Size(989, 278);
+            this.gridRecent.Size = new System.Drawing.Size(1010, 188);
             this.gridRecent.TabIndex = 0;
             // 
             // OrderRef
@@ -762,7 +762,7 @@ namespace SmartMed.UI
             this.panelRecentHeader.Location = new System.Drawing.Point(0, 0);
             this.panelRecentHeader.Name = "panelRecentHeader";
             this.panelRecentHeader.Padding = new System.Windows.Forms.Padding(12, 8, 10, 4);
-            this.panelRecentHeader.Size = new System.Drawing.Size(989, 36);
+            this.panelRecentHeader.Size = new System.Drawing.Size(1010, 36);
             this.panelRecentHeader.TabIndex = 0;
             // 
             // flowRecentHeaderActions
@@ -771,7 +771,7 @@ namespace SmartMed.UI
             this.flowRecentHeaderActions.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(238)))), ((int)(((byte)(245)))), ((int)(((byte)(244)))));
             this.flowRecentHeaderActions.Controls.Add(this.btnPrint);
             this.flowRecentHeaderActions.Dock = System.Windows.Forms.DockStyle.Right;
-            this.flowRecentHeaderActions.Location = new System.Drawing.Point(907, 8);
+            this.flowRecentHeaderActions.Location = new System.Drawing.Point(928, 8);
             this.flowRecentHeaderActions.Name = "flowRecentHeaderActions";
             this.flowRecentHeaderActions.Size = new System.Drawing.Size(72, 24);
             this.flowRecentHeaderActions.TabIndex = 1;
@@ -817,7 +817,6 @@ namespace SmartMed.UI
             this.Name = "AdminDashboardForm";
             this.Text = "Operational Dashboard";
             this.panelScrollHost.ResumeLayout(false);
-            this.panelScrollHost.PerformLayout();
             this.tableLayoutRoot.ResumeLayout(false);
             this.panelHeader.ResumeLayout(false);
             this.panelHeader.PerformLayout();

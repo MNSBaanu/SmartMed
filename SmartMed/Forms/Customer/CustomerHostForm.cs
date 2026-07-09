@@ -26,21 +26,10 @@ namespace SmartMed.UI
         private readonly Timer _clockTimer = new Timer { Interval = 30000 };
         private bool _chromeApplied;
         private bool _runtimeWired;
-        private SmartMed.UI.NavButton btnNavLogout;
 
         public CustomerHostForm()
         {
             InitializeComponent();
-
-            btnNavLogout = new SmartMed.UI.NavButton
-            {
-                Text = "LOGOUT",
-                Name = "btnNavLogout",
-                Cursor = Cursors.Hand,
-                Font = new Font(SystemFonts.DefaultFont.FontFamily, 11F, FontStyle.Bold)
-            };
-            btnNavLogout.Click += (s, e) => Logout();
-            panelSidebar.Controls.Add(btnNavLogout);
 
             DoubleBuffered = true;
             ApplyViewChrome();
@@ -67,8 +56,7 @@ namespace SmartMed.UI
 
             UiTheme.ApplyFormFonts(this);
             UiTheme.ApplyAdminWinFormsShell(
-                this, panelTitleBar, panelMenuBar, panelSidebar, panelContent, panelStatusBar);
-            panelMenuBar.Visible = false;
+                this, panelTitleBar, null, panelSidebar, panelContent, panelStatusBar);
             ApplySidebarChrome();
             ApplyWinControls();
         }
@@ -77,8 +65,6 @@ namespace SmartMed.UI
         {
             if (_runtimeWired) return;
             _runtimeWired = true;
-
-            WireMenuBar();
 
             SetActiveNav(CustomerNavItem.Home);
             ShowHome();
@@ -108,18 +94,16 @@ namespace SmartMed.UI
         {
             UiTheme.ConfigureTopNavigation(
                 panelSidebar,
-                panelBrand,
+                null,
                 panelSupport,
-                panelNavSpacer,
+                null,
                 btnNavHome,
                 btnNavBrowse,
                 btnNavCart,
                 btnNavOrders,
                 btnNavProfile,
                 btnNavLogout);
-            UiTheme.StyleSidebarBrand(panelBrand, panelBrandIcon, lblBrandTitle, lblBrandSubtitle, customerPortal: true, topNav: true);
-            panelBrand.Visible = false;
-            UiTheme.StyleCustomerSupportPanel(panelSupport, lblSupportHeading, lblSupportBody, btnSupportContact, topNav: true);
+            UiTheme.StyleCustomerSupportPanel(panelSupport, null, null, btnSupportContact, topNav: true);
             StyleNavButton(btnNavHome, _activeNav == CustomerNavItem.Home);
             StyleNavButton(btnNavBrowse, _activeNav == CustomerNavItem.Browse);
             StyleNavButton(btnNavCart, _activeNav == CustomerNavItem.Cart);
@@ -134,15 +118,6 @@ namespace SmartMed.UI
             UiTheme.StyleWindowControlButton(btnWinMinimize);
             UiTheme.StyleWindowControlButton(btnWinMaximize);
             UiTheme.StyleWindowControlButton(btnWinClose, isClose: true);
-        }
-
-        private void WireMenuBar()
-        {
-            foreach (Control c in panelMenuBar.Controls)
-            {
-                if (c is Label lbl)
-                    lbl.Click += (s, e) => { };
-            }
         }
 
         private void ShowPage(Form page, string title)
@@ -225,6 +200,7 @@ namespace SmartMed.UI
         private void BtnNavCart_Click(object sender, EventArgs e) => NavigateTo(CustomerNavItem.Cart);
         private void BtnNavOrders_Click(object sender, EventArgs e) => NavigateTo(CustomerNavItem.Orders);
         private void BtnNavProfile_Click(object sender, EventArgs e) => NavigateTo(CustomerNavItem.Profile);
+        private void BtnNavLogout_Click(object sender, EventArgs e) => Logout();
 
         private void BtnSupportContact_Click(object sender, EventArgs e)
         {
