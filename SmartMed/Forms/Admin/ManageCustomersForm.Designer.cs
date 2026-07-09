@@ -54,15 +54,12 @@ namespace SmartMed.UI
             this.btnPageNext = new System.Windows.Forms.Button();
             this.tableStatsRow = new System.Windows.Forms.TableLayoutPanel();
             this.panelStatTotal = new System.Windows.Forms.Panel();
-            this.pnlStatTotalAccent = new System.Windows.Forms.Panel();
             this.lblTotalCustomers = new System.Windows.Forms.Label();
             this.lblStatTotalTitle = new System.Windows.Forms.Label();
             this.panelStatActive = new System.Windows.Forms.Panel();
-            this.pnlStatActiveAccent = new System.Windows.Forms.Panel();
             this.lblActiveCustomers = new System.Windows.Forms.Label();
             this.lblStatActiveTitle = new System.Windows.Forms.Label();
             this.panelStatInactive = new System.Windows.Forms.Panel();
-            this.pnlStatInactiveAccent = new System.Windows.Forms.Panel();
             this.lblInactiveCustomers = new System.Windows.Forms.Label();
             this.lblStatInactiveTitle = new System.Windows.Forms.Label();
             this.panelScrollHost.SuspendLayout();
@@ -569,7 +566,6 @@ namespace SmartMed.UI
             // panelStatTotal
             // 
             this.panelStatTotal.BackColor = System.Drawing.Color.White;
-            this.panelStatTotal.Controls.Add(this.pnlStatTotalAccent);
             this.panelStatTotal.Controls.Add(this.lblTotalCustomers);
             this.panelStatTotal.Controls.Add(this.lblStatTotalTitle);
             this.panelStatTotal.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -579,15 +575,6 @@ namespace SmartMed.UI
             this.panelStatTotal.Padding = new System.Windows.Forms.Padding(16, 14, 14, 14);
             this.panelStatTotal.Size = new System.Drawing.Size(159, 108);
             this.panelStatTotal.TabIndex = 0;
-            // 
-            // pnlStatTotalAccent
-            // 
-            this.pnlStatTotalAccent.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(53)))), ((int)(((byte)(103)))), ((int)(((byte)(94)))));
-            this.pnlStatTotalAccent.Dock = System.Windows.Forms.DockStyle.Left;
-            this.pnlStatTotalAccent.Location = new System.Drawing.Point(16, 30);
-            this.pnlStatTotalAccent.Name = "pnlStatTotalAccent";
-            this.pnlStatTotalAccent.Size = new System.Drawing.Size(4, 64);
-            this.pnlStatTotalAccent.TabIndex = 2;
             // 
             // lblTotalCustomers
             // 
@@ -617,7 +604,6 @@ namespace SmartMed.UI
             // panelStatActive
             // 
             this.panelStatActive.BackColor = System.Drawing.Color.White;
-            this.panelStatActive.Controls.Add(this.pnlStatActiveAccent);
             this.panelStatActive.Controls.Add(this.lblActiveCustomers);
             this.panelStatActive.Controls.Add(this.lblStatActiveTitle);
             this.panelStatActive.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -627,15 +613,6 @@ namespace SmartMed.UI
             this.panelStatActive.Padding = new System.Windows.Forms.Padding(16, 14, 14, 14);
             this.panelStatActive.Size = new System.Drawing.Size(159, 108);
             this.panelStatActive.TabIndex = 1;
-            // 
-            // pnlStatActiveAccent
-            // 
-            this.pnlStatActiveAccent.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(16)))), ((int)(((byte)(185)))), ((int)(((byte)(129)))));
-            this.pnlStatActiveAccent.Dock = System.Windows.Forms.DockStyle.Left;
-            this.pnlStatActiveAccent.Location = new System.Drawing.Point(16, 30);
-            this.pnlStatActiveAccent.Name = "pnlStatActiveAccent";
-            this.pnlStatActiveAccent.Size = new System.Drawing.Size(4, 64);
-            this.pnlStatActiveAccent.TabIndex = 2;
             // 
             // lblActiveCustomers
             // 
@@ -665,7 +642,6 @@ namespace SmartMed.UI
             // panelStatInactive
             // 
             this.panelStatInactive.BackColor = System.Drawing.Color.White;
-            this.panelStatInactive.Controls.Add(this.pnlStatInactiveAccent);
             this.panelStatInactive.Controls.Add(this.lblInactiveCustomers);
             this.panelStatInactive.Controls.Add(this.lblStatInactiveTitle);
             this.panelStatInactive.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -675,15 +651,6 @@ namespace SmartMed.UI
             this.panelStatInactive.Padding = new System.Windows.Forms.Padding(16, 14, 14, 14);
             this.panelStatInactive.Size = new System.Drawing.Size(174, 108);
             this.panelStatInactive.TabIndex = 2;
-            // 
-            // pnlStatInactiveAccent
-            // 
-            this.pnlStatInactiveAccent.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(65)))), ((int)(((byte)(72)))), ((int)(((byte)(71)))));
-            this.pnlStatInactiveAccent.Dock = System.Windows.Forms.DockStyle.Left;
-            this.pnlStatInactiveAccent.Location = new System.Drawing.Point(16, 30);
-            this.pnlStatInactiveAccent.Name = "pnlStatInactiveAccent";
-            this.pnlStatInactiveAccent.Size = new System.Drawing.Size(4, 64);
-            this.pnlStatInactiveAccent.TabIndex = 2;
             // 
             // lblInactiveCustomers
             // 
@@ -782,15 +749,12 @@ namespace SmartMed.UI
         private System.Windows.Forms.Panel panelFooter;
         private System.Windows.Forms.TableLayoutPanel tableStatsRow;
         private System.Windows.Forms.Panel panelStatTotal;
-        private System.Windows.Forms.Panel pnlStatTotalAccent;
         private System.Windows.Forms.Label lblStatTotalTitle;
         private System.Windows.Forms.Label lblTotalCustomers;
         private System.Windows.Forms.Panel panelStatActive;
-        private System.Windows.Forms.Panel pnlStatActiveAccent;
         private System.Windows.Forms.Label lblStatActiveTitle;
         private System.Windows.Forms.Label lblActiveCustomers;
         private System.Windows.Forms.Panel panelStatInactive;
-        private System.Windows.Forms.Panel pnlStatInactiveAccent;
         private System.Windows.Forms.Label lblStatInactiveTitle;
         private System.Windows.Forms.Label lblInactiveCustomers;
         private System.Windows.Forms.FlowLayoutPanel flowPager;
