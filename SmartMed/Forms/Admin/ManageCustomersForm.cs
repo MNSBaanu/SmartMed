@@ -10,7 +10,6 @@ namespace SmartMed.UI
 {
     public sealed partial class ManageCustomersForm : EmbeddedPageForm
     {
-        private const int PageSize = 10;
         private const int ActiveOrderDays = 90;
 
         private CustomerService _customers;
@@ -19,7 +18,6 @@ namespace SmartMed.UI
 
         private List<CustomerRow> _allRows = new List<CustomerRow>();
         private List<CustomerRow> _filteredRows = new List<CustomerRow>();
-        private int _currentPage = 1;
         private int? _selectedId;
         private bool _runtimeWired;
         private bool _chromeApplied;
@@ -88,7 +86,6 @@ namespace SmartMed.UI
                 }
             };
             _filteredRows = _allRows;
-            _currentPage = 1;
             BindPage();
             UpdateStats();
         }
@@ -102,6 +99,7 @@ namespace SmartMed.UI
             AdminPageView.ApplyChrome(this);
 
             UiTheme.ApplyClinicalGrid(gridCustomers);
+            gridCustomers.ScrollBars = ScrollBars.Vertical;
             UiTheme.StyleTextBox(txtSearch);
 
             WirePanelBorder(panelGridOuter);
@@ -150,8 +148,6 @@ namespace SmartMed.UI
             txtSearch.TextChanged += (s, e) => ApplyFilters();
             btnExport.Click += BtnExport_Click;
             btnPrint.Click += BtnPrint_Click;
-            btnPagePrev.Click += (s, e) => ChangePage(-1);
-            btnPageNext.Click += (s, e) => ChangePage(1);
             gridCustomers.CellFormatting += GridCustomers_CellFormatting;
             gridCustomers.CellContentClick += GridCustomers_CellContentClick;
             gridCustomers.SelectionChanged += GridCustomers_SelectionChanged;
@@ -262,7 +258,6 @@ namespace SmartMed.UI
             }
 
             _filteredRows = rows.ToList();
-            _currentPage = 1;
             BindPage();
             UpdateStats();
         }
@@ -276,12 +271,7 @@ namespace SmartMed.UI
 
         private void BindPage()
         {
-            var totalPages = Math.Max(1, (int)Math.Ceiling(_filteredRows.Count / (double)PageSize));
-            if (_currentPage > totalPages) _currentPage = totalPages;
-
             var pageRows = _filteredRows
-                .Skip((_currentPage - 1) * PageSize)
-                .Take(PageSize)
                 .Select(r => new
                 {
                     r.CustomerID,
@@ -291,7 +281,6 @@ namespace SmartMed.UI
                     r.LastOrder,
                     Orders = r.OrderCount,
                     Activity = r.ActivityStatus,
-                    Account = r.AccountStatus,
                     AccountAction = r.Customer?.IsActive == true ? "Deactivate" : "Activate"
                 })
                 .ToList();
@@ -302,15 +291,17 @@ namespace SmartMed.UI
             UiTheme.BeautifyGridHeaders(gridCustomers);
             EnsureGridActionColumns();
 
-            lblPageInfo.Text = $"Page {_currentPage} of {totalPages}";
-            btnPagePrev.Enabled = _currentPage > 1;
-            btnPageNext.Enabled = _currentPage < totalPages;
+            lblPageInfo.Text = pageRows.Count == 1
+                ? "1 customer"
+                : $"{pageRows.Count:N0} customers";
+            btnPagePrev.Visible = false;
+            btnPageNext.Visible = false;
         }
 
         private void EnsureGridActionColumns()
         {
             AddOrConfigureButtonColumn("Edit", "Edit", 68);
-            AddOrConfigureButtonColumn("AccountAction", "Account", 96, "AccountAction");
+            AddOrConfigureButtonColumn("AccountAction", "Account", 112, "AccountAction");
             AddOrConfigureButtonColumn("Remove", "Remove", 80);
 
             if (gridCustomers.Columns.Contains("Edit"))
@@ -366,12 +357,6 @@ namespace SmartMed.UI
             }
 
             gridCustomers.Columns.Add(column);
-        }
-
-        private void ChangePage(int delta)
-        {
-            _currentPage += delta;
-            BindPage();
         }
 
         private void GridCustomers_SelectionChanged(object sender, EventArgs e)
@@ -445,25 +430,9 @@ namespace SmartMed.UI
                 return;
             }
 
-            if (columnName != "colStatus" && columnName != "colAccount") return;
+            if (columnName != "colStatus") return;
 
             var status = e.Value?.ToString() ?? "";
-            if (columnName == "colAccount")
-            {
-                if (string.Equals(status, "ENABLED", StringComparison.OrdinalIgnoreCase))
-                {
-                    e.CellStyle.BackColor = Color.FromArgb(184, 237, 226);
-                    e.CellStyle.ForeColor = Color.FromArgb(27, 79, 71);
-                }
-                else
-                {
-                    e.CellStyle.BackColor = Color.FromArgb(254, 226, 226);
-                    e.CellStyle.ForeColor = Color.FromArgb(153, 27, 27);
-                }
-                e.CellStyle.Font = UiTheme.UiFontBold;
-                return;
-            }
-
             if (string.Equals(status, "ACTIVE", StringComparison.OrdinalIgnoreCase))
             {
                 e.CellStyle.BackColor = Color.FromArgb(184, 237, 226);

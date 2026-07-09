@@ -44,7 +44,6 @@ namespace SmartMed.UI
             this.colLastOrder = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.colOrders = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.colStatus = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.colAccount = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.panelGridHeader = new System.Windows.Forms.Panel();
             this.lblGridHeaderTitle = new System.Windows.Forms.Label();
             this.panelFooter = new System.Windows.Forms.Panel();
@@ -187,7 +186,7 @@ namespace SmartMed.UI
             this.lblPageSubtitle.Name = "lblPageSubtitle";
             this.lblPageSubtitle.Size = new System.Drawing.Size(491, 20);
             this.lblPageSubtitle.TabIndex = 1;
-            this.lblPageSubtitle.Text = "View and maintain customer records, contact details, and order activity.";
+            this.lblPageSubtitle.Text = "View customer records. Order Activity shows recent ordering; use Account to enable or disable login.";
             // 
             // lblPageTitle
             // 
@@ -357,8 +356,7 @@ namespace SmartMed.UI
             this.colContactInfo,
             this.colLastOrder,
             this.colOrders,
-            this.colStatus,
-            this.colAccount});
+            this.colStatus});
             dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
             dataGridViewCellStyle3.BackColor = System.Drawing.Color.White;
             dataGridViewCellStyle3.Font = new System.Drawing.Font("Hanken Grotesk", 9F);
@@ -371,15 +369,15 @@ namespace SmartMed.UI
             this.gridCustomers.EnableHeadersVisualStyles = false;
             this.gridCustomers.GridColor = System.Drawing.Color.FromArgb(((int)(((byte)(238)))), ((int)(((byte)(245)))), ((int)(((byte)(244)))));
             this.gridCustomers.Location = new System.Drawing.Point(0, 4);
-            this.gridCustomers.MinimumSize = new System.Drawing.Size(0, 360);
             this.gridCustomers.MultiSelect = false;
             this.gridCustomers.Name = "gridCustomers";
             this.gridCustomers.ReadOnly = true;
             this.gridCustomers.RowHeadersVisible = false;
             this.gridCustomers.RowHeadersWidth = 51;
             this.gridCustomers.RowTemplate.Height = 36;
+            this.gridCustomers.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.gridCustomers.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.gridCustomers.Size = new System.Drawing.Size(1010, 360);
+            this.gridCustomers.Size = new System.Drawing.Size(1010, 358);
             this.gridCustomers.TabIndex = 0;
             // 
             // colCustomerID
@@ -434,18 +432,10 @@ namespace SmartMed.UI
             // colStatus
             // 
             this.colStatus.DataPropertyName = "Activity";
-            this.colStatus.HeaderText = "Activity";
+            this.colStatus.HeaderText = "Order Activity";
             this.colStatus.MinimumWidth = 6;
             this.colStatus.Name = "colStatus";
             this.colStatus.ReadOnly = true;
-            // 
-            // colAccount
-            // 
-            this.colAccount.DataPropertyName = "Account";
-            this.colAccount.HeaderText = "Account";
-            this.colAccount.MinimumWidth = 6;
-            this.colAccount.Name = "colAccount";
-            this.colAccount.ReadOnly = true;
             // 
             // panelGridHeader
             // 
@@ -745,7 +735,6 @@ namespace SmartMed.UI
         private System.Windows.Forms.DataGridViewTextBoxColumn colLastOrder;
         private System.Windows.Forms.DataGridViewTextBoxColumn colOrders;
         private System.Windows.Forms.DataGridViewTextBoxColumn colStatus;
-        private System.Windows.Forms.DataGridViewTextBoxColumn colAccount;
         private System.Windows.Forms.Panel panelFooter;
         private System.Windows.Forms.TableLayoutPanel tableStatsRow;
         private System.Windows.Forms.Panel panelStatTotal;
