@@ -276,7 +276,7 @@ namespace SmartMed.UI
                 {
                     r.OrderID,
                     r.OrderRef,
-                    Customer = $"{r.CustomerName}\n{r.CustomerRef}",
+                    Customer = $"{r.CustomerName} ({r.CustomerRef})",
                     r.OrderDate,
                     r.TotalAmount,
                     r.Status,
@@ -290,7 +290,7 @@ namespace SmartMed.UI
             UiTheme.BeautifyGridHeaders(gridOrders);
 
             if (gridOrders.Columns.Contains("Customer"))
-                gridOrders.Columns["Customer"].DefaultCellStyle.WrapMode = DataGridViewTriState.True;
+                gridOrders.Columns["Customer"].DefaultCellStyle.WrapMode = DataGridViewTriState.False;
 
             lblPageInfo.Text = $"Page {_currentPage} / {totalPages}";
             btnPagePrev.Enabled = _currentPage > 1;
