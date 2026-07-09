@@ -67,13 +67,42 @@ namespace SmartMed.UI
         public static DataTable SalesReportTable()
         {
             var table = new DataTable();
-            table.Columns.Add("OrderRef", typeof(string));
+            table.Columns.Add("Order Ref", typeof(string));
             table.Columns.Add("Customer", typeof(string));
-            table.Columns.Add("OrderDate", typeof(string));
-            table.Columns.Add("TotalAmount", typeof(string));
+            table.Columns.Add("Order Date", typeof(string));
+            table.Columns.Add("Total", typeof(string));
             table.Columns.Add("Status", typeof(string));
-            table.Rows.Add("#SM-0001", "Jane Perera", DateTime.Today.AddDays(-2).ToString("yyyy-MM-dd"), "LKR 2,450.00", OrderService.StatusDelivered);
-            table.Rows.Add("#SM-0002", "Kamal Silva", DateTime.Today.AddDays(-1).ToString("yyyy-MM-dd"), "LKR 890.00", OrderService.StatusPending);
+            table.Rows.Add("#SM-0001", "Jane Perera", DateTime.Today.AddDays(-2).ToString("MMM dd, yyyy hh:mm tt"), "LKR 2,450.00", OrderService.StatusDelivered);
+            table.Rows.Add("#SM-0002", "Kamal Silva", DateTime.Today.AddDays(-1).ToString("MMM dd, yyyy hh:mm tt"), "LKR 890.00", OrderService.StatusDelivered);
+            return table;
+        }
+
+        public static DataTable InventoryReportTable()
+        {
+            var table = new DataTable();
+            table.Columns.Add("Medicine", typeof(string));
+            table.Columns.Add("Category", typeof(string));
+            table.Columns.Add("Stock", typeof(string));
+            table.Columns.Add("Price", typeof(string));
+            table.Columns.Add("Supplier", typeof(string));
+            table.Columns.Add("Expiry Date", typeof(string));
+            table.Columns.Add("Stock Status", typeof(string));
+            table.Columns.Add("Expiry Status", typeof(string));
+            table.Columns.Add("Inventory Status", typeof(string));
+            table.Rows.Add("Amoxicillin 500mg", "Antibiotic", "12", "LKR 450.00", "PharmaCo", DateTime.Today.AddMonths(2).ToString("yyyy-MM-dd"), "Low Stock", "Current", "Low Stock");
+            table.Rows.Add("Metformin 850mg", "Antidiabetic", "8", "LKR 380.00", "HealthLine", DateTime.Today.AddDays(-5).ToString("yyyy-MM-dd"), "Low Stock", "Expired", "Expired");
+            return table;
+        }
+
+        public static DataTable CustomerHistoryReportTable()
+        {
+            var table = new DataTable();
+            table.Columns.Add("Order Ref", typeof(string));
+            table.Columns.Add("Order Date", typeof(string));
+            table.Columns.Add("Status", typeof(string));
+            table.Columns.Add("Total", typeof(string));
+            table.Rows.Add("#SM-0001", DateTime.Today.AddDays(-1).ToString("MMM dd, yyyy hh:mm tt"), OrderService.StatusPending, "LKR 1,250.00");
+            table.Rows.Add("#SM-0002", DateTime.Today.AddDays(-3).ToString("MMM dd, yyyy hh:mm tt"), OrderService.StatusDelivered, "LKR 890.00");
             return table;
         }
 

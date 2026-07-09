@@ -16,7 +16,13 @@ namespace SmartMed.Services
             return _orders.GetSalesReport(range.From, range.ToExclusive);
         }
 
+        public DataTable GetSalesReportDisplay(ReportPeriod period) =>
+            ReportTableFormatter.FormatSalesReport(GetSalesReport(period));
+
         public DataTable GetStockReport() => _orders.GetStockReport();
+
+        public DataTable GetStockReportDisplay() =>
+            ReportTableFormatter.FormatStockReport(GetStockReport());
 
         public decimal GetOutstandingAmount(ReportPeriod period)
         {
@@ -31,6 +37,9 @@ namespace SmartMed.Services
             var range = ReportPeriodHelper.GetRange(period);
             return _orders.GetCustomerOrderHistory(customerId, range.From, range.ToExclusive);
         }
+
+        public DataTable GetCustomerOrderHistoryDisplay(int customerId, ReportPeriod period) =>
+            ReportTableFormatter.FormatCustomerOrderHistory(GetCustomerOrderHistory(customerId, period));
 
         public decimal TotalSales => _orders.GetTotalSales();
 

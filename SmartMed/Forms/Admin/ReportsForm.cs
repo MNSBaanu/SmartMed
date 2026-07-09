@@ -18,6 +18,7 @@ namespace SmartMed.UI
         private ReportPeriod _activePeriod = ReportPeriod.Month;
         private bool _reportViewed;
         private DataTable _currentReportTable;
+        private DataTable _sourceReportTable;
 
         public ReportsForm()
         {
@@ -48,10 +49,11 @@ namespace SmartMed.UI
 
         protected override void DoRefreshPage()
         {
-            if (_reportViewed)
-                LoadActiveReport();
-            else
-                ResetReportPreview();
+            if (!_servicesReady)
+                return;
+
+            EnsureCustomerFilterLoaded();
+            LoadActiveReport();
         }
 
         protected override void LoadDesignTimePreview()
@@ -62,6 +64,7 @@ namespace SmartMed.UI
             UpdateStatTitlesForTab();
 
             _currentReportTable = DesignTimePreviewData.SalesReportTable();
+            _sourceReportTable = _currentReportTable;
             BindReportGrid(_currentReportTable);
             UiTheme.BeautifyGridHeaders(gridReport);
             lblTotalRevenue.Text = "LKR 3,340.00";
@@ -148,8 +151,24 @@ namespace SmartMed.UI
             btnWeekPeriod.Click += (s, e) => SwitchPeriod(ReportPeriod.Week);
             btnMonthPeriod.Click += (s, e) => SwitchPeriod(ReportPeriod.Month);
             btnYearPeriod.Click += (s, e) => SwitchPeriod(ReportPeriod.Year);
-            cmbCustomer.SelectedIndexChanged += (s, e) => ResetReportPreview();
+            cmbCustomer.SelectedIndexChanged += (s, e) => LoadActiveReport();
             gridReport.CellFormatting += GridReport_CellFormatting;
+
+            EnsureCustomerFilterLoaded();
+            LoadActiveReport();
+        }
+
+        private void EnsureCustomerFilterLoaded()
+        {
+            if (!_servicesReady || cmbCustomer == null || cmbCustomer.Items.Count > 0)
+                return;
+
+            var allCustomers = _customers.GetAll();
+            cmbCustomer.DisplayMember = "Name";
+            cmbCustomer.ValueMember = "CustomerID";
+            cmbCustomer.DataSource = allCustomers;
+            if (allCustomers.Count > 0)
+                cmbCustomer.SelectedIndex = 0;
         }
 
         private void SwitchTab(ReportTab tab)
@@ -159,14 +178,14 @@ namespace SmartMed.UI
             UpdatePeriodFilterVisibility();
             UpdateTabStyles();
             UpdateStatTitlesForTab();
-            ResetReportPreview();
+            LoadActiveReport();
         }
 
         private void SwitchPeriod(ReportPeriod period)
         {
             _activePeriod = period;
             UpdatePeriodStyles();
-            ResetReportPreview();
+            LoadActiveReport();
         }
 
         private void UpdateStatTitlesForTab()
@@ -244,6 +263,7 @@ namespace SmartMed.UI
         {
             _reportViewed = false;
             _currentReportTable = null;
+            _sourceReportTable = null;
             if (gridReport != null)
             {
                 gridReport.DataSource = null;
@@ -288,7 +308,7 @@ namespace SmartMed.UI
                     LoadHistoryReport();
 
                 UpdateSummaryStats();
-                _reportViewed = _currentReportTable != null;
+                _reportViewed = true;
                 UpdateExportButtons();
 
                 if (_reportViewed && _currentReportTable.Rows.Count == 0)
@@ -304,11 +324,11 @@ namespace SmartMed.UI
 
         private void LoadSalesReport()
         {
-            var table = _reports.GetSalesReport(_activePeriod);
-            _currentReportTable = table;
-            BindReportGrid(table);
+            _sourceReportTable = _reports.GetSalesReport(_activePeriod);
+            _currentReportTable = ReportTableFormatter.FormatSalesReport(_sourceReportTable);
+            BindReportGrid(_currentReportTable);
             lblFooterStatus.Text =
-                $"Items: {table.Rows.Count} | Completed sales only | {GetPeriodStatusText()} | {DateTime.Now:hh:mm tt | MMM dd, yyyy}";
+                $"Items: {_sourceReportTable.Rows.Count} | Completed sales only | {GetPeriodStatusText()} | {DateTime.Now:hh:mm tt | MMM dd, yyyy}";
         }
 
         private void BindReportGrid(DataTable table)
@@ -321,47 +341,39 @@ namespace SmartMed.UI
 
         private void LoadInventoryReport()
         {
-            var table = _reports.GetStockReport();
-            _currentReportTable = table;
-            BindReportGrid(table);
+            _sourceReportTable = _reports.GetStockReport();
+            _currentReportTable = ReportTableFormatter.FormatStockReport(_sourceReportTable);
+            BindReportGrid(_currentReportTable);
 
-            var current = CountColumnValue(table, "InventoryStatus", "Current");
-            var lowStock = CountColumnValue(table, "StockStatus", "Low Stock");
-            var expired = CountColumnValue(table, "ExpiryStatus", "Expired");
-            var nearExpiry = CountColumnValue(table, "ExpiryStatus", "Near Expiry");
+            var current = ReportTableFormatter.CountColumnValue(_sourceReportTable, "InventoryStatus", "Current");
+            var lowStock = ReportTableFormatter.CountColumnValue(_sourceReportTable, "StockStatus", "Low Stock");
+            var expired = ReportTableFormatter.CountColumnValue(_sourceReportTable, "ExpiryStatus", "Expired");
+            var nearExpiry = ReportTableFormatter.CountColumnValue(_sourceReportTable, "ExpiryStatus", "Near Expiry");
 
             lblFooterStatus.Text =
-                $"Items: {table.Rows.Count} | Current: {current} | Low stock: {lowStock} | Expired: {expired} | Near expiry: {nearExpiry} | {DateTime.Now:hh:mm tt | MMM dd, yyyy}";
+                $"Items: {_sourceReportTable.Rows.Count} | Current: {current} | Low stock: {lowStock} | Expired: {expired} | Near expiry: {nearExpiry} | {DateTime.Now:hh:mm tt | MMM dd, yyyy}";
         }
 
         private void LoadHistoryReport()
         {
-            var allCustomers = _customers.GetAll();
-            if (cmbCustomer.Items.Count == 0)
-            {
-                cmbCustomer.DisplayMember = "Name";
-                cmbCustomer.ValueMember = "CustomerID";
-                cmbCustomer.DataSource = allCustomers;
-            }
-
-            if (cmbCustomer.SelectedValue == null && allCustomers.Count > 0)
-                cmbCustomer.SelectedIndex = 0;
+            EnsureCustomerFilterLoaded();
 
             if (cmbCustomer.SelectedValue == null)
             {
+                _sourceReportTable = null;
                 _currentReportTable = null;
                 gridReport.DataSource = null;
                 gridReport.Columns.Clear();
-                lblFooterStatus.Text = "No customers available | Server Connected";
+                lblFooterStatus.Text = "No customers available.";
                 return;
             }
 
             var customerId = Convert.ToInt32(cmbCustomer.SelectedValue);
-            var table = _reports.GetCustomerOrderHistory(customerId, _activePeriod);
-            _currentReportTable = table;
-            BindReportGrid(table);
+            _sourceReportTable = _reports.GetCustomerOrderHistory(customerId, _activePeriod);
+            _currentReportTable = ReportTableFormatter.FormatCustomerOrderHistory(_sourceReportTable);
+            BindReportGrid(_currentReportTable);
             lblFooterStatus.Text =
-                $"Items: {table.Rows.Count} | Customer order history | {cmbCustomer.Text} | {GetPeriodStatusText()} | {DateTime.Now:hh:mm tt}";
+                $"Items: {_sourceReportTable.Rows.Count} | Customer order history | {cmbCustomer.Text} | {GetPeriodStatusText()} | {DateTime.Now:hh:mm tt}";
         }
 
         private void UpdateSummaryStats()
@@ -370,61 +382,41 @@ namespace SmartMed.UI
 
             if (_activeTab == ReportTab.MedicineInventory)
             {
-                var stock = _currentReportTable ?? _reports.GetStockReport();
+                var stock = _sourceReportTable ?? _reports.GetStockReport();
                 lblTotalRevenue.Text = stock.Rows.Count.ToString("N0");
-                lblTotalOrders.Text = CountColumnValue(stock, "StockStatus", "Low Stock").ToString("N0");
-                lblLowStock.Text = CountColumnValue(stock, "ExpiryStatus", "Expired").ToString("N0");
-                lblOutstanding.Text = CountColumnValue(stock, "ExpiryStatus", "Near Expiry").ToString("N0");
+                lblTotalOrders.Text = ReportTableFormatter.CountColumnValue(stock, "StockStatus", "Low Stock").ToString("N0");
+                lblLowStock.Text = ReportTableFormatter.CountColumnValue(stock, "ExpiryStatus", "Expired").ToString("N0");
+                lblOutstanding.Text = ReportTableFormatter.CountColumnValue(stock, "ExpiryStatus", "Near Expiry").ToString("N0");
                 return;
             }
 
-            if (_activeTab == ReportTab.CustomerOrderHistory && _currentReportTable != null)
+            if (_activeTab == ReportTab.CustomerOrderHistory && _sourceReportTable != null)
             {
-                decimal spend = 0;
-                foreach (DataRow row in _currentReportTable.Rows)
-                    spend += Convert.ToDecimal(row["TotalAmount"]);
-
-                lblTotalRevenue.Text = $"LKR {spend:N2}";
-                lblTotalOrders.Text = _currentReportTable.Rows.Count.ToString("N0");
+                lblTotalRevenue.Text = $"LKR {ReportTableFormatter.SumAmountColumn(_sourceReportTable):N2}";
+                lblTotalOrders.Text = _sourceReportTable.Rows.Count.ToString("N0");
 
                 var stock = _reports.GetStockReport();
-                lblLowStock.Text = CountColumnValue(stock, "StockStatus", "Low Stock").ToString("N0");
+                lblLowStock.Text = ReportTableFormatter.CountColumnValue(stock, "StockStatus", "Low Stock").ToString("N0");
                 lblOutstanding.Text = $"LKR {_reports.GetOutstandingAmount(_activePeriod):N2}";
                 return;
             }
 
-            var sales = _reports.GetSalesReport(_activePeriod);
-            decimal totalRevenue = 0;
-            foreach (DataRow row in sales.Rows)
-                totalRevenue += Convert.ToDecimal(row["TotalAmount"]);
-
-            lblTotalRevenue.Text = $"LKR {totalRevenue:N2}";
+            var sales = _sourceReportTable ?? _reports.GetSalesReport(_activePeriod);
+            lblTotalRevenue.Text = $"LKR {ReportTableFormatter.SumAmountColumn(sales):N2}";
             lblTotalOrders.Text = sales.Rows.Count.ToString("N0");
 
             var inventory = _reports.GetStockReport();
-            lblLowStock.Text = CountColumnValue(inventory, "StockStatus", "Low Stock").ToString("N0");
+            lblLowStock.Text = ReportTableFormatter.CountColumnValue(inventory, "StockStatus", "Low Stock").ToString("N0");
             lblOutstanding.Text = $"LKR {_reports.GetOutstandingAmount(_activePeriod):N2}";
-        }
-
-        private static int CountColumnValue(DataTable table, string column, string value)
-        {
-            if (table == null || !table.Columns.Contains(column)) return 0;
-            var count = 0;
-            foreach (DataRow row in table.Rows)
-            {
-                if (string.Equals(row[column]?.ToString(), value, StringComparison.OrdinalIgnoreCase))
-                    count++;
-            }
-            return count;
         }
 
         private void GridReport_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
         {
             if (_activeTab != ReportTab.MedicineInventory || e.RowIndex < 0) return;
-            if (_currentReportTable == null || !_currentReportTable.Columns.Contains("InventoryStatus")) return;
+            if (_currentReportTable == null || !_currentReportTable.Columns.Contains("Inventory Status")) return;
             if (e.RowIndex >= _currentReportTable.Rows.Count) return;
 
-            var status = _currentReportTable.Rows[e.RowIndex]["InventoryStatus"]?.ToString();
+            var status = _currentReportTable.Rows[e.RowIndex]["Inventory Status"]?.ToString();
             if (string.IsNullOrEmpty(status)) return;
 
             if (status == "Expired")
