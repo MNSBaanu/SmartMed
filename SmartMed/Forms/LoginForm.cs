@@ -219,6 +219,7 @@ namespace SmartMed.UI
 
             try
             {
+                CartService.ReleaseAll(new MedicineService());
                 Session.Clear();
 
                 var identity = UiTheme.ReadTextBoxValue(txtUsername);

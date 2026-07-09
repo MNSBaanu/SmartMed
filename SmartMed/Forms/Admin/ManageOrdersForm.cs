@@ -513,18 +513,50 @@ namespace SmartMed.UI
                 btnSave.Left = 246;
                 btnSave.Top = 140;
                 btnSave.DialogResult = DialogResult.OK;
-                var btnCancel = AdminUiHelpers.CreateWinButton("Cancel", false, 90);
-                btnCancel.Left = 150;
-                btnCancel.Top = 140;
-                btnCancel.DialogResult = DialogResult.Cancel;
+                var btnClose = AdminUiHelpers.CreateWinButton("Close", false, 90);
+                btnClose.Left = 150;
+                btnClose.Top = 140;
+                btnClose.DialogResult = DialogResult.Cancel;
 
                 dlg.Controls.Add(btnRx);
                 dlg.Controls.Add(btnVerify);
                 dlg.Controls.Add(btnReject);
                 dlg.Controls.Add(btnSave);
-                dlg.Controls.Add(btnCancel);
+                dlg.Controls.Add(btnClose);
                 dlg.AcceptButton = btnSave;
-                dlg.CancelButton = btnCancel;
+                dlg.CancelButton = btnClose;
+
+                if (order.Status == OrderService.StatusPending)
+                {
+                    var btnCancelOrder = AdminUiHelpers.CreateWinButton("Cancel Order", false, 110);
+                    btnCancelOrder.Left = 16;
+                    btnCancelOrder.Top = 140;
+                    btnCancelOrder.Click += (s, e) =>
+                    {
+                        if (MessageBox.Show("Cancel this order and restore stock?", "Confirm Cancel",
+                                MessageBoxButtons.YesNo, MessageBoxIcon.Warning) != DialogResult.Yes)
+                            return;
+
+                        try
+                        {
+                            _orders.CancelOrderAsAdmin(orderId);
+                            dlg.DialogResult = DialogResult.Cancel;
+                            dlg.Close();
+                            LoadOrders();
+                            MessageBox.Show("Order cancelled and stock restored.", "SmartMed",
+                                MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        }
+                        catch (Exception ex)
+                        {
+                            MessageBox.Show(ex.Message, "Cancel Failed", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        }
+                    };
+                    dlg.Controls.Add(btnCancelOrder);
+                    dlg.ClientSize = new Size(400, 220);
+                    btnSave.Top = 160;
+                    btnClose.Top = 160;
+                    btnCancelOrder.Top = 160;
+                }
 
                 if (dlg.ShowDialog(FindForm()) != DialogResult.OK || cmb.SelectedItem == null)
                     return;

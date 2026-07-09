@@ -49,6 +49,21 @@ namespace SmartMed.Services
                 throw new InvalidOperationException($"{m.MedicineName} is out of stock.");
         }
 
+        public void ReduceStock(int medicineId, int quantity)
+        {
+            if (quantity <= 0)
+                throw new ArgumentException("Quantity must be greater than zero.");
+            if (!_medicines.ReduceStock(medicineId, quantity))
+                throw new InvalidOperationException("Insufficient stock.");
+        }
+
+        public void RestoreStock(int medicineId, int quantity)
+        {
+            if (quantity <= 0)
+                throw new ArgumentException("Quantity must be greater than zero.");
+            _medicines.RestoreStock(medicineId, quantity);
+        }
+
         public List<Medicine> GetExpiredMedicines() =>
             GetAll().Where(IsExpired).OrderBy(m => m.ExpiryDate).ToList();
 

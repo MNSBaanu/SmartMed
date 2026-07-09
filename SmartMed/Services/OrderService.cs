@@ -135,25 +135,32 @@ namespace SmartMed.Services
             if (requiresRx)
                 _prescriptions.SavePrescription(customerId, orderId, prescriptionSourcePath);
 
-            foreach (var item in orderItems)
-                _medicines.UpdateStock(item.MedicineID, -item.Quantity);
-
             return orderId;
         }
 
         public void CancelOrder(int orderId, int customerId)
         {
+            CancelPendingOrder(orderId, customerId);
+        }
+
+        public void CancelOrderAsAdmin(int orderId)
+        {
+            CancelPendingOrder(orderId, null);
+        }
+
+        private void CancelPendingOrder(int orderId, int? customerId)
+        {
             var order = _orders.GetById(orderId);
             if (order == null)
                 throw new InvalidOperationException("Order not found.");
-            if (order.CustomerID != customerId)
+            if (customerId.HasValue && order.CustomerID != customerId.Value)
                 throw new InvalidOperationException("You can only cancel your own orders.");
             if (order.Status != StatusPending)
                 throw new InvalidOperationException("Only pending orders can be cancelled.");
 
             var items = _orders.GetItems(orderId);
             foreach (var item in items)
-                _medicines.UpdateStock(item.MedicineID, item.Quantity);
+                _medicines.RestoreStock(item.MedicineID, item.Quantity);
 
             _orders.DeleteOrder(orderId);
         }

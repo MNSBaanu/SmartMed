@@ -191,6 +191,7 @@ namespace SmartMed.UI
                     ? $"{medicine.MedicineName} added to cart.\n{offer}"
                     : $"{medicine.MedicineName} added to cart.";
                 SmartMedMessageBox.Show(message, "Cart", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                Search();
             }
             catch (Exception ex)
             {

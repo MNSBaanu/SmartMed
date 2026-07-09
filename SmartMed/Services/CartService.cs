@@ -51,65 +51,118 @@ namespace SmartMed.Services
                 line.PrescriptionPath = path;
         }
 
-        public static void Clear() => Lines.Clear();
+        public static void Clear(MedicineService medicines, bool restoreStock = true)
+        {
+            if (restoreStock && medicines != null)
+            {
+                foreach (var line in Lines.ToList())
+                    medicines.RestoreStock(line.MedicineID, line.Quantity);
+            }
+
+            Lines.Clear();
+        }
+
+        public static void ReleaseAll(MedicineService medicines) => Clear(medicines, restoreStock: true);
+
+        public static void Discard() => Lines.Clear();
 
         public static void Add(Medicine medicine, int quantity, MedicineService medicines)
         {
             if (medicines == null)
                 throw new ArgumentNullException(nameof(medicines));
+            if (quantity <= 0)
+                throw new ArgumentException("Quantity must be greater than zero.");
 
-            ValidateLine(medicine, quantity);
-
-            var promoApplied = medicines.IsPromotionActive(medicine);
-            var unitPrice = medicines.GetEffectivePrice(medicine);
+            var fresh = medicines.GetById(medicine.MedicineID);
+            if (fresh == null)
+                throw new InvalidOperationException("Medicine not found.");
+            medicines.ValidateForCustomerPurchase(fresh);
 
             var existing = Lines.FirstOrDefault(l => l.MedicineID == medicine.MedicineID);
-            if (existing != null)
-            {
-                existing.Quantity += quantity;
-                existing.UnitPrice = unitPrice;
-                existing.ListPrice = medicine.Price;
-                existing.DiscountPercent = medicine.DiscountPercent;
-                existing.PromoApplied = promoApplied;
-                return;
-            }
+            var newTotal = (existing?.Quantity ?? 0) + quantity;
+            if (newTotal > fresh.StockQuantity)
+                throw new InvalidOperationException("Quantity exceeds available stock.");
 
-            Lines.Add(new CartLine
+            medicines.ReduceStock(medicine.MedicineID, quantity);
+
+            try
             {
-                MedicineID = medicine.MedicineID,
-                MedicineName = medicine.MedicineName,
-                Quantity = quantity,
-                UnitPrice = unitPrice,
-                ListPrice = medicine.Price,
-                DiscountPercent = medicine.DiscountPercent,
-                PromoApplied = promoApplied,
-                RequiresPrescription = medicine.RequiresPrescription
-            });
+                var promoApplied = medicines.IsPromotionActive(fresh);
+                var unitPrice = medicines.GetEffectivePrice(fresh);
+
+                if (existing != null)
+                {
+                    existing.Quantity += quantity;
+                    existing.UnitPrice = unitPrice;
+                    existing.ListPrice = fresh.Price;
+                    existing.DiscountPercent = fresh.DiscountPercent;
+                    existing.PromoApplied = promoApplied;
+                    return;
+                }
+
+                Lines.Add(new CartLine
+                {
+                    MedicineID = fresh.MedicineID,
+                    MedicineName = fresh.MedicineName,
+                    Quantity = quantity,
+                    UnitPrice = unitPrice,
+                    ListPrice = fresh.Price,
+                    DiscountPercent = fresh.DiscountPercent,
+                    PromoApplied = promoApplied,
+                    RequiresPrescription = fresh.RequiresPrescription
+                });
+            }
+            catch
+            {
+                medicines.RestoreStock(medicine.MedicineID, quantity);
+                throw;
+            }
         }
 
-        public static void Remove(int medicineId) =>
-            Lines.RemoveAll(l => l.MedicineID == medicineId);
-
-        public static void UpdateQuantity(int medicineId, int quantity)
+        public static void Remove(int medicineId, MedicineService medicines)
         {
             var line = Lines.FirstOrDefault(l => l.MedicineID == medicineId);
             if (line == null) return;
-            if (quantity <= 0)
-                Lines.Remove(line);
-            else
-                line.Quantity = quantity;
+
+            medicines?.RestoreStock(medicineId, line.Quantity);
+            Lines.Remove(line);
         }
 
-        private static void ValidateLine(Medicine medicine, int quantity)
+        public static void UpdateQuantity(int medicineId, int quantity, MedicineService medicines)
         {
-            if (medicine == null)
-                throw new InvalidOperationException("Medicine not found.");
-            if (medicine.ExpiryDate.Date < DateTime.Today)
-                throw new InvalidOperationException($"{medicine.MedicineName} has expired and cannot be purchased.");
+            var line = Lines.FirstOrDefault(l => l.MedicineID == medicineId);
+            if (line == null) return;
+
             if (quantity <= 0)
-                throw new ArgumentException("Quantity must be greater than zero.");
-            if (quantity > medicine.StockQuantity)
-                throw new InvalidOperationException("Quantity exceeds available stock.");
+            {
+                Remove(medicineId, medicines);
+                return;
+            }
+
+            if (medicines == null)
+            {
+                line.Quantity = quantity;
+                return;
+            }
+
+            var delta = quantity - line.Quantity;
+            if (delta == 0) return;
+
+            if (delta > 0)
+            {
+                var fresh = medicines.GetById(medicineId);
+                if (fresh == null)
+                    throw new InvalidOperationException("Medicine not found.");
+                if (delta > fresh.StockQuantity)
+                    throw new InvalidOperationException("Quantity exceeds available stock.");
+                medicines.ReduceStock(medicineId, delta);
+            }
+            else
+            {
+                medicines.RestoreStock(medicineId, -delta);
+            }
+
+            line.Quantity = quantity;
         }
     }
 }

@@ -117,6 +117,24 @@ namespace SmartMed.Data
                 new SqlParameter("@id", medicineId));
         }
 
+        public bool ReduceStock(int medicineId, int quantity)
+        {
+            if (quantity <= 0) return false;
+            return DatabaseHelper.ExecuteNonQuery(
+                    "UPDATE Medicine SET StockQuantity = StockQuantity - @q WHERE MedicineID=@id AND StockQuantity >= @q",
+                    new SqlParameter("@q", quantity),
+                    new SqlParameter("@id", medicineId)) > 0;
+        }
+
+        public void RestoreStock(int medicineId, int quantity)
+        {
+            if (quantity <= 0) return;
+            DatabaseHelper.ExecuteNonQuery(
+                "UPDATE Medicine SET StockQuantity = StockQuantity + @q WHERE MedicineID=@id",
+                new SqlParameter("@q", quantity),
+                new SqlParameter("@id", medicineId));
+        }
+
         public DataTable GetExpiryReport()
         {
             return DatabaseHelper.ExecuteQuery(

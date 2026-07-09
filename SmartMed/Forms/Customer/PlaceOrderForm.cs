@@ -9,6 +9,7 @@ namespace SmartMed.UI
     public sealed partial class PlaceOrderForm : EmbeddedPageForm
     {
         private OrderService _orders;
+        private MedicineService _medicines;
         private bool _servicesReady;
         private bool _runtimeWired;
         private bool _chromeApplied;
@@ -19,6 +20,7 @@ namespace SmartMed.UI
             if (!IsDesignHost())
             {
                 _orders = new OrderService();
+                _medicines = new MedicineService();
                 _servicesReady = true;
             }
         }
@@ -80,7 +82,7 @@ namespace SmartMed.UI
             btnRemoveSelected.Click += BtnRemove_Click;
             btnClearCart.Click += (s, e) =>
             {
-                CartService.Clear();
+                CartService.Clear(_medicines);
                 RefreshCart();
             };
             btnPlaceOrder.Click += BtnPlace_Click;
@@ -172,7 +174,7 @@ namespace SmartMed.UI
         {
             if (gridCart.CurrentRow == null) return;
             var id = Convert.ToInt32(gridCart.CurrentRow.Cells["MedicineID"].Value);
-            CartService.Remove(id);
+            CartService.Remove(id, _medicines);
             RefreshCart();
         }
 
@@ -192,7 +194,7 @@ namespace SmartMed.UI
                         "Upload a prescription for: " + string.Join(", ", missing));
 
                 var orderId = _orders.PlaceOrder(customer.CustomerID, CartService.Items, CartService.FirstPrescriptionPath);
-                CartService.Clear();
+                CartService.Discard();
                 RefreshCart();
                 SmartMedMessageBox.Show($"Order placed successfully. Reference #SM-{orderId:D4}", "Order",
                     MessageBoxButtons.OK, MessageBoxIcon.Information);
