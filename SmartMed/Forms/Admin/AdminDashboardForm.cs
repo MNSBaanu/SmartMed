@@ -57,10 +57,10 @@ namespace SmartMed.UI
             UiTheme.ApplyClinicalGrid(gridExpiry);
             UiTheme.ApplyClinicalGrid(gridRecent);
 
-            WireStatCard(panelStatStock, UiTheme.AdminTeal, skipAccent: true);
-            WireStatCard(panelStatOrders, Color.FromArgb(184, 237, 226), skipAccent: true);
-            WireStatCard(panelStatSales, Color.FromArgb(199, 234, 228), skipAccent: true);
-            WireStatCard(panelStatUsers, Color.FromArgb(171, 205, 200), skipAccent: true);
+            WireStatCard(panelStatStock, UiTheme.AdminTeal);
+            WireStatCard(panelStatOrders, Color.FromArgb(184, 237, 226));
+            WireStatCard(panelStatSales, Color.FromArgb(199, 234, 228));
+            WireStatCard(panelStatUsers, Color.FromArgb(171, 205, 200));
             WirePanelBorder(panelLowStockOuter);
             WirePanelBorder(panelExpiryOuter);
             WirePanelBorder(panelRecentOuter);
@@ -83,7 +83,7 @@ namespace SmartMed.UI
             };
         }
 
-        private static void WireStatCard(Panel card, Color accent, bool skipAccent = false)
+        private static void WireStatCard(Panel card, Color accent)
         {
             if (card == null || card.Tag as string == "dash-stat") return;
             card.Tag = "dash-stat";
@@ -94,11 +94,8 @@ namespace SmartMed.UI
                 rect.Height -= 1;
                 using (var pen = new Pen(UiTheme.AdminOutline))
                     e.Graphics.DrawRectangle(pen, rect);
-                if (!skipAccent)
-                {
-                    using (var brush = new SolidBrush(accent))
-                        e.Graphics.FillRectangle(brush, 0, 0, 4, rect.Height);
-                }
+                using (var brush = new SolidBrush(accent))
+                    e.Graphics.FillRectangle(brush, 0, 0, 4, rect.Height);
             };
         }
 

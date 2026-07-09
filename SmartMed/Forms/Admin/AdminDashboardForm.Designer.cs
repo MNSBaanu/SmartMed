@@ -31,19 +31,15 @@ namespace SmartMed.UI
             this.lblPageTitle = new System.Windows.Forms.Label();
             this.tableStatsRow = new System.Windows.Forms.TableLayoutPanel();
             this.panelStatStock = new System.Windows.Forms.Panel();
-            this.pnlStatStockAccent = new System.Windows.Forms.Panel();
             this.lblStockValue = new System.Windows.Forms.Label();
             this.lblStatStockTitle = new System.Windows.Forms.Label();
             this.panelStatOrders = new System.Windows.Forms.Panel();
-            this.pnlStatOrdersAccent = new System.Windows.Forms.Panel();
             this.lblOrdersValue = new System.Windows.Forms.Label();
             this.lblStatOrdersTitle = new System.Windows.Forms.Label();
             this.panelStatSales = new System.Windows.Forms.Panel();
-            this.pnlStatSalesAccent = new System.Windows.Forms.Panel();
             this.lblSalesValue = new System.Windows.Forms.Label();
             this.lblStatSalesTitle = new System.Windows.Forms.Label();
             this.panelStatUsers = new System.Windows.Forms.Panel();
-            this.pnlStatUsersAccent = new System.Windows.Forms.Panel();
             this.lblCustomersValue = new System.Windows.Forms.Label();
             this.lblStatUsersTitle = new System.Windows.Forms.Label();
             this.tableAlertsRow = new System.Windows.Forms.TableLayoutPanel();
@@ -246,7 +242,6 @@ namespace SmartMed.UI
             // panelStatStock
             // 
             this.panelStatStock.BackColor = System.Drawing.Color.White;
-            this.panelStatStock.Controls.Add(this.pnlStatStockAccent);
             this.panelStatStock.Controls.Add(this.lblStockValue);
             this.panelStatStock.Controls.Add(this.lblStatStockTitle);
             this.panelStatStock.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -256,15 +251,6 @@ namespace SmartMed.UI
             this.panelStatStock.Padding = new System.Windows.Forms.Padding(16, 14, 14, 14);
             this.panelStatStock.Size = new System.Drawing.Size(233, 108);
             this.panelStatStock.TabIndex = 0;
-            // 
-            // pnlStatStockAccent
-            // 
-            this.pnlStatStockAccent.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(53)))), ((int)(((byte)(103)))), ((int)(((byte)(94)))));
-            this.pnlStatStockAccent.Dock = System.Windows.Forms.DockStyle.Left;
-            this.pnlStatStockAccent.Location = new System.Drawing.Point(16, 30);
-            this.pnlStatStockAccent.Name = "pnlStatStockAccent";
-            this.pnlStatStockAccent.Size = new System.Drawing.Size(4, 64);
-            this.pnlStatStockAccent.TabIndex = 2;
             // 
             // lblStockValue
             // 
@@ -294,7 +280,6 @@ namespace SmartMed.UI
             // panelStatOrders
             // 
             this.panelStatOrders.BackColor = System.Drawing.Color.White;
-            this.panelStatOrders.Controls.Add(this.pnlStatOrdersAccent);
             this.panelStatOrders.Controls.Add(this.lblOrdersValue);
             this.panelStatOrders.Controls.Add(this.lblStatOrdersTitle);
             this.panelStatOrders.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -304,15 +289,6 @@ namespace SmartMed.UI
             this.panelStatOrders.Padding = new System.Windows.Forms.Padding(16, 14, 14, 14);
             this.panelStatOrders.Size = new System.Drawing.Size(233, 108);
             this.panelStatOrders.TabIndex = 1;
-            // 
-            // pnlStatOrdersAccent
-            // 
-            this.pnlStatOrdersAccent.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(184)))), ((int)(((byte)(237)))), ((int)(((byte)(226)))));
-            this.pnlStatOrdersAccent.Dock = System.Windows.Forms.DockStyle.Left;
-            this.pnlStatOrdersAccent.Location = new System.Drawing.Point(16, 30);
-            this.pnlStatOrdersAccent.Name = "pnlStatOrdersAccent";
-            this.pnlStatOrdersAccent.Size = new System.Drawing.Size(4, 64);
-            this.pnlStatOrdersAccent.TabIndex = 2;
             // 
             // lblOrdersValue
             // 
@@ -342,7 +318,6 @@ namespace SmartMed.UI
             // panelStatSales
             // 
             this.panelStatSales.BackColor = System.Drawing.Color.White;
-            this.panelStatSales.Controls.Add(this.pnlStatSalesAccent);
             this.panelStatSales.Controls.Add(this.lblSalesValue);
             this.panelStatSales.Controls.Add(this.lblStatSalesTitle);
             this.panelStatSales.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -352,15 +327,6 @@ namespace SmartMed.UI
             this.panelStatSales.Padding = new System.Windows.Forms.Padding(16, 14, 14, 14);
             this.panelStatSales.Size = new System.Drawing.Size(233, 108);
             this.panelStatSales.TabIndex = 2;
-            // 
-            // pnlStatSalesAccent
-            // 
-            this.pnlStatSalesAccent.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(199)))), ((int)(((byte)(234)))), ((int)(((byte)(228)))));
-            this.pnlStatSalesAccent.Dock = System.Windows.Forms.DockStyle.Left;
-            this.pnlStatSalesAccent.Location = new System.Drawing.Point(16, 30);
-            this.pnlStatSalesAccent.Name = "pnlStatSalesAccent";
-            this.pnlStatSalesAccent.Size = new System.Drawing.Size(4, 64);
-            this.pnlStatSalesAccent.TabIndex = 2;
             // 
             // lblSalesValue
             // 
@@ -390,7 +356,6 @@ namespace SmartMed.UI
             // panelStatUsers
             // 
             this.panelStatUsers.BackColor = System.Drawing.Color.White;
-            this.panelStatUsers.Controls.Add(this.pnlStatUsersAccent);
             this.panelStatUsers.Controls.Add(this.lblCustomersValue);
             this.panelStatUsers.Controls.Add(this.lblStatUsersTitle);
             this.panelStatUsers.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -400,15 +365,6 @@ namespace SmartMed.UI
             this.panelStatUsers.Padding = new System.Windows.Forms.Padding(16, 14, 14, 14);
             this.panelStatUsers.Size = new System.Drawing.Size(250, 108);
             this.panelStatUsers.TabIndex = 3;
-            // 
-            // pnlStatUsersAccent
-            // 
-            this.pnlStatUsersAccent.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(171)))), ((int)(((byte)(205)))), ((int)(((byte)(200)))));
-            this.pnlStatUsersAccent.Dock = System.Windows.Forms.DockStyle.Left;
-            this.pnlStatUsersAccent.Location = new System.Drawing.Point(16, 30);
-            this.pnlStatUsersAccent.Name = "pnlStatUsersAccent";
-            this.pnlStatUsersAccent.Size = new System.Drawing.Size(4, 64);
-            this.pnlStatUsersAccent.TabIndex = 2;
             // 
             // lblCustomersValue
             // 
@@ -907,19 +863,15 @@ namespace SmartMed.UI
         private System.Windows.Forms.Button btnNewOrder;
         private System.Windows.Forms.TableLayoutPanel tableStatsRow;
         private System.Windows.Forms.Panel panelStatStock;
-        private System.Windows.Forms.Panel pnlStatStockAccent;
         private System.Windows.Forms.Label lblStatStockTitle;
         private System.Windows.Forms.Label lblStockValue;
         private System.Windows.Forms.Panel panelStatOrders;
-        private System.Windows.Forms.Panel pnlStatOrdersAccent;
         private System.Windows.Forms.Label lblStatOrdersTitle;
         private System.Windows.Forms.Label lblOrdersValue;
         private System.Windows.Forms.Panel panelStatSales;
-        private System.Windows.Forms.Panel pnlStatSalesAccent;
         private System.Windows.Forms.Label lblStatSalesTitle;
         private System.Windows.Forms.Label lblSalesValue;
         private System.Windows.Forms.Panel panelStatUsers;
-        private System.Windows.Forms.Panel pnlStatUsersAccent;
         private System.Windows.Forms.Label lblStatUsersTitle;
         private System.Windows.Forms.Label lblCustomersValue;
         private System.Windows.Forms.TableLayoutPanel tableAlertsRow;
