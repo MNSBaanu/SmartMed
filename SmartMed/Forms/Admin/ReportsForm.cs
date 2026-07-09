@@ -2,6 +2,7 @@ using System;
 using System.Data;
 using System.Drawing;
 using System.Windows.Forms;
+using SmartMed.Models;
 using SmartMed.Services;
 
 namespace SmartMed.UI
@@ -160,15 +161,29 @@ namespace SmartMed.UI
 
         private void EnsureCustomerFilterLoaded()
         {
-            if (!_servicesReady || cmbCustomer == null || cmbCustomer.Items.Count > 0)
-                return;
+            if (!_servicesReady || cmbCustomer == null) return;
+            if (cmbCustomer.DataSource != null) return;
 
             var allCustomers = _customers.GetAll();
+            cmbCustomer.DataSource = null;
+            cmbCustomer.Items.Clear();
             cmbCustomer.DisplayMember = "Name";
             cmbCustomer.ValueMember = "CustomerID";
             cmbCustomer.DataSource = allCustomers;
             if (allCustomers.Count > 0)
                 cmbCustomer.SelectedIndex = 0;
+        }
+
+        private int? GetSelectedCustomerId()
+        {
+            if (cmbCustomer?.SelectedItem is Customer customer)
+                return customer.CustomerID;
+
+            if (cmbCustomer?.SelectedValue != null
+                && int.TryParse(cmbCustomer.SelectedValue.ToString(), out var id))
+                return id;
+
+            return null;
         }
 
         private void SwitchTab(ReportTab tab)
@@ -311,7 +326,7 @@ namespace SmartMed.UI
                 _reportViewed = true;
                 UpdateExportButtons();
 
-                if (_reportViewed && _currentReportTable.Rows.Count == 0)
+                if (_reportViewed && _currentReportTable != null && _currentReportTable.Rows.Count == 0)
                     MessageBox.Show("No records found for the selected filters.", "View Report",
                         MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
@@ -358,22 +373,31 @@ namespace SmartMed.UI
         {
             EnsureCustomerFilterLoaded();
 
-            if (cmbCustomer.SelectedValue == null)
+            var customerId = GetSelectedCustomerId();
+            if (!customerId.HasValue)
             {
-                _sourceReportTable = null;
-                _currentReportTable = null;
-                gridReport.DataSource = null;
-                gridReport.Columns.Clear();
+                _sourceReportTable = CreateEmptyOrderHistorySource();
+                _currentReportTable = ReportTableFormatter.FormatCustomerOrderHistory(_sourceReportTable);
+                BindReportGrid(_currentReportTable);
                 lblFooterStatus.Text = "No customers available.";
                 return;
             }
 
-            var customerId = Convert.ToInt32(cmbCustomer.SelectedValue);
-            _sourceReportTable = _reports.GetCustomerOrderHistory(customerId, _activePeriod);
+            _sourceReportTable = _reports.GetCustomerOrderHistory(customerId.Value, _activePeriod);
             _currentReportTable = ReportTableFormatter.FormatCustomerOrderHistory(_sourceReportTable);
             BindReportGrid(_currentReportTable);
             lblFooterStatus.Text =
                 $"Items: {_sourceReportTable.Rows.Count} | Customer order history | {cmbCustomer.Text} | {GetPeriodStatusText()} | {DateTime.Now:hh:mm tt}";
+        }
+
+        private static DataTable CreateEmptyOrderHistorySource()
+        {
+            var table = new DataTable();
+            table.Columns.Add("OrderID", typeof(int));
+            table.Columns.Add("OrderDate", typeof(DateTime));
+            table.Columns.Add("Status", typeof(string));
+            table.Columns.Add("TotalAmount", typeof(decimal));
+            return table;
         }
 
         private void UpdateSummaryStats()
@@ -390,10 +414,10 @@ namespace SmartMed.UI
                 return;
             }
 
-            if (_activeTab == ReportTab.CustomerOrderHistory && _sourceReportTable != null)
+            if (_activeTab == ReportTab.CustomerOrderHistory)
             {
                 lblTotalRevenue.Text = $"LKR {ReportTableFormatter.SumAmountColumn(_sourceReportTable):N2}";
-                lblTotalOrders.Text = _sourceReportTable.Rows.Count.ToString("N0");
+                lblTotalOrders.Text = (_sourceReportTable?.Rows.Count ?? 0).ToString("N0");
 
                 var stock = _reports.GetStockReport();
                 lblLowStock.Text = ReportTableFormatter.CountColumnValue(stock, "StockStatus", "Low Stock").ToString("N0");

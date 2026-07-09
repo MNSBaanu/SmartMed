@@ -588,9 +588,6 @@ namespace SmartMed.UI
             this.cmbCustomer.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cmbCustomer.Font = new System.Drawing.Font("Hanken Grotesk", 9F);
             this.cmbCustomer.FormattingEnabled = true;
-            this.cmbCustomer.Items.AddRange(new object[] {
-            "Jane Perera",
-            "Kamal Silva"});
             this.cmbCustomer.Location = new System.Drawing.Point(72, 8);
             this.cmbCustomer.Name = "cmbCustomer";
             this.cmbCustomer.Size = new System.Drawing.Size(320, 26);
