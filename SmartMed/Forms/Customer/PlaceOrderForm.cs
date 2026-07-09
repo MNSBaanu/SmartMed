@@ -87,6 +87,8 @@ namespace SmartMed.UI
             };
             btnPlaceOrder.Click += BtnPlace_Click;
             gridCart.CellContentClick += GridCart_CellContentClick;
+            gridCart.CellClick += GridCart_CellClick;
+            gridCart.CellFormatting += GridCart_CellFormatting;
         }
 
         private void RefreshCart()
@@ -138,20 +140,56 @@ namespace SmartMed.UI
                 });
             }
 
+            if (!gridCart.Columns.Contains("PreviewBtn"))
+            {
+                gridCart.Columns.Add(new DataGridViewButtonColumn
+                {
+                    Name = "PreviewBtn",
+                    HeaderText = "",
+                    Text = "Preview",
+                    UseColumnTextForButtonValue = true,
+                    Width = 90,
+                    AutoSizeMode = DataGridViewAutoSizeColumnMode.None
+                });
+            }
+
             foreach (DataGridViewRow row in gridCart.Rows)
             {
                 if (row.IsNewRow) continue;
                 var isRx = string.Equals(row.Cells["Rx"].Value?.ToString(), "Yes", StringComparison.OrdinalIgnoreCase);
-                var cell = row.Cells["UploadBtn"] as DataGridViewButtonCell;
-                if (cell != null)
-                    cell.Value = isRx ? "Upload Rx" : string.Empty;
+                var prescription = row.Cells["Prescription"].Value?.ToString() ?? string.Empty;
+                var hasUploaded = isRx
+                    && !string.IsNullOrWhiteSpace(prescription)
+                    && !string.Equals(prescription, "Required", StringComparison.OrdinalIgnoreCase);
+
+                var uploadCell = row.Cells["UploadBtn"] as DataGridViewButtonCell;
+                if (uploadCell != null)
+                    uploadCell.Value = isRx ? (hasUploaded ? "Change" : "Upload Rx") : string.Empty;
+
+                var previewCell = row.Cells["PreviewBtn"] as DataGridViewButtonCell;
+                if (previewCell != null)
+                    previewCell.Value = hasUploaded ? "Preview" : string.Empty;
+            }
+
+            if (gridCart.Columns.Contains("Prescription"))
+            {
+                gridCart.Columns["Prescription"].DefaultCellStyle.ForeColor = UiTheme.AdminTeal;
+                gridCart.Columns["Prescription"].DefaultCellStyle.Font = UiTheme.UiFont;
             }
         }
 
         private void GridCart_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
             if (e.RowIndex < 0 || e.ColumnIndex < 0) return;
-            if (gridCart.Columns[e.ColumnIndex].Name != "UploadBtn") return;
+
+            var colName = gridCart.Columns[e.ColumnIndex].Name;
+            if (colName == "PreviewBtn")
+            {
+                PreviewPrescriptionForRow(e.RowIndex);
+                return;
+            }
+
+            if (colName != "UploadBtn") return;
 
             var row = gridCart.Rows[e.RowIndex];
             if (!string.Equals(row.Cells["Rx"].Value?.ToString(), "Yes", StringComparison.OrdinalIgnoreCase))
@@ -167,6 +205,64 @@ namespace SmartMed.UI
                 var id = Convert.ToInt32(row.Cells["MedicineID"].Value);
                 CartService.SetPrescription(id, dialog.FileName);
                 RefreshCart();
+            }
+        }
+
+        private void GridCart_CellClick(object sender, DataGridViewCellEventArgs e)
+        {
+            if (e.RowIndex < 0 || e.ColumnIndex < 0) return;
+            if (gridCart.Columns[e.ColumnIndex].Name != "Prescription") return;
+            PreviewPrescriptionForRow(e.RowIndex);
+        }
+
+        private void GridCart_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
+        {
+            if (e.RowIndex < 0 || e.ColumnIndex < 0) return;
+            if (gridCart.Columns[e.ColumnIndex].Name != "Prescription") return;
+
+            var value = e.Value?.ToString() ?? string.Empty;
+            if (string.IsNullOrWhiteSpace(value) || value == "—" || value == "Required")
+            {
+                e.CellStyle.ForeColor = UiTheme.AdminMuted;
+                e.CellStyle.Font = UiTheme.UiFont;
+                return;
+            }
+
+            e.CellStyle.ForeColor = UiTheme.AdminTeal;
+            e.CellStyle.Font = UiTheme.UiFontBold;
+        }
+
+        private void PreviewPrescriptionForRow(int rowIndex)
+        {
+            var row = gridCart.Rows[rowIndex];
+            if (!string.Equals(row.Cells["Rx"].Value?.ToString(), "Yes", StringComparison.OrdinalIgnoreCase))
+                return;
+
+            var medicineId = Convert.ToInt32(row.Cells["MedicineID"].Value);
+            var line = CartService.Items.FirstOrDefault(l => l.MedicineID == medicineId);
+            var filePath = line?.PrescriptionPath;
+            if (string.IsNullOrWhiteSpace(filePath))
+            {
+                SmartMedMessageBox.Show("Upload a prescription first.", "Preview Prescription",
+                    MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return;
+            }
+
+            if (!System.IO.File.Exists(filePath))
+            {
+                SmartMedMessageBox.Show("Prescription file is no longer available on this device.", "Preview Prescription",
+                    MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return;
+            }
+
+            try
+            {
+                System.Diagnostics.Process.Start(filePath);
+            }
+            catch (Exception ex)
+            {
+                SmartMedMessageBox.Show($"Could not open prescription file.\n{ex.Message}", "Preview Prescription",
+                    MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
         }
 
