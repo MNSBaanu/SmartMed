@@ -135,6 +135,7 @@ namespace SmartMed.Services
             if (requiresRx)
                 _prescriptions.SavePrescription(customerId, orderId, prescriptionSourcePath);
 
+            AdminOrderAlerts.NotifyOrderPlaced(orderId);
             return orderId;
         }
 

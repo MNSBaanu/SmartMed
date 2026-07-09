@@ -25,6 +25,7 @@ namespace SmartMed.UI
         private ReportsForm _reportsPage;
         private AdminNavItem _activeNav = AdminNavItem.Overview;
         private readonly Timer _clockTimer = new Timer { Interval = 30000 };
+        private readonly OrderService _orderAlerts = new OrderService();
         private bool _chromeApplied;
         private bool _runtimeWired;
         private bool _avatarWired;
@@ -87,9 +88,45 @@ namespace SmartMed.UI
             SetActiveNav(AdminNavItem.Overview);
             ShowDashboard();
 
-            _clockTimer.Tick += (s, e) => UpdateStatusTime();
+            _clockTimer.Tick += (s, e) =>
+            {
+                UpdateStatusTime();
+                UpdateOrdersNavBadge();
+            };
             _clockTimer.Start();
             UpdateStatusTime();
+            UpdateOrdersNavBadge();
+
+            AdminOrderAlerts.AlertsChanged += AdminOrderAlerts_AlertsChanged;
+        }
+
+        private void AdminOrderAlerts_AlertsChanged(object sender, EventArgs e)
+        {
+            if (IsDisposed) return;
+            if (InvokeRequired)
+            {
+                BeginInvoke(new Action(() => AdminOrderAlerts_AlertsChanged(sender, e)));
+                return;
+            }
+
+            UpdateOrdersNavBadge();
+            if (_ordersPage != null && !_ordersPage.IsDisposed && _activeNav == AdminNavItem.Orders)
+                _ordersPage.RefreshPage();
+        }
+
+        private void UpdateOrdersNavBadge()
+        {
+            if (DesignHostHelper.IsDesignHost(this)) return;
+
+            try
+            {
+                var newCount = AdminOrderAlerts.GetNewCount(_orderAlerts.GetAll());
+                btnNavOrders.Text = newCount > 0 ? $"Orders ({newCount})" : "Orders";
+            }
+            catch
+            {
+                btnNavOrders.Text = "Orders";
+            }
         }
 
         private void LoadDesignTimePreview()

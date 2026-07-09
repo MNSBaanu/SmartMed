@@ -63,7 +63,8 @@ namespace SmartMed.UI
                     RawStatus = OrderService.StatusPending,
                     RxStatus = "Approved",
                     Prescription = "Uploaded",
-                    OrderDateValue = now.AddDays(-1)
+                    OrderDateValue = now.AddDays(-1),
+                    IsNew = true
                 },
                 new OrderRow
                 {
@@ -175,6 +176,17 @@ namespace SmartMed.UI
             gridOrders.CellFormatting += GridOrders_CellFormatting;
             gridOrders.CellContentClick += GridOrders_CellContentClick;
             gridOrders.SelectionChanged += GridOrders_SelectionChanged;
+
+            AdminOrderAlerts.AlertsChanged += (s, e) =>
+            {
+                if (IsDisposed || !_servicesReady) return;
+                if (InvokeRequired)
+                {
+                    BeginInvoke(new Action(() => DoRefreshPage()));
+                    return;
+                }
+                DoRefreshPage();
+            };
         }
 
         private void LoadOrders()
@@ -207,7 +219,8 @@ namespace SmartMed.UI
                 RawStatus = order.Status,
                 RxStatus = rxStatus,
                 Prescription = _orders.GetPrescriptionDisplay(order.OrderID),
-                OrderDateValue = order.OrderDate
+                OrderDateValue = order.OrderDate,
+                IsNew = AdminOrderAlerts.IsNew(order)
             };
         }
 
@@ -338,6 +351,21 @@ namespace SmartMed.UI
         private void GridOrders_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
         {
             if (e.RowIndex < 0 || e.ColumnIndex < 0) return;
+
+            var orderIdCell = gridOrders.Rows[e.RowIndex].Cells["OrderID"];
+            OrderRow row = null;
+            if (orderIdCell?.Value != null)
+            {
+                var orderId = Convert.ToInt32(orderIdCell.Value);
+                row = _filteredRows.FirstOrDefault(r => r.OrderID == orderId);
+            }
+
+            if (row?.IsNew == true)
+            {
+                e.CellStyle.BackColor = Color.FromArgb(255, 251, 235);
+                e.CellStyle.Font = UiTheme.UiFontBold;
+            }
+
             if (gridOrders.Columns[e.ColumnIndex].Name != "Status") return;
 
             var status = e.Value?.ToString() ?? "";
@@ -644,6 +672,7 @@ namespace SmartMed.UI
             public string RawStatus { get; set; }
             public string RxStatus { get; set; }
             public string Prescription { get; set; }
+            public bool IsNew { get; set; }
         }
     }
 }
