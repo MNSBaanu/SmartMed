@@ -44,6 +44,7 @@ namespace SmartMed.UI
             this.colLastOrder = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.colOrders = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.colStatus = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colAccount = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.panelGridHeader = new System.Windows.Forms.Panel();
             this.lblGridHeaderTitle = new System.Windows.Forms.Label();
             this.panelFooter = new System.Windows.Forms.Panel();
@@ -359,7 +360,8 @@ namespace SmartMed.UI
             this.colContactInfo,
             this.colLastOrder,
             this.colOrders,
-            this.colStatus});
+            this.colStatus,
+            this.colAccount});
             dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
             dataGridViewCellStyle3.BackColor = System.Drawing.Color.White;
             dataGridViewCellStyle3.Font = new System.Drawing.Font("Hanken Grotesk", 9F);
@@ -434,11 +436,19 @@ namespace SmartMed.UI
             // 
             // colStatus
             // 
-            this.colStatus.DataPropertyName = "Status";
-            this.colStatus.HeaderText = "Status";
+            this.colStatus.DataPropertyName = "Activity";
+            this.colStatus.HeaderText = "Activity";
             this.colStatus.MinimumWidth = 6;
             this.colStatus.Name = "colStatus";
             this.colStatus.ReadOnly = true;
+            // 
+            // colAccount
+            // 
+            this.colAccount.DataPropertyName = "Account";
+            this.colAccount.HeaderText = "Account";
+            this.colAccount.MinimumWidth = 6;
+            this.colAccount.Name = "colAccount";
+            this.colAccount.ReadOnly = true;
             // 
             // panelGridHeader
             // 
@@ -650,7 +660,7 @@ namespace SmartMed.UI
             this.lblStatActiveTitle.Name = "lblStatActiveTitle";
             this.lblStatActiveTitle.Size = new System.Drawing.Size(129, 16);
             this.lblStatActiveTitle.TabIndex = 0;
-            this.lblStatActiveTitle.Text = "ACTIVE";
+            this.lblStatActiveTitle.Text = "ENABLED";
             // 
             // panelStatInactive
             // 
@@ -698,7 +708,7 @@ namespace SmartMed.UI
             this.lblStatInactiveTitle.Name = "lblStatInactiveTitle";
             this.lblStatInactiveTitle.Size = new System.Drawing.Size(144, 16);
             this.lblStatInactiveTitle.TabIndex = 0;
-            this.lblStatInactiveTitle.Text = "INACTIVE";
+            this.lblStatInactiveTitle.Text = "DISABLED";
             // 
             // ManageCustomersForm
             // 
@@ -768,6 +778,7 @@ namespace SmartMed.UI
         private System.Windows.Forms.DataGridViewTextBoxColumn colLastOrder;
         private System.Windows.Forms.DataGridViewTextBoxColumn colOrders;
         private System.Windows.Forms.DataGridViewTextBoxColumn colStatus;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colAccount;
         private System.Windows.Forms.Panel panelFooter;
         private System.Windows.Forms.TableLayoutPanel tableStatsRow;
         private System.Windows.Forms.Panel panelStatTotal;

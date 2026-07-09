@@ -45,14 +45,15 @@ namespace SmartMed.Services
         public void ExportToCsv(IList<Customer> customers, string filePath)
         {
             var sb = new System.Text.StringBuilder();
-            sb.AppendLine("CustomerID,Name,Email,Phone,Address");
+            sb.AppendLine("CustomerID,Name,Email,Phone,Address,IsActive");
             foreach (var c in customers)
             {
                 sb.Append(c.CustomerID).Append(',');
                 sb.Append(EscapeCsv(c.Name)).Append(',');
                 sb.Append(EscapeCsv(c.Email)).Append(',');
                 sb.Append(EscapeCsv(c.Phone)).Append(',');
-                sb.AppendLine(EscapeCsv(c.Address));
+                sb.Append(EscapeCsv(c.Address)).Append(',');
+                sb.AppendLine(c.IsActive ? "Active" : "Inactive");
             }
             System.IO.File.WriteAllText(filePath, sb.ToString(), System.Text.Encoding.UTF8);
         }
@@ -86,6 +87,16 @@ namespace SmartMed.Services
                 throw new InvalidOperationException("Email already registered.");
             customer.Password = existing.Password;
             _customers.Update(customer);
+        }
+
+        public void SetAccountActive(int customerId, bool isActive)
+        {
+            if (customerId <= 0)
+                throw new ArgumentException("Select a customer to update.");
+            var existing = _customers.GetById(customerId);
+            if (existing == null)
+                throw new InvalidOperationException("Customer not found.");
+            _customers.SetActiveStatus(customerId, isActive);
         }
 
         public void Delete(int customerId)

@@ -62,7 +62,8 @@ namespace SmartMed.UI
                     ContactInfo = $"{sample.Email} / {sample.Phone}",
                     LastOrder = DateTime.Today.AddDays(-14).ToString("yyyy-MM-dd"),
                     OrderCount = 3,
-                    Status = "ACTIVE",
+                    ActivityStatus = "ACTIVE",
+                    AccountStatus = "ENABLED",
                     Customer = sample
                 },
                 new CustomerRow
@@ -73,14 +74,16 @@ namespace SmartMed.UI
                     ContactInfo = "kamal@example.com / 0779876543",
                     LastOrder = "—",
                     OrderCount = 0,
-                    Status = "INACTIVE",
+                    ActivityStatus = "INACTIVE",
+                    AccountStatus = "DISABLED",
                     Customer = new Customer
                     {
                         CustomerID = 1002,
                         Name = "Kamal Silva",
                         Email = "kamal@example.com",
                         Phone = "0779876543",
-                        Address = "45 Galle Road, Colombo"
+                        Address = "45 Galle Road, Colombo",
+                        IsActive = false
                     }
                 }
             };
@@ -182,6 +185,27 @@ namespace SmartMed.UI
             }
         }
 
+        private void ToggleAccountStatus(int customerId, bool activate)
+        {
+            var action = activate ? "activate" : "deactivate";
+            if (MessageBox.Show($"Are you sure you want to {action} this customer account?",
+                    activate ? "Confirm Activate" : "Confirm Deactivate",
+                    MessageBoxButtons.YesNo, MessageBoxIcon.Question) != DialogResult.Yes)
+                return;
+
+            try
+            {
+                _customers.SetAccountActive(customerId, activate);
+                RefreshPage();
+                MessageBox.Show(activate ? "Customer account activated." : "Customer account deactivated.", "SmartMed",
+                    MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Account Update Failed", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
+        }
+
         private void LoadCustomers()
         {
             if (!_servicesReady) return;
@@ -206,7 +230,8 @@ namespace SmartMed.UI
                         ContactInfo = $"{c.Email} / {c.Phone}",
                         LastOrder = lastOrder?.ToString("yyyy-MM-dd") ?? "—",
                         OrderCount = stats?.Count ?? 0,
-                        Status = GetActivityStatus(lastOrder),
+                        ActivityStatus = GetActivityStatus(lastOrder),
+                        AccountStatus = c.IsActive ? "ENABLED" : "DISABLED",
                         Customer = c
                     };
                 })
@@ -245,8 +270,8 @@ namespace SmartMed.UI
         private void UpdateStats()
         {
             lblTotalCustomers.Text = _allRows.Count.ToString("N0");
-            lblActiveCustomers.Text = _allRows.Count(r => r.Status == "ACTIVE").ToString("N0");
-            lblInactiveCustomers.Text = _allRows.Count(r => r.Status == "INACTIVE").ToString("N0");
+            lblActiveCustomers.Text = _allRows.Count(r => r.Customer?.IsActive == true).ToString("N0");
+            lblInactiveCustomers.Text = _allRows.Count(r => r.Customer?.IsActive == false).ToString("N0");
         }
 
         private void BindPage()
@@ -265,7 +290,9 @@ namespace SmartMed.UI
                     r.ContactInfo,
                     r.LastOrder,
                     Orders = r.OrderCount,
-                    r.Status
+                    Activity = r.ActivityStatus,
+                    Account = r.AccountStatus,
+                    AccountAction = r.Customer?.IsActive == true ? "Deactivate" : "Activate"
                 })
                 .ToList();
 
@@ -283,39 +310,62 @@ namespace SmartMed.UI
         private void EnsureGridActionColumns()
         {
             AddOrConfigureButtonColumn("Edit", "Edit", 68);
+            AddOrConfigureButtonColumn("AccountAction", "Account", 96, "AccountAction");
             AddOrConfigureButtonColumn("Remove", "Remove", 80);
 
             if (gridCustomers.Columns.Contains("Edit"))
-                gridCustomers.Columns["Edit"].DisplayIndex = gridCustomers.Columns.Count - 2;
+                gridCustomers.Columns["Edit"].DisplayIndex = gridCustomers.Columns.Count - 3;
+            if (gridCustomers.Columns.Contains("AccountAction"))
+                gridCustomers.Columns["AccountAction"].DisplayIndex = gridCustomers.Columns.Count - 2;
             if (gridCustomers.Columns.Contains("Remove"))
                 gridCustomers.Columns["Remove"].DisplayIndex = gridCustomers.Columns.Count - 1;
         }
 
-        private void AddOrConfigureButtonColumn(string name, string text, int width)
+        private void AddOrConfigureButtonColumn(string name, string text, int width, string dataPropertyName = null)
         {
             if (gridCustomers.Columns[name] is DataGridViewButtonColumn existing)
             {
                 existing.HeaderText = text;
-                existing.Text = text;
                 existing.Width = width;
                 existing.MinimumWidth = width;
+                if (!string.IsNullOrEmpty(dataPropertyName))
+                {
+                    existing.DataPropertyName = dataPropertyName;
+                    existing.UseColumnTextForButtonValue = false;
+                }
+                else
+                {
+                    existing.Text = text;
+                    existing.UseColumnTextForButtonValue = true;
+                }
                 return;
             }
 
             if (gridCustomers.Columns.Contains(name))
                 gridCustomers.Columns.Remove(name);
 
-            gridCustomers.Columns.Add(new DataGridViewButtonColumn
+            var column = new DataGridViewButtonColumn
             {
                 Name = name,
                 HeaderText = text,
-                Text = text,
-                UseColumnTextForButtonValue = true,
                 Width = width,
                 MinimumWidth = width,
                 FlatStyle = FlatStyle.Flat,
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.None
-            });
+            };
+
+            if (!string.IsNullOrEmpty(dataPropertyName))
+            {
+                column.DataPropertyName = dataPropertyName;
+                column.UseColumnTextForButtonValue = false;
+            }
+            else
+            {
+                column.Text = text;
+                column.UseColumnTextForButtonValue = true;
+            }
+
+            gridCustomers.Columns.Add(column);
         }
 
         private void ChangePage(int delta)
@@ -346,7 +396,7 @@ namespace SmartMed.UI
             if (e.RowIndex < 0 || !_servicesReady) return;
 
             var colName = gridCustomers.Columns[e.ColumnIndex].Name;
-            if (colName != "Edit" && colName != "Remove") return;
+            if (colName != "Edit" && colName != "Remove" && colName != "AccountAction") return;
 
             var idCell = gridCustomers.Rows[e.RowIndex].Cells["colCustomerID"];
             if (idCell?.Value == null) return;
@@ -354,6 +404,11 @@ namespace SmartMed.UI
             var id = Convert.ToInt32(idCell.Value);
             if (colName == "Edit")
                 EditCustomer(id);
+            else if (colName == "AccountAction")
+            {
+                var row = _allRows.FirstOrDefault(r => r.CustomerID == id);
+                ToggleAccountStatus(id, row?.Customer?.IsActive != true);
+            }
             else
                 RemoveCustomer(id);
         }
@@ -371,6 +426,17 @@ namespace SmartMed.UI
                 return;
             }
 
+            if (columnName == "AccountAction")
+            {
+                var action = e.Value?.ToString() ?? "";
+                e.CellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
+                e.CellStyle.ForeColor = string.Equals(action, "Deactivate", StringComparison.OrdinalIgnoreCase)
+                    ? UiTheme.Danger
+                    : Color.FromArgb(16, 185, 129);
+                e.CellStyle.Font = UiTheme.UiFontBold;
+                return;
+            }
+
             if (columnName == "Remove")
             {
                 e.CellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
@@ -379,9 +445,25 @@ namespace SmartMed.UI
                 return;
             }
 
-            if (columnName != "colStatus") return;
+            if (columnName != "colStatus" && columnName != "colAccount") return;
 
             var status = e.Value?.ToString() ?? "";
+            if (columnName == "colAccount")
+            {
+                if (string.Equals(status, "ENABLED", StringComparison.OrdinalIgnoreCase))
+                {
+                    e.CellStyle.BackColor = Color.FromArgb(184, 237, 226);
+                    e.CellStyle.ForeColor = Color.FromArgb(27, 79, 71);
+                }
+                else
+                {
+                    e.CellStyle.BackColor = Color.FromArgb(254, 226, 226);
+                    e.CellStyle.ForeColor = Color.FromArgb(153, 27, 27);
+                }
+                e.CellStyle.Font = UiTheme.UiFontBold;
+                return;
+            }
+
             if (string.Equals(status, "ACTIVE", StringComparison.OrdinalIgnoreCase))
             {
                 e.CellStyle.BackColor = Color.FromArgb(184, 237, 226);
@@ -555,7 +637,8 @@ namespace SmartMed.UI
             public string ContactInfo { get; set; }
             public string LastOrder { get; set; }
             public int OrderCount { get; set; }
-            public string Status { get; set; }
+            public string ActivityStatus { get; set; }
+            public string AccountStatus { get; set; }
             public Customer Customer { get; set; }
         }
     }

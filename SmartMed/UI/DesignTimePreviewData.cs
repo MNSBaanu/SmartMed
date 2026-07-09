@@ -60,7 +60,8 @@ namespace SmartMed.UI
             Name = "Jane Perera",
             Email = "jane.perera@example.com",
             Phone = "0771234567",
-            Address = "12 Hospital Road, Colombo"
+            Address = "12 Hospital Road, Colombo",
+            IsActive = true
         };
 
         public static DataTable SalesReportTable()

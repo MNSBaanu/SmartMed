@@ -24,7 +24,8 @@ CREATE TABLE Customer (
     Email      NVARCHAR(100) NOT NULL UNIQUE,
     Phone      NVARCHAR(20)  NOT NULL,
     Address    NVARCHAR(200) NOT NULL,
-    Password   NVARCHAR(100) NOT NULL
+    Password   NVARCHAR(100) NOT NULL,
+    IsActive   BIT NOT NULL DEFAULT 1
 );
 
 CREATE TABLE Medicine (
@@ -74,39 +75,5 @@ CREATE TABLE Prescription (
     CONSTRAINT FK_Prescription_Customer FOREIGN KEY (CustomerID) REFERENCES Customer(CustomerID),
     CONSTRAINT FK_Prescription_Order FOREIGN KEY (OrderID) REFERENCES [Order](OrderID)
 );
-
--- Seed data
-INSERT INTO Admin (Username, Password, Email)
-VALUES ('admin', 'admin123', 'admin@smartmed.com');
-
-INSERT INTO Customer (FullName, Email, Phone, Address, Password)
-VALUES
-    ('John Smith', 'john@email.com', '0771234567', '12 Main Street, Colombo', 'customer123'),
-    ('Jane Doe', 'jane@email.com', '0779876543', '45 Park Road, Kandy', 'customer123'),
-    ('Demo Customer', 'customer@gmail.com', '0771112233', '10 Demo Lane, Colombo', 'Customer123');
-
-INSERT INTO Medicine (MedicineName, Category, Dosage, Price, StockQuantity, Supplier, ExpiryDate, RequiresPrescription)
-VALUES
-    ('Paracetamol', 'Pain Relief', '500mg', 5.50, 200, 'PharmaCo', '2027-06-30', 0),
-    ('Amoxicillin', 'Antibiotic', '250mg', 12.00, 80, 'MediSupply', '2026-12-31', 1),
-    ('Ibuprofen', 'Pain Relief', '400mg', 8.75, 150, 'PharmaCo', '2027-03-15', 0),
-    ('Vitamin C', 'Supplements', '1000mg', 15.00, 100, 'HealthPlus', '2028-01-20', 0),
-    ('Cough Syrup', 'Cold & Flu', '100ml', 9.25, 60, 'MediSupply', '2026-08-10', 0);
-
-INSERT INTO [Order] (CustomerID, OrderDate, Status, TotalAmount)
-VALUES (1, DATEADD(DAY, -2, GETDATE()), 'Delivered', 14.25);
-
-INSERT INTO OrderItem (OrderID, MedicineID, Quantity, UnitPrice, Subtotal)
-VALUES
-    (1, 1, 2, 5.50, 11.00),
-    (1, 3, 1, 8.75, 8.75);
-
-UPDATE [Order] SET TotalAmount = 19.75 WHERE OrderID = 1;
-
-INSERT INTO [Order] (CustomerID, OrderDate, Status, TotalAmount)
-VALUES (1, DATEADD(DAY, -1, GETDATE()), 'Pending', 15.00);
-
-INSERT INTO OrderItem (OrderID, MedicineID, Quantity, UnitPrice, Subtotal)
-VALUES (2, 4, 1, 15.00, 15.00);
 
 GO

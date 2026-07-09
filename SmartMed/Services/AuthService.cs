@@ -23,7 +23,11 @@ namespace SmartMed.Services
             if (ValidationService.IsNullOrWhiteSpace(password))
                 throw new System.ArgumentException("Password is required.");
 
-            return _customerRepo.GetByCredentials(email.Trim(), password);
+            var customer = _customerRepo.GetByCredentials(email.Trim(), password);
+            if (customer != null && !customer.IsActive)
+                throw new System.InvalidOperationException("This account has been deactivated. Please contact the pharmacy administrator.");
+
+            return customer;
         }
 
         public void RegisterCustomer(Customer customer)

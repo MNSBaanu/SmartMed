@@ -7,10 +7,13 @@ namespace SmartMed.Data
 {
     public class CustomerRepository
     {
+        private const string SelectColumns =
+            "CustomerID, FullName, Email, Phone, Address, Password, IsActive";
+
         public Customer GetByCredentials(string email, string password)
         {
             var table = DatabaseHelper.ExecuteQuery(
-                "SELECT CustomerID, FullName, Email, Phone, Address, Password FROM Customer WHERE Email=@e AND Password=@p",
+                $"SELECT {SelectColumns} FROM Customer WHERE Email=@e AND Password=@p",
                 new SqlParameter("@e", email),
                 new SqlParameter("@p", password));
 
@@ -21,7 +24,7 @@ namespace SmartMed.Data
         public Customer GetById(int id)
         {
             var table = DatabaseHelper.ExecuteQuery(
-                "SELECT CustomerID, FullName, Email, Phone, Address, Password FROM Customer WHERE CustomerID=@id",
+                $"SELECT {SelectColumns} FROM Customer WHERE CustomerID=@id",
                 new SqlParameter("@id", id));
             if (table.Rows.Count == 0) return null;
             return Map(table.Rows[0]);
@@ -31,7 +34,7 @@ namespace SmartMed.Data
         {
             var list = new List<Customer>();
             var table = DatabaseHelper.ExecuteQuery(
-                "SELECT CustomerID, FullName, Email, Phone, Address, Password FROM Customer ORDER BY FullName");
+                $"SELECT {SelectColumns} FROM Customer ORDER BY FullName");
             foreach (System.Data.DataRow row in table.Rows)
                 list.Add(Map(row));
             return list;
@@ -53,13 +56,14 @@ namespace SmartMed.Data
         public int Insert(Customer customer)
         {
             DatabaseHelper.ExecuteNonQuery(
-                @"INSERT INTO Customer (FullName, Email, Phone, Address, Password)
-                  VALUES (@n, @e, @ph, @a, @pw)",
+                @"INSERT INTO Customer (FullName, Email, Phone, Address, Password, IsActive)
+                  VALUES (@n, @e, @ph, @a, @pw, @active)",
                 new SqlParameter("@n", customer.Name),
                 new SqlParameter("@e", customer.Email),
                 new SqlParameter("@ph", customer.Phone),
                 new SqlParameter("@a", customer.Address),
-                new SqlParameter("@pw", customer.Password));
+                new SqlParameter("@pw", customer.Password),
+                new SqlParameter("@active", customer.IsActive));
 
             return Convert.ToInt32(DatabaseHelper.ExecuteScalar("SELECT MAX(CustomerID) FROM Customer"));
         }
@@ -83,6 +87,14 @@ namespace SmartMed.Data
                 new SqlParameter("@id", id));
         }
 
+        public void SetActiveStatus(int customerId, bool isActive)
+        {
+            DatabaseHelper.ExecuteNonQuery(
+                "UPDATE Customer SET IsActive=@active WHERE CustomerID=@id",
+                new SqlParameter("@active", isActive),
+                new SqlParameter("@id", customerId));
+        }
+
         public void UpdatePassword(int customerId, string newPassword)
         {
             DatabaseHelper.ExecuteNonQuery(
@@ -100,7 +112,9 @@ namespace SmartMed.Data
                 Email = row["Email"].ToString(),
                 Phone = row["Phone"].ToString(),
                 Address = row["Address"].ToString(),
-                Password = row["Password"].ToString()
+                Password = row["Password"].ToString(),
+                IsActive = row.Table.Columns.Contains("IsActive") && row["IsActive"] != DBNull.Value
+                    && Convert.ToBoolean(row["IsActive"])
             };
         }
     }
