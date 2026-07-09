@@ -44,6 +44,8 @@ namespace SmartMed.UI
         public static readonly Color ErrorContainer = Color.FromArgb(255, 218, 214);
         public static readonly Color Error = Color.FromArgb(186, 26, 26);
         public static readonly Color ErrorOnContainer = Color.FromArgb(147, 0, 10);
+        public static readonly Color GridSelectionBack = Color.FromArgb(232, 238, 252);
+        public static readonly Color GridSelectionFore = Color.FromArgb(52, 64, 96);
 
         /// <summary>
         /// Wires Enter / Up / Down keyboard navigation across an ordered set of input
@@ -746,17 +748,29 @@ namespace SmartMed.UI
             grid.RowTemplate.Height = 36;
             grid.DefaultCellStyle.BackColor = Color.White;
             grid.DefaultCellStyle.ForeColor = AdminOnSurface;
-            grid.DefaultCellStyle.SelectionBackColor = Color.FromArgb(220, 240, 236);
-            grid.DefaultCellStyle.SelectionForeColor = AdminOnSurface;
+            grid.DefaultCellStyle.SelectionBackColor = GridSelectionBack;
+            grid.DefaultCellStyle.SelectionForeColor = GridSelectionFore;
             grid.DefaultCellStyle.Font = UiFont;
             grid.DefaultCellStyle.Padding = new Padding(8, 4, 8, 4);
             grid.AlternatingRowsDefaultCellStyle.BackColor = Color.FromArgb(250, 252, 252);
+            grid.AlternatingRowsDefaultCellStyle.SelectionBackColor = GridSelectionBack;
+            grid.AlternatingRowsDefaultCellStyle.SelectionForeColor = GridSelectionFore;
             grid.ColumnHeadersDefaultCellStyle.BackColor = SurfaceContainer;
             grid.ColumnHeadersDefaultCellStyle.ForeColor = AdminMuted;
             grid.ColumnHeadersDefaultCellStyle.Font = UiFontBold;
             grid.ColumnHeadersDefaultCellStyle.Padding = new Padding(10, 0, 10, 0);
             grid.ColumnHeadersDefaultCellStyle.SelectionBackColor = grid.ColumnHeadersDefaultCellStyle.BackColor;
             grid.CellBorderStyle = DataGridViewCellBorderStyle.SingleHorizontal;
+        }
+
+        public static bool IsSelectedRow(DataGridView grid, int rowIndex) =>
+            grid != null && rowIndex >= 0 && rowIndex < grid.Rows.Count && grid.Rows[rowIndex].Selected;
+
+        public static void ApplySelectedRowCellStyle(DataGridViewCellStyle style)
+        {
+            if (style == null) return;
+            style.BackColor = GridSelectionBack;
+            style.ForeColor = GridSelectionFore;
         }
 
         public static void BeautifyGridHeaders(DataGridView grid)

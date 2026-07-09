@@ -437,6 +437,11 @@ namespace SmartMed.UI
         private void GridReport_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
         {
             if (_activeTab != ReportTab.MedicineInventory || e.RowIndex < 0) return;
+            if (UiTheme.IsSelectedRow(gridReport, e.RowIndex))
+            {
+                UiTheme.ApplySelectedRowCellStyle(e.CellStyle);
+                return;
+            }
             if (_currentReportTable == null || !_currentReportTable.Columns.Contains("Inventory Status")) return;
             if (e.RowIndex >= _currentReportTable.Rows.Count) return;
 
@@ -445,18 +450,18 @@ namespace SmartMed.UI
 
             if (status == "Expired")
             {
-                e.CellStyle.BackColor = Color.FromArgb(255, 235, 235);
-                e.CellStyle.ForeColor = Color.DarkRed;
+                e.CellStyle.BackColor = Color.FromArgb(254, 232, 232);
+                e.CellStyle.ForeColor = Color.FromArgb(153, 27, 27);
             }
             else if (status == "Near Expiry")
             {
-                e.CellStyle.BackColor = Color.FromArgb(255, 248, 220);
+                e.CellStyle.BackColor = Color.FromArgb(255, 248, 232);
                 e.CellStyle.ForeColor = Color.FromArgb(140, 70, 0);
             }
             else if (status == "Low Stock")
             {
-                e.CellStyle.BackColor = Color.FromArgb(255, 242, 230);
-                e.CellStyle.ForeColor = Color.DarkOrange;
+                e.CellStyle.BackColor = Color.FromArgb(255, 246, 238);
+                e.CellStyle.ForeColor = Color.FromArgb(180, 90, 20);
             }
         }
 

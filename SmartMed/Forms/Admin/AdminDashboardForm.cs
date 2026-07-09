@@ -207,6 +207,11 @@ namespace SmartMed.UI
         {
             if (e.RowIndex < 0 || e.ColumnIndex < 0) return;
             var grid = (DataGridView)sender;
+            if (UiTheme.IsSelectedRow(grid, e.RowIndex))
+            {
+                UiTheme.ApplySelectedRowCellStyle(e.CellStyle);
+                return;
+            }
             if (grid.Columns[e.ColumnIndex].Name != "Status" && grid.Columns[e.ColumnIndex].Name != "DueDate")
                 return;
 
@@ -215,14 +220,14 @@ namespace SmartMed.UI
             {
                 if (string.Equals(value, "CRITICAL", StringComparison.OrdinalIgnoreCase))
                 {
-                    e.CellStyle.ForeColor = UiTheme.Danger;
-                    e.CellStyle.BackColor = Color.FromArgb(255, 218, 214);
+                    e.CellStyle.ForeColor = Color.FromArgb(153, 27, 27);
+                    e.CellStyle.BackColor = Color.FromArgb(254, 232, 232);
                     e.CellStyle.Font = UiTheme.UiFontBold;
                 }
                 else if (string.Equals(value, "LOW", StringComparison.OrdinalIgnoreCase))
                 {
-                    e.CellStyle.ForeColor = Color.FromArgb(104, 57, 61);
-                    e.CellStyle.BackColor = Color.FromArgb(255, 218, 219);
+                    e.CellStyle.ForeColor = Color.FromArgb(140, 70, 0);
+                    e.CellStyle.BackColor = Color.FromArgb(255, 246, 230);
                     e.CellStyle.Font = UiTheme.UiFontBold;
                 }
             }
@@ -236,6 +241,11 @@ namespace SmartMed.UI
         private void GridRecent_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
         {
             if (e.RowIndex < 0 || e.ColumnIndex < 0) return;
+            if (UiTheme.IsSelectedRow(gridRecent, e.RowIndex))
+            {
+                UiTheme.ApplySelectedRowCellStyle(e.CellStyle);
+                return;
+            }
             if (gridRecent.Columns[e.ColumnIndex].Name != "FulfillmentStatus") return;
 
             var status = e.Value?.ToString() ?? string.Empty;

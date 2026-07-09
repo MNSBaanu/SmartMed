@@ -411,6 +411,12 @@ namespace SmartMed.UI
         {
             if (e.RowIndex < 0 || e.ColumnIndex < 0) return;
 
+            if (UiTheme.IsSelectedRow(gridCustomers, e.RowIndex))
+            {
+                UiTheme.ApplySelectedRowCellStyle(e.CellStyle);
+                return;
+            }
+
             var columnName = gridCustomers.Columns[e.ColumnIndex].Name;
             if (columnName == "Edit")
             {

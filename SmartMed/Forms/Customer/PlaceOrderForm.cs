@@ -218,6 +218,11 @@ namespace SmartMed.UI
         private void GridCart_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
         {
             if (e.RowIndex < 0 || e.ColumnIndex < 0) return;
+            if (UiTheme.IsSelectedRow(gridCart, e.RowIndex))
+            {
+                UiTheme.ApplySelectedRowCellStyle(e.CellStyle);
+                return;
+            }
             if (gridCart.Columns[e.ColumnIndex].Name != "Prescription") return;
 
             var value = e.Value?.ToString() ?? string.Empty;

@@ -352,6 +352,12 @@ namespace SmartMed.UI
         {
             if (e.RowIndex < 0 || e.ColumnIndex < 0) return;
 
+            if (UiTheme.IsSelectedRow(gridOrders, e.RowIndex))
+            {
+                UiTheme.ApplySelectedRowCellStyle(e.CellStyle);
+                return;
+            }
+
             var orderIdCell = gridOrders.Rows[e.RowIndex].Cells["OrderID"];
             OrderRow row = null;
             if (orderIdCell?.Value != null)

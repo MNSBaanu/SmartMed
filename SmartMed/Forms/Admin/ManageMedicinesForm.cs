@@ -470,6 +470,13 @@ namespace SmartMed.UI
             if (item == null) return;
 
             var row = gridMedicines.Rows[e.RowIndex];
+            if (row.Selected)
+            {
+                row.DefaultCellStyle.BackColor = UiTheme.GridSelectionBack;
+                row.DefaultCellStyle.ForeColor = UiTheme.GridSelectionFore;
+                return;
+            }
+
             if (Rules.CheckExpiry(item) == MedicineService.ExpiryExpired)
             {
                 row.DefaultCellStyle.BackColor = Color.FromArgb(255, 230, 230);
@@ -487,6 +494,13 @@ namespace SmartMed.UI
             if (e.RowIndex < 0 || gridMedicines.Rows[e.RowIndex].Cells["MedicineID"]?.Value == null)
                 return;
 
+            var row = gridMedicines.Rows[e.RowIndex];
+            if (row.Selected)
+            {
+                UiTheme.ApplySelectedRowCellStyle(e.CellStyle);
+                return;
+            }
+
             var id = Convert.ToInt32(gridMedicines.Rows[e.RowIndex].Cells["MedicineID"].Value);
             var item = _allMedicines.FirstOrDefault(m => m.MedicineID == id);
             if (item == null) return;
@@ -496,14 +510,22 @@ namespace SmartMed.UI
 
             if (columnName == "Stock")
             {
-                e.CellStyle.ForeColor = Color.White;
                 e.CellStyle.Font = UiTheme.UiFontBold;
                 if (item.StockQuantity <= 20)
-                    e.CellStyle.BackColor = Color.FromArgb(220, 53, 69);
+                {
+                    e.CellStyle.BackColor = Color.FromArgb(254, 226, 226);
+                    e.CellStyle.ForeColor = Color.FromArgb(153, 27, 27);
+                }
                 else if (item.StockQuantity <= 50)
-                    e.CellStyle.BackColor = Color.FromArgb(255, 193, 7);
+                {
+                    e.CellStyle.BackColor = Color.FromArgb(255, 243, 205);
+                    e.CellStyle.ForeColor = Color.FromArgb(140, 70, 0);
+                }
                 else
-                    e.CellStyle.BackColor = Color.FromArgb(40, 167, 69);
+                {
+                    e.CellStyle.BackColor = Color.FromArgb(220, 245, 238);
+                    e.CellStyle.ForeColor = Color.FromArgb(27, 79, 71);
+                }
                 e.Value = $"{item.StockQuantity}";
             }
             else if (columnName == "Status")
