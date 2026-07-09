@@ -28,7 +28,7 @@ namespace SmartMed.Services
             switch (currentStatus)
             {
                 case StatusPending:
-                    return new[] { StatusReadyForPickup };
+                    return new[] { StatusReadyForPickup, StatusDelivered };
                 case StatusReadyForPickup:
                     return new[] { StatusDelivered };
                 default:
@@ -65,13 +65,16 @@ namespace SmartMed.Services
             if (transitionError != null)
                 throw new InvalidOperationException(transitionError);
 
-            if (status == StatusReadyForPickup && _prescriptions.HasPrescription(orderId))
+            if (status == StatusReadyForPickup || status == StatusDelivered)
             {
-                var rxStatus = _prescriptions.GetStatus(orderId);
-                if (string.Equals(rxStatus, PrescriptionService.StatusPending, StringComparison.OrdinalIgnoreCase))
-                    throw new InvalidOperationException("Verify the prescription before marking the order Ready for Pickup.");
-                if (string.Equals(rxStatus, PrescriptionService.StatusRejected, StringComparison.OrdinalIgnoreCase))
-                    throw new InvalidOperationException("This prescription was rejected. The order cannot proceed until a valid prescription is provided.");
+                if (_prescriptions.HasPrescription(orderId))
+                {
+                    var rxStatus = _prescriptions.GetStatus(orderId);
+                    if (string.Equals(rxStatus, PrescriptionService.StatusPending, StringComparison.OrdinalIgnoreCase))
+                        throw new InvalidOperationException("Verify the prescription before updating this order.");
+                    if (string.Equals(rxStatus, PrescriptionService.StatusRejected, StringComparison.OrdinalIgnoreCase))
+                        throw new InvalidOperationException("This prescription was rejected. The order cannot proceed until a valid prescription is provided.");
+                }
             }
 
             _orders.UpdateStatus(orderId, status);
@@ -88,8 +91,10 @@ namespace SmartMed.Services
             if (newStatus == StatusReadyForPickup && currentStatus != StatusPending)
                 return "Order must be Pending before it can be marked Ready for Pickup.";
 
-            if (newStatus == StatusDelivered && currentStatus != StatusReadyForPickup)
-                return "Order must be Ready for Pickup before it can be marked Delivered.";
+            if (newStatus == StatusDelivered
+                && currentStatus != StatusReadyForPickup
+                && currentStatus != StatusPending)
+                return "Order must be Pending or Ready for Pickup before it can be marked Delivered.";
 
             if (newStatus == StatusPending)
                 return "Order status cannot be changed back to Pending.";

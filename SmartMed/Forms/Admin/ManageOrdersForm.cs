@@ -195,6 +195,7 @@ namespace SmartMed.UI
             gridOrders.CellFormatting += GridOrders_CellFormatting;
             gridOrders.CellContentClick += GridOrders_CellContentClick;
             gridOrders.CellClick += GridOrders_CellClick;
+            gridOrders.CellBeginEdit += GridOrders_CellBeginEdit;
             gridOrders.CellValueChanged += GridOrders_CellValueChanged;
             gridOrders.EditingControlShowing += GridOrders_EditingControlShowing;
             gridOrders.CurrentCellDirtyStateChanged += GridOrders_CurrentCellDirtyStateChanged;
@@ -320,6 +321,7 @@ namespace SmartMed.UI
             HideInternalColumns();
             UiTheme.BeautifyGridHeaders(gridOrders);
             EnsureGridColumns();
+            ApplyStatusCellEditability();
 
             if (gridOrders.Columns.Contains("Customer"))
                 gridOrders.Columns["Customer"].DefaultCellStyle.WrapMode = DataGridViewTriState.False;
@@ -350,6 +352,7 @@ namespace SmartMed.UI
                 gridOrders.Columns.Remove("Edit");
 
             gridOrders.ReadOnly = false;
+            gridOrders.EditMode = DataGridViewEditMode.EditOnEnter;
             foreach (DataGridViewColumn col in gridOrders.Columns)
                 col.ReadOnly = true;
 
@@ -392,6 +395,31 @@ namespace SmartMed.UI
                 gridOrders.Columns[columnName].DisplayIndex = displayIndex;
         }
 
+        private static bool CanUpdateStatus(OrderRow row) =>
+            row != null && OrderService.GetAllowedNextStatuses(row.RawStatus).Count > 0;
+
+        private void ApplyStatusCellEditability()
+        {
+            if (!gridOrders.Columns.Contains("Status")) return;
+
+            foreach (DataGridViewRow gridRow in gridOrders.Rows)
+            {
+                if (gridRow.IsNewRow) continue;
+
+                var orderRow = GetOrderRow(gridRow.Index);
+                var canUpdate = CanUpdateStatus(orderRow);
+                var statusCell = gridRow.Cells["Status"];
+                statusCell.ReadOnly = !canUpdate;
+
+                if (statusCell is DataGridViewComboBoxCell comboCell)
+                {
+                    comboCell.DisplayStyle = canUpdate
+                        ? DataGridViewComboBoxDisplayStyle.ComboBox
+                        : DataGridViewComboBoxDisplayStyle.Nothing;
+                }
+            }
+        }
+
         private void EnsureStatusComboColumn()
         {
             const string name = "Status";
@@ -414,7 +442,8 @@ namespace SmartMed.UI
                     Name = name,
                     HeaderText = "Status",
                     DataPropertyName = name,
-                    DisplayStyle = DataGridViewComboBoxDisplayStyle.Nothing,
+                    DisplayStyle = DataGridViewComboBoxDisplayStyle.ComboBox,
+                    DisplayStyleForCurrentCellOnly = true,
                     FlatStyle = FlatStyle.Flat,
                     Width = width,
                     MinimumWidth = 100,
@@ -541,16 +570,31 @@ namespace SmartMed.UI
             }
         }
 
+        private void GridOrders_CellBeginEdit(object sender, DataGridViewCellCancelEventArgs e)
+        {
+            if (e.RowIndex < 0 || e.ColumnIndex < 0) return;
+            if (gridOrders.Columns[e.ColumnIndex].Name != "Status") return;
+            if (!CanUpdateStatus(GetOrderRow(e.RowIndex)))
+                e.Cancel = true;
+        }
+
         private void GridOrders_CellClick(object sender, DataGridViewCellEventArgs e)
         {
             if (e.RowIndex < 0 || !_servicesReady) return;
-            if (gridOrders.Columns[e.ColumnIndex].Name != "Prescription") return;
+            var colName = gridOrders.Columns[e.ColumnIndex].Name;
 
-            var row = GetOrderRow(e.RowIndex);
-            if (row?.HasPrescription != true) return;
+            if (colName == "Prescription")
+            {
+                var row = GetOrderRow(e.RowIndex);
+                if (row?.HasPrescription != true) return;
 
-            var orderId = Convert.ToInt32(gridOrders.Rows[e.RowIndex].Cells["OrderID"].Value);
-            OpenPrescription(orderId);
+                var orderId = Convert.ToInt32(gridOrders.Rows[e.RowIndex].Cells["OrderID"].Value);
+                OpenPrescription(orderId);
+                return;
+            }
+
+            if (colName == "Status" && CanUpdateStatus(GetOrderRow(e.RowIndex)))
+                gridOrders.BeginEdit(true);
         }
 
         private void UpdateStats()
@@ -655,6 +699,8 @@ namespace SmartMed.UI
             if (columnName == "Status")
             {
                 var status = e.Value?.ToString() ?? string.Empty;
+                var canUpdate = row != null && CanUpdateStatus(row);
+
                 if (row != null && row.Status == "Flagged")
                 {
                     e.CellStyle.BackColor = Color.FromArgb(255, 218, 214);
@@ -681,6 +727,10 @@ namespace SmartMed.UI
                     e.CellStyle.ForeColor = Color.FromArgb(27, 79, 71);
                     e.CellStyle.Font = UiTheme.UiFontBold;
                 }
+
+                if (canUpdate)
+                    e.CellStyle.ForeColor = UiTheme.AdminTeal;
+
                 return;
             }
 
