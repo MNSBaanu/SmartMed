@@ -21,15 +21,14 @@ namespace SmartMed.UI
             this.lblPageSubtitle = new System.Windows.Forms.Label();
             this.lblPageTitle = new System.Windows.Forms.Label();
             this.flowFilter = new System.Windows.Forms.FlowLayoutPanel();
-            this.lblName = new System.Windows.Forms.Label();
-            this.txtName = new System.Windows.Forms.TextBox();
-            this.lblCategory = new System.Windows.Forms.Label();
-            this.txtCategory = new System.Windows.Forms.TextBox();
-            this.lblMinPrice = new System.Windows.Forms.Label();
-            this.txtMinPrice = new System.Windows.Forms.TextBox();
-            this.lblMaxPrice = new System.Windows.Forms.Label();
-            this.txtMaxPrice = new System.Windows.Forms.TextBox();
+            this.lblCategoryLabel = new System.Windows.Forms.Label();
+            this.cmbCategory = new System.Windows.Forms.ComboBox();
+            this.txtSearch = new System.Windows.Forms.TextBox();
             this.btnSearch = new System.Windows.Forms.Button();
+            this.lblPriceLabel = new System.Windows.Forms.Label();
+            this.txtMinPrice = new System.Windows.Forms.TextBox();
+            this.txtMaxPrice = new System.Windows.Forms.TextBox();
+            this.btnClear = new System.Windows.Forms.Button();
             this.panelGridOuter = new System.Windows.Forms.Panel();
             this.panelGridBody = new System.Windows.Forms.Panel();
             this.grid = new System.Windows.Forms.DataGridView();
@@ -115,110 +114,57 @@ namespace SmartMed.UI
             // 
             this.flowFilter.AutoSize = true;
             this.flowFilter.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(244)))), ((int)(((byte)(251)))), ((int)(((byte)(250)))));
-            this.flowFilter.Controls.Add(this.lblName);
-            this.flowFilter.Controls.Add(this.txtName);
-            this.flowFilter.Controls.Add(this.lblCategory);
-            this.flowFilter.Controls.Add(this.txtCategory);
-            this.flowFilter.Controls.Add(this.lblMinPrice);
-            this.flowFilter.Controls.Add(this.txtMinPrice);
-            this.flowFilter.Controls.Add(this.lblMaxPrice);
-            this.flowFilter.Controls.Add(this.txtMaxPrice);
+            this.flowFilter.Controls.Add(this.lblCategoryLabel);
+            this.flowFilter.Controls.Add(this.cmbCategory);
+            this.flowFilter.Controls.Add(this.txtSearch);
             this.flowFilter.Controls.Add(this.btnSearch);
+            this.flowFilter.Controls.Add(this.lblPriceLabel);
+            this.flowFilter.Controls.Add(this.txtMinPrice);
+            this.flowFilter.Controls.Add(this.txtMaxPrice);
+            this.flowFilter.Controls.Add(this.btnClear);
             this.flowFilter.Dock = System.Windows.Forms.DockStyle.Fill;
             this.flowFilter.Location = new System.Drawing.Point(0, 92);
             this.flowFilter.Margin = new System.Windows.Forms.Padding(0, 0, 0, 12);
             this.flowFilter.Name = "flowFilter";
+            this.flowFilter.Padding = new System.Windows.Forms.Padding(0, 2, 0, 0);
             this.flowFilter.Size = new System.Drawing.Size(1012, 30);
             this.flowFilter.TabIndex = 1;
-            this.flowFilter.WrapContents = true;
+            this.flowFilter.WrapContents = false;
             // 
-            // lblName
+            // lblCategoryLabel
             // 
-            this.lblName.AutoSize = true;
-            this.lblName.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(244)))), ((int)(((byte)(251)))), ((int)(((byte)(250)))));
-            this.lblName.Font = new System.Drawing.Font("Hanken Grotesk", 9F);
-            this.lblName.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(65)))), ((int)(((byte)(72)))), ((int)(((byte)(71)))));
-            this.lblName.Location = new System.Drawing.Point(0, 8);
-            this.lblName.Margin = new System.Windows.Forms.Padding(0, 6, 4, 0);
-            this.lblName.Name = "lblName";
-            this.lblName.Size = new System.Drawing.Size(48, 18);
-            this.lblName.TabIndex = 0;
-            this.lblName.Text = "Name:";
+            this.lblCategoryLabel.AutoSize = true;
+            this.lblCategoryLabel.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(244)))), ((int)(((byte)(251)))), ((int)(((byte)(250)))));
+            this.lblCategoryLabel.Font = new System.Drawing.Font("Hanken Grotesk", 9F);
+            this.lblCategoryLabel.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(65)))), ((int)(((byte)(72)))), ((int)(((byte)(71)))));
+            this.lblCategoryLabel.Location = new System.Drawing.Point(0, 8);
+            this.lblCategoryLabel.Margin = new System.Windows.Forms.Padding(0, 6, 4, 0);
+            this.lblCategoryLabel.Name = "lblCategoryLabel";
+            this.lblCategoryLabel.Size = new System.Drawing.Size(68, 18);
+            this.lblCategoryLabel.TabIndex = 0;
+            this.lblCategoryLabel.Text = "Category:";
             // 
-            // txtName
+            // cmbCategory
             // 
-            this.txtName.Font = new System.Drawing.Font("Hanken Grotesk", 9F);
-            this.txtName.Location = new System.Drawing.Point(52, 4);
-            this.txtName.Margin = new System.Windows.Forms.Padding(0, 0, 8, 0);
-            this.txtName.Name = "txtName";
-            this.txtName.Size = new System.Drawing.Size(140, 25);
-            this.txtName.TabIndex = 1;
+            this.cmbCategory.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmbCategory.Font = new System.Drawing.Font("Hanken Grotesk", 9F);
+            this.cmbCategory.FormattingEnabled = true;
+            this.cmbCategory.Items.AddRange(new object[] {
+            "All categories"});
+            this.cmbCategory.Location = new System.Drawing.Point(72, 4);
+            this.cmbCategory.Margin = new System.Windows.Forms.Padding(0, 2, 8, 0);
+            this.cmbCategory.Name = "cmbCategory";
+            this.cmbCategory.Size = new System.Drawing.Size(130, 26);
+            this.cmbCategory.TabIndex = 1;
             // 
-            // lblCategory
+            // txtSearch
             // 
-            this.lblCategory.AutoSize = true;
-            this.lblCategory.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(244)))), ((int)(((byte)(251)))), ((int)(((byte)(250)))));
-            this.lblCategory.Font = new System.Drawing.Font("Hanken Grotesk", 9F);
-            this.lblCategory.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(65)))), ((int)(((byte)(72)))), ((int)(((byte)(71)))));
-            this.lblCategory.Location = new System.Drawing.Point(200, 8);
-            this.lblCategory.Margin = new System.Windows.Forms.Padding(0, 6, 4, 0);
-            this.lblCategory.Name = "lblCategory";
-            this.lblCategory.Size = new System.Drawing.Size(68, 18);
-            this.lblCategory.TabIndex = 2;
-            this.lblCategory.Text = "Category:";
-            // 
-            // txtCategory
-            // 
-            this.txtCategory.Font = new System.Drawing.Font("Hanken Grotesk", 9F);
-            this.txtCategory.Location = new System.Drawing.Point(272, 4);
-            this.txtCategory.Margin = new System.Windows.Forms.Padding(0, 0, 8, 0);
-            this.txtCategory.Name = "txtCategory";
-            this.txtCategory.Size = new System.Drawing.Size(120, 25);
-            this.txtCategory.TabIndex = 3;
-            // 
-            // lblMinPrice
-            // 
-            this.lblMinPrice.AutoSize = true;
-            this.lblMinPrice.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(244)))), ((int)(((byte)(251)))), ((int)(((byte)(250)))));
-            this.lblMinPrice.Font = new System.Drawing.Font("Hanken Grotesk", 9F);
-            this.lblMinPrice.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(65)))), ((int)(((byte)(72)))), ((int)(((byte)(71)))));
-            this.lblMinPrice.Location = new System.Drawing.Point(400, 8);
-            this.lblMinPrice.Margin = new System.Windows.Forms.Padding(0, 6, 4, 0);
-            this.lblMinPrice.Name = "lblMinPrice";
-            this.lblMinPrice.Size = new System.Drawing.Size(32, 18);
-            this.lblMinPrice.TabIndex = 4;
-            this.lblMinPrice.Text = "Min:";
-            // 
-            // txtMinPrice
-            // 
-            this.txtMinPrice.Font = new System.Drawing.Font("Hanken Grotesk", 9F);
-            this.txtMinPrice.Location = new System.Drawing.Point(436, 4);
-            this.txtMinPrice.Margin = new System.Windows.Forms.Padding(0, 0, 8, 0);
-            this.txtMinPrice.Name = "txtMinPrice";
-            this.txtMinPrice.Size = new System.Drawing.Size(80, 25);
-            this.txtMinPrice.TabIndex = 5;
-            // 
-            // lblMaxPrice
-            // 
-            this.lblMaxPrice.AutoSize = true;
-            this.lblMaxPrice.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(244)))), ((int)(((byte)(251)))), ((int)(((byte)(250)))));
-            this.lblMaxPrice.Font = new System.Drawing.Font("Hanken Grotesk", 9F);
-            this.lblMaxPrice.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(65)))), ((int)(((byte)(72)))), ((int)(((byte)(71)))));
-            this.lblMaxPrice.Location = new System.Drawing.Point(524, 8);
-            this.lblMaxPrice.Margin = new System.Windows.Forms.Padding(0, 6, 4, 0);
-            this.lblMaxPrice.Name = "lblMaxPrice";
-            this.lblMaxPrice.Size = new System.Drawing.Size(35, 18);
-            this.lblMaxPrice.TabIndex = 6;
-            this.lblMaxPrice.Text = "Max:";
-            // 
-            // txtMaxPrice
-            // 
-            this.txtMaxPrice.Font = new System.Drawing.Font("Hanken Grotesk", 9F);
-            this.txtMaxPrice.Location = new System.Drawing.Point(563, 4);
-            this.txtMaxPrice.Margin = new System.Windows.Forms.Padding(0, 0, 8, 0);
-            this.txtMaxPrice.Name = "txtMaxPrice";
-            this.txtMaxPrice.Size = new System.Drawing.Size(80, 25);
-            this.txtMaxPrice.TabIndex = 7;
+            this.txtSearch.Font = new System.Drawing.Font("Hanken Grotesk", 9F);
+            this.txtSearch.Location = new System.Drawing.Point(210, 4);
+            this.txtSearch.Margin = new System.Windows.Forms.Padding(0, 2, 8, 0);
+            this.txtSearch.Name = "txtSearch";
+            this.txtSearch.Size = new System.Drawing.Size(140, 25);
+            this.txtSearch.TabIndex = 2;
             // 
             // btnSearch
             // 
@@ -228,12 +174,60 @@ namespace SmartMed.UI
             this.btnSearch.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnSearch.Font = new System.Drawing.Font("Hanken Grotesk", 9F);
             this.btnSearch.ForeColor = System.Drawing.Color.White;
-            this.btnSearch.Location = new System.Drawing.Point(651, 4);
+            this.btnSearch.Location = new System.Drawing.Point(358, 4);
+            this.btnSearch.Margin = new System.Windows.Forms.Padding(0, 2, 8, 0);
             this.btnSearch.Name = "btnSearch";
-            this.btnSearch.Size = new System.Drawing.Size(80, 30);
-            this.btnSearch.TabIndex = 8;
+            this.btnSearch.Size = new System.Drawing.Size(72, 26);
+            this.btnSearch.TabIndex = 3;
             this.btnSearch.Text = "Search";
             this.btnSearch.UseVisualStyleBackColor = false;
+            // 
+            // lblPriceLabel
+            // 
+            this.lblPriceLabel.AutoSize = true;
+            this.lblPriceLabel.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(244)))), ((int)(((byte)(251)))), ((int)(((byte)(250)))));
+            this.lblPriceLabel.Font = new System.Drawing.Font("Hanken Grotesk", 9F);
+            this.lblPriceLabel.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(65)))), ((int)(((byte)(72)))), ((int)(((byte)(71)))));
+            this.lblPriceLabel.Location = new System.Drawing.Point(438, 8);
+            this.lblPriceLabel.Margin = new System.Windows.Forms.Padding(0, 6, 4, 0);
+            this.lblPriceLabel.Name = "lblPriceLabel";
+            this.lblPriceLabel.Size = new System.Drawing.Size(40, 18);
+            this.lblPriceLabel.TabIndex = 4;
+            this.lblPriceLabel.Text = "Price:";
+            // 
+            // txtMinPrice
+            // 
+            this.txtMinPrice.Font = new System.Drawing.Font("Hanken Grotesk", 9F);
+            this.txtMinPrice.Location = new System.Drawing.Point(482, 4);
+            this.txtMinPrice.Margin = new System.Windows.Forms.Padding(0, 2, 4, 0);
+            this.txtMinPrice.Name = "txtMinPrice";
+            this.txtMinPrice.Size = new System.Drawing.Size(56, 25);
+            this.txtMinPrice.TabIndex = 5;
+            // 
+            // txtMaxPrice
+            // 
+            this.txtMaxPrice.Font = new System.Drawing.Font("Hanken Grotesk", 9F);
+            this.txtMaxPrice.Location = new System.Drawing.Point(542, 4);
+            this.txtMaxPrice.Margin = new System.Windows.Forms.Padding(0, 2, 8, 0);
+            this.txtMaxPrice.Name = "txtMaxPrice";
+            this.txtMaxPrice.Size = new System.Drawing.Size(56, 25);
+            this.txtMaxPrice.TabIndex = 6;
+            // 
+            // btnClear
+            // 
+            this.btnClear.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(238)))), ((int)(((byte)(245)))), ((int)(((byte)(244)))));
+            this.btnClear.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.btnClear.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(193)))), ((int)(((byte)(200)))), ((int)(((byte)(198)))));
+            this.btnClear.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnClear.Font = new System.Drawing.Font("Hanken Grotesk", 9F);
+            this.btnClear.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(22)))), ((int)(((byte)(29)))), ((int)(((byte)(29)))));
+            this.btnClear.Location = new System.Drawing.Point(606, 4);
+            this.btnClear.Margin = new System.Windows.Forms.Padding(0, 2, 0, 0);
+            this.btnClear.Name = "btnClear";
+            this.btnClear.Size = new System.Drawing.Size(64, 26);
+            this.btnClear.TabIndex = 7;
+            this.btnClear.Text = "Clear";
+            this.btnClear.UseVisualStyleBackColor = false;
             // 
             // panelGridOuter
             // 
@@ -342,15 +336,14 @@ namespace SmartMed.UI
         private System.Windows.Forms.Label lblPageSubtitle;
         private System.Windows.Forms.Label lblPageTitle;
         private System.Windows.Forms.FlowLayoutPanel flowFilter;
-        private System.Windows.Forms.Label lblName;
-        private System.Windows.Forms.TextBox txtName;
-        private System.Windows.Forms.Label lblCategory;
-        private System.Windows.Forms.TextBox txtCategory;
-        private System.Windows.Forms.Label lblMinPrice;
-        private System.Windows.Forms.TextBox txtMinPrice;
-        private System.Windows.Forms.Label lblMaxPrice;
-        private System.Windows.Forms.TextBox txtMaxPrice;
+        private System.Windows.Forms.Label lblCategoryLabel;
+        private System.Windows.Forms.ComboBox cmbCategory;
+        private System.Windows.Forms.TextBox txtSearch;
         private System.Windows.Forms.Button btnSearch;
+        private System.Windows.Forms.Label lblPriceLabel;
+        private System.Windows.Forms.TextBox txtMinPrice;
+        private System.Windows.Forms.TextBox txtMaxPrice;
+        private System.Windows.Forms.Button btnClear;
         private System.Windows.Forms.Panel panelGridOuter;
         private System.Windows.Forms.Panel panelGridBody;
         private System.Windows.Forms.DataGridView grid;

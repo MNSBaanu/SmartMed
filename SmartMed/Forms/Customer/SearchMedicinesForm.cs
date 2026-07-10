@@ -4,6 +4,7 @@ using System.Globalization;
 using System.Linq;
 using System.Windows.Forms;
 using System.Windows.Forms.VisualStyles;
+using SmartMed.Models;
 using SmartMed.Services;
 
 namespace SmartMed.UI
@@ -37,11 +38,22 @@ namespace SmartMed.UI
                 WireRuntimeBehavior();
         }
 
-        protected override void DoRefreshPage() => Search();
+        protected override void DoRefreshPage()
+        {
+            RefreshCategoryFilter();
+            ApplyFilters();
+        }
 
         protected override void LoadDesignTimePreview()
         {
             ApplyViewChrome();
+
+            if (cmbCategory.Items.Count == 0)
+            {
+                cmbCategory.Items.Add("All categories");
+                cmbCategory.Items.Add("Wellness");
+                cmbCategory.SelectedIndex = 0;
+            }
 
             UiTheme.SetGridDataSource(grid, DesignTimePreviewData.SearchMedicineRows());
             if (grid.Columns.Contains("MedicineID"))
@@ -59,12 +71,21 @@ namespace SmartMed.UI
             AdminPageView.ApplyChrome(this);
 
             UiTheme.ApplyClinicalGrid(grid);
-            UiTheme.StyleTextBox(txtName);
-            UiTheme.StyleTextBox(txtCategory);
+            UiTheme.StyleTextBox(txtSearch);
             UiTheme.StyleTextBox(txtMinPrice);
             UiTheme.StyleTextBox(txtMaxPrice);
+            UiTheme.StyleComboBox(cmbCategory);
+            cmbCategory.FlatStyle = FlatStyle.Standard;
+            UiTheme.ApplyFlatButton(btnSearch, UiButtonStyle.Primary);
+            UiTheme.ApplyFlatButton(btnClear, UiButtonStyle.Secondary);
 
             WirePanelBorder(panelGridOuter);
+
+            if (cmbCategory.Items.Count == 0)
+            {
+                cmbCategory.Items.Add("All categories");
+                cmbCategory.SelectedIndex = 0;
+            }
         }
 
         private static void WirePanelBorder(Panel panel)
@@ -87,8 +108,21 @@ namespace SmartMed.UI
             _runtimeWired = true;
 
             BuildQuickFilters();
-            btnSearch.Click += (s, e) => Search();
+            UiTheme.WireClinicalPlaceholderTextBox(txtSearch, "Search");
+            UiTheme.WireClinicalPlaceholderTextBox(txtMinPrice, "Min");
+            UiTheme.WireClinicalPlaceholderTextBox(txtMaxPrice, "Max");
+
+            btnSearch.Click += (s, e) => ApplyFilters();
+            btnClear.Click += BtnClear_Click;
+            txtSearch.KeyDown += TxtSearch_KeyDown;
+            txtSearch.TextChanged += (s, e) => ApplyFilters();
+            cmbCategory.SelectedIndexChanged += (s, e) => ApplyFilters();
+            txtMinPrice.TextChanged += (s, e) => ApplyFilters();
+            txtMaxPrice.TextChanged += (s, e) => ApplyFilters();
             grid.CellContentClick += Grid_CellContentClick;
+
+            RefreshCategoryFilter();
+            ApplyFilters();
         }
 
         private void BuildQuickFilters()
@@ -145,19 +179,68 @@ namespace SmartMed.UI
 
         private void ApplyQuickFilter(Button source, string categoryFilter)
         {
-            txtCategory.Text = categoryFilter ?? string.Empty;
             SetActiveQuickFilter(source);
-            Search();
+            if (string.IsNullOrEmpty(categoryFilter))
+                cmbCategory.SelectedIndex = 0;
+            else
+            {
+                var idx = cmbCategory.Items.IndexOf(categoryFilter);
+                cmbCategory.SelectedIndex = idx >= 0 ? idx : 0;
+            }
+            ApplyFilters();
         }
 
-        private void Search()
+        private void BtnClear_Click(object sender, EventArgs e)
+        {
+            UiTheme.ResetClinicalPlaceholder(txtSearch, "Search");
+            cmbCategory.SelectedIndex = 0;
+            UiTheme.ResetClinicalPlaceholder(txtMinPrice, "Min");
+            UiTheme.ResetClinicalPlaceholder(txtMaxPrice, "Max");
+            SetActiveQuickFilter(_btnFilterAll);
+            ApplyFilters();
+        }
+
+        private void TxtSearch_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+            {
+                e.SuppressKeyPress = true;
+                ApplyFilters();
+            }
+        }
+
+        private void RefreshCategoryFilter()
+        {
+            if (!_servicesReady || cmbCategory == null) return;
+
+            var selected = cmbCategory.SelectedItem?.ToString();
+            cmbCategory.Items.Clear();
+            cmbCategory.Items.Add("All categories");
+
+            var categories = _medicines.GetAll()
+                .Where(_medicines.IsAvailableForSale)
+                .Select(m => m.Category)
+                .Where(c => !string.IsNullOrWhiteSpace(c))
+                .Distinct(StringComparer.OrdinalIgnoreCase)
+                .OrderBy(c => c);
+
+            foreach (var cat in categories)
+                cmbCategory.Items.Add(cat);
+
+            cmbCategory.SelectedIndex = 0;
+            if (!string.IsNullOrEmpty(selected))
+            {
+                var idx = cmbCategory.Items.IndexOf(selected);
+                if (idx >= 0)
+                    cmbCategory.SelectedIndex = idx;
+            }
+        }
+
+        private void ApplyFilters()
         {
             if (!_servicesReady) return;
 
-            decimal? min = decimal.TryParse(txtMinPrice?.Text, out var minVal) ? minVal : (decimal?)null;
-            decimal? max = decimal.TryParse(txtMaxPrice?.Text, out var maxVal) ? maxVal : (decimal?)null;
-
-            var results = _medicines.SearchForCustomers(txtName?.Text ?? "", txtCategory?.Text ?? "", min, max)
+            var results = GetFilteredMedicines()
                 .Select(m => new
                 {
                     m.MedicineID,
@@ -176,6 +259,19 @@ namespace SmartMed.UI
                 grid.Columns["MedicineID"].Visible = false;
             UiTheme.BeautifyGridHeaders(grid);
             AddCartColumns();
+        }
+
+        private System.Collections.Generic.List<Medicine> GetFilteredMedicines()
+        {
+            decimal? minPrice = decimal.TryParse(UiTheme.ReadTextBoxValue(txtMinPrice), out var min) ? min : (decimal?)null;
+            decimal? maxPrice = decimal.TryParse(UiTheme.ReadTextBoxValue(txtMaxPrice), out var max) ? max : (decimal?)null;
+            var category = cmbCategory?.SelectedIndex > 0 ? cmbCategory.SelectedItem?.ToString() : null;
+
+            return _medicines.SearchForCustomers(
+                UiTheme.ReadTextBoxValue(txtSearch),
+                category,
+                minPrice,
+                maxPrice);
         }
 
         private void AddCartColumns()
@@ -253,7 +349,7 @@ namespace SmartMed.UI
                     ? $"{medicine.MedicineName} added to cart.\n{offer}"
                     : $"{medicine.MedicineName} added to cart.";
                 SmartMedMessageBox.Show(message, "Cart", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                Search();
+                ApplyFilters();
             }
             catch (Exception ex)
             {
@@ -277,50 +373,72 @@ namespace SmartMed.UI
             private static System.Drawing.Rectangle UpRect(System.Drawing.Rectangle c)
             { var a = SpinArea(c); return new System.Drawing.Rectangle(a.Left, a.Top, a.Width, a.Height / 2); }
             private static System.Drawing.Rectangle DownRect(System.Drawing.Rectangle c)
-            { var a = SpinArea(c); return new System.Drawing.Rectangle(a.Left, a.Top + a.Height / 2, a.Width, a.Height - a.Height / 2); }
+            { var a = SpinArea(c); return new System.Drawing.Rectangle(a.Left, a.Top + a.Height / 2, a.Width, a.Height / 2); }
 
-            protected override void Paint(System.Drawing.Graphics g, System.Drawing.Rectangle clipBounds,
+            protected override void Paint(Graphics graphics, System.Drawing.Rectangle clipBounds,
                 System.Drawing.Rectangle cellBounds, int rowIndex, DataGridViewElementStates cellState,
-                object value, object formattedValue, string errorText, DataGridViewCellStyle cellStyle,
-                DataGridViewAdvancedBorderStyle advancedBorderStyle, DataGridViewPaintParts paintParts)
+                object value, object formattedValue, string errorText,
+                DataGridViewCellStyle cellStyle, DataGridViewAdvancedBorderStyle advancedBorderStyle,
+                DataGridViewPaintParts paintParts)
             {
-                base.Paint(g, clipBounds, cellBounds, rowIndex, cellState, value, formattedValue, errorText,
-                    cellStyle, advancedBorderStyle, paintParts);
-                if ((paintParts & DataGridViewPaintParts.ContentForeground) == 0) return;
-                DrawArrow(g, UpRect(cellBounds), true);
-                DrawArrow(g, DownRect(cellBounds), false);
+                base.Paint(graphics, clipBounds, cellBounds, rowIndex, cellState, value, formattedValue,
+                    errorText, cellStyle, advancedBorderStyle, paintParts);
+
+                if ((paintParts & DataGridViewPaintParts.ContentBackground) == 0) return;
+
+                var up = UpRect(cellBounds);
+                var down = DownRect(cellBounds);
+                if (up.Width <= 0 || up.Height <= 0) return;
+
+                ComboBoxRenderer.DrawDropDownButton(graphics, up, ComboBoxState.Normal);
+                ComboBoxRenderer.DrawDropDownButton(graphics, down, ComboBoxState.Normal);
+
+                var arrowSize = 4;
+                var cx = up.Left + up.Width / 2;
+                var cyUp = up.Top + up.Height / 2 + 1;
+                var cyDown = down.Top + down.Height / 2 + 1;
+                using (var brush = new SolidBrush(Color.FromArgb(65, 72, 71)))
+                {
+                    graphics.FillPolygon(brush, new[]
+                    {
+                        new Point(cx - arrowSize, cyUp - 1),
+                        new Point(cx + arrowSize, cyUp - 1),
+                        new Point(cx, cyUp - arrowSize - 1)
+                    });
+                    graphics.FillPolygon(brush, new[]
+                    {
+                        new Point(cx - arrowSize, cyDown - 1),
+                        new Point(cx + arrowSize, cyDown - 1),
+                        new Point(cx, cyDown + arrowSize - 1)
+                    });
+                }
             }
 
-            private static void DrawArrow(System.Drawing.Graphics g, System.Drawing.Rectangle r, bool up)
+            protected override void OnClick(DataGridViewCellEventArgs e)
             {
-                if (Application.RenderWithVisualStyles)
-                    new VisualStyleRenderer(up ? VisualStyleElement.Spin.Up.Normal : VisualStyleElement.Spin.Down.Normal)
-                        .DrawBackground(g, r);
-                else
-                    ControlPaint.DrawScrollButton(g, r, up ? ScrollButton.Up : ScrollButton.Down, ButtonState.Normal);
-            }
-
-            protected override void OnMouseDown(DataGridViewCellMouseEventArgs e)
-            {
-                base.OnMouseDown(e);
+                base.OnClick(e);
                 if (DataGridView == null) return;
-                var size = DataGridView.GetCellDisplayRectangle(e.ColumnIndex, e.RowIndex, false).Size;
-                var local = new System.Drawing.Rectangle(System.Drawing.Point.Empty, size);
-                decimal delta;
-                if (UpRect(local).Contains(e.Location)) delta = 1;
-                else if (DownRect(local).Contains(e.Location)) delta = -1;
-                else return;
 
-                if (DataGridView.IsCurrentCellInEditMode)
-                    DataGridView.EndEdit();
+                var rect = DataGridView.GetCellDisplayRectangle(e.ColumnIndex, e.RowIndex, false);
+                var pt = DataGridView.PointToClient(Cursor.Position);
+                var local = new Point(pt.X - rect.X, pt.Y - rect.Y);
+                var cellRect = new System.Drawing.Rectangle(Point.Empty, rect.Size);
 
-                var col = OwningColumn as DataGridViewNumericUpDownColumn;
-                decimal min = col?.Minimum ?? 1, max = col?.Maximum ?? 99;
-                decimal.TryParse(GetValue(e.RowIndex)?.ToString(), out var v);
-                v = Math.Max(min, Math.Min(max, v + delta));
-                SetValue(e.RowIndex, v.ToString(CultureInfo.InvariantCulture));
-                DataGridView.InvalidateCell(ColumnIndex, e.RowIndex);
-                DataGridView.Update();
+                if (!SpinArea(cellRect).Contains(local)) return;
+
+                var col = DataGridView.Columns[e.ColumnIndex] as DataGridViewNumericUpDownColumn;
+                var min = col?.Minimum ?? 1;
+                var max = col?.Maximum ?? 99;
+                var current = 1m;
+                decimal.TryParse(Value?.ToString(), NumberStyles.Any, CultureInfo.InvariantCulture, out current);
+
+                if (UpRect(cellRect).Contains(local))
+                    current = Math.Min(max, current + 1);
+                else if (DownRect(cellRect).Contains(local))
+                    current = Math.Max(min, current - 1);
+
+                Value = ((int)current).ToString(CultureInfo.InvariantCulture);
+                DataGridView.InvalidateCell(this);
             }
         }
     }
