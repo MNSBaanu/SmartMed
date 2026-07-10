@@ -12,18 +12,8 @@ namespace SmartMed.UI
         private HealthServiceService _health;
         private CustomerService _customers;
         private bool _servicesReady;
-        private bool _layoutBuilt;
         private bool _runtimeWired;
         private bool _chromeApplied;
-
-        private Label _lblPageTitle;
-        private Label _lblPageSubtitle;
-        private TextBox _txtRecordSearch;
-        private DataGridView _gridServices;
-        private DataGridView _gridRecords;
-        private Button _btnAddService;
-        private Button _btnAddRecord;
-        private Button _btnReload;
 
         public ManageHealthServicesForm()
         {
@@ -41,160 +31,31 @@ namespace SmartMed.UI
         protected override void OnLoad(EventArgs e)
         {
             base.OnLoad(e);
-            EnsureLayout();
             ApplyViewChrome();
             if (_servicesReady)
                 WireRuntimeBehavior();
         }
 
-        protected override void DoRefreshPage() => LoadData();
+        protected override void DoRefreshPage()
+        {
+            if (!_servicesReady || !_runtimeWired)
+                return;
+
+            LoadData();
+        }
 
         protected override void LoadDesignTimePreview()
         {
-            EnsureLayout();
             ApplyViewChrome();
-
-            UiTheme.SetGridDataSource(_gridServices, new[]
-            {
-                new { ServiceName = "Blood Pressure Check", Price = "LKR 500.00", Status = "Active", Description = "In-pharmacy screening" },
-                new { ServiceName = "Flu Vaccination", Price = "LKR 1,200.00", Status = "Active", Description = "Seasonal vaccination" }
-            });
-            UiTheme.SetGridDataSource(_gridRecords, new[]
-            {
-                new { ServiceDate = DateTime.Today.AddDays(-5).ToString("yyyy-MM-dd"), Customer = "Jane Customer", Service = "Blood Pressure Check", Result = "120/80 mmHg", Pharmacist = "admin", Notes = "Within normal range." }
-            });
-            UiTheme.BeautifyGridHeaders(_gridServices);
-            UiTheme.BeautifyGridHeaders(_gridRecords);
+            BindDesignTimeGrids();
         }
 
-        private void EnsureLayout()
+        private void BindDesignTimeGrids()
         {
-            if (_layoutBuilt) return;
-            _layoutBuilt = true;
-
-            var root = new TableLayoutPanel
-            {
-                Dock = DockStyle.Fill,
-                ColumnCount = 1,
-                BackColor = UiTheme.AdminSurface
-            };
-            root.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
-            root.RowStyles.Add(new RowStyle(SizeType.AutoSize));
-            root.RowStyles.Add(new RowStyle(SizeType.Percent, 45F));
-            root.RowStyles.Add(new RowStyle(SizeType.Percent, 55F));
-
-            var header = new Panel { Dock = DockStyle.Fill, Height = 76, Margin = new Padding(0, 0, 0, 12) };
-            _lblPageTitle = new Label
-            {
-                Text = "Health Services",
-                Font = UiTheme.UiFontTitle,
-                ForeColor = UiTheme.AdminOnSurface,
-                AutoSize = true,
-                Location = new Point(0, 8)
-            };
-            _lblPageSubtitle = new Label
-            {
-                Text = "Register available services and record customer service delivery with results and pharmacist notes.",
-                Font = UiTheme.UiFont,
-                ForeColor = UiTheme.AdminMuted,
-                AutoSize = true,
-                Location = new Point(0, 44),
-                MaximumSize = new Size(900, 0)
-            };
-            header.Controls.Add(_lblPageTitle);
-            header.Controls.Add(_lblPageSubtitle);
-
-            var servicesOuter = BuildSectionPanel("AVAILABLE SERVICES", out _btnAddService, "Add Service", out var servicesBody);
-            _gridServices = CreateGrid();
-            servicesBody.Controls.Add(_gridServices);
-            _gridServices.Dock = DockStyle.Fill;
-
-            var recordsToolbar = new FlowLayoutPanel
-            {
-                AutoSize = true,
-                Dock = DockStyle.Top,
-                FlowDirection = FlowDirection.LeftToRight,
-                WrapContents = false,
-                Padding = new Padding(8, 4, 8, 4),
-                BackColor = UiTheme.AdminSurface
-            };
-            recordsToolbar.Controls.Add(new Label
-            {
-                Text = "Search:",
-                AutoSize = true,
-                Margin = new Padding(0, 8, 4, 0),
-                ForeColor = UiTheme.AdminMuted
-            });
-            _txtRecordSearch = new TextBox { Width = 180 };
-            UiTheme.StyleTextBox(_txtRecordSearch);
-            recordsToolbar.Controls.Add(_txtRecordSearch);
-            _btnReload = AdminUiHelpers.CreateWinButton("Reload", false, 88);
-            recordsToolbar.Controls.Add(_btnReload);
-
-            var recordsOuter = BuildSectionPanel("SERVICE HISTORY", out _btnAddRecord, "Record Service", out var recordsBody);
-            recordsToolbar.Dock = DockStyle.Top;
-            recordsOuter.Controls.Add(recordsToolbar);
-            _gridRecords = CreateGrid();
-            recordsBody.Controls.Add(_gridRecords);
-            _gridRecords.Dock = DockStyle.Fill;
-
-            root.Controls.Add(header, 0, 0);
-            root.Controls.Add(servicesOuter, 0, 1);
-            root.Controls.Add(recordsOuter, 0, 2);
-
-            panelScrollHost.Controls.Add(root);
-            root.Dock = DockStyle.Fill;
-        }
-
-        private static Panel BuildSectionPanel(string title, out Button actionButton, string actionText, out Panel body)
-        {
-            var outer = new Panel
-            {
-                Dock = DockStyle.Fill,
-                Margin = new Padding(0, 0, 0, 8),
-                BackColor = UiTheme.AdminSurface
-            };
-            var header = new Panel
-            {
-                Dock = DockStyle.Top,
-                Height = 40,
-                BackColor = Color.FromArgb(238, 245, 244),
-                Padding = new Padding(12, 8, 12, 8)
-            };
-            header.Controls.Add(new Label
-            {
-                Text = title,
-                Font = UiTheme.UiFontBold,
-                ForeColor = UiTheme.AdminOnSurface,
-                AutoSize = true,
-                Location = new Point(0, 4)
-            });
-            actionButton = AdminUiHelpers.CreateWinButton(actionText, true, 120);
-            var actionBtn = actionButton;
-            actionButton.Anchor = AnchorStyles.Top | AnchorStyles.Right;
-            actionButton.Location = new Point(header.Width - 130, 4);
-            header.Resize += (s, e) => actionBtn.Left = header.ClientSize.Width - actionBtn.Width - 8;
-            header.Controls.Add(actionButton);
-
-            body = new Panel { Dock = DockStyle.Fill, Padding = new Padding(1), BackColor = Color.White };
-            outer.Controls.Add(body);
-            outer.Controls.Add(header);
-            return outer;
-        }
-
-        private static DataGridView CreateGrid()
-        {
-            var grid = new DataGridView
-            {
-                ReadOnly = true,
-                AllowUserToAddRows = false,
-                AllowUserToDeleteRows = false,
-                SelectionMode = DataGridViewSelectionMode.FullRowSelect,
-                MultiSelect = false,
-                RowHeadersVisible = false,
-                AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill
-            };
-            return grid;
+            UiTheme.SetGridDataSource(gridServices, DesignTimePreviewData.HealthServiceRows());
+            UiTheme.SetGridDataSource(gridRecords, DesignTimePreviewData.HealthServiceRecordRows());
+            UiTheme.BeautifyGridHeaders(gridServices);
+            UiTheme.BeautifyGridHeaders(gridRecords);
         }
 
         private void ApplyViewChrome()
@@ -204,8 +65,9 @@ namespace SmartMed.UI
 
             AdminPageView.EnsureTheme();
             AdminPageView.ApplyChrome(this);
-            if (_gridServices != null) UiTheme.ApplyClinicalGrid(_gridServices);
-            if (_gridRecords != null) UiTheme.ApplyClinicalGrid(_gridRecords);
+            UiTheme.ApplyClinicalGrid(gridServices);
+            UiTheme.ApplyClinicalGrid(gridRecords);
+            UiTheme.StyleTextBox(txtRecordSearch);
         }
 
         private void WireRuntimeBehavior()
@@ -213,17 +75,19 @@ namespace SmartMed.UI
             if (_runtimeWired) return;
             _runtimeWired = true;
 
-            _btnAddService.Click += (s, e) => ShowServiceDialog(null);
-            _btnAddRecord.Click += (s, e) => ShowRecordDialog(null);
-            _btnReload.Click += (s, e) => RefreshPage();
-            _txtRecordSearch.TextChanged += (s, e) => BindRecords();
-            _gridServices.CellContentClick += GridServices_CellContentClick;
-            _gridRecords.CellContentClick += GridRecords_CellContentClick;
+            btnAddService.Click += (s, e) => ShowServiceDialog(null);
+            btnAddRecord.Click += (s, e) => ShowRecordDialog(null);
+            btnReload.Click += (s, e) => RefreshPage();
+            txtRecordSearch.TextChanged += (s, e) => BindRecords();
+            gridServices.CellContentClick += GridServices_CellContentClick;
+            gridRecords.CellContentClick += GridRecords_CellContentClick;
         }
 
         private void LoadData()
         {
-            if (!_servicesReady) return;
+            if (!_servicesReady)
+                return;
+
             BindServices();
             BindRecords();
         }
@@ -241,16 +105,16 @@ namespace SmartMed.UI
                 Remove = s.IsActive ? "Deactivate" : "Activate"
             }).ToList();
 
-            UiTheme.SetGridDataSource(_gridServices, rows);
-            if (_gridServices.Columns.Contains("ServiceID"))
-                _gridServices.Columns["ServiceID"].Visible = false;
-            UiTheme.BeautifyGridHeaders(_gridServices);
-            AddButtonColumns(_gridServices, ("Edit", 60), ("Remove", 80));
+            UiTheme.SetGridDataSource(gridServices, rows);
+            if (gridServices.Columns.Contains("ServiceID"))
+                gridServices.Columns["ServiceID"].Visible = false;
+            UiTheme.BeautifyGridHeaders(gridServices);
+            AddButtonColumns(gridServices, ("Edit", 60), ("Remove", 80));
         }
 
         private void BindRecords()
         {
-            var keyword = _txtRecordSearch?.Text?.Trim() ?? string.Empty;
+            var keyword = txtRecordSearch?.Text?.Trim() ?? string.Empty;
             var rows = _health.GetAllRecords()
                 .Where(r => string.IsNullOrEmpty(keyword)
                     || (r.CustomerName?.IndexOf(keyword, StringComparison.OrdinalIgnoreCase) ?? -1) >= 0
@@ -269,11 +133,11 @@ namespace SmartMed.UI
                     Remove = "Remove"
                 }).ToList();
 
-            UiTheme.SetGridDataSource(_gridRecords, rows);
-            if (_gridRecords.Columns.Contains("RecordID"))
-                _gridRecords.Columns["RecordID"].Visible = false;
-            UiTheme.BeautifyGridHeaders(_gridRecords);
-            AddButtonColumns(_gridRecords, ("Edit", 60), ("Remove", 70));
+            UiTheme.SetGridDataSource(gridRecords, rows);
+            if (gridRecords.Columns.Contains("RecordID"))
+                gridRecords.Columns["RecordID"].Visible = false;
+            UiTheme.BeautifyGridHeaders(gridRecords);
+            AddButtonColumns(gridRecords, ("Edit", 60), ("Remove", 70));
         }
 
         private static void AddButtonColumns(DataGridView grid, params (string Name, int Width)[] columns)
@@ -296,8 +160,8 @@ namespace SmartMed.UI
         private void GridServices_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
             if (!_servicesReady || e.RowIndex < 0) return;
-            var id = Convert.ToInt32(_gridServices.Rows[e.RowIndex].Cells["ServiceID"].Value);
-            var col = _gridServices.Columns[e.ColumnIndex].Name;
+            var id = Convert.ToInt32(gridServices.Rows[e.RowIndex].Cells["ServiceID"].Value);
+            var col = gridServices.Columns[e.ColumnIndex].Name;
             if (col == "Edit")
                 ShowServiceDialog(_health.GetServiceById(id));
             else if (col == "Remove")
@@ -307,8 +171,8 @@ namespace SmartMed.UI
         private void GridRecords_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
             if (!_servicesReady || e.RowIndex < 0) return;
-            var id = Convert.ToInt32(_gridRecords.Rows[e.RowIndex].Cells["RecordID"].Value);
-            var col = _gridRecords.Columns[e.ColumnIndex].Name;
+            var id = Convert.ToInt32(gridRecords.Rows[e.RowIndex].Cells["RecordID"].Value);
+            var col = gridRecords.Columns[e.ColumnIndex].Name;
             if (col == "Edit")
             {
                 var record = _health.GetAllRecords().FirstOrDefault(r => r.RecordID == id);
