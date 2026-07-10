@@ -15,6 +15,7 @@ namespace SmartMed.UI
             public static readonly AdminNavItem Medicines = new AdminNavItem("Medicines");
             public static readonly AdminNavItem Customers = new AdminNavItem("Customers");
             public static readonly AdminNavItem Orders = new AdminNavItem("Orders");
+            public static readonly AdminNavItem HealthServices = new AdminNavItem("HealthServices");
             public static readonly AdminNavItem Reports = new AdminNavItem("Reports");
         }
 
@@ -22,6 +23,7 @@ namespace SmartMed.UI
         private ManageMedicinesForm _medicinesPage;
         private ManageCustomersForm _customersPage;
         private ManageOrdersForm _ordersPage;
+        private ManageHealthServicesForm _healthServicesPage;
         private ReportsForm _reportsPage;
         private AdminNavItem _activeNav = AdminNavItem.Overview;
         private readonly Timer _clockTimer = new Timer { Interval = 30000 };
@@ -137,6 +139,7 @@ namespace SmartMed.UI
                 btnNavMedicines,
                 btnNavCustomers,
                 btnNavOrders,
+                btnNavHealthServices,
                 btnNavReports,
                 btnNavLogout);
             UiTheme.StyleSidebarProfileFooter(panelProfile, panelAvatar, lblProfileName, lblProfileRole, topNav: true);
@@ -144,6 +147,7 @@ namespace SmartMed.UI
             StyleNavButton(btnNavMedicines, _activeNav == AdminNavItem.Medicines);
             StyleNavButton(btnNavCustomers, _activeNav == AdminNavItem.Customers);
             StyleNavButton(btnNavOrders, _activeNav == AdminNavItem.Orders);
+            StyleNavButton(btnNavHealthServices, _activeNav == AdminNavItem.HealthServices);
             StyleNavButton(btnNavReports, _activeNav == AdminNavItem.Reports);
             StyleNavButton(btnNavLogout, false);
             btnNavLogout.Font = new Font(SystemFonts.DefaultFont.FontFamily, 11F, FontStyle.Bold);
@@ -240,6 +244,16 @@ namespace SmartMed.UI
             UpdateTitleBar("Manage Orders");
         }
 
+        private void ShowHealthServices()
+        {
+            if (_healthServicesPage == null || _healthServicesPage.IsDisposed)
+                _healthServicesPage = new ManageHealthServicesForm();
+
+            HostPageHelper.ShowInPanel(panelContent, _healthServicesPage);
+            _healthServicesPage.RefreshPage();
+            UpdateTitleBar("Health Services");
+        }
+
         private void ShowReports()
         {
             if (_reportsPage == null || _reportsPage.IsDisposed)
@@ -265,6 +279,7 @@ namespace SmartMed.UI
             StyleNavButton(btnNavMedicines, nav == AdminNavItem.Medicines);
             StyleNavButton(btnNavCustomers, nav == AdminNavItem.Customers);
             StyleNavButton(btnNavOrders, nav == AdminNavItem.Orders);
+            StyleNavButton(btnNavHealthServices, nav == AdminNavItem.HealthServices);
             StyleNavButton(btnNavReports, nav == AdminNavItem.Reports);
         }
 
@@ -274,6 +289,7 @@ namespace SmartMed.UI
             else if (nav == AdminNavItem.Medicines) { SetActiveNav(nav); ShowMedicines(); }
             else if (nav == AdminNavItem.Customers) { SetActiveNav(nav); ShowCustomers(); }
             else if (nav == AdminNavItem.Orders) { SetActiveNav(nav); ShowOrders(); }
+            else if (nav == AdminNavItem.HealthServices) { SetActiveNav(nav); ShowHealthServices(); }
             else if (nav == AdminNavItem.Reports) { SetActiveNav(nav); ShowReports(); }
         }
 
@@ -310,6 +326,12 @@ namespace SmartMed.UI
         {
             SetActiveNav(AdminNavItem.Orders);
             ShowOrders();
+        }
+
+        private void BtnNavHealthServices_Click(object sender, EventArgs e)
+        {
+            SetActiveNav(AdminNavItem.HealthServices);
+            ShowHealthServices();
         }
 
         private void BtnNavReports_Click(object sender, EventArgs e)
@@ -351,6 +373,7 @@ namespace SmartMed.UI
             _medicinesPage?.Dispose();
             _customersPage?.Dispose();
             _ordersPage?.Dispose();
+            _healthServicesPage?.Dispose();
             _reportsPage?.Dispose();
             base.OnFormClosed(e);
         }

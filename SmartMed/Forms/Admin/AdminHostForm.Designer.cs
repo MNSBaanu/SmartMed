@@ -29,6 +29,7 @@ namespace SmartMed.UI
             this.btnNavMedicines = new SmartMed.UI.NavButton();
             this.btnNavCustomers = new SmartMed.UI.NavButton();
             this.btnNavOrders = new SmartMed.UI.NavButton();
+            this.btnNavHealthServices = new SmartMed.UI.NavButton();
             this.btnNavReports = new SmartMed.UI.NavButton();
             this.btnNavLogout = new SmartMed.UI.NavButton();
             this.panelProfile = new System.Windows.Forms.Panel();
@@ -168,6 +169,7 @@ namespace SmartMed.UI
             this.flowNavButtons.Controls.Add(this.btnNavMedicines);
             this.flowNavButtons.Controls.Add(this.btnNavCustomers);
             this.flowNavButtons.Controls.Add(this.btnNavOrders);
+            this.flowNavButtons.Controls.Add(this.btnNavHealthServices);
             this.flowNavButtons.Controls.Add(this.btnNavReports);
             this.flowNavButtons.Controls.Add(this.btnNavLogout);
             this.flowNavButtons.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -222,13 +224,24 @@ namespace SmartMed.UI
             this.btnNavOrders.UseVisualStyleBackColor = false;
             this.btnNavOrders.Click += new System.EventHandler(this.BtnNavOrders_Click);
             // 
+            // btnNavHealthServices
+            // 
+            this.btnNavHealthServices.Location = new System.Drawing.Point(571, 9);
+            this.btnNavHealthServices.Margin = new System.Windows.Forms.Padding(2, 9, 2, 9);
+            this.btnNavHealthServices.Name = "btnNavHealthServices";
+            this.btnNavHealthServices.Size = new System.Drawing.Size(137, 43);
+            this.btnNavHealthServices.TabIndex = 4;
+            this.btnNavHealthServices.Text = "Health Services";
+            this.btnNavHealthServices.UseVisualStyleBackColor = false;
+            this.btnNavHealthServices.Click += new System.EventHandler(this.BtnNavHealthServices_Click);
+            // 
             // btnNavReports
             // 
-            this.btnNavReports.Location = new System.Drawing.Point(571, 9);
+            this.btnNavReports.Location = new System.Drawing.Point(712, 9);
             this.btnNavReports.Margin = new System.Windows.Forms.Padding(2, 9, 2, 9);
             this.btnNavReports.Name = "btnNavReports";
             this.btnNavReports.Size = new System.Drawing.Size(137, 43);
-            this.btnNavReports.TabIndex = 4;
+            this.btnNavReports.TabIndex = 5;
             this.btnNavReports.Text = "Reports";
             this.btnNavReports.UseVisualStyleBackColor = false;
             this.btnNavReports.Click += new System.EventHandler(this.BtnNavReports_Click);
@@ -236,11 +249,11 @@ namespace SmartMed.UI
             // btnNavLogout
             // 
             this.btnNavLogout.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Bold);
-            this.btnNavLogout.Location = new System.Drawing.Point(712, 9);
+            this.btnNavLogout.Location = new System.Drawing.Point(853, 9);
             this.btnNavLogout.Margin = new System.Windows.Forms.Padding(2, 9, 2, 9);
             this.btnNavLogout.Name = "btnNavLogout";
             this.btnNavLogout.Size = new System.Drawing.Size(137, 43);
-            this.btnNavLogout.TabIndex = 5;
+            this.btnNavLogout.TabIndex = 6;
             this.btnNavLogout.Text = "LOGOUT";
             this.btnNavLogout.UseVisualStyleBackColor = false;
             this.btnNavLogout.Click += new System.EventHandler(this.BtnNavLogout_Click);
@@ -337,6 +350,7 @@ namespace SmartMed.UI
         private SmartMed.UI.NavButton btnNavMedicines;
         private SmartMed.UI.NavButton btnNavCustomers;
         private SmartMed.UI.NavButton btnNavOrders;
+        private SmartMed.UI.NavButton btnNavHealthServices;
         private SmartMed.UI.NavButton btnNavReports;
         private SmartMed.UI.NavButton btnNavLogout;
         private System.Windows.Forms.Panel panelContent;
