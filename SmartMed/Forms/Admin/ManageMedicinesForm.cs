@@ -12,7 +12,8 @@ namespace SmartMed.UI
     {
         private static readonly string[] DefaultCategories =
         {
-            "Antibiotic", "Analgesic", "Antidiabetic", "Hypertension", "Antiviral", "Vitamin", "Other"
+            "Antibiotic", "Analgesic", "Antidiabetic", "Hypertension", "Antiviral", "Vitamin",
+            "Wellness", "Other"
         };
 
         private MedicineService _medicines;
