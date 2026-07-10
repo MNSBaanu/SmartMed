@@ -16,6 +16,8 @@ namespace SmartMed.UI
         private bool _runtimeWired;
         private bool _chromeApplied;
         private Button _btnHealthServicesTab;
+        private Label _lblPreviewPlaceholder;
+        private Label _lblGridHeaderSubtitle;
 
         private ReportTab _activeTab = ReportTab.SalesPerformance;
         private ReportPeriod _activePeriod = ReportPeriod.Month;
@@ -31,6 +33,7 @@ namespace SmartMed.UI
                 _reports = new ReportService();
                 _customers = new CustomerService();
                 _servicesReady = true;
+                btnViewReport.Click += BtnViewReport_Click;
             }
         }
 
@@ -38,25 +41,41 @@ namespace SmartMed.UI
 
         protected override void OnLoad(EventArgs e)
         {
+            EnsureRuntimeReady();
             base.OnLoad(e);
+        }
+
+        protected override void SetVisibleCore(bool value)
+        {
+            if (value && _servicesReady && !IsDesignHost())
+                EnsureRuntimeReady();
+            base.SetVisibleCore(value);
+        }
+
+        internal void EnsureRuntimeReady()
+        {
             ApplyViewChrome();
-            if (_servicesReady)
-                WireRuntimeBehavior();
-            else
-            {
-                UpdateTabStyles();
-                UpdatePeriodStyles();
-                UpdateStatTitlesForTab();
-            }
+            if (!_servicesReady || _runtimeWired)
+                return;
+
+            WireRuntimeBehavior();
         }
 
         protected override void DoRefreshPage()
         {
-            if (!_servicesReady)
+            if (!_servicesReady || !_runtimeWired)
                 return;
 
-            EnsureCustomerFilterLoaded();
-            LoadActiveReport();
+            try
+            {
+                EnsureCustomerFilterLoaded();
+                if (_reportViewed)
+                    LoadActiveReport();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Reports", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
         }
 
         protected override void LoadDesignTimePreview()
@@ -76,6 +95,7 @@ namespace SmartMed.UI
             lblOutstanding.Text = "LKR 890.00";
             lblFooterStatus.Text = "Design preview — sample sales report.";
             _reportViewed = true;
+            UpdatePreviewDisplay();
             UpdateExportButtons();
         }
 
@@ -108,7 +128,41 @@ namespace SmartMed.UI
             UpdateTabStyles();
             UpdatePeriodStyles();
             UpdateStatTitlesForTab();
+            EnsurePreviewChrome();
             UpdateExportButtons();
+        }
+
+        private void EnsurePreviewChrome()
+        {
+            if (_lblPreviewPlaceholder == null && panelGridBody != null)
+            {
+                _lblPreviewPlaceholder = new Label
+                {
+                    Text = "Select report type and filters, then click View Report to preview results here.",
+                    Dock = DockStyle.Fill,
+                    TextAlign = ContentAlignment.MiddleCenter,
+                    ForeColor = UiTheme.AdminMuted,
+                    Font = UiTheme.UiFont,
+                    BackColor = Color.White
+                };
+                panelGridBody.Controls.Add(_lblPreviewPlaceholder);
+            }
+
+            if (_lblGridHeaderSubtitle == null && panelGridHeader != null)
+            {
+                _lblGridHeaderSubtitle = new Label
+                {
+                    AutoSize = true,
+                    ForeColor = UiTheme.AdminMuted,
+                    Font = UiTheme.UiFont,
+                    BackColor = panelGridHeader.BackColor,
+                    Location = new Point(12, 28),
+                    MaximumSize = new Size(960, 36)
+                };
+                panelGridHeader.Controls.Add(_lblGridHeaderSubtitle);
+                panelGridHeader.Padding = new Padding(12, 8, 10, 8);
+                panelGridHeader.Height = 52;
+            }
         }
 
         private void EnsureHealthServicesTab()
@@ -164,6 +218,7 @@ namespace SmartMed.UI
             if (_runtimeWired) return;
             _runtimeWired = true;
 
+            btnViewReport.Click -= BtnViewReport_Click;
             btnViewReport.Click += BtnViewReport_Click;
             btnExportCsv.Click += BtnExportCsv_Click;
             btnExportPdf.Click += BtnExportPdf_Click;
@@ -175,11 +230,14 @@ namespace SmartMed.UI
             btnWeekPeriod.Click += (s, e) => SwitchPeriod(ReportPeriod.Week);
             btnMonthPeriod.Click += (s, e) => SwitchPeriod(ReportPeriod.Month);
             btnYearPeriod.Click += (s, e) => SwitchPeriod(ReportPeriod.Year);
-            cmbCustomer.SelectedIndexChanged += (s, e) => LoadActiveReport();
+            cmbCustomer.SelectedIndexChanged += (s, e) =>
+            {
+                if (_reportViewed)
+                    LoadActiveReport();
+            };
             gridReport.CellFormatting += GridReport_CellFormatting;
 
-            EnsureCustomerFilterLoaded();
-            LoadActiveReport();
+            ResetReportPreview();
         }
 
         private void EnsureCustomerFilterLoaded()
@@ -215,19 +273,23 @@ namespace SmartMed.UI
 
         private void SwitchTab(ReportTab tab)
         {
+            if (_activeTab == tab)
+                return;
+
             _activeTab = tab;
             panelCustomerFilter.Visible = tab == ReportTab.CustomerOrderHistory || tab == ReportTab.HealthServices;
             UpdatePeriodFilterVisibility();
             UpdateTabStyles();
             UpdateStatTitlesForTab();
-            LoadActiveReport();
+            ResetReportPreview();
         }
 
         private void SwitchPeriod(ReportPeriod period)
         {
             _activePeriod = period;
             UpdatePeriodStyles();
-            LoadActiveReport();
+            if (_reportViewed)
+                LoadActiveReport();
         }
 
         private void UpdateStatTitlesForTab()
@@ -320,12 +382,47 @@ namespace SmartMed.UI
             if (gridReport != null)
             {
                 gridReport.DataSource = null;
+                gridReport.Rows.Clear();
                 gridReport.Columns.Clear();
             }
             if (lblFooterStatus != null)
                 lblFooterStatus.Text = "Select report type and filters, then click View Report.";
             ClearSummaryStats();
+            UpdatePreviewDisplay();
             UpdateExportButtons();
+        }
+
+        private void UpdatePreviewDisplay()
+        {
+            EnsurePreviewChrome();
+
+            if (lblGridHeaderTitle != null)
+                lblGridHeaderTitle.Text = _reportViewed ? GetReportTitle() : "Report Preview";
+
+            if (_lblGridHeaderSubtitle != null)
+            {
+                _lblGridHeaderSubtitle.Text = _reportViewed ? GetReportSubtitle() : string.Empty;
+                _lblGridHeaderSubtitle.Visible = _reportViewed;
+            }
+
+            if (_lblPreviewPlaceholder != null)
+            {
+                _lblPreviewPlaceholder.Visible = !_reportViewed;
+                if (_reportViewed)
+                    _lblPreviewPlaceholder.SendToBack();
+                else
+                    _lblPreviewPlaceholder.BringToFront();
+            }
+
+            if (gridReport != null)
+            {
+                gridReport.Visible = true;
+                if (_reportViewed)
+                    gridReport.BringToFront();
+            }
+
+            panelGridBody?.Refresh();
+            panelGridOuter?.Refresh();
         }
 
         private void ClearSummaryStats()
@@ -345,11 +442,25 @@ namespace SmartMed.UI
             btnExportPdf.Enabled = canExport;
         }
 
-        private void BtnViewReport_Click(object sender, EventArgs e) => LoadActiveReport();
-
-        private void LoadActiveReport()
+        private void BtnViewReport_Click(object sender, EventArgs e)
         {
-            if (!_servicesReady) return;
+            EnsureRuntimeReady();
+            if (!TryLoadActiveReport())
+                return;
+
+            ReportPreviewDialog.Show(
+                FindForm(),
+                _currentReportTable,
+                GetReportTitle(),
+                GetReportSubtitle());
+        }
+
+        private void LoadActiveReport() => TryLoadActiveReport();
+
+        private bool TryLoadActiveReport()
+        {
+            if (!_servicesReady)
+                return false;
 
             try
             {
@@ -364,16 +475,15 @@ namespace SmartMed.UI
 
                 UpdateSummaryStats();
                 _reportViewed = true;
+                UpdatePreviewDisplay();
                 UpdateExportButtons();
-
-                if (_reportViewed && _currentReportTable != null && _currentReportTable.Rows.Count == 0)
-                    MessageBox.Show("No records found for the selected filters.", "View Report",
-                        MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return true;
             }
             catch (Exception ex)
             {
                 ResetReportPreview();
                 MessageBox.Show(ex.Message, "Report Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return false;
             }
         }
 
@@ -388,10 +498,14 @@ namespace SmartMed.UI
 
         private void BindReportGrid(DataTable table)
         {
-            gridReport.AutoGenerateColumns = true;
+            gridReport.DataSource = null;
+            gridReport.Rows.Clear();
             gridReport.Columns.Clear();
-            UiTheme.SetGridDataSource(gridReport, table);
+            gridReport.AutoGenerateColumns = true;
+            UiTheme.SetGridDataSource(gridReport, table ?? new DataTable());
             UiTheme.BeautifyGridHeaders(gridReport);
+            gridReport.ClearSelection();
+            gridReport.Refresh();
         }
 
         private void LoadInventoryReport()

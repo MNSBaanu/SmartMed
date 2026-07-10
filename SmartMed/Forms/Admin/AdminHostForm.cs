@@ -260,6 +260,7 @@ namespace SmartMed.UI
                 _reportsPage = new ReportsForm();
 
             HostPageHelper.ShowInPanel(panelContent, _reportsPage);
+            _reportsPage.EnsureRuntimeReady();
             _reportsPage.RefreshPage();
             UpdateTitleBar("Generate Reports");
         }

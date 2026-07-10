@@ -1284,20 +1284,22 @@ namespace SmartMed.UI
         {
             if (btn == null) return;
             btn.FlatStyle = FlatStyle.Flat;
-            btn.FlatAppearance.BorderSize = 0;
             btn.Cursor = Cursors.Hand;
             btn.UseVisualStyleBackColor = false;
             if (active)
             {
-                btn.BackColor = Color.White;
-                btn.ForeColor = AdminOnSurface;
+                btn.BackColor = AdminTeal;
+                btn.ForeColor = Color.White;
                 btn.Font = UiFontBold;
+                btn.FlatAppearance.BorderSize = 0;
             }
             else
             {
-                btn.BackColor = AdminSidebar;
+                btn.BackColor = Color.White;
                 btn.ForeColor = AdminMuted;
                 btn.Font = UiFont;
+                btn.FlatAppearance.BorderColor = AdminOutline;
+                btn.FlatAppearance.BorderSize = 1;
             }
         }
 
