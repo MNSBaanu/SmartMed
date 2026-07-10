@@ -224,7 +224,7 @@ namespace SmartMed.UI
                 Price = Rules.GetEffectivePrice(m).ToString("N2"),
                 Expiry = m.ExpiryDate.ToString("yyyy-MM-dd"),
                 Rx = m.RequiresPrescription ? "Rx" : "—",
-                Discount = $"{m.DiscountPercent:N0}%",
+                Discount = m.DiscountPercent > 0 ? $"{m.DiscountPercent:N0}%" : "—",
                 StartDate = FormatPromoDate(m.PromotionStartDate),
                 EndDate = FormatPromoDate(m.PromotionEndDate),
                 Promo = FormatPromotionStatus(m),
@@ -613,7 +613,7 @@ namespace SmartMed.UI
                 var txtStock = new TextBox { Left = 170, Top = 152, Width = 100, MaxLength = 6 };
                 var dtpExpiry = new DateTimePicker { Left = 286, Top = 152, Width = 170, Format = DateTimePickerFormat.Short };
                 var txtSupplier = new TextBox { Left = 16, Top = 208, Width = 440 };
-                var txtDiscount = new TextBox { Left = 16, Top = 264, Width = 100, Text = "0" };
+                var txtDiscount = new TextBox { Left = 16, Top = 264, Width = 100 };
                 var chkRx = new CheckBox { Text = "Requires Prescription (Rx)", Left = 130, Top = 264, AutoSize = true, BackColor = UiTheme.AdminSurface };
                 var chkPromo = new CheckBox { Text = "On Promotion", Left = 16, Top = 300, AutoSize = true, BackColor = UiTheme.AdminSurface };
                 var dtpPromoStart = new DateTimePicker { Left = 16, Top = 356, Width = 210, Format = DateTimePickerFormat.Short, Enabled = false };
@@ -645,7 +645,9 @@ namespace SmartMed.UI
                     txtStock.Text = existing.StockQuantity.ToString();
                     dtpExpiry.Value = existing.ExpiryDate;
                     txtSupplier.Text = existing.Supplier;
-                    txtDiscount.Text = existing.DiscountPercent.ToString("N0");
+                    txtDiscount.Text = existing.DiscountPercent > 0
+                        ? existing.DiscountPercent.ToString("N0")
+                        : string.Empty;
                     chkRx.Checked = existing.RequiresPrescription;
                     chkPromo.Checked = existing.IsOnPromotion;
                     if (existing.PromotionStartDate.HasValue) dtpPromoStart.Value = existing.PromotionStartDate.Value;
@@ -673,7 +675,7 @@ namespace SmartMed.UI
                 dlg.Controls.Add(dtpExpiry);
                 dlg.Controls.Add(MakeFieldLabel(ValidationService.RequiredLabel("Supplier"), 16, 192));
                 dlg.Controls.Add(txtSupplier);
-                dlg.Controls.Add(MakeFieldLabel("Discount %", 16, 248));
+                dlg.Controls.Add(MakeFieldLabel("Discount % (optional)", 16, 248));
                 dlg.Controls.Add(txtDiscount);
                 dlg.Controls.Add(chkRx);
                 dlg.Controls.Add(chkPromo);
@@ -738,7 +740,10 @@ namespace SmartMed.UI
                 throw new ArgumentException("Stock quantity must be a valid number.");
             if (!decimal.TryParse(txtPrice.Text.Trim(), out var price))
                 throw new ArgumentException("Price must be a valid number.");
-            if (!decimal.TryParse(txtDiscount.Text.Trim(), out var discount))
+
+            var discountText = txtDiscount.Text.Trim();
+            var discount = 0m;
+            if (!string.IsNullOrEmpty(discountText) && !decimal.TryParse(discountText, out discount))
                 throw new ArgumentException("Discount must be a valid number.");
 
             return new Medicine

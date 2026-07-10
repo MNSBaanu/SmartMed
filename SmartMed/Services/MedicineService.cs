@@ -99,8 +99,6 @@ namespace SmartMed.Services
                     throw new ArgumentException("Promotion start date and end date are required when a medicine is on promotion.");
                 if (item.PromotionStartDate.Value.Date > item.PromotionEndDate.Value.Date)
                     throw new ArgumentException("Promotion start date cannot be after the end date.");
-                if (item.DiscountPercent <= 0)
-                    throw new ArgumentException("Discount must be greater than 0 for a promotion.");
             }
             else
             {
