@@ -110,6 +110,15 @@
     <EmbeddedResource Update="Forms\Admin\ManageMedicinesForm.resx">
       <DependentUpon>ManageMedicinesForm.cs</DependentUpon>
     </EmbeddedResource>
+    <Compile Update="Forms\Admin\ManageHealthServicesForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Forms\Admin\ManageHealthServicesForm.Designer.cs">
+      <DependentUpon>ManageHealthServicesForm.cs</DependentUpon>
+    </Compile>
+    <EmbeddedResource Update="Forms\Admin\ManageHealthServicesForm.resx">
+      <DependentUpon>ManageHealthServicesForm.cs</DependentUpon>
+    </EmbeddedResource>
     <Compile Update="Forms\Admin\ReportsForm.cs">
       <SubType>Form</SubType>
     </Compile>

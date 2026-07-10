@@ -34,6 +34,23 @@ The following requirements define what the SmartMed pharmacy management system m
 4. **Password Change Functionality** — The system will allow both administrators and customers to securely change their account passwords after successful authentication, improving account security and user management.
 5. **Order Cancellation** — The system will allow customers to cancel orders that are still in the Pending status. Once an order has been processed or marked as Ready for Pickup, cancellation will no longer be permitted.
 
+## Catalog Scope
+
+SmartMed Pharmacy offers prescription and over-the-counter medications, wellness products, and health services:
+
+| Offering | Implementation |
+|----------|----------------|
+| Prescription / OTC medications | `Medicine` catalog; `RequiresPrescription` flag |
+| Wellness products | `Medicine` with `Category = Wellness` |
+| Health services | Dedicated `HealthService` catalog + `HealthServiceRecord` for delivery history |
+
+### Health Services module
+
+- **Register services** — Admin → Health Services → add/edit available services (name, description, price).
+- **Record delivery** — Log which customer received a service, with date, result, and pharmacist notes.
+- **View history** — Admin service history grid; customers see their own records on **My Profile**.
+- **Reports** — Reports → **Health Services** tab (filter by period and optional customer).
+
 ## Non-Functional Requirements
 
 - **Usability** — The system shall provide an intuitive and user-friendly interface with role-based navigation, allowing administrators and customers to easily access their respective functionalities through clearly organized forms and menus.
