@@ -51,6 +51,22 @@ namespace SmartMed.UI
                 ExpiryDate = DateTime.Today.AddDays(-5),
                 RequiresPrescription = true,
                 DiscountPercent = 10m
+            },
+            new Medicine
+            {
+                MedicineID = 4,
+                MedicineName = "Vitamin C 500mg",
+                Category = "Wellness",
+                Dosage = "Tablet",
+                Price = 250m,
+                StockQuantity = 40,
+                Supplier = "WellLife",
+                ExpiryDate = DateTime.Today.AddMonths(8),
+                RequiresPrescription = false,
+                DiscountPercent = 5m,
+                IsOnPromotion = true,
+                PromotionStartDate = DateTime.Today,
+                PromotionEndDate = DateTime.Today.AddDays(30)
             }
         };
 
@@ -115,7 +131,8 @@ namespace SmartMed.UI
         public static object[] SearchMedicineRows() => new object[]
         {
             new { MedicineID = 1, MedicineName = "Amoxicillin 500mg", Category = "Antibiotic", Price = "LKR 427.50", StockQuantity = 12, Rx = "Yes", Discount = "5%", Promo = "Active" },
-            new { MedicineID = 2, MedicineName = "Paracetamol 500mg", Category = "Analgesic", Price = "LKR 120.00", StockQuantity = 85, Rx = "No", Discount = "—", Promo = "—" }
+            new { MedicineID = 2, MedicineName = "Paracetamol 500mg", Category = "Analgesic", Price = "LKR 120.00", StockQuantity = 85, Rx = "No", Discount = "—", Promo = "—" },
+            new { MedicineID = 4, MedicineName = "Vitamin C 500mg", Category = "Wellness", Price = "LKR 237.50", StockQuantity = 40, Rx = "No", Discount = "5%", Promo = "Active" }
         };
 
         public static object[] CartRows() => new object[]
