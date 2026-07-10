@@ -73,6 +73,20 @@ namespace SmartMed.Services
                 .OrderBy(m => m.ExpiryDate)
                 .ToList();
 
+        public List<string> GetExpiryAlertMessages(int warningDays = 30) =>
+            GetAll()
+                .Where(m => CheckExpiry(m, warningDays) != ExpiryValid)
+                .OrderBy(m => m.ExpiryDate)
+                .Select(m =>
+                {
+                    var status = CheckExpiry(m, warningDays) == ExpiryExpired ? "Expired" : "Expiring soon";
+                    return $"{status} — {m.MedicineName} (exp. {m.ExpiryDate:yyyy-MM-dd})";
+                })
+                .ToList();
+
+        public bool HasExpiryAlerts(int warningDays = 30) =>
+            GetAll().Any(m => CheckExpiry(m, warningDays) != ExpiryValid);
+
         public void ValidateMedicine(Medicine item, bool isNew)
         {
             if (!isNew && item.MedicineID <= 0)

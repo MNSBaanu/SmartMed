@@ -179,6 +179,12 @@ namespace SmartMed.UI
                 Timestamp = FormatRelativeTime(o.OrderDate)
             }).ToList();
             BindRecentGrid(_recentRows);
+
+            if (MedicineExpiryNotifications.TryMarkDashboardPromptShown()
+                && _medicines.HasExpiryAlerts())
+            {
+                ExpiryAlertsDialog.Show(FindForm(), _medicines.GetExpiryAlertMessages());
+            }
         }
 
         private void BindRecentGrid(IEnumerable<object> rows)

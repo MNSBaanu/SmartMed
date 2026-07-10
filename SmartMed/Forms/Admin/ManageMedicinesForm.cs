@@ -24,6 +24,7 @@ namespace SmartMed.UI
 
         private List<Medicine> _allMedicines = new List<Medicine>();
         private List<string> _expiryAlertLines = new List<string>();
+        private bool _expiryPromptShown;
         private int? _selectedId;
 
         private MedicineService Rules =>
@@ -170,6 +171,16 @@ namespace SmartMed.UI
             _allMedicines = _medicines.GetAll();
             RefreshCategoryFilter();
             ApplyFilters();
+            PromptExpiryAlertsIfNeeded();
+        }
+
+        private void PromptExpiryAlertsIfNeeded()
+        {
+            if (!_servicesReady || _expiryPromptShown || _expiryAlertLines.Count == 0)
+                return;
+
+            _expiryPromptShown = true;
+            ExpiryAlertsDialog.Show(FindForm(), _expiryAlertLines);
         }
 
         private void RefreshCategoryFilter()
@@ -312,7 +323,7 @@ namespace SmartMed.UI
         {
             if (btnViewExpiryAlerts == null) return;
 
-            _expiryAlertLines = BuildExpiryAlertLines(all);
+            _expiryAlertLines = Rules.GetExpiryAlertMessages();
             var count = _expiryAlertLines.Count;
             btnViewExpiryAlerts.Text = $"Alerts ({count})";
             btnViewExpiryAlerts.ForeColor = count > 0
@@ -320,59 +331,8 @@ namespace SmartMed.UI
                 : Color.FromArgb(53, 103, 94);
         }
 
-        private List<string> BuildExpiryAlertLines(IEnumerable<Medicine> all) =>
-            all
-                .Where(m => Rules.CheckExpiry(m) != MedicineService.ExpiryValid)
-                .OrderBy(m => m.ExpiryDate)
-                .Select(m =>
-                {
-                    var status = Rules.CheckExpiry(m) == MedicineService.ExpiryExpired
-                        ? "Expired"
-                        : "Expiring soon";
-                    return $"{status} — {m.MedicineName} (exp. {m.ExpiryDate:yyyy-MM-dd})";
-                })
-                .ToList();
-
-        private void BtnViewExpiryAlerts_Click(object sender, EventArgs e)
-        {
-            if (_expiryAlertLines.Count == 0)
-            {
-                MessageBox.Show("No expiry alerts. All medicines are within safe expiry dates.",
-                    "Expiry Alerts", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                return;
-            }
-
-            using (var dlg = new Form
-            {
-                Text = "Expiry Alerts",
-                StartPosition = FormStartPosition.CenterParent,
-                Width = 520,
-                Height = 420,
-                MinimizeBox = false,
-                MaximizeBox = false,
-                FormBorderStyle = FormBorderStyle.FixedDialog,
-                Font = UiTheme.UiFont,
-                BackColor = UiTheme.AdminSurface
-            })
-            {
-                var list = new ListBox
-                {
-                    Dock = DockStyle.Fill,
-                    BorderStyle = BorderStyle.FixedSingle,
-                    IntegralHeight = false,
-                    Font = UiTheme.UiFont
-                };
-                list.Items.AddRange(_expiryAlertLines.ToArray());
-                var btnClose = AdminUiHelpers.CreateWinButton("Close", false, 88);
-                btnClose.Dock = DockStyle.Bottom;
-                btnClose.Height = 36;
-                btnClose.DialogResult = DialogResult.OK;
-                dlg.Controls.Add(btnClose);
-                dlg.Controls.Add(list);
-                dlg.AcceptButton = btnClose;
-                dlg.ShowDialog(FindForm());
-            }
-        }
+        private void BtnViewExpiryAlerts_Click(object sender, EventArgs e) =>
+            ExpiryAlertsDialog.Show(FindForm(), _expiryAlertLines);
 
         private static string FormatPromoDate(DateTime? date) =>
             date?.ToString("yyyy-MM-dd") ?? "—";
