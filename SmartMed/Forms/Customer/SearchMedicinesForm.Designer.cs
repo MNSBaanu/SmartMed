@@ -97,7 +97,7 @@ namespace SmartMed.UI
             this.lblPageSubtitle.Name = "lblPageSubtitle";
             this.lblPageSubtitle.Size = new System.Drawing.Size(320, 18);
             this.lblPageSubtitle.TabIndex = 1;
-            this.lblPageSubtitle.Text = "Search the catalog and add items to your cart.";
+            this.lblPageSubtitle.Text = "Browse medications and wellness products — add items to your cart.";
             // 
             // lblPageTitle
             // 
@@ -109,7 +109,7 @@ namespace SmartMed.UI
             this.lblPageTitle.Name = "lblPageTitle";
             this.lblPageTitle.Size = new System.Drawing.Size(198, 36);
             this.lblPageTitle.TabIndex = 0;
-            this.lblPageTitle.Text = "Browse Medicines";
+            this.lblPageTitle.Text = "Browse Catalog";
             // 
             // flowFilter
             // 
@@ -299,7 +299,7 @@ namespace SmartMed.UI
             this.lblGridTitle.Name = "lblGridTitle";
             this.lblGridTitle.Size = new System.Drawing.Size(108, 16);
             this.lblGridTitle.TabIndex = 0;
-            this.lblGridTitle.Text = "Medicine Catalog";
+            this.lblGridTitle.Text = "Product & Service Catalog";
             // 
             // SearchMedicinesForm
             // 

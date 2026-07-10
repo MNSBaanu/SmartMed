@@ -14,6 +14,8 @@ namespace SmartMed.UI
         private bool _servicesReady;
         private bool _runtimeWired;
         private bool _chromeApplied;
+        private Button _btnFilterAll;
+        private Button _btnFilterWellness;
 
         public SearchMedicinesForm()
         {
@@ -84,8 +86,68 @@ namespace SmartMed.UI
             if (_runtimeWired) return;
             _runtimeWired = true;
 
+            BuildQuickFilters();
             btnSearch.Click += (s, e) => Search();
             grid.CellContentClick += Grid_CellContentClick;
+        }
+
+        private void BuildQuickFilters()
+        {
+            var lblQuick = new Label
+            {
+                AutoSize = true,
+                Text = "Quick:",
+                Font = UiTheme.UiFont,
+                ForeColor = UiTheme.AdminMuted,
+                Margin = new Padding(0, 6, 4, 0),
+                BackColor = UiTheme.AdminSurface
+            };
+
+            _btnFilterAll = CreateQuickFilterButton("All", null);
+            _btnFilterWellness = CreateQuickFilterButton("Wellness", "Wellness");
+
+            _btnFilterAll.Click += (s, e) => ApplyQuickFilter(_btnFilterAll, null);
+            _btnFilterWellness.Click += (s, e) => ApplyQuickFilter(_btnFilterWellness, "Wellness");
+
+            flowFilter.Controls.Add(lblQuick);
+            flowFilter.Controls.Add(_btnFilterAll);
+            flowFilter.Controls.Add(_btnFilterWellness);
+
+            flowFilter.Controls.SetChildIndex(lblQuick, 0);
+            flowFilter.Controls.SetChildIndex(_btnFilterAll, 1);
+            flowFilter.Controls.SetChildIndex(_btnFilterWellness, 2);
+
+            SetActiveQuickFilter(_btnFilterAll);
+        }
+
+        private static Button CreateQuickFilterButton(string text, string categoryFilter)
+        {
+            var btn = new Button
+            {
+                Text = text,
+                AutoSize = true,
+                Height = 28,
+                Margin = new Padding(0, 2, 6, 0),
+                Tag = categoryFilter ?? string.Empty
+            };
+            UiTheme.ApplyFlatButton(btn, UiButtonStyle.Secondary);
+            return btn;
+        }
+
+        private void SetActiveQuickFilter(Button active)
+        {
+            foreach (var btn in new[] { _btnFilterAll, _btnFilterWellness })
+            {
+                if (btn == null) continue;
+                UiTheme.ApplyFlatButton(btn, btn == active ? UiButtonStyle.Primary : UiButtonStyle.Secondary);
+            }
+        }
+
+        private void ApplyQuickFilter(Button source, string categoryFilter)
+        {
+            txtCategory.Text = categoryFilter ?? string.Empty;
+            SetActiveQuickFilter(source);
+            Search();
         }
 
         private void Search()
