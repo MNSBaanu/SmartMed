@@ -120,6 +120,7 @@ namespace SmartMed.UI
             txtMinPrice.TextChanged += (s, e) => ApplyFilters();
             txtMaxPrice.TextChanged += (s, e) => ApplyFilters();
             grid.CellContentClick += Grid_CellContentClick;
+            grid.CellDoubleClick += Grid_CellDoubleClick;
 
             RefreshCategoryFilter();
             ApplyFilters();
@@ -300,6 +301,20 @@ namespace SmartMed.UI
             }
             grid.Columns["Qty"].DefaultCellStyle.Padding = new Padding(2, 0, 20, 0);
 
+            if (!grid.Columns.Contains("DetailsBtn"))
+            {
+                grid.Columns.Add(new DataGridViewButtonColumn
+                {
+                    Name = "DetailsBtn",
+                    HeaderText = "",
+                    Text = "Details",
+                    UseColumnTextForButtonValue = true,
+                    Width = 72,
+                    ReadOnly = true,
+                    AutoSizeMode = DataGridViewAutoSizeColumnMode.None
+                });
+            }
+
             if (!grid.Columns.Contains("AddBtn"))
             {
                 grid.Columns.Add(new DataGridViewButtonColumn
@@ -325,9 +340,35 @@ namespace SmartMed.UI
         private void Grid_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
             if (e.RowIndex < 0 || e.ColumnIndex < 0) return;
-            if (grid.Columns[e.ColumnIndex].Name != "AddBtn") return;
+            var col = grid.Columns[e.ColumnIndex].Name;
+            if (col == "DetailsBtn")
+            {
+                ShowMedicineDetails(grid.Rows[e.RowIndex]);
+                return;
+            }
+            if (col != "AddBtn") return;
             grid.EndEdit();
             AddRowToCart(grid.Rows[e.RowIndex]);
+        }
+
+        private void Grid_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
+        {
+            if (e.RowIndex < 0) return;
+            ShowMedicineDetails(grid.Rows[e.RowIndex]);
+        }
+
+        private void ShowMedicineDetails(DataGridViewRow row)
+        {
+            if (!_servicesReady || row == null) return;
+            if (!grid.Columns.Contains("MedicineID")) return;
+
+            var idValue = row.Cells["MedicineID"].Value;
+            if (idValue == null || !int.TryParse(idValue.ToString(), out var id)) return;
+
+            var medicine = _medicines.GetById(id);
+            if (medicine == null) return;
+
+            MedicineDetailsDialog.Show(FindForm(), medicine, _medicines);
         }
 
         private void AddRowToCart(DataGridViewRow row)

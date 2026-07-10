@@ -203,6 +203,15 @@ namespace SmartMed.Services
         public string GetCustomerOfferDisplay(Medicine m) =>
             m != null && IsPromotionActive(m) ? $"{m.DiscountPercent:N0}% promo applied" : "—";
 
+        public string GetCustomerStockDisplay(Medicine m)
+        {
+            if (m == null) return "—";
+            if (IsExpired(m)) return "Unavailable (expired)";
+            if (m.StockQuantity <= 0) return "Out of stock";
+            if (IsLowStock(m)) return $"Limited stock ({m.StockQuantity} left)";
+            return $"In stock ({m.StockQuantity} available)";
+        }
+
         public string GetOrderLineOfferDisplay(decimal unitPrice, decimal listPrice, decimal discountPercent)
         {
             if (listPrice <= 0 || unitPrice >= listPrice)
