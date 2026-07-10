@@ -43,7 +43,7 @@ namespace SmartMed.UI
 
             UiTheme.SetGridDataSource(gridCart, DesignTimePreviewData.CartRows());
             BeautifyCartGrid();
-            lblTotal.Text = "Total: LKR 975.00 (2 items)";
+            lblTotal.Text = "Checkout total: LKR 975.00 (2 items)";
             lblRxNote.Visible = true;
         }
 
@@ -86,6 +86,11 @@ namespace SmartMed.UI
                 RefreshCart();
             };
             btnPlaceOrder.Click += BtnPlace_Click;
+            gridCart.ReadOnly = false;
+            gridCart.EditMode = DataGridViewEditMode.EditOnEnter;
+            gridCart.SelectionMode = DataGridViewSelectionMode.CellSelect;
+            gridCart.CurrentCellDirtyStateChanged += GridCart_CurrentCellDirtyStateChanged;
+            gridCart.CellValueChanged += GridCart_CellValueChanged;
             gridCart.CellContentClick += GridCart_CellContentClick;
             gridCart.CellClick += GridCart_CellClick;
             gridCart.CellFormatting += GridCart_CellFormatting;
@@ -113,14 +118,44 @@ namespace SmartMed.UI
                 Prescription = l.PrescriptionDisplay
             }).ToList());
             BeautifyCartGrid();
-            lblTotal.Text = $"Total: LKR {CartService.Total:N2} ({CartService.ItemCount} items)";
-            lblRxNote.Visible = CartService.RequiresPrescription;
+            UpdateCartTotals();
+            lblRxNote.Visible = CartService.SelectedRequiresPrescription;
+        }
+
+        private void UpdateCartTotals()
+        {
+            var selectedCount = CartService.SelectedItemCount;
+            var cartCount = CartService.ItemCount;
+            if (selectedCount == cartCount)
+                lblTotal.Text = $"Checkout total: LKR {CartService.SelectedTotal:N2} ({selectedCount} items)";
+            else
+                lblTotal.Text =
+                    $"Checkout total: LKR {CartService.SelectedTotal:N2} ({selectedCount} of {cartCount} items selected)";
         }
 
         private void BeautifyCartGrid()
         {
             if (gridCart.Columns.Contains("MedicineID"))
                 gridCart.Columns["MedicineID"].Visible = false;
+
+            if (!gridCart.Columns.Contains("Checkout"))
+            {
+                var checkoutCol = new DataGridViewCheckBoxColumn
+                {
+                    Name = "Checkout",
+                    HeaderText = "Checkout",
+                    Width = 72,
+                    AutoSizeMode = DataGridViewAutoSizeColumnMode.None
+                };
+                gridCart.Columns.Insert(0, checkoutCol);
+            }
+            else if (gridCart.Columns["Checkout"].DisplayIndex != 0)
+            {
+                gridCart.Columns["Checkout"].DisplayIndex = 0;
+            }
+
+            EnsureCheckoutColumnEditable();
+
             if (gridCart.Columns.Contains("DiscountDisplay"))
                 gridCart.Columns["DiscountDisplay"].HeaderText = "Discount";
             if (gridCart.Columns.Contains("PromoDisplay"))
@@ -156,6 +191,20 @@ namespace SmartMed.UI
             foreach (DataGridViewRow row in gridCart.Rows)
             {
                 if (row.IsNewRow) continue;
+
+                if (gridCart.Columns.Contains("Checkout"))
+                {
+                    if (PreferDesignTimePreview())
+                        row.Cells["Checkout"].Value = true;
+                    else
+                    {
+                        var medicineId = Convert.ToInt32(row.Cells["MedicineID"].Value);
+                        var line = CartService.Items.FirstOrDefault(l => l.MedicineID == medicineId);
+                        if (line != null)
+                            row.Cells["Checkout"].Value = line.SelectedForCheckout;
+                    }
+                }
+
                 var isRx = string.Equals(row.Cells["Rx"].Value?.ToString(), "Yes", StringComparison.OrdinalIgnoreCase);
                 var prescription = row.Cells["Prescription"].Value?.ToString() ?? string.Empty;
                 var hasUploaded = isRx
@@ -176,6 +225,44 @@ namespace SmartMed.UI
                 gridCart.Columns["Prescription"].DefaultCellStyle.ForeColor = UiTheme.AdminTeal;
                 gridCart.Columns["Prescription"].DefaultCellStyle.Font = UiTheme.UiFont;
             }
+        }
+
+        private void EnsureCheckoutColumnEditable()
+        {
+            if (!gridCart.Columns.Contains("Checkout")) return;
+
+            gridCart.Columns["Checkout"].ReadOnly = false;
+            foreach (DataGridViewColumn col in gridCart.Columns)
+            {
+                if (col.Name != "Checkout")
+                    col.ReadOnly = true;
+            }
+        }
+
+        private void GridCart_CurrentCellDirtyStateChanged(object sender, EventArgs e)
+        {
+            if (gridCart.IsCurrentCellDirty)
+                gridCart.CommitEdit(DataGridViewDataErrorContexts.Commit);
+        }
+
+        private void GridCart_CellValueChanged(object sender, DataGridViewCellEventArgs e)
+        {
+            if (e.RowIndex < 0 || e.ColumnIndex < 0) return;
+            if (gridCart.Columns[e.ColumnIndex].Name != "Checkout") return;
+            SyncCheckoutSelection(e.RowIndex);
+        }
+
+        private void SyncCheckoutSelection(int rowIndex)
+        {
+            if (rowIndex < 0 || rowIndex >= gridCart.Rows.Count) return;
+            var row = gridCart.Rows[rowIndex];
+            var id = Convert.ToInt32(row.Cells["MedicineID"].Value);
+            var line = CartService.Items.FirstOrDefault(l => l.MedicineID == id);
+            if (line == null) return;
+
+            line.SelectedForCheckout = Convert.ToBoolean(row.Cells["Checkout"].Value);
+            UpdateCartTotals();
+            lblRxNote.Visible = CartService.SelectedRequiresPrescription;
         }
 
         private void GridCart_CellContentClick(object sender, DataGridViewCellEventArgs e)
@@ -292,13 +379,17 @@ namespace SmartMed.UI
                 if (CartService.ItemCount == 0)
                     throw new InvalidOperationException("Your cart is empty.");
 
-                var missing = CartService.MissingPrescriptions.Select(l => l.MedicineName).ToList();
+                var selected = CartService.SelectedItems.ToList();
+                if (selected.Count == 0)
+                    throw new InvalidOperationException("Select at least one item to checkout.");
+
+                var missing = CartService.SelectedMissingPrescriptions.Select(l => l.MedicineName).ToList();
                 if (missing.Count > 0)
                     throw new InvalidOperationException(
-                        "Upload a prescription for: " + string.Join(", ", missing));
+                        "Upload a prescription for selected Rx items: " + string.Join(", ", missing));
 
                 PaymentResult payment;
-                using (var paymentDialog = new PaymentCheckoutDialog(CartService.Total))
+                using (var paymentDialog = new PaymentCheckoutDialog(CartService.SelectedTotal))
                 {
                     if (paymentDialog.ShowDialog(FindForm()) != DialogResult.OK || paymentDialog.Result == null)
                         return;
@@ -307,12 +398,12 @@ namespace SmartMed.UI
 
                 var orderId = _orders.PlaceOrder(
                     customer.CustomerID,
-                    CartService.Items,
-                    CartService.FirstPrescriptionPath,
+                    selected,
+                    CartService.SelectedFirstPrescriptionPath,
                     payment.Method,
                     payment.Status,
                     payment.Reference);
-                CartService.Discard();
+                CartService.RemoveMany(selected.Select(l => l.MedicineID));
                 RefreshCart();
                 SmartMedMessageBox.Show(
                     $"Order placed successfully. Reference #SM-{orderId:D4}\nPayment: {payment.Method} ({payment.Status})",

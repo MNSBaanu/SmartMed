@@ -137,8 +137,8 @@ namespace SmartMed.UI
 
         public static object[] CartRows() => new object[]
         {
-            new { MedicineID = 1, MedicineName = "Amoxicillin 500mg", Quantity = 2, ListPrice = "LKR 450.00", UnitPrice = "LKR 427.50", DiscountDisplay = "5%", PromoDisplay = "Active", OfferDisplay = "5% off", Subtotal = "LKR 855.00", Rx = "Yes" },
-            new { MedicineID = 2, MedicineName = "Paracetamol 500mg", Quantity = 1, ListPrice = "LKR 120.00", UnitPrice = "LKR 120.00", DiscountDisplay = "—", PromoDisplay = "—", OfferDisplay = "—", Subtotal = "LKR 120.00", Rx = "No" }
+            new { MedicineID = 1, MedicineName = "Amoxicillin 500mg", Quantity = 2, ListPrice = "LKR 450.00", UnitPrice = "LKR 427.50", DiscountDisplay = "5%", PromoDisplay = "Active", Applied = "5% off", Subtotal = "LKR 855.00", Rx = "Yes", Prescription = "Required" },
+            new { MedicineID = 2, MedicineName = "Paracetamol 500mg", Quantity = 1, ListPrice = "LKR 120.00", UnitPrice = "LKR 120.00", DiscountDisplay = "—", PromoDisplay = "—", Applied = "—", Subtotal = "LKR 120.00", Rx = "No", Prescription = "—" }
         };
 
         public static object[] TrackOrderRows() => new object[]

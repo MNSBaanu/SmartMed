@@ -17,6 +17,7 @@ namespace SmartMed.Services
         public bool PromoApplied { get; set; }
         public bool RequiresPrescription { get; set; }
         public string PrescriptionPath { get; set; }
+        public bool SelectedForCheckout { get; set; } = true;
         public decimal Subtotal => UnitPrice * Quantity;
 
         public string DiscountDisplay => DiscountPercent > 0 ? $"{DiscountPercent:N0}%" : "—";
@@ -35,17 +36,33 @@ namespace SmartMed.Services
 
         public static IReadOnlyList<CartLine> Items => Lines;
 
+        public static IReadOnlyList<CartLine> SelectedItems =>
+            Lines.Where(l => l.SelectedForCheckout).ToList();
+
         public static int ItemCount => Lines.Sum(l => l.Quantity);
+
+        public static int SelectedItemCount => SelectedItems.Sum(l => l.Quantity);
 
         public static decimal Total => Lines.Sum(l => l.Subtotal);
 
+        public static decimal SelectedTotal => SelectedItems.Sum(l => l.Subtotal);
+
         public static bool RequiresPrescription => Lines.Any(l => l.RequiresPrescription);
+
+        public static bool SelectedRequiresPrescription =>
+            SelectedItems.Any(l => l.RequiresPrescription);
 
         public static IEnumerable<CartLine> MissingPrescriptions =>
             Lines.Where(l => l.RequiresPrescription && string.IsNullOrWhiteSpace(l.PrescriptionPath));
 
+        public static IEnumerable<CartLine> SelectedMissingPrescriptions =>
+            SelectedItems.Where(l => l.RequiresPrescription && string.IsNullOrWhiteSpace(l.PrescriptionPath));
+
         public static string FirstPrescriptionPath =>
             Lines.FirstOrDefault(l => l.RequiresPrescription && !string.IsNullOrWhiteSpace(l.PrescriptionPath))?.PrescriptionPath;
+
+        public static string SelectedFirstPrescriptionPath =>
+            SelectedItems.FirstOrDefault(l => l.RequiresPrescription && !string.IsNullOrWhiteSpace(l.PrescriptionPath))?.PrescriptionPath;
 
         public static void LoadForCustomer(int customerId, MedicineService medicines)
         {
@@ -159,6 +176,16 @@ namespace SmartMed.Services
             Persist();
         }
 
+        public static void RemoveMany(IEnumerable<int> medicineIds)
+        {
+            if (medicineIds == null) return;
+            var ids = new HashSet<int>(medicineIds);
+            if (ids.Count == 0) return;
+
+            Lines.RemoveAll(l => ids.Contains(l.MedicineID));
+            Persist();
+        }
+
         public static void UpdateQuantity(int medicineId, int quantity, MedicineService medicines)
         {
             var line = Lines.FirstOrDefault(l => l.MedicineID == medicineId);
@@ -201,7 +228,8 @@ namespace SmartMed.Services
                 DiscountPercent = fresh.DiscountPercent,
                 PromoApplied = medicines.IsPromotionActive(fresh),
                 RequiresPrescription = fresh.RequiresPrescription,
-                PrescriptionPath = prescriptionPath
+                PrescriptionPath = prescriptionPath,
+                SelectedForCheckout = true
             };
         }
 
