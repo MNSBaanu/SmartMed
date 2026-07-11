@@ -10,7 +10,7 @@ namespace SmartMed.UI
     {
         private MedicineDetailsDialog(Medicine medicine, MedicineService medicines)
         {
-            Text = "Medicine Details";
+            Text = "About this product";
             StartPosition = FormStartPosition.CenterParent;
             Width = 480;
             Height = 520;
@@ -22,6 +22,11 @@ namespace SmartMed.UI
             BackColor = UiTheme.AdminSurface;
             Font = UiTheme.UiFont;
 
+            var isWellness = string.Equals(medicine?.Category, "Wellness", StringComparison.OrdinalIgnoreCase);
+            var effectivePrice = medicines.GetEffectivePrice(medicine);
+            var listPrice = medicine.Price;
+            var hasPromo = medicines.IsPromotionActive(medicine) && effectivePrice < listPrice;
+
             var panelHeader = new Panel
             {
                 Dock = DockStyle.Top,
@@ -32,7 +37,7 @@ namespace SmartMed.UI
 
             var lblTitle = new Label
             {
-                Text = medicine?.MedicineName ?? "Medicine",
+                Text = medicine?.MedicineName ?? "Product",
                 AutoSize = false,
                 Width = 420,
                 Height = 28,
@@ -42,7 +47,9 @@ namespace SmartMed.UI
             };
             var lblSubtitle = new Label
             {
-                Text = medicine?.Category ?? string.Empty,
+                Text = isWellness
+                    ? "Wellness product"
+                    : (string.IsNullOrWhiteSpace(medicine?.Category) ? "Medicine" : $"{medicine.Category} medicine"),
                 AutoSize = true,
                 Font = UiTheme.UiFont,
                 ForeColor = UiTheme.AdminMuted,
@@ -77,32 +84,48 @@ namespace SmartMed.UI
                 BackColor = UiTheme.AdminSurface,
                 Width = 400
             };
-            table.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 140));
+            table.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 150));
             table.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100));
 
-            var effectivePrice = medicines.GetEffectivePrice(medicine);
-            var listPrice = medicine.Price;
-            var hasPromo = effectivePrice < listPrice;
+            AddDetailRow(table, "Form / dosage",
+                string.IsNullOrWhiteSpace(medicine.Dosage) ? "—" : medicine.Dosage);
 
-            AddDetailRow(table, "Dosage / Form", medicine.Dosage ?? "—");
-            AddDetailRow(table, "List Price", $"LKR {listPrice:N2}");
-            AddDetailRow(table, "Your Price", $"LKR {effectivePrice:N2}", hasPromo);
-            AddDetailRow(table, "Discount", medicines.GetCustomerDiscountDisplay(medicine));
-            AddDetailRow(table, "Promotion", medicines.GetCustomerPromoDisplay(medicine));
+            if (hasPromo)
+            {
+                AddDetailRow(table, "Usual price", $"LKR {listPrice:N2}");
+                AddDetailRow(table, "Your price", $"LKR {effectivePrice:N2}", highlightValue: true);
+                AddDetailRow(table, "You save",
+                    $"{medicine.DiscountPercent:N0}% off" +
+                    (medicine.PromotionEndDate.HasValue
+                        ? $" (offer ends {medicine.PromotionEndDate.Value:dd MMM yyyy})"
+                        : string.Empty),
+                    highlightValue: true);
+            }
+            else
+            {
+                AddDetailRow(table, "Price", $"LKR {effectivePrice:N2}");
+            }
+
             AddDetailRow(table, "Availability", medicines.GetCustomerStockDisplay(medicine));
-            AddDetailRow(table, "Prescription", medicine.RequiresPrescription ? "Required" : "Not required");
-            AddDetailRow(table, "Valid Until", medicine.ExpiryDate.ToString("dd MMM yyyy"));
-            AddDetailRow(table, "Product ID", $"#M-{medicine.MedicineID:D4}");
+            AddDetailRow(table, "Prescription",
+                medicine.RequiresPrescription
+                    ? "Yes — you must upload a valid prescription when ordering"
+                    : "No — you can order without a prescription");
+            AddDetailRow(table, "Use before", medicine.ExpiryDate.ToString("dd MMM yyyy"));
 
             stack.Controls.Add(table);
 
             if (medicine.RequiresPrescription)
                 stack.Controls.Add(CreateNotePanel(
-                    "A valid prescription must be uploaded when you place an order for this item."));
+                    "Have your prescription ready. Orders for this item cannot be completed without uploading it."));
 
             if (medicines.IsLowStock(medicine) && medicine.StockQuantity > 0)
                 stack.Controls.Add(CreateNotePanel(
-                    "Stock is limited. Order soon to avoid missing out."));
+                    "Only a few left in stock. Order soon if you need this item."));
+
+            if (medicines.IsExpired(medicine))
+                stack.Controls.Add(CreateNotePanel(
+                    "This product has passed its use-before date and is not available to order."));
 
             panelBody.Controls.Add(stack);
 
@@ -174,7 +197,7 @@ namespace SmartMed.UI
             {
                 Text = value ?? "—",
                 AutoSize = true,
-                MaximumSize = new Size(280, 0),
+                MaximumSize = new Size(260, 0),
                 ForeColor = highlightValue ? UiTheme.AdminTeal : UiTheme.AdminOnSurface,
                 Font = highlightValue ? UiTheme.UiFontBold : UiTheme.UiFont,
                 Margin = new Padding(0, 0, 0, 10),
