@@ -24,7 +24,6 @@ namespace SmartMed.UI
 
         private List<Medicine> _allMedicines = new List<Medicine>();
         private List<string> _expiryAlertLines = new List<string>();
-        private bool _expiryPromptShown;
         private int? _selectedId;
 
         private MedicineService Rules =>
@@ -171,16 +170,6 @@ namespace SmartMed.UI
             _allMedicines = _medicines.GetAll();
             RefreshCategoryFilter();
             ApplyFilters();
-            PromptExpiryAlertsIfNeeded();
-        }
-
-        private void PromptExpiryAlertsIfNeeded()
-        {
-            if (!_servicesReady || _expiryPromptShown || _expiryAlertLines.Count == 0)
-                return;
-
-            _expiryPromptShown = true;
-            ExpiryAlertsDialog.Show(FindForm(), _expiryAlertLines);
         }
 
         private void RefreshCategoryFilter()
