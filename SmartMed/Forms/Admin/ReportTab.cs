@@ -9,6 +9,6 @@ namespace SmartMed.UI
         public static readonly ReportTab SalesPerformance = new ReportTab("SalesPerformance");
         public static readonly ReportTab MedicineInventory = new ReportTab("MedicineInventory");
         public static readonly ReportTab CustomerOrderHistory = new ReportTab("CustomerOrderHistory");
-        public static readonly ReportTab HealthServices = new ReportTab("HealthServices");
     }
 }
+

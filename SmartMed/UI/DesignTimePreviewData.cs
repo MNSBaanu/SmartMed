@@ -147,25 +147,6 @@ namespace SmartMed.UI
             new { OrderID = 2, OrderRef = "#SM-0002", OrderDate = DateTime.Today.AddDays(-4).ToString("MMM dd, yyyy hh:mm tt"), Status = OrderService.StatusDelivered, Total = "LKR 890.00", Payment = "Cash on Pickup (Pay on Pickup)", Prescription = "—" }
         };
 
-        public static object[] HealthServiceRows() => new object[]
-        {
-            new { ServiceName = "Blood Pressure Check", Price = "LKR 500.00", Status = "Active", Description = "In-pharmacy screening" },
-            new { ServiceName = "Flu Vaccination", Price = "LKR 1,200.00", Status = "Active", Description = "Seasonal vaccination" }
-        };
-
-        public static object[] HealthServiceRecordRows() => new object[]
-        {
-            new
-            {
-                ServiceDate = DateTime.Today.AddDays(-5).ToString("yyyy-MM-dd"),
-                CustomerName = "Jane Customer",
-                ServiceName = "Blood Pressure Check",
-                Result = "120/80 mmHg",
-                Pharmacist = "admin",
-                Notes = "Within normal range."
-            }
-        };
-
         public static object[] TrackOrderItemRows() => new object[]
         {
             new { MedicineName = "Amoxicillin 500mg", Quantity = 2, UnitPrice = "LKR 427.50", Discount = "5% off", Subtotal = "LKR 855.00" },

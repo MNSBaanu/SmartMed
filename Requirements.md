@@ -36,20 +36,12 @@ The following requirements define what the SmartMed pharmacy management system m
 
 ## Catalog Scope
 
-SmartMed Pharmacy offers prescription and over-the-counter medications, wellness products, and health services:
+SmartMed Pharmacy offers prescription and over-the-counter medications and wellness products:
 
 | Offering | Implementation |
 |----------|----------------|
 | Prescription / OTC medications | `Medicine` catalog; `RequiresPrescription` flag |
 | Wellness products | `Medicine` with `Category = Wellness` |
-| Health services | Dedicated `HealthService` catalog + `HealthServiceRecord` for delivery history |
-
-### Health Services module
-
-- **Register services** — Admin → Health Services → add/edit available services (name, description, price).
-- **Record delivery** — Log which customer received a service, with date, result, and pharmacist notes.
-- **View history** — Admin service history grid; customers see their own records on **My Profile**.
-- **Reports** — Reports → **Health Services** tab (filter by period and optional customer).
 
 ## Non-Functional Requirements
 

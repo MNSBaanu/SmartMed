@@ -15,7 +15,6 @@ namespace SmartMed.UI
         private bool _servicesReady;
         private bool _runtimeWired;
         private bool _chromeApplied;
-        private Button _btnHealthServicesTab;
         private Label _lblPreviewPlaceholder;
         private Label _lblGridHeaderSubtitle;
 
@@ -119,7 +118,6 @@ namespace SmartMed.UI
             btnSalesTab.Tag = ReportTab.SalesPerformance;
             btnInventoryTab.Tag = ReportTab.MedicineInventory;
             btnHistoryTab.Tag = ReportTab.CustomerOrderHistory;
-            EnsureHealthServicesTab();
             btnWeekPeriod.Tag = ReportPeriod.Week;
             btnMonthPeriod.Tag = ReportPeriod.Month;
             btnYearPeriod.Tag = ReportPeriod.Year;
@@ -165,24 +163,6 @@ namespace SmartMed.UI
             }
         }
 
-        private void EnsureHealthServicesTab()
-        {
-            if (_btnHealthServicesTab != null) return;
-
-            _btnHealthServicesTab = new Button
-            {
-                AutoSize = true,
-                MinimumSize = new Size(120, 32),
-                Text = "Health Services",
-                FlatStyle = FlatStyle.Flat,
-                Cursor = Cursors.Hand,
-                Padding = new Padding(12, 0, 12, 0),
-                Tag = ReportTab.HealthServices
-            };
-            _btnHealthServicesTab.FlatAppearance.BorderSize = 0;
-            flowTabs.Controls.Add(_btnHealthServicesTab);
-        }
-
         private static void WirePanelBorder(Panel panel)
         {
             if (panel == null || panel.Tag as string == "dash-border") return;
@@ -225,8 +205,6 @@ namespace SmartMed.UI
             btnSalesTab.Click += (s, e) => SwitchTab(ReportTab.SalesPerformance);
             btnInventoryTab.Click += (s, e) => SwitchTab(ReportTab.MedicineInventory);
             btnHistoryTab.Click += (s, e) => SwitchTab(ReportTab.CustomerOrderHistory);
-            if (_btnHealthServicesTab != null)
-                _btnHealthServicesTab.Click += (s, e) => SwitchTab(ReportTab.HealthServices);
             btnWeekPeriod.Click += (s, e) => SwitchPeriod(ReportPeriod.Week);
             btnMonthPeriod.Click += (s, e) => SwitchPeriod(ReportPeriod.Month);
             btnYearPeriod.Click += (s, e) => SwitchPeriod(ReportPeriod.Year);
@@ -277,7 +255,7 @@ namespace SmartMed.UI
                 return;
 
             _activeTab = tab;
-            panelCustomerFilter.Visible = tab == ReportTab.CustomerOrderHistory || tab == ReportTab.HealthServices;
+            panelCustomerFilter.Visible = tab == ReportTab.CustomerOrderHistory;
             UpdatePeriodFilterVisibility();
             UpdateTabStyles();
             UpdateStatTitlesForTab();
@@ -311,15 +289,6 @@ namespace SmartMed.UI
                 lblStatTitleOrders.Text = "ORDERS";
                 lblStatTitleLowStock.Text = "LOW STOCK";
                 lblStatTitleOutstanding.Text = "OUTSTANDING";
-                return;
-            }
-
-            if (_activeTab == ReportTab.HealthServices)
-            {
-                lblStatTitleRevenue.Text = "RECORDS";
-                lblStatTitleOrders.Text = "CUSTOMERS";
-                lblStatTitleLowStock.Text = "SERVICES";
-                lblStatTitleOutstanding.Text = "UNIQUE RESULTS";
                 return;
             }
 
@@ -368,8 +337,6 @@ namespace SmartMed.UI
             StyleTab(btnSalesTab, _activeTab == ReportTab.SalesPerformance);
             StyleTab(btnInventoryTab, _activeTab == ReportTab.MedicineInventory);
             StyleTab(btnHistoryTab, _activeTab == ReportTab.CustomerOrderHistory);
-            if (_btnHealthServicesTab != null)
-                StyleTab(_btnHealthServicesTab, _activeTab == ReportTab.HealthServices);
         }
 
         private static void StyleTab(Button btn, bool active) => UiTheme.StyleTabButton(btn, active);
@@ -468,8 +435,6 @@ namespace SmartMed.UI
                     LoadSalesReport();
                 else if (_activeTab == ReportTab.MedicineInventory)
                     LoadInventoryReport();
-                else if (_activeTab == ReportTab.HealthServices)
-                    LoadHealthServicesReport();
                 else
                     LoadHistoryReport();
 
@@ -544,18 +509,6 @@ namespace SmartMed.UI
                 $"Items: {_sourceReportTable.Rows.Count} | Customer order history | {cmbCustomer.Text} | {GetPeriodStatusText()} | {DateTime.Now:hh:mm tt}";
         }
 
-        private void LoadHealthServicesReport()
-        {
-            EnsureCustomerFilterLoaded();
-            var customerId = GetSelectedCustomerId();
-            int? filter = customerId.HasValue && customerId.Value > 0 ? customerId : null;
-            _sourceReportTable = _reports.GetHealthServicesReport(_activePeriod, filter);
-            _currentReportTable = ReportTableFormatter.FormatHealthServicesReport(_sourceReportTable);
-            BindReportGrid(_currentReportTable);
-            lblFooterStatus.Text =
-                $"Items: {_sourceReportTable.Rows.Count} | Health service delivery history | {cmbCustomer.Text} | {GetPeriodStatusText()} | {DateTime.Now:hh:mm tt}";
-        }
-
         private static DataTable CreateEmptyOrderHistorySource()
         {
             var table = new DataTable();
@@ -591,16 +544,6 @@ namespace SmartMed.UI
                 return;
             }
 
-            if (_activeTab == ReportTab.HealthServices)
-            {
-                var count = _sourceReportTable?.Rows.Count ?? 0;
-                lblTotalRevenue.Text = count.ToString("N0");
-                lblTotalOrders.Text = CountDistinct(_sourceReportTable, "CustomerName").ToString("N0");
-                lblLowStock.Text = CountDistinct(_sourceReportTable, "ServiceName").ToString("N0");
-                lblOutstanding.Text = CountDistinct(_sourceReportTable, "Result").ToString("N0");
-                return;
-            }
-
             var sales = _sourceReportTable ?? _reports.GetSalesReport(_activePeriod);
             lblTotalRevenue.Text = $"LKR {ReportTableFormatter.SumAmountColumn(sales):N2}";
             lblTotalOrders.Text = sales.Rows.Count.ToString("N0");
@@ -608,19 +551,6 @@ namespace SmartMed.UI
             var inventory = _reports.GetStockReport();
             lblLowStock.Text = ReportTableFormatter.CountColumnValue(inventory, "StockStatus", "Low Stock").ToString("N0");
             lblOutstanding.Text = $"LKR {_reports.GetOutstandingAmount(_activePeriod):N2}";
-        }
-
-        private static int CountDistinct(DataTable table, string column)
-        {
-            if (table == null || !table.Columns.Contains(column)) return 0;
-            var values = new System.Collections.Generic.HashSet<string>(StringComparer.OrdinalIgnoreCase);
-            foreach (DataRow row in table.Rows)
-            {
-                var value = row[column]?.ToString();
-                if (!string.IsNullOrWhiteSpace(value))
-                    values.Add(value);
-            }
-            return values.Count;
         }
 
         private void GridReport_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
@@ -716,7 +646,6 @@ namespace SmartMed.UI
         {
             if (_activeTab == ReportTab.SalesPerformance) return "Sales Performance Report";
             if (_activeTab == ReportTab.MedicineInventory) return "Medicine Inventory Report";
-            if (_activeTab == ReportTab.HealthServices) return "Health Services Report";
             return "Customer Order History Report";
         }
 
@@ -728,9 +657,6 @@ namespace SmartMed.UI
             if (_activeTab == ReportTab.CustomerOrderHistory)
                 return $"Customer: {cmbCustomer?.Text} | Period: {GetPeriodStatusText()} | Generated {DateTime.Now:MMM dd, yyyy hh:mm tt}";
 
-            if (_activeTab == ReportTab.HealthServices)
-                return $"Customer filter: {cmbCustomer?.Text} | Period: {GetPeriodStatusText()} | Generated {DateTime.Now:MMM dd, yyyy hh:mm tt}";
-
             return $"Period: {GetPeriodStatusText()} | Completed orders only | Generated {DateTime.Now:MMM dd, yyyy hh:mm tt}";
         }
 
@@ -738,7 +664,6 @@ namespace SmartMed.UI
         {
             if (_activeTab == ReportTab.SalesPerformance) return "sales-performance";
             if (_activeTab == ReportTab.MedicineInventory) return "medicine-inventory";
-            if (_activeTab == ReportTab.HealthServices) return "health-services";
             return "customer-order-history";
         }
     }

@@ -85,32 +85,6 @@ namespace SmartMed.Services
             return table;
         }
 
-        public static DataTable FormatHealthServicesReport(DataTable source)
-        {
-            var table = CreateTable(
-                ("Service Date", typeof(string)),
-                ("Customer", typeof(string)),
-                ("Service", typeof(string)),
-                ("Result", typeof(string)),
-                ("Pharmacist", typeof(string)),
-                ("Notes", typeof(string)));
-
-            if (source == null) return table;
-
-            foreach (DataRow row in source.Rows)
-            {
-                table.Rows.Add(
-                    FormatDate(row["ServiceDate"]),
-                    row["CustomerName"]?.ToString(),
-                    row["ServiceName"]?.ToString(),
-                    row["Result"]?.ToString(),
-                    row["PharmacistName"]?.ToString() ?? "—",
-                    row["PharmacistNotes"]?.ToString() ?? "—");
-            }
-
-            return table;
-        }
-
         public static decimal SumAmountColumn(DataTable source, string columnName = "TotalAmount")
         {
             if (source == null || !source.Columns.Contains(columnName)) return 0m;

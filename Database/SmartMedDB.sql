@@ -91,32 +91,10 @@ CREATE TABLE CartItem (
     CONSTRAINT UQ_CartItem_Customer_Medicine UNIQUE (CustomerID, MedicineID)
 );
 
-CREATE TABLE HealthService (
-    ServiceID     INT IDENTITY(1,1) PRIMARY KEY,
-    ServiceName   NVARCHAR(100) NOT NULL UNIQUE,
-    Description   NVARCHAR(255) NULL,
-    Price         DECIMAL(10,2) NOT NULL CHECK (Price >= 0),
-    IsActive      BIT NOT NULL DEFAULT 1
-);
-
-CREATE TABLE HealthServiceRecord (
-    RecordID          INT IDENTITY(1,1) PRIMARY KEY,
-    ServiceID         INT NOT NULL,
-    CustomerID        INT NOT NULL,
-    AdminID           INT NULL,
-    ServiceDate       DATE NOT NULL,
-    Result            NVARCHAR(100) NOT NULL,
-    PharmacistNotes   NVARCHAR(500) NULL,
-    CreatedAt         DATETIME NOT NULL DEFAULT GETDATE(),
-    CONSTRAINT FK_HealthServiceRecord_Service FOREIGN KEY (ServiceID) REFERENCES HealthService(ServiceID),
-    CONSTRAINT FK_HealthServiceRecord_Customer FOREIGN KEY (CustomerID) REFERENCES Customer(CustomerID),
-    CONSTRAINT FK_HealthServiceRecord_Admin FOREIGN KEY (AdminID) REFERENCES Admin(AdminID)
-);
-
 GO
 
 -- ---------------------------------------------------------------------------
--- Seed data (demo logins, mixed catalog: meds, wellness, health services)
+-- Seed data (demo logins, mixed catalog: meds/wellness only)
 -- ---------------------------------------------------------------------------
 
 INSERT INTO Admin (Username, Password, Email)
@@ -145,20 +123,11 @@ VALUES
     (N'Hand Sanitizer 500ml', N'Wellness', N'Bottle', 320.00, 50, N'CleanCare', DATEADD(MONTH, 12, CAST(GETDATE() AS DATE)),
         0, 0.00, 0, NULL, NULL);
 
-INSERT INTO HealthService (ServiceName, Description, Price, IsActive)
-VALUES
-    (N'Blood Pressure Check', N'In-pharmacy blood pressure screening', 500.00, 1),
-    (N'Flu Vaccination', N'Seasonal influenza vaccination', 1200.00, 1),
-    (N'Health Consultation (15 min)', N'Brief pharmacist health consultation', 800.00, 1);
-
 DECLARE @JaneId INT = (SELECT CustomerID FROM Customer WHERE Email = N'customer@gmail.com');
 DECLARE @JohnId INT = (SELECT CustomerID FROM Customer WHERE Email = N'john@email.com');
-DECLARE @AdminId INT = (SELECT AdminID FROM Admin WHERE Username = N'admin');
 DECLARE @AmoxId INT = (SELECT MedicineID FROM Medicine WHERE MedicineName = N'Amoxicillin 500mg');
 DECLARE @ParaId INT = (SELECT MedicineID FROM Medicine WHERE MedicineName = N'Paracetamol 500mg');
 DECLARE @VitCId INT = (SELECT MedicineID FROM Medicine WHERE MedicineName = N'Vitamin C 500mg');
-DECLARE @BpServiceId INT = (SELECT ServiceID FROM HealthService WHERE ServiceName = N'Blood Pressure Check');
-DECLARE @FluServiceId INT = (SELECT ServiceID FROM HealthService WHERE ServiceName = N'Flu Vaccination');
 
 INSERT INTO [Order] (CustomerID, OrderDate, Status, TotalAmount, PaymentMethod, PaymentStatus, PaymentReference)
 VALUES
@@ -183,10 +152,5 @@ VALUES
 
 INSERT INTO Prescription (CustomerID, OrderID, PrescriptionFile, UploadDate, Status)
 VALUES (@JaneId, @Order2, N'seed_rx_jane.pdf', DATEADD(DAY, -1, GETDATE()), N'Pending');
-
-INSERT INTO HealthServiceRecord (ServiceID, CustomerID, AdminID, ServiceDate, Result, PharmacistNotes)
-VALUES
-    (@BpServiceId, @JaneId, @AdminId, DATEADD(DAY, -5, CAST(GETDATE() AS DATE)), N'120/80 mmHg', N'Within normal range. Advised regular monitoring.'),
-    (@FluServiceId, @JohnId, @AdminId, DATEADD(DAY, -10, CAST(GETDATE() AS DATE)), N'Administered', N'No adverse reaction observed. Rest for 15 minutes.');
 
 GO

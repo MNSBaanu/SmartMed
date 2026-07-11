@@ -62,8 +62,8 @@ Academic Misconduct in the Student Handbook).
 **Software Development Task**
 
 **SmartMed** Pharmacy is a chain of pharmacies that provides
-prescription and over-the-counter medications, wellness products, and
-health services. They aim to manage their inventory efficiently, process
+prescription and over-the-counter medications and wellness products.
+They aim to manage their inventory efficiently, process
 customer orders, and maintain high-quality customer service through a
 desktop-based application.
 
