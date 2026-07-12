@@ -1,10 +1,9 @@
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Drawing;
 using System.Drawing.Printing;
-using System.IO;
 using System.Linq;
-using System.Text;
 using System.Windows.Forms;
 using SmartMed.Data;
 using SmartMed.Models;
@@ -264,23 +263,54 @@ namespace SmartMed.Services
 
         public void ExportToCsv(IList<Medicine> medicines, string filePath)
         {
-            var sb = new StringBuilder();
-            sb.AppendLine("MedicineName,Category,Dosage,Price,Stock,Supplier,Expiry,Rx,DiscountPercent,OnPromotion,EffectivePrice");
-            foreach (var m in medicines)
+            ExportHelper.ExportDataTableToCsv(BuildInventoryExportTable(medicines), filePath);
+        }
+
+        public void ExportToPdf(IList<Medicine> medicines, string filePath)
+        {
+            if (medicines == null || medicines.Count == 0)
+                throw new InvalidOperationException("No medicines to export.");
+
+            var subtitle = $"Inventory export  |  Generated: {DateTime.Now:MMM dd, yyyy HH:mm}  |  Items: {medicines.Count}";
+            ExportHelper.ExportDataTableToPdf(
+                BuildInventoryExportTable(medicines),
+                filePath,
+                "SmartMed Medicine Inventory",
+                subtitle);
+        }
+
+        private DataTable BuildInventoryExportTable(IList<Medicine> medicines)
+        {
+            var table = new DataTable();
+            table.Columns.Add("Name");
+            table.Columns.Add("Category");
+            table.Columns.Add("Dosage");
+            table.Columns.Add("Stock");
+            table.Columns.Add("Price (LKR)");
+            table.Columns.Add("Effective (LKR)");
+            table.Columns.Add("Supplier");
+            table.Columns.Add("Expiry");
+            table.Columns.Add("Rx");
+            table.Columns.Add("Discount %");
+            table.Columns.Add("Promo");
+
+            foreach (var m in medicines ?? Array.Empty<Medicine>())
             {
-                sb.Append(EscapeCsv(m.MedicineName)).Append(',');
-                sb.Append(EscapeCsv(m.Category)).Append(',');
-                sb.Append(EscapeCsv(m.Dosage)).Append(',');
-                sb.Append(m.Price.ToString("F2")).Append(',');
-                sb.Append(m.StockQuantity).Append(',');
-                sb.Append(EscapeCsv(m.Supplier)).Append(',');
-                sb.Append(m.ExpiryDate.ToString("yyyy-MM-dd")).Append(',');
-                sb.Append(m.RequiresPrescription ? "Yes" : "No").Append(',');
-                sb.Append(m.DiscountPercent.ToString("F2")).Append(',');
-                sb.Append(m.IsOnPromotion ? "Yes" : "No").Append(',');
-                sb.AppendLine(GetEffectivePrice(m).ToString("F2"));
+                table.Rows.Add(
+                    m.MedicineName,
+                    m.Category,
+                    m.Dosage,
+                    m.StockQuantity.ToString(),
+                    m.Price.ToString("N2"),
+                    GetEffectivePrice(m).ToString("N2"),
+                    m.Supplier,
+                    m.ExpiryDate.ToString("yyyy-MM-dd"),
+                    m.RequiresPrescription ? "Yes" : "No",
+                    m.DiscountPercent.ToString("N0"),
+                    m.IsOnPromotion ? "Yes" : "No");
             }
-            File.WriteAllText(filePath, sb.ToString(), Encoding.UTF8);
+
+            return table;
         }
 
         public void PrintInventory(IList<Medicine> medicines, string title)
@@ -320,12 +350,6 @@ namespace SmartMed.Services
 
             using (var preview = new PrintPreviewDialog { Document = doc, Width = 900, Height = 650 })
                 preview.ShowDialog();
-        }
-
-        private static string EscapeCsv(string value)
-        {
-            if (string.IsNullOrEmpty(value)) return "\"\"";
-            return "\"" + value.Replace("\"", "\"\"") + "\"";
         }
     }
 }

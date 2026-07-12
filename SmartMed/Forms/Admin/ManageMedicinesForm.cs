@@ -357,15 +357,22 @@ namespace SmartMed.UI
             try
             {
                 var items = GetFilteredMedicines();
+                if (items == null || items.Count == 0)
+                {
+                    MessageBox.Show("No medicines to export.", "Export PDF",
+                        MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    return;
+                }
+
                 using (var dialog = new SaveFileDialog
                 {
-                    Filter = "CSV files (*.csv)|*.csv",
-                    FileName = $"SmartMed_Inventory_{DateTime.Now:yyyyMMdd}.csv"
+                    Filter = "PDF files (*.pdf)|*.pdf",
+                    FileName = $"SmartMed_Inventory_{DateTime.Now:yyyyMMdd}.pdf"
                 })
                 {
                     if (dialog.ShowDialog() != DialogResult.OK) return;
-                    _medicines.ExportToCsv(items, dialog.FileName);
-                    MessageBox.Show("Inventory exported successfully.", "SmartMed",
+                    _medicines.ExportToPdf(items, dialog.FileName);
+                    MessageBox.Show("Inventory exported to PDF.", "Export PDF",
                         MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
             }

@@ -135,9 +135,9 @@ namespace SmartMed.UI
             this.btnExport.Location = new System.Drawing.Point(0, 3);
             this.btnExport.Margin = new System.Windows.Forms.Padding(0, 0, 10, 0);
             this.btnExport.Name = "btnExport";
-            this.btnExport.Size = new System.Drawing.Size(96, 30);
+            this.btnExport.Size = new System.Drawing.Size(110, 30);
             this.btnExport.TabIndex = 0;
-            this.btnExport.Text = "Export";
+            this.btnExport.Text = "Export PDF";
             this.btnExport.UseVisualStyleBackColor = false;
             // 
             // btnAdd
