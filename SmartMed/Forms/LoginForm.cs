@@ -57,8 +57,6 @@ namespace SmartMed.UI
             AuthFormView.ApplyCardBorder(panelLoginCard);
             AuthFormView.ApplyPasswordFieldBorder(pnlPasswordField);
             LayoutLoginContent();
-            panelMain.Resize -= PanelMain_Resize;
-            panelMain.Resize += PanelMain_Resize;
         }
 
         internal void ResetAfterLogout()
@@ -86,8 +84,6 @@ namespace SmartMed.UI
         {
             UiTheme.WireClinicalPlaceholderTextBox(txtUsername, "Enter email or username");
             UiTheme.WireClinicalPasswordField(pnlPasswordField, txtPassword, btnTogglePassword, "Enter your password");
-            txtPassword.GotFocus -= TxtPassword_ApplyMask;
-            txtPassword.GotFocus += TxtPassword_ApplyMask;
 
             HideErrorPanel();
             panelError.SendToBack();
@@ -111,9 +107,9 @@ namespace SmartMed.UI
             panelFooter.Top = panelLoginCard.Bottom + CardFooterGap;
         }
 
-        private void PanelMain_Resize(object sender, EventArgs e) => LayoutLoginContent();
+        private void panelMain_Resize(object sender, EventArgs e) => LayoutLoginContent();
 
-        private void TxtPassword_ApplyMask(object sender, EventArgs e) =>
+        private void txtPassword_GotFocus(object sender, EventArgs e) =>
             SetPasswordVisible(_passwordVisible);
 
         internal void RestoreLoginAppearance()
@@ -141,7 +137,7 @@ namespace SmartMed.UI
             UiTheme.SetPasswordToggleText(btnTogglePassword, visible);
         }
 
-        private void PanelMain_Paint(object sender, PaintEventArgs e)
+        private void panelMain_Paint(object sender, PaintEventArgs e)
         {
             var rect = panelMain.ClientRectangle;
             if (rect.Width <= 0 || rect.Height <= 0) return;
@@ -149,24 +145,24 @@ namespace SmartMed.UI
                 e.Graphics.FillRectangle(brush, rect);
         }
 
-        private void BtnTogglePassword_Click(object sender, EventArgs e) =>
+        private void btnTogglePassword_Click(object sender, EventArgs e) =>
             SetPasswordVisible(!_passwordVisible);
 
-        private void TxtUsername_KeyDown(object sender, KeyEventArgs e)
+        private void txtUsername_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode != Keys.Enter) return;
             e.SuppressKeyPress = true;
             txtPassword.Focus();
         }
 
-        private void TxtPassword_KeyDown(object sender, KeyEventArgs e)
+        private void txtPassword_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode != Keys.Enter) return;
             e.SuppressKeyPress = true;
             PerformLogin();
         }
 
-        private void LnkForgot_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        private void lnkForgot_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             SmartMedMessageBox.Show(
                 "Please contact your pharmacy administrator to reset your password.",
@@ -175,7 +171,7 @@ namespace SmartMed.UI
                 MessageBoxIcon.Information);
         }
 
-        private void BtnRegister_Click(object sender, EventArgs e)
+        private void btnRegister_Click(object sender, EventArgs e)
         {
             Hide();
             try
@@ -193,12 +189,12 @@ namespace SmartMed.UI
             }
         }
 
-        private void BtnLogin_Click(object sender, EventArgs e) => PerformLogin();
+        private void btnLogin_Click(object sender, EventArgs e) => PerformLogin();
 
-        private void BtnQuickAdmin_Click(object sender, EventArgs e) =>
+        private void btnQuickAdmin_Click(object sender, EventArgs e) =>
             PerformLoginWith(DemoAdminUsername, DemoAdminPassword);
 
-        private void BtnQuickCustomer_Click(object sender, EventArgs e) =>
+        private void btnQuickCustomer_Click(object sender, EventArgs e) =>
             PerformLoginWith(DemoCustomerEmail, DemoCustomerPassword);
 
         private void PerformLoginWith(string identity, string password)
