@@ -105,7 +105,6 @@ namespace SmartMed.UI
             _runtimeWired = true;
 
             btnRefresh.Click += (s, e) => LoadDashboardData();
-            btnNewOrder.Click += (s, e) => GoToAdminSection(AdminHostForm.AdminNavItem.Orders);
             btnPrint.Click += BtnPrintRecent_Click;
             gridRecent.CellFormatting += GridRecent_CellFormatting;
             gridRecent.CellContentClick += GridRecent_CellContentClick;

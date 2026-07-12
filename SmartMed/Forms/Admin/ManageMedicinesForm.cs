@@ -149,11 +149,29 @@ namespace SmartMed.UI
 
         private void BtnClear_Click(object sender, EventArgs e)
         {
-            UiTheme.ResetClinicalPlaceholder(txtSearch, "Search");
-            cmbCategory.SelectedIndex = 0;
-            UiTheme.ResetClinicalPlaceholder(txtMinPrice, "Min");
-            UiTheme.ResetClinicalPlaceholder(txtMaxPrice, "Max");
+            ClearMedicineFilters();
+        }
+
+        /// <summary>Clears search/price inputs and resets category, then shows the full list.</summary>
+        private void ClearMedicineFilters()
+        {
+            ClearFilterInput(txtSearch, "Search");
+            ClearFilterInput(txtMinPrice, "Min");
+            ClearFilterInput(txtMaxPrice, "Max");
+
+            if (cmbCategory != null && cmbCategory.Items.Count > 0)
+                cmbCategory.SelectedIndex = 0;
+
+            _selectedId = null;
             ApplyFilters();
+        }
+
+        private static void ClearFilterInput(TextBox textBox, string placeholder)
+        {
+            if (textBox == null) return;
+            // Wipe any typed value and show the placeholder again (not kept as filter text).
+            textBox.ForeColor = UiTheme.PlaceholderText;
+            textBox.Text = placeholder;
         }
 
         private void TxtSearch_KeyDown(object sender, KeyEventArgs e)

@@ -26,7 +26,6 @@ namespace SmartMed.UI
             this.panelHeader = new System.Windows.Forms.Panel();
             this.flowHeaderActions = new System.Windows.Forms.FlowLayoutPanel();
             this.btnRefresh = new System.Windows.Forms.Button();
-            this.btnNewOrder = new System.Windows.Forms.Button();
             this.lblPageSubtitle = new System.Windows.Forms.Label();
             this.lblPageTitle = new System.Windows.Forms.Label();
             this.tableStatsRow = new System.Windows.Forms.TableLayoutPanel();
@@ -151,12 +150,11 @@ namespace SmartMed.UI
             this.flowHeaderActions.AutoSize = true;
             this.flowHeaderActions.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(244)))), ((int)(((byte)(251)))), ((int)(((byte)(250)))));
             this.flowHeaderActions.Controls.Add(this.btnRefresh);
-            this.flowHeaderActions.Controls.Add(this.btnNewOrder);
             this.flowHeaderActions.Dock = System.Windows.Forms.DockStyle.Right;
-            this.flowHeaderActions.Location = new System.Drawing.Point(788, 0);
+            this.flowHeaderActions.Location = new System.Drawing.Point(916, 0);
             this.flowHeaderActions.Name = "flowHeaderActions";
             this.flowHeaderActions.Padding = new System.Windows.Forms.Padding(0, 16, 0, 0);
-            this.flowHeaderActions.Size = new System.Drawing.Size(224, 76);
+            this.flowHeaderActions.Size = new System.Drawing.Size(96, 76);
             this.flowHeaderActions.TabIndex = 2;
             this.flowHeaderActions.WrapContents = false;
             // 
@@ -170,29 +168,12 @@ namespace SmartMed.UI
             this.btnRefresh.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F);
             this.btnRefresh.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(22)))), ((int)(((byte)(29)))), ((int)(((byte)(29)))));
             this.btnRefresh.Location = new System.Drawing.Point(0, 16);
-            this.btnRefresh.Margin = new System.Windows.Forms.Padding(0, 0, 10, 0);
+            this.btnRefresh.Margin = new System.Windows.Forms.Padding(0);
             this.btnRefresh.Name = "btnRefresh";
             this.btnRefresh.Size = new System.Drawing.Size(96, 30);
             this.btnRefresh.TabIndex = 1;
             this.btnRefresh.Text = "Refresh";
             this.btnRefresh.UseVisualStyleBackColor = false;
-            // 
-            // btnNewOrder
-            // 
-            this.btnNewOrder.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(53)))), ((int)(((byte)(103)))), ((int)(((byte)(94)))));
-            this.btnNewOrder.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.btnNewOrder.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(27)))), ((int)(((byte)(79)))), ((int)(((byte)(71)))));
-            this.btnNewOrder.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(59)))), ((int)(((byte)(109)))), ((int)(((byte)(100)))));
-            this.btnNewOrder.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnNewOrder.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F);
-            this.btnNewOrder.ForeColor = System.Drawing.Color.White;
-            this.btnNewOrder.Location = new System.Drawing.Point(106, 16);
-            this.btnNewOrder.Margin = new System.Windows.Forms.Padding(0);
-            this.btnNewOrder.Name = "btnNewOrder";
-            this.btnNewOrder.Size = new System.Drawing.Size(118, 30);
-            this.btnNewOrder.TabIndex = 2;
-            this.btnNewOrder.Text = "+ New Order";
-            this.btnNewOrder.UseVisualStyleBackColor = false;
             // 
             // lblPageSubtitle
             // 
@@ -859,7 +840,6 @@ namespace SmartMed.UI
         private System.Windows.Forms.Label lblPageSubtitle;
         private System.Windows.Forms.FlowLayoutPanel flowHeaderActions;
         private System.Windows.Forms.Button btnRefresh;
-        private System.Windows.Forms.Button btnNewOrder;
         private System.Windows.Forms.TableLayoutPanel tableStatsRow;
         private System.Windows.Forms.Panel panelStatStock;
         private System.Windows.Forms.Label lblStatStockTitle;

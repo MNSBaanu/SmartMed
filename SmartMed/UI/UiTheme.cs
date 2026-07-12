@@ -453,8 +453,9 @@ namespace SmartMed.UI
             if (!string.IsNullOrWhiteSpace(textBox.Text) && !IsPlaceholderActive(textBox))
                 return;
 
-            textBox.Text = placeholder;
+            // ForeColor first so TextChanged readers treat the text as placeholder, not a filter value.
             textBox.ForeColor = PlaceholderText;
+            textBox.Text = placeholder;
             textBox.PasswordChar = '\0';
         }
 
@@ -479,6 +480,8 @@ namespace SmartMed.UI
         {
             if (textBox == null) return;
             textBox.Tag = "clinical-placeholder-wired";
+            // Force-clear user input; ApplyPlaceholder alone skips non-empty real text.
+            textBox.Text = string.Empty;
             ApplyPlaceholder(textBox, placeholder);
         }
 
