@@ -9,7 +9,7 @@ namespace SmartMed.Data
     public class MedicineRepository
     {
         private const string SelectColumns =
-            "MedicineID, MedicineName, Category, Dosage, Price, StockQuantity, Supplier, ExpiryDate, RequiresPrescription, DiscountPercent, IsOnPromotion, PromotionStartDate, PromotionEndDate";
+            "MedicineID, MedicineName, Category, Dosage, Price, StockQuantity, Supplier, ExpiryDate, RequiresPrescription, DiscountPercent, IsOnPromotion, PromotionStartDate, PromotionEndDate, Description, ActiveIngredient, UsageInstructions, Warnings, SideEffects, PackSize";
 
         public List<Medicine> GetAll()
         {
@@ -64,29 +64,29 @@ namespace SmartMed.Data
         public void Insert(Medicine item)
         {
             DatabaseHelper.ExecuteNonQuery(
-                @"INSERT INTO Medicine (MedicineName, Category, Dosage, Price, StockQuantity, Supplier, ExpiryDate, RequiresPrescription, DiscountPercent, IsOnPromotion, PromotionStartDate, PromotionEndDate)
-                  VALUES (@n, @c, @d, @p, @s, @su, @e, @r, @disc, @promo, @pStart, @pEnd)",
-                new SqlParameter("@n", item.MedicineName),
-                new SqlParameter("@c", item.Category),
-                new SqlParameter("@d", item.Dosage),
-                new SqlParameter("@p", item.Price),
-                new SqlParameter("@s", item.StockQuantity),
-                new SqlParameter("@su", item.Supplier),
-                new SqlParameter("@e", item.ExpiryDate),
-                new SqlParameter("@r", item.RequiresPrescription),
-                new SqlParameter("@disc", item.DiscountPercent),
-                new SqlParameter("@promo", item.IsOnPromotion),
-                new SqlParameter("@pStart", (object)item.PromotionStartDate ?? DBNull.Value),
-                new SqlParameter("@pEnd", (object)item.PromotionEndDate ?? DBNull.Value));
+                @"INSERT INTO Medicine (MedicineName, Category, Dosage, Price, StockQuantity, Supplier, ExpiryDate, RequiresPrescription, DiscountPercent, IsOnPromotion, PromotionStartDate, PromotionEndDate, Description, ActiveIngredient, UsageInstructions, Warnings, SideEffects, PackSize)
+                  VALUES (@n, @c, @d, @p, @s, @su, @e, @r, @disc, @promo, @pStart, @pEnd, @desc, @ai, @usage, @warn, @side, @pack)",
+                BuildWriteParameters(item));
         }
 
         public int Update(Medicine item)
         {
+            var parameters = new System.Collections.Generic.List<SqlParameter>(BuildWriteParameters(item))
+            {
+                new SqlParameter("@id", item.MedicineID)
+            };
             return DatabaseHelper.ExecuteNonQuery(
                 @"UPDATE Medicine SET MedicineName=@n, Category=@c, Dosage=@d, Price=@p, StockQuantity=@s,
                   Supplier=@su, ExpiryDate=@e, RequiresPrescription=@r, DiscountPercent=@disc, IsOnPromotion=@promo,
-                  PromotionStartDate=@pStart, PromotionEndDate=@pEnd
+                  PromotionStartDate=@pStart, PromotionEndDate=@pEnd, Description=@desc, ActiveIngredient=@ai,
+                  UsageInstructions=@usage, Warnings=@warn, SideEffects=@side, PackSize=@pack
                   WHERE MedicineID=@id",
+                parameters.ToArray());
+        }
+
+        private static SqlParameter[] BuildWriteParameters(Medicine item) =>
+            new[]
+            {
                 new SqlParameter("@n", item.MedicineName),
                 new SqlParameter("@c", item.Category),
                 new SqlParameter("@d", item.Dosage),
@@ -99,8 +99,13 @@ namespace SmartMed.Data
                 new SqlParameter("@promo", item.IsOnPromotion),
                 new SqlParameter("@pStart", (object)item.PromotionStartDate ?? DBNull.Value),
                 new SqlParameter("@pEnd", (object)item.PromotionEndDate ?? DBNull.Value),
-                new SqlParameter("@id", item.MedicineID));
-        }
+                new SqlParameter("@desc", (object)item.Description ?? DBNull.Value),
+                new SqlParameter("@ai", (object)item.ActiveIngredient ?? DBNull.Value),
+                new SqlParameter("@usage", (object)item.UsageInstructions ?? DBNull.Value),
+                new SqlParameter("@warn", (object)item.Warnings ?? DBNull.Value),
+                new SqlParameter("@side", (object)item.SideEffects ?? DBNull.Value),
+                new SqlParameter("@pack", (object)item.PackSize ?? DBNull.Value)
+            };
 
         public void Delete(int id)
         {
@@ -166,7 +171,13 @@ namespace SmartMed.Data
                 IsOnPromotion = row.Table.Columns.Contains("IsOnPromotion")
                     && Convert.ToBoolean(row["IsOnPromotion"]),
                 PromotionStartDate = ReadNullableDate(row, "PromotionStartDate"),
-                PromotionEndDate = ReadNullableDate(row, "PromotionEndDate")
+                PromotionEndDate = ReadNullableDate(row, "PromotionEndDate"),
+                Description = ReadOptionalString(row, "Description"),
+                ActiveIngredient = ReadOptionalString(row, "ActiveIngredient"),
+                UsageInstructions = ReadOptionalString(row, "UsageInstructions"),
+                Warnings = ReadOptionalString(row, "Warnings"),
+                SideEffects = ReadOptionalString(row, "SideEffects"),
+                PackSize = ReadOptionalString(row, "PackSize")
             };
         }
 
@@ -175,6 +186,14 @@ namespace SmartMed.Data
             if (!row.Table.Columns.Contains(column) || row[column] == DBNull.Value)
                 return null;
             return Convert.ToDateTime(row[column]);
+        }
+
+        private static string ReadOptionalString(DataRow row, string column)
+        {
+            if (!row.Table.Columns.Contains(column) || row[column] == DBNull.Value)
+                return null;
+            var value = row[column].ToString();
+            return string.IsNullOrWhiteSpace(value) ? null : value;
         }
     }
 }

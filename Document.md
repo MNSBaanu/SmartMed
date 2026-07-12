@@ -77,7 +77,8 @@ for Admins and Customers.
 -   Login -- Secure login for admins.
 
 -   Manage Medicine Details -- Add, update, delete medicine details
-    (name, category, dosage, price, stock, supplier).
+    (name, category, dosage, price, stock, supplier) and optional
+    customer-facing product info (description, usage, warnings, pack size).
 
 -   Manage Customer Details -- View and update customer information.
 
@@ -94,7 +95,8 @@ for Admins and Customers.
 
 -   Register/Login -- New user registration and login.
 
--   Search Medicines -- Search by name, category, or price range.
+-   Search Medicines -- Search by name, category, or price range; view
+    product details before purchase.
 
 -   Place Orders -- Add medicines to cart and place orders.
 

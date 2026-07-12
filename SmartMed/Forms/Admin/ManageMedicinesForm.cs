@@ -548,27 +548,67 @@ namespace SmartMed.UI
                 Text = isEdit ? "Edit Medicine" : "Add Medicine",
                 FormBorderStyle = FormBorderStyle.FixedDialog,
                 StartPosition = FormStartPosition.CenterParent,
-                ClientSize = new Size(480, 520),
+                ClientSize = new Size(520, 680),
                 MaximizeBox = false,
                 MinimizeBox = false,
                 Font = UiTheme.UiFont,
                 BackColor = UiTheme.AdminSurface
             })
             {
-                var txtName = new TextBox { Left = 16, Top = 40, Width = 440 };
-                var cmbCat = new ComboBox { Left = 16, Top = 96, Width = 210, DropDownStyle = ComboBoxStyle.DropDown };
-                var txtDosage = new TextBox { Left = 246, Top = 96, Width = 210 };
+                const int fieldWidth = 472;
+
+                var panelFooter = new Panel
+                {
+                    Dock = DockStyle.Bottom,
+                    Height = 56,
+                    BackColor = UiTheme.AdminSurface
+                };
+                var panelBody = new Panel
+                {
+                    Dock = DockStyle.Fill,
+                    AutoScroll = true,
+                    BackColor = UiTheme.AdminSurface,
+                    Padding = new Padding(0, 0, 8, 8)
+                };
+
+                var txtName = new TextBox { Left = 16, Top = 40, Width = fieldWidth };
+                var cmbCat = new ComboBox { Left = 16, Top = 96, Width = 220, DropDownStyle = ComboBoxStyle.DropDown };
+                var txtDosage = new TextBox { Left = 252, Top = 96, Width = 236 };
                 var txtPrice = new TextBox { Left = 16, Top = 152, Width = 140 };
                 var txtStock = new TextBox { Left = 170, Top = 152, Width = 100, MaxLength = 6 };
-                var dtpExpiry = new DateTimePicker { Left = 286, Top = 152, Width = 170, Format = DateTimePickerFormat.Short };
-                var txtSupplier = new TextBox { Left = 16, Top = 208, Width = 440 };
+                var dtpExpiry = new DateTimePicker { Left = 286, Top = 152, Width = 202, Format = DateTimePickerFormat.Short };
+                var txtSupplier = new TextBox { Left = 16, Top = 208, Width = fieldWidth };
                 var txtDiscount = new TextBox { Left = 16, Top = 264, Width = 100 };
                 var chkRx = new CheckBox { Text = "Requires Prescription (Rx)", Left = 130, Top = 264, AutoSize = true, BackColor = UiTheme.AdminSurface };
                 var chkPromo = new CheckBox { Text = "On Promotion", Left = 16, Top = 300, AutoSize = true, BackColor = UiTheme.AdminSurface };
-                var dtpPromoStart = new DateTimePicker { Left = 16, Top = 356, Width = 210, Format = DateTimePickerFormat.Short, Enabled = false };
-                var dtpPromoEnd = new DateTimePicker { Left = 246, Top = 356, Width = 210, Format = DateTimePickerFormat.Short, Enabled = false };
+                var dtpPromoStart = new DateTimePicker { Left = 16, Top = 356, Width = 220, Format = DateTimePickerFormat.Short, Enabled = false };
+                var dtpPromoEnd = new DateTimePicker { Left = 252, Top = 356, Width = 236, Format = DateTimePickerFormat.Short, Enabled = false };
 
-                foreach (var tb in new[] { txtName, txtDosage, txtPrice, txtStock, txtSupplier, txtDiscount })
+                var txtDescription = new TextBox
+                {
+                    Left = 16, Top = 428, Width = fieldWidth, Height = 48,
+                    Multiline = true, ScrollBars = ScrollBars.Vertical
+                };
+                var txtActiveIngredient = new TextBox { Left = 16, Top = 508, Width = fieldWidth };
+                var txtUsageInstructions = new TextBox
+                {
+                    Left = 16, Top = 564, Width = fieldWidth, Height = 48,
+                    Multiline = true, ScrollBars = ScrollBars.Vertical
+                };
+                var txtWarnings = new TextBox
+                {
+                    Left = 16, Top = 644, Width = fieldWidth, Height = 48,
+                    Multiline = true, ScrollBars = ScrollBars.Vertical
+                };
+                var txtSideEffects = new TextBox { Left = 16, Top = 724, Width = fieldWidth };
+                var txtPackSize = new TextBox { Left = 16, Top = 780, Width = fieldWidth };
+
+                foreach (var tb in new[]
+                {
+                    txtName, txtDosage, txtPrice, txtStock, txtSupplier, txtDiscount,
+                    txtDescription, txtActiveIngredient, txtUsageInstructions,
+                    txtWarnings, txtSideEffects, txtPackSize
+                })
                     UiTheme.StyleTextBox(tb);
                 UiTheme.StyleComboBox(cmbCat);
                 cmbCat.Items.AddRange(DefaultCategories);
@@ -603,6 +643,12 @@ namespace SmartMed.UI
                     if (existing.PromotionEndDate.HasValue) dtpPromoEnd.Value = existing.PromotionEndDate.Value;
                     dtpPromoStart.Enabled = existing.IsOnPromotion;
                     dtpPromoEnd.Enabled = existing.IsOnPromotion;
+                    txtDescription.Text = existing.Description ?? string.Empty;
+                    txtActiveIngredient.Text = existing.ActiveIngredient ?? string.Empty;
+                    txtUsageInstructions.Text = existing.UsageInstructions ?? string.Empty;
+                    txtWarnings.Text = existing.Warnings ?? string.Empty;
+                    txtSideEffects.Text = existing.SideEffects ?? string.Empty;
+                    txtPackSize.Text = existing.PackSize ?? string.Empty;
                 }
                 else
                 {
@@ -610,44 +656,62 @@ namespace SmartMed.UI
                     dtpExpiry.Value = DateTime.Today.AddMonths(6);
                 }
 
-                dlg.Controls.Add(MakeFieldLabel(ValidationService.RequiredLabel("Medicine Name"), 16, 24));
-                dlg.Controls.Add(txtName);
-                dlg.Controls.Add(MakeFieldLabel(ValidationService.RequiredLabel("Category"), 16, 80));
-                dlg.Controls.Add(cmbCat);
-                dlg.Controls.Add(MakeFieldLabel(ValidationService.RequiredLabel("Dosage / Form"), 246, 80));
-                dlg.Controls.Add(txtDosage);
-                dlg.Controls.Add(MakeFieldLabel(ValidationService.RequiredLabel("Unit Price (LKR)"), 16, 136));
-                dlg.Controls.Add(txtPrice);
-                dlg.Controls.Add(MakeFieldLabel(ValidationService.RequiredLabel("Stock"), 170, 136));
-                dlg.Controls.Add(txtStock);
-                dlg.Controls.Add(MakeFieldLabel(ValidationService.RequiredLabel("Expiry Date"), 286, 136));
-                dlg.Controls.Add(dtpExpiry);
-                dlg.Controls.Add(MakeFieldLabel(ValidationService.RequiredLabel("Supplier"), 16, 192));
-                dlg.Controls.Add(txtSupplier);
-                dlg.Controls.Add(MakeFieldLabel("Discount % (optional)", 16, 248));
-                dlg.Controls.Add(txtDiscount);
-                dlg.Controls.Add(chkRx);
-                dlg.Controls.Add(chkPromo);
-                dlg.Controls.Add(MakeFieldLabel("Promotion Start", 16, 340));
-                dlg.Controls.Add(dtpPromoStart);
-                dlg.Controls.Add(MakeFieldLabel("Promotion End", 246, 340));
-                dlg.Controls.Add(dtpPromoEnd);
+                panelBody.Controls.Add(MakeFieldLabel(ValidationService.RequiredLabel("Medicine Name"), 16, 24));
+                panelBody.Controls.Add(txtName);
+                panelBody.Controls.Add(MakeFieldLabel(ValidationService.RequiredLabel("Category"), 16, 80));
+                panelBody.Controls.Add(cmbCat);
+                panelBody.Controls.Add(MakeFieldLabel(ValidationService.RequiredLabel("Dosage / Form"), 252, 80));
+                panelBody.Controls.Add(txtDosage);
+                panelBody.Controls.Add(MakeFieldLabel(ValidationService.RequiredLabel("Unit Price (LKR)"), 16, 136));
+                panelBody.Controls.Add(txtPrice);
+                panelBody.Controls.Add(MakeFieldLabel(ValidationService.RequiredLabel("Stock"), 170, 136));
+                panelBody.Controls.Add(txtStock);
+                panelBody.Controls.Add(MakeFieldLabel(ValidationService.RequiredLabel("Expiry Date"), 286, 136));
+                panelBody.Controls.Add(dtpExpiry);
+                panelBody.Controls.Add(MakeFieldLabel(ValidationService.RequiredLabel("Supplier"), 16, 192));
+                panelBody.Controls.Add(txtSupplier);
+                panelBody.Controls.Add(MakeFieldLabel("Discount % (optional)", 16, 248));
+                panelBody.Controls.Add(txtDiscount);
+                panelBody.Controls.Add(chkRx);
+                panelBody.Controls.Add(chkPromo);
+                panelBody.Controls.Add(MakeFieldLabel("Promotion Start", 16, 340));
+                panelBody.Controls.Add(dtpPromoStart);
+                panelBody.Controls.Add(MakeFieldLabel("Promotion End", 252, 340));
+                panelBody.Controls.Add(dtpPromoEnd);
+
+                panelBody.Controls.Add(MakeFieldLabel("Description (What it's for)", 16, 412));
+                panelBody.Controls.Add(txtDescription);
+                panelBody.Controls.Add(MakeFieldLabel("Active Ingredient", 16, 492));
+                panelBody.Controls.Add(txtActiveIngredient);
+                panelBody.Controls.Add(MakeFieldLabel("Usage Instructions (How to take)", 16, 548));
+                panelBody.Controls.Add(txtUsageInstructions);
+                panelBody.Controls.Add(MakeFieldLabel("Warnings", 16, 628));
+                panelBody.Controls.Add(txtWarnings);
+                panelBody.Controls.Add(MakeFieldLabel("Side Effects", 16, 708));
+                panelBody.Controls.Add(txtSideEffects);
+                panelBody.Controls.Add(MakeFieldLabel("Pack Size", 16, 764));
+                panelBody.Controls.Add(txtPackSize);
 
                 var btnSave = AdminUiHelpers.CreateWinButton(isEdit ? "Update" : "Add", true, 88);
-                btnSave.Left = 284;
-                btnSave.Top = 480;
+                btnSave.Left = 316;
+                btnSave.Top = 12;
                 var btnCancel = AdminUiHelpers.CreateWinButton("Cancel", false, 88);
-                btnCancel.Left = 378;
-                btnCancel.Top = 480;
+                btnCancel.Left = 410;
+                btnCancel.Top = 12;
                 btnCancel.DialogResult = DialogResult.Cancel;
-                dlg.Controls.Add(btnSave);
-                dlg.Controls.Add(btnCancel);
+                panelFooter.Controls.Add(btnSave);
+                panelFooter.Controls.Add(btnCancel);
+
+                dlg.Controls.Add(panelBody);
+                dlg.Controls.Add(panelFooter);
                 dlg.AcceptButton = btnSave;
                 dlg.CancelButton = btnCancel;
 
                 UiTheme.EnableFieldNavigation(btnSave,
                     txtName, cmbCat, txtDosage, txtPrice, txtStock, dtpExpiry,
-                    txtSupplier, txtDiscount, chkRx, chkPromo, dtpPromoStart, dtpPromoEnd);
+                    txtSupplier, txtDiscount, chkRx, chkPromo, dtpPromoStart, dtpPromoEnd,
+                    txtDescription, txtActiveIngredient, txtUsageInstructions,
+                    txtWarnings, txtSideEffects, txtPackSize);
 
                 // Validate and save inside the dialog so it stays open (and keeps the
                 // entered values) when validation fails, instead of closing on OK first.
@@ -657,7 +721,8 @@ namespace SmartMed.UI
                     {
                         var medicine = ReadDialogFields(existing?.MedicineID ?? 0, txtName, cmbCat, txtDosage,
                             txtPrice, txtStock, dtpExpiry, txtSupplier, txtDiscount, chkRx, chkPromo,
-                            dtpPromoStart, dtpPromoEnd);
+                            dtpPromoStart, dtpPromoEnd, txtDescription, txtActiveIngredient,
+                            txtUsageInstructions, txtWarnings, txtSideEffects, txtPackSize);
 
                         if (isEdit)
                             _medicines.Update(medicine);
@@ -683,7 +748,9 @@ namespace SmartMed.UI
         private static Medicine ReadDialogFields(
             int medicineId, TextBox txtName, ComboBox cmbCat, TextBox txtDosage, TextBox txtPrice,
             TextBox txtStock, DateTimePicker dtpExpiry, TextBox txtSupplier, TextBox txtDiscount,
-            CheckBox chkRx, CheckBox chkPromo, DateTimePicker dtpPromoStart, DateTimePicker dtpPromoEnd)
+            CheckBox chkRx, CheckBox chkPromo, DateTimePicker dtpPromoStart, DateTimePicker dtpPromoEnd,
+            TextBox txtDescription, TextBox txtActiveIngredient, TextBox txtUsageInstructions,
+            TextBox txtWarnings, TextBox txtSideEffects, TextBox txtPackSize)
         {
             if (!int.TryParse(txtStock.Text.Trim(), out var stock))
                 throw new ArgumentException("Stock quantity must be a valid number.");
@@ -709,9 +776,18 @@ namespace SmartMed.UI
                 DiscountPercent = discount,
                 IsOnPromotion = chkPromo.Checked,
                 PromotionStartDate = chkPromo.Checked ? (DateTime?)dtpPromoStart.Value.Date : null,
-                PromotionEndDate = chkPromo.Checked ? (DateTime?)dtpPromoEnd.Value.Date : null
+                PromotionEndDate = chkPromo.Checked ? (DateTime?)dtpPromoEnd.Value.Date : null,
+                Description = OptionalText(txtDescription),
+                ActiveIngredient = OptionalText(txtActiveIngredient),
+                UsageInstructions = OptionalText(txtUsageInstructions),
+                Warnings = OptionalText(txtWarnings),
+                SideEffects = OptionalText(txtSideEffects),
+                PackSize = OptionalText(txtPackSize)
             };
         }
+
+        private static string OptionalText(TextBox textBox) =>
+            string.IsNullOrWhiteSpace(textBox?.Text) ? null : textBox.Text.Trim();
 
         private static Label MakeFieldLabel(string text, int left, int top) =>
             new Label

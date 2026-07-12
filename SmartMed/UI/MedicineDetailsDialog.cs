@@ -89,6 +89,12 @@ namespace SmartMed.UI
 
             AddDetailRow(table, "Form / dosage",
                 string.IsNullOrWhiteSpace(medicine.Dosage) ? "—" : medicine.Dosage);
+            AddOptionalDetailRow(table, "What it's for", medicine.Description);
+            AddOptionalDetailRow(table, "Active ingredient", medicine.ActiveIngredient);
+            AddOptionalDetailRow(table, "How to take", medicine.UsageInstructions);
+            AddOptionalDetailRow(table, "Warnings", medicine.Warnings);
+            AddOptionalDetailRow(table, "Possible side effects", medicine.SideEffects);
+            AddOptionalDetailRow(table, "Pack size", medicine.PackSize);
 
             if (hasPromo)
             {
@@ -176,6 +182,12 @@ namespace SmartMed.UI
                 BackColor = Color.FromArgb(255, 248, 232)
             });
             return panel;
+        }
+
+        private static void AddOptionalDetailRow(TableLayoutPanel table, string label, string value)
+        {
+            if (string.IsNullOrWhiteSpace(value)) return;
+            AddDetailRow(table, label, value.Trim());
         }
 
         private static void AddDetailRow(TableLayoutPanel table, string label, string value, bool highlightValue = false)

@@ -18,6 +18,14 @@ namespace SmartMed.Models
         public DateTime? PromotionStartDate { get; set; }
         public DateTime? PromotionEndDate { get; set; }
 
+        /// <summary>What the product is for (customer-facing).</summary>
+        public string Description { get; set; }
+        public string ActiveIngredient { get; set; }
+        public string UsageInstructions { get; set; }
+        public string Warnings { get; set; }
+        public string SideEffects { get; set; }
+        public string PackSize { get; set; }
+
         public void AddMedicine() { }
         public void UpdateMedicine() { }
         public void DeleteMedicine() { }

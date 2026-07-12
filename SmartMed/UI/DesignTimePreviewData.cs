@@ -24,7 +24,13 @@ namespace SmartMed.UI
                 DiscountPercent = 5m,
                 IsOnPromotion = true,
                 PromotionStartDate = DateTime.Today.AddDays(-7),
-                PromotionEndDate = DateTime.Today.AddDays(23)
+                PromotionEndDate = DateTime.Today.AddDays(23),
+                Description = "Antibiotic used to treat bacterial infections such as chest, ear, and urinary tract infections.",
+                ActiveIngredient = "Amoxicillin",
+                UsageInstructions = "Take one capsule every 8 hours, or as directed by your doctor. Complete the full course.",
+                Warnings = "Prescription only. Do not use if allergic to penicillin.",
+                SideEffects = "May cause nausea, diarrhea, or rash.",
+                PackSize = "21 capsules"
             },
             new Medicine
             {
@@ -37,7 +43,13 @@ namespace SmartMed.UI
                 Supplier = "MedSupply",
                 ExpiryDate = DateTime.Today.AddMonths(10),
                 RequiresPrescription = false,
-                DiscountPercent = 0m
+                DiscountPercent = 0m,
+                Description = "Pain reliever and fever reducer for mild to moderate pain and fever.",
+                ActiveIngredient = "Paracetamol (Acetaminophen)",
+                UsageInstructions = "Take 1–2 tablets every 4–6 hours as needed. Do not exceed 8 tablets in 24 hours.",
+                Warnings = "Do not exceed the recommended dose. Avoid with other paracetamol-containing products.",
+                SideEffects = "Rare rash; overdose can cause serious liver damage.",
+                PackSize = "20 tablets"
             },
             new Medicine
             {
@@ -50,7 +62,13 @@ namespace SmartMed.UI
                 Supplier = "HealthLine",
                 ExpiryDate = DateTime.Today.AddDays(-5),
                 RequiresPrescription = true,
-                DiscountPercent = 10m
+                DiscountPercent = 10m,
+                Description = "Oral antidiabetic medicine that helps control blood sugar in type 2 diabetes.",
+                ActiveIngredient = "Metformin hydrochloride",
+                UsageInstructions = "Take with meals as directed by your doctor.",
+                Warnings = "Prescription only. Tell your doctor about kidney problems before use.",
+                SideEffects = "Stomach upset, diarrhea, or metallic taste.",
+                PackSize = "30 tablets"
             },
             new Medicine
             {
@@ -66,7 +84,13 @@ namespace SmartMed.UI
                 DiscountPercent = 5m,
                 IsOnPromotion = true,
                 PromotionStartDate = DateTime.Today,
-                PromotionEndDate = DateTime.Today.AddDays(30)
+                PromotionEndDate = DateTime.Today.AddDays(30),
+                Description = "Dietary supplement that supports immune health.",
+                ActiveIngredient = "Ascorbic acid",
+                UsageInstructions = "Take one tablet daily with food.",
+                Warnings = "Consult a doctor if you have kidney stones.",
+                SideEffects = "Mild stomach upset at high doses.",
+                PackSize = "60 tablets"
             }
         };
 

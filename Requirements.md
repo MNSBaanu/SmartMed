@@ -42,6 +42,7 @@ SmartMed Pharmacy offers prescription and over-the-counter medications and welln
 |----------|----------------|
 | Prescription / OTC medications | `Medicine` catalog; `RequiresPrescription` flag |
 | Wellness products | `Medicine` with `Category = Wellness` |
+| Customer product info | Optional `Description`, `ActiveIngredient`, `UsageInstructions`, `Warnings`, `SideEffects`, `PackSize` on `Medicine` |
 
 ## Non-Functional Requirements
 

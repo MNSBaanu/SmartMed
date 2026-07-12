@@ -121,6 +121,23 @@ namespace SmartMed.Services
             }
             if (isNew && item.ExpiryDate.Date < DateTime.Today)
                 throw new ArgumentException("Expiry date cannot be in the past.");
+
+            item.Description = NormalizeOptional(item.Description, 500, "Description");
+            item.ActiveIngredient = NormalizeOptional(item.ActiveIngredient, 200, "Active ingredient");
+            item.UsageInstructions = NormalizeOptional(item.UsageInstructions, 500, "Usage instructions");
+            item.Warnings = NormalizeOptional(item.Warnings, 500, "Warnings");
+            item.SideEffects = NormalizeOptional(item.SideEffects, 300, "Side effects");
+            item.PackSize = NormalizeOptional(item.PackSize, 100, "Pack size");
+        }
+
+        private static string NormalizeOptional(string value, int maxLength, string fieldName)
+        {
+            if (string.IsNullOrWhiteSpace(value))
+                return null;
+            var trimmed = value.Trim();
+            if (trimmed.Length > maxLength)
+                throw new ArgumentException($"{fieldName} must be {maxLength} characters or fewer.");
+            return trimmed;
         }
 
         public void Add(Medicine item)
