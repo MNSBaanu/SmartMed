@@ -14,7 +14,7 @@ namespace SmartMed.Data
             var list = new List<Order>();
             var table = DatabaseHelper.ExecuteQuery(
                 @"SELECT o.OrderID, o.CustomerID, c.FullName AS CustomerName, o.OrderDate, o.Status, o.TotalAmount,
-                         o.PaymentMethod, o.PaymentStatus, o.PaymentReference
+                         o.PaymentMethod, o.PaymentStatus, o.PaymentReference, o.CancellationReason
                   FROM [Order] o INNER JOIN Customer c ON o.CustomerID = c.CustomerID
                   ORDER BY o.OrderDate DESC");
             foreach (DataRow row in table.Rows)
@@ -26,7 +26,7 @@ namespace SmartMed.Data
         {
             var table = DatabaseHelper.ExecuteQuery(
                 @"SELECT o.OrderID, o.CustomerID, c.FullName AS CustomerName, o.OrderDate, o.Status, o.TotalAmount,
-                         o.PaymentMethod, o.PaymentStatus, o.PaymentReference
+                         o.PaymentMethod, o.PaymentStatus, o.PaymentReference, o.CancellationReason
                   FROM [Order] o INNER JOIN Customer c ON o.CustomerID = c.CustomerID
                   WHERE o.OrderID=@id",
                 new SqlParameter("@id", orderId));
@@ -39,7 +39,7 @@ namespace SmartMed.Data
             var list = new List<Order>();
             var table = DatabaseHelper.ExecuteQuery(
                 @"SELECT o.OrderID, o.CustomerID, c.FullName AS CustomerName, o.OrderDate, o.Status, o.TotalAmount,
-                         o.PaymentMethod, o.PaymentStatus, o.PaymentReference
+                         o.PaymentMethod, o.PaymentStatus, o.PaymentReference, o.CancellationReason
                   FROM [Order] o INNER JOIN Customer c ON o.CustomerID = c.CustomerID
                   WHERE o.CustomerID=@cid ORDER BY o.OrderDate DESC",
                 new SqlParameter("@cid", customerId));
@@ -102,6 +102,17 @@ namespace SmartMed.Data
                 new SqlParameter("@id", orderId));
         }
 
+        public void MarkCancelled(int orderId, string reason)
+        {
+            DatabaseHelper.ExecuteNonQuery(
+                @"UPDATE [Order]
+                  SET Status=@s, CancellationReason=@r
+                  WHERE OrderID=@id",
+                new SqlParameter("@s", "Cancelled"),
+                new SqlParameter("@r", reason),
+                new SqlParameter("@id", orderId));
+        }
+
         public void DeleteOrder(int orderId)
         {
             DatabaseHelper.ExecuteNonQuery(
@@ -136,7 +147,7 @@ namespace SmartMed.Data
                 @"SELECT ISNULL(SUM(TotalAmount), 0)
                   FROM [Order]
                   WHERE OrderDate >= @from AND OrderDate < @to
-                    AND Status <> 'Delivered'",
+                    AND Status NOT IN ('Delivered', 'Cancelled')",
                 new SqlParameter("@from", from),
                 new SqlParameter("@to", toExclusive));
             return Convert.ToDecimal(result);
@@ -171,7 +182,7 @@ namespace SmartMed.Data
         public DataTable GetCustomerOrderHistory(int customerId, DateTime from, DateTime toExclusive)
         {
             return DatabaseHelper.ExecuteQuery(
-                @"SELECT o.OrderID, o.OrderDate, o.Status, o.TotalAmount
+                @"SELECT o.OrderID, o.OrderDate, o.Status, o.TotalAmount, o.CancellationReason
                   FROM [Order] o
                   WHERE o.CustomerID=@cid AND o.OrderDate >= @from AND o.OrderDate < @to
                   ORDER BY o.OrderDate DESC",
@@ -182,14 +193,15 @@ namespace SmartMed.Data
 
         public decimal GetTotalSales()
         {
-            var result = DatabaseHelper.ExecuteScalar("SELECT ISNULL(SUM(TotalAmount), 0) FROM [Order]");
+            var result = DatabaseHelper.ExecuteScalar(
+                "SELECT ISNULL(SUM(TotalAmount), 0) FROM [Order] WHERE Status = 'Delivered'");
             return Convert.ToDecimal(result);
         }
 
         public int GetActiveOrderCount()
         {
             return Convert.ToInt32(DatabaseHelper.ExecuteScalar(
-                "SELECT COUNT(*) FROM [Order] WHERE Status <> 'Delivered'"));
+                "SELECT COUNT(*) FROM [Order] WHERE Status NOT IN ('Delivered', 'Cancelled')"));
         }
 
         private static Order MapOrder(DataRow row)
@@ -210,6 +222,9 @@ namespace SmartMed.Data
                     : PaymentService.StatusPayOnPickup,
                 PaymentReference = row.Table.Columns.Contains("PaymentReference") && row["PaymentReference"] != DBNull.Value
                     ? row["PaymentReference"].ToString()
+                    : null,
+                CancellationReason = row.Table.Columns.Contains("CancellationReason") && row["CancellationReason"] != DBNull.Value
+                    ? row["CancellationReason"].ToString()
                     : null
             };
         }

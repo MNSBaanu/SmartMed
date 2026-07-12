@@ -26,6 +26,16 @@ namespace SmartMed.UI
             this.btnPrint = new System.Windows.Forms.Button();
             this.lblPageSubtitle = new System.Windows.Forms.Label();
             this.lblPageTitle = new System.Windows.Forms.Label();
+            this.tableStatsRow = new System.Windows.Forms.TableLayoutPanel();
+            this.panelStatTotal = new System.Windows.Forms.Panel();
+            this.lblTotalCustomers = new System.Windows.Forms.Label();
+            this.lblStatTotalTitle = new System.Windows.Forms.Label();
+            this.panelStatActive = new System.Windows.Forms.Panel();
+            this.lblActiveCustomers = new System.Windows.Forms.Label();
+            this.lblStatActiveTitle = new System.Windows.Forms.Label();
+            this.panelStatInactive = new System.Windows.Forms.Panel();
+            this.lblInactiveCustomers = new System.Windows.Forms.Label();
+            this.lblStatInactiveTitle = new System.Windows.Forms.Label();
             this.panelToolbar = new System.Windows.Forms.Panel();
             this.flowToolbarRight = new System.Windows.Forms.FlowLayoutPanel();
             this.lblSearchLabel = new System.Windows.Forms.Label();
@@ -51,20 +61,14 @@ namespace SmartMed.UI
             this.btnPagePrev = new System.Windows.Forms.Button();
             this.lblPageInfo = new System.Windows.Forms.Label();
             this.btnPageNext = new System.Windows.Forms.Button();
-            this.tableStatsRow = new System.Windows.Forms.TableLayoutPanel();
-            this.panelStatTotal = new System.Windows.Forms.Panel();
-            this.lblTotalCustomers = new System.Windows.Forms.Label();
-            this.lblStatTotalTitle = new System.Windows.Forms.Label();
-            this.panelStatActive = new System.Windows.Forms.Panel();
-            this.lblActiveCustomers = new System.Windows.Forms.Label();
-            this.lblStatActiveTitle = new System.Windows.Forms.Label();
-            this.panelStatInactive = new System.Windows.Forms.Panel();
-            this.lblInactiveCustomers = new System.Windows.Forms.Label();
-            this.lblStatInactiveTitle = new System.Windows.Forms.Label();
             this.panelScrollHost.SuspendLayout();
             this.tableLayoutRoot.SuspendLayout();
             this.panelHeader.SuspendLayout();
             this.flowHeaderActions.SuspendLayout();
+            this.tableStatsRow.SuspendLayout();
+            this.panelStatTotal.SuspendLayout();
+            this.panelStatActive.SuspendLayout();
+            this.panelStatInactive.SuspendLayout();
             this.panelToolbar.SuspendLayout();
             this.flowToolbarRight.SuspendLayout();
             this.flowToolbarLeft.SuspendLayout();
@@ -75,15 +79,10 @@ namespace SmartMed.UI
             this.panelGridHeader.SuspendLayout();
             this.panelFooter.SuspendLayout();
             this.flowPager.SuspendLayout();
-            this.tableStatsRow.SuspendLayout();
-            this.panelStatTotal.SuspendLayout();
-            this.panelStatActive.SuspendLayout();
-            this.panelStatInactive.SuspendLayout();
             this.SuspendLayout();
             // 
             // panelScrollHost
             // 
-            this.panelScrollHost.AutoScroll = false;
             this.panelScrollHost.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(244)))), ((int)(((byte)(251)))), ((int)(((byte)(250)))));
             this.panelScrollHost.Controls.Add(this.tableLayoutRoot);
             this.panelScrollHost.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -112,7 +111,7 @@ namespace SmartMed.UI
             this.tableLayoutRoot.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutRoot.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tableLayoutRoot.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutRoot.Size = new System.Drawing.Size(1012, 696);
+            this.tableLayoutRoot.Size = new System.Drawing.Size(1012, 672);
             this.tableLayoutRoot.TabIndex = 0;
             // 
             // panelHeader
@@ -149,7 +148,7 @@ namespace SmartMed.UI
             this.btnExport.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(193)))), ((int)(((byte)(200)))), ((int)(((byte)(198)))));
             this.btnExport.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(227)))), ((int)(((byte)(234)))), ((int)(((byte)(233)))));
             this.btnExport.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnExport.Font = new System.Drawing.Font("Hanken Grotesk", 9F);
+            this.btnExport.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F);
             this.btnExport.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(22)))), ((int)(((byte)(29)))), ((int)(((byte)(29)))));
             this.btnExport.Location = new System.Drawing.Point(0, 16);
             this.btnExport.Margin = new System.Windows.Forms.Padding(0, 0, 10, 0);
@@ -166,7 +165,7 @@ namespace SmartMed.UI
             this.btnPrint.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(193)))), ((int)(((byte)(200)))), ((int)(((byte)(198)))));
             this.btnPrint.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(227)))), ((int)(((byte)(234)))), ((int)(((byte)(233)))));
             this.btnPrint.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnPrint.Font = new System.Drawing.Font("Hanken Grotesk", 9F);
+            this.btnPrint.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F);
             this.btnPrint.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(22)))), ((int)(((byte)(29)))), ((int)(((byte)(29)))));
             this.btnPrint.Location = new System.Drawing.Point(106, 16);
             this.btnPrint.Margin = new System.Windows.Forms.Padding(0);
@@ -180,25 +179,159 @@ namespace SmartMed.UI
             // 
             this.lblPageSubtitle.AutoSize = true;
             this.lblPageSubtitle.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(244)))), ((int)(((byte)(251)))), ((int)(((byte)(250)))));
-            this.lblPageSubtitle.Font = new System.Drawing.Font("Hanken Grotesk", 9F);
+            this.lblPageSubtitle.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F);
             this.lblPageSubtitle.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(65)))), ((int)(((byte)(72)))), ((int)(((byte)(71)))));
             this.lblPageSubtitle.Location = new System.Drawing.Point(0, 44);
             this.lblPageSubtitle.Name = "lblPageSubtitle";
-            this.lblPageSubtitle.Size = new System.Drawing.Size(491, 20);
+            this.lblPageSubtitle.Size = new System.Drawing.Size(668, 18);
             this.lblPageSubtitle.TabIndex = 1;
-            this.lblPageSubtitle.Text = "View customer records. Order Activity shows recent ordering; use Account to enable or disable login.";
+            this.lblPageSubtitle.Text = "View customer records. Order Activity shows recent ordering; use Account to enabl" +
+    "e or disable login.";
             // 
             // lblPageTitle
             // 
             this.lblPageTitle.AutoSize = true;
             this.lblPageTitle.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(244)))), ((int)(((byte)(251)))), ((int)(((byte)(250)))));
-            this.lblPageTitle.Font = new System.Drawing.Font("Hanken Grotesk", 20F, System.Drawing.FontStyle.Bold);
+            this.lblPageTitle.Font = new System.Drawing.Font("Microsoft Sans Serif", 20F, System.Drawing.FontStyle.Bold);
             this.lblPageTitle.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(24)))), ((int)(((byte)(22)))));
             this.lblPageTitle.Location = new System.Drawing.Point(0, 8);
             this.lblPageTitle.Name = "lblPageTitle";
-            this.lblPageTitle.Size = new System.Drawing.Size(317, 44);
+            this.lblPageTitle.Size = new System.Drawing.Size(329, 39);
             this.lblPageTitle.TabIndex = 0;
             this.lblPageTitle.Text = "Manage Customers";
+            // 
+            // tableStatsRow
+            // 
+            this.tableStatsRow.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(244)))), ((int)(((byte)(251)))), ((int)(((byte)(250)))));
+            this.tableStatsRow.ColumnCount = 3;
+            this.tableStatsRow.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 33.33F));
+            this.tableStatsRow.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 33.33F));
+            this.tableStatsRow.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 33.34F));
+            this.tableStatsRow.Controls.Add(this.panelStatTotal, 0, 0);
+            this.tableStatsRow.Controls.Add(this.panelStatActive, 1, 0);
+            this.tableStatsRow.Controls.Add(this.panelStatInactive, 2, 0);
+            this.tableStatsRow.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tableStatsRow.Location = new System.Drawing.Point(0, 100);
+            this.tableStatsRow.Margin = new System.Windows.Forms.Padding(0, 0, 0, 16);
+            this.tableStatsRow.Name = "tableStatsRow";
+            this.tableStatsRow.RowCount = 1;
+            this.tableStatsRow.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableStatsRow.Size = new System.Drawing.Size(1012, 108);
+            this.tableStatsRow.TabIndex = 1;
+            // 
+            // panelStatTotal
+            // 
+            this.panelStatTotal.BackColor = System.Drawing.Color.White;
+            this.panelStatTotal.Controls.Add(this.lblTotalCustomers);
+            this.panelStatTotal.Controls.Add(this.lblStatTotalTitle);
+            this.panelStatTotal.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panelStatTotal.Location = new System.Drawing.Point(0, 0);
+            this.panelStatTotal.Margin = new System.Windows.Forms.Padding(0, 0, 14, 0);
+            this.panelStatTotal.Name = "panelStatTotal";
+            this.panelStatTotal.Padding = new System.Windows.Forms.Padding(16, 14, 14, 14);
+            this.panelStatTotal.Size = new System.Drawing.Size(323, 108);
+            this.panelStatTotal.TabIndex = 0;
+            // 
+            // lblTotalCustomers
+            // 
+            this.lblTotalCustomers.BackColor = System.Drawing.Color.White;
+            this.lblTotalCustomers.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lblTotalCustomers.Font = new System.Drawing.Font("Microsoft Sans Serif", 22F, System.Drawing.FontStyle.Bold);
+            this.lblTotalCustomers.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(24)))), ((int)(((byte)(22)))));
+            this.lblTotalCustomers.Location = new System.Drawing.Point(16, 30);
+            this.lblTotalCustomers.Name = "lblTotalCustomers";
+            this.lblTotalCustomers.Size = new System.Drawing.Size(293, 64);
+            this.lblTotalCustomers.TabIndex = 1;
+            this.lblTotalCustomers.Text = "2";
+            this.lblTotalCustomers.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // lblStatTotalTitle
+            // 
+            this.lblStatTotalTitle.BackColor = System.Drawing.Color.White;
+            this.lblStatTotalTitle.Dock = System.Windows.Forms.DockStyle.Top;
+            this.lblStatTotalTitle.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold);
+            this.lblStatTotalTitle.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(65)))), ((int)(((byte)(72)))), ((int)(((byte)(71)))));
+            this.lblStatTotalTitle.Location = new System.Drawing.Point(16, 14);
+            this.lblStatTotalTitle.Name = "lblStatTotalTitle";
+            this.lblStatTotalTitle.Size = new System.Drawing.Size(293, 16);
+            this.lblStatTotalTitle.TabIndex = 0;
+            this.lblStatTotalTitle.Text = "TOTAL CUSTOMERS";
+            // 
+            // panelStatActive
+            // 
+            this.panelStatActive.BackColor = System.Drawing.Color.White;
+            this.panelStatActive.Controls.Add(this.lblActiveCustomers);
+            this.panelStatActive.Controls.Add(this.lblStatActiveTitle);
+            this.panelStatActive.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panelStatActive.Location = new System.Drawing.Point(337, 0);
+            this.panelStatActive.Margin = new System.Windows.Forms.Padding(0, 0, 14, 0);
+            this.panelStatActive.Name = "panelStatActive";
+            this.panelStatActive.Padding = new System.Windows.Forms.Padding(16, 14, 14, 14);
+            this.panelStatActive.Size = new System.Drawing.Size(323, 108);
+            this.panelStatActive.TabIndex = 1;
+            // 
+            // lblActiveCustomers
+            // 
+            this.lblActiveCustomers.BackColor = System.Drawing.Color.White;
+            this.lblActiveCustomers.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lblActiveCustomers.Font = new System.Drawing.Font("Microsoft Sans Serif", 22F, System.Drawing.FontStyle.Bold);
+            this.lblActiveCustomers.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(24)))), ((int)(((byte)(22)))));
+            this.lblActiveCustomers.Location = new System.Drawing.Point(16, 30);
+            this.lblActiveCustomers.Name = "lblActiveCustomers";
+            this.lblActiveCustomers.Size = new System.Drawing.Size(293, 64);
+            this.lblActiveCustomers.TabIndex = 1;
+            this.lblActiveCustomers.Text = "1";
+            this.lblActiveCustomers.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // lblStatActiveTitle
+            // 
+            this.lblStatActiveTitle.BackColor = System.Drawing.Color.White;
+            this.lblStatActiveTitle.Dock = System.Windows.Forms.DockStyle.Top;
+            this.lblStatActiveTitle.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold);
+            this.lblStatActiveTitle.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(65)))), ((int)(((byte)(72)))), ((int)(((byte)(71)))));
+            this.lblStatActiveTitle.Location = new System.Drawing.Point(16, 14);
+            this.lblStatActiveTitle.Name = "lblStatActiveTitle";
+            this.lblStatActiveTitle.Size = new System.Drawing.Size(293, 16);
+            this.lblStatActiveTitle.TabIndex = 0;
+            this.lblStatActiveTitle.Text = "ENABLED";
+            // 
+            // panelStatInactive
+            // 
+            this.panelStatInactive.BackColor = System.Drawing.Color.White;
+            this.panelStatInactive.Controls.Add(this.lblInactiveCustomers);
+            this.panelStatInactive.Controls.Add(this.lblStatInactiveTitle);
+            this.panelStatInactive.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panelStatInactive.Location = new System.Drawing.Point(674, 0);
+            this.panelStatInactive.Margin = new System.Windows.Forms.Padding(0);
+            this.panelStatInactive.Name = "panelStatInactive";
+            this.panelStatInactive.Padding = new System.Windows.Forms.Padding(16, 14, 14, 14);
+            this.panelStatInactive.Size = new System.Drawing.Size(338, 108);
+            this.panelStatInactive.TabIndex = 2;
+            // 
+            // lblInactiveCustomers
+            // 
+            this.lblInactiveCustomers.BackColor = System.Drawing.Color.White;
+            this.lblInactiveCustomers.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lblInactiveCustomers.Font = new System.Drawing.Font("Microsoft Sans Serif", 22F, System.Drawing.FontStyle.Bold);
+            this.lblInactiveCustomers.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(24)))), ((int)(((byte)(22)))));
+            this.lblInactiveCustomers.Location = new System.Drawing.Point(16, 30);
+            this.lblInactiveCustomers.Name = "lblInactiveCustomers";
+            this.lblInactiveCustomers.Size = new System.Drawing.Size(308, 64);
+            this.lblInactiveCustomers.TabIndex = 1;
+            this.lblInactiveCustomers.Text = "1";
+            this.lblInactiveCustomers.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // lblStatInactiveTitle
+            // 
+            this.lblStatInactiveTitle.BackColor = System.Drawing.Color.White;
+            this.lblStatInactiveTitle.Dock = System.Windows.Forms.DockStyle.Top;
+            this.lblStatInactiveTitle.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold);
+            this.lblStatInactiveTitle.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(65)))), ((int)(((byte)(72)))), ((int)(((byte)(71)))));
+            this.lblStatInactiveTitle.Location = new System.Drawing.Point(16, 14);
+            this.lblStatInactiveTitle.Name = "lblStatInactiveTitle";
+            this.lblStatInactiveTitle.Size = new System.Drawing.Size(308, 16);
+            this.lblStatInactiveTitle.TabIndex = 0;
+            this.lblStatInactiveTitle.Text = "DISABLED";
             // 
             // panelToolbar
             // 
@@ -206,7 +339,7 @@ namespace SmartMed.UI
             this.panelToolbar.Controls.Add(this.flowToolbarRight);
             this.panelToolbar.Controls.Add(this.flowToolbarLeft);
             this.panelToolbar.Dock = System.Windows.Forms.DockStyle.Top;
-            this.panelToolbar.Location = new System.Drawing.Point(0, 220);
+            this.panelToolbar.Location = new System.Drawing.Point(0, 224);
             this.panelToolbar.Margin = new System.Windows.Forms.Padding(0, 0, 0, 12);
             this.panelToolbar.Name = "panelToolbar";
             this.panelToolbar.Size = new System.Drawing.Size(1012, 44);
@@ -230,23 +363,23 @@ namespace SmartMed.UI
             // 
             this.lblSearchLabel.AutoSize = true;
             this.lblSearchLabel.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(244)))), ((int)(((byte)(251)))), ((int)(((byte)(250)))));
-            this.lblSearchLabel.Font = new System.Drawing.Font("Hanken Grotesk", 9F);
+            this.lblSearchLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F);
             this.lblSearchLabel.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(65)))), ((int)(((byte)(72)))), ((int)(((byte)(71)))));
             this.lblSearchLabel.Location = new System.Drawing.Point(0, 10);
             this.lblSearchLabel.Margin = new System.Windows.Forms.Padding(0, 6, 6, 0);
             this.lblSearchLabel.Name = "lblSearchLabel";
-            this.lblSearchLabel.Size = new System.Drawing.Size(59, 20);
+            this.lblSearchLabel.Size = new System.Drawing.Size(59, 18);
             this.lblSearchLabel.TabIndex = 0;
             this.lblSearchLabel.Text = "Search:";
             // 
             // txtSearch
             // 
-            this.txtSearch.Font = new System.Drawing.Font("Hanken Grotesk", 9F);
+            this.txtSearch.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F);
             this.txtSearch.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(22)))), ((int)(((byte)(29)))), ((int)(((byte)(29)))));
             this.txtSearch.Location = new System.Drawing.Point(65, 4);
             this.txtSearch.Margin = new System.Windows.Forms.Padding(0);
             this.txtSearch.Name = "txtSearch";
-            this.txtSearch.Size = new System.Drawing.Size(200, 27);
+            this.txtSearch.Size = new System.Drawing.Size(200, 24);
             this.txtSearch.TabIndex = 1;
             // 
             // flowToolbarLeft
@@ -258,7 +391,7 @@ namespace SmartMed.UI
             this.flowToolbarLeft.Dock = System.Windows.Forms.DockStyle.Left;
             this.flowToolbarLeft.Location = new System.Drawing.Point(0, 0);
             this.flowToolbarLeft.Name = "flowToolbarLeft";
-            this.flowToolbarLeft.Size = new System.Drawing.Size(234, 44);
+            this.flowToolbarLeft.Size = new System.Drawing.Size(224, 44);
             this.flowToolbarLeft.TabIndex = 0;
             this.flowToolbarLeft.WrapContents = false;
             // 
@@ -269,7 +402,7 @@ namespace SmartMed.UI
             this.btnAdd.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(27)))), ((int)(((byte)(79)))), ((int)(((byte)(71)))));
             this.btnAdd.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(59)))), ((int)(((byte)(109)))), ((int)(((byte)(100)))));
             this.btnAdd.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnAdd.Font = new System.Drawing.Font("Hanken Grotesk", 9F);
+            this.btnAdd.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F);
             this.btnAdd.ForeColor = System.Drawing.Color.White;
             this.btnAdd.Location = new System.Drawing.Point(0, 0);
             this.btnAdd.Margin = new System.Windows.Forms.Padding(0, 0, 10, 0);
@@ -286,7 +419,7 @@ namespace SmartMed.UI
             this.btnReload.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(193)))), ((int)(((byte)(200)))), ((int)(((byte)(198)))));
             this.btnReload.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(227)))), ((int)(((byte)(234)))), ((int)(((byte)(233)))));
             this.btnReload.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnReload.Font = new System.Drawing.Font("Hanken Grotesk", 9F);
+            this.btnReload.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F);
             this.btnReload.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(22)))), ((int)(((byte)(29)))), ((int)(((byte)(29)))));
             this.btnReload.Location = new System.Drawing.Point(140, 0);
             this.btnReload.Margin = new System.Windows.Forms.Padding(0);
@@ -301,11 +434,11 @@ namespace SmartMed.UI
             this.panelGridOuter.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(193)))), ((int)(((byte)(200)))), ((int)(((byte)(198)))));
             this.panelGridOuter.Controls.Add(this.panelGridInner);
             this.panelGridOuter.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panelGridOuter.Location = new System.Drawing.Point(0, 276);
+            this.panelGridOuter.Location = new System.Drawing.Point(0, 280);
             this.panelGridOuter.Margin = new System.Windows.Forms.Padding(0, 0, 0, 16);
             this.panelGridOuter.Name = "panelGridOuter";
             this.panelGridOuter.Padding = new System.Windows.Forms.Padding(1);
-            this.panelGridOuter.Size = new System.Drawing.Size(1012, 400);
+            this.panelGridOuter.Size = new System.Drawing.Size(1012, 312);
             this.panelGridOuter.TabIndex = 2;
             // 
             // panelGridInner
@@ -316,7 +449,7 @@ namespace SmartMed.UI
             this.panelGridInner.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panelGridInner.Location = new System.Drawing.Point(1, 1);
             this.panelGridInner.Name = "panelGridInner";
-            this.panelGridInner.Size = new System.Drawing.Size(1010, 398);
+            this.panelGridInner.Size = new System.Drawing.Size(1010, 310);
             this.panelGridInner.TabIndex = 0;
             // 
             // panelGridBody
@@ -327,7 +460,7 @@ namespace SmartMed.UI
             this.panelGridBody.Location = new System.Drawing.Point(0, 36);
             this.panelGridBody.Name = "panelGridBody";
             this.panelGridBody.Padding = new System.Windows.Forms.Padding(0, 4, 0, 0);
-            this.panelGridBody.Size = new System.Drawing.Size(1010, 362);
+            this.panelGridBody.Size = new System.Drawing.Size(1010, 274);
             this.panelGridBody.TabIndex = 1;
             // 
             // gridCustomers
@@ -337,13 +470,12 @@ namespace SmartMed.UI
             dataGridViewCellStyle1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(250)))), ((int)(((byte)(252)))), ((int)(((byte)(252)))));
             this.gridCustomers.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle1;
             this.gridCustomers.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
-            this.gridCustomers.AutoSizeRowsMode = System.Windows.Forms.DataGridViewAutoSizeRowsMode.None;
             this.gridCustomers.BackgroundColor = System.Drawing.Color.White;
             this.gridCustomers.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.gridCustomers.CellBorderStyle = System.Windows.Forms.DataGridViewCellBorderStyle.SingleHorizontal;
             this.gridCustomers.ColumnHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.None;
             dataGridViewCellStyle2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(232)))), ((int)(((byte)(239)))), ((int)(((byte)(238)))));
-            dataGridViewCellStyle2.Font = new System.Drawing.Font("Hanken Grotesk", 9F);
+            dataGridViewCellStyle2.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F);
             dataGridViewCellStyle2.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(65)))), ((int)(((byte)(72)))), ((int)(((byte)(71)))));
             dataGridViewCellStyle2.SelectionBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(232)))), ((int)(((byte)(239)))), ((int)(((byte)(238)))));
             dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
@@ -360,7 +492,7 @@ namespace SmartMed.UI
             this.colStatus});
             dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
             dataGridViewCellStyle3.BackColor = System.Drawing.Color.White;
-            dataGridViewCellStyle3.Font = new System.Drawing.Font("Hanken Grotesk", 9F);
+            dataGridViewCellStyle3.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F);
             dataGridViewCellStyle3.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(22)))), ((int)(((byte)(29)))), ((int)(((byte)(29)))));
             dataGridViewCellStyle3.SelectionBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(240)))), ((int)(((byte)(236)))));
             dataGridViewCellStyle3.SelectionForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(22)))), ((int)(((byte)(29)))), ((int)(((byte)(29)))));
@@ -376,9 +508,8 @@ namespace SmartMed.UI
             this.gridCustomers.RowHeadersVisible = false;
             this.gridCustomers.RowHeadersWidth = 51;
             this.gridCustomers.RowTemplate.Height = 36;
-            this.gridCustomers.ScrollBars = System.Windows.Forms.ScrollBars.Both;
             this.gridCustomers.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.gridCustomers.Size = new System.Drawing.Size(1010, 358);
+            this.gridCustomers.Size = new System.Drawing.Size(1010, 270);
             this.gridCustomers.TabIndex = 0;
             // 
             // colCustomerID
@@ -454,11 +585,11 @@ namespace SmartMed.UI
             this.lblGridHeaderTitle.AutoSize = true;
             this.lblGridHeaderTitle.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(238)))), ((int)(((byte)(245)))), ((int)(((byte)(244)))));
             this.lblGridHeaderTitle.Dock = System.Windows.Forms.DockStyle.Left;
-            this.lblGridHeaderTitle.Font = new System.Drawing.Font("Hanken Grotesk", 8.25F, System.Drawing.FontStyle.Bold);
+            this.lblGridHeaderTitle.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold);
             this.lblGridHeaderTitle.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(65)))), ((int)(((byte)(72)))), ((int)(((byte)(71)))));
             this.lblGridHeaderTitle.Location = new System.Drawing.Point(12, 8);
             this.lblGridHeaderTitle.Name = "lblGridHeaderTitle";
-            this.lblGridHeaderTitle.Size = new System.Drawing.Size(149, 18);
+            this.lblGridHeaderTitle.Size = new System.Drawing.Size(174, 17);
             this.lblGridHeaderTitle.TabIndex = 0;
             this.lblGridHeaderTitle.Text = "CUSTOMER RECORDS";
             // 
@@ -467,7 +598,7 @@ namespace SmartMed.UI
             this.panelFooter.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(244)))), ((int)(((byte)(251)))), ((int)(((byte)(250)))));
             this.panelFooter.Controls.Add(this.flowPager);
             this.panelFooter.Dock = System.Windows.Forms.DockStyle.Top;
-            this.panelFooter.Location = new System.Drawing.Point(0, 648);
+            this.panelFooter.Location = new System.Drawing.Point(0, 624);
             this.panelFooter.Margin = new System.Windows.Forms.Padding(0, 16, 0, 0);
             this.panelFooter.Name = "panelFooter";
             this.panelFooter.Size = new System.Drawing.Size(1012, 48);
@@ -495,7 +626,7 @@ namespace SmartMed.UI
             this.btnPagePrev.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(193)))), ((int)(((byte)(200)))), ((int)(((byte)(198)))));
             this.btnPagePrev.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(227)))), ((int)(((byte)(234)))), ((int)(((byte)(233)))));
             this.btnPagePrev.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnPagePrev.Font = new System.Drawing.Font("Hanken Grotesk", 9F);
+            this.btnPagePrev.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F);
             this.btnPagePrev.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(22)))), ((int)(((byte)(29)))), ((int)(((byte)(29)))));
             this.btnPagePrev.Location = new System.Drawing.Point(8, 8);
             this.btnPagePrev.Margin = new System.Windows.Forms.Padding(0);
@@ -509,12 +640,12 @@ namespace SmartMed.UI
             // 
             this.lblPageInfo.AutoSize = true;
             this.lblPageInfo.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(244)))), ((int)(((byte)(251)))), ((int)(((byte)(250)))));
-            this.lblPageInfo.Font = new System.Drawing.Font("Hanken Grotesk", 9F);
+            this.lblPageInfo.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F);
             this.lblPageInfo.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(65)))), ((int)(((byte)(72)))), ((int)(((byte)(71)))));
-            this.lblPageInfo.Location = new System.Drawing.Point(52, 46);
+            this.lblPageInfo.Location = new System.Drawing.Point(52, 16);
             this.lblPageInfo.Margin = new System.Windows.Forms.Padding(8, 8, 8, 0);
             this.lblPageInfo.Name = "lblPageInfo";
-            this.lblPageInfo.Size = new System.Drawing.Size(83, 20);
+            this.lblPageInfo.Size = new System.Drawing.Size(83, 18);
             this.lblPageInfo.TabIndex = 1;
             this.lblPageInfo.Text = "Page 1 of 1";
             // 
@@ -525,9 +656,9 @@ namespace SmartMed.UI
             this.btnPageNext.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(193)))), ((int)(((byte)(200)))), ((int)(((byte)(198)))));
             this.btnPageNext.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(227)))), ((int)(((byte)(234)))), ((int)(((byte)(233)))));
             this.btnPageNext.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnPageNext.Font = new System.Drawing.Font("Hanken Grotesk", 9F);
+            this.btnPageNext.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F);
             this.btnPageNext.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(22)))), ((int)(((byte)(29)))), ((int)(((byte)(29)))));
-            this.btnPageNext.Location = new System.Drawing.Point(143, 38);
+            this.btnPageNext.Location = new System.Drawing.Point(143, 8);
             this.btnPageNext.Margin = new System.Windows.Forms.Padding(0);
             this.btnPageNext.Name = "btnPageNext";
             this.btnPageNext.Size = new System.Drawing.Size(36, 32);
@@ -535,154 +666,24 @@ namespace SmartMed.UI
             this.btnPageNext.Text = ">";
             this.btnPageNext.UseVisualStyleBackColor = false;
             // 
-            // tableStatsRow
-            // 
-            this.tableStatsRow.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(244)))), ((int)(((byte)(251)))), ((int)(((byte)(250)))));
-            this.tableStatsRow.ColumnCount = 3;
-            this.tableStatsRow.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 33.33F));
-            this.tableStatsRow.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 33.33F));
-            this.tableStatsRow.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 33.34F));
-            this.tableStatsRow.Controls.Add(this.panelStatTotal, 0, 0);
-            this.tableStatsRow.Controls.Add(this.panelStatActive, 1, 0);
-            this.tableStatsRow.Controls.Add(this.panelStatInactive, 2, 0);
-            this.tableStatsRow.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableStatsRow.Location = new System.Drawing.Point(0, 96);
-            this.tableStatsRow.Margin = new System.Windows.Forms.Padding(0, 0, 0, 16);
-            this.tableStatsRow.Name = "tableStatsRow";
-            this.tableStatsRow.RowCount = 1;
-            this.tableStatsRow.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableStatsRow.Size = new System.Drawing.Size(1012, 108);
-            this.tableStatsRow.TabIndex = 1;
-            // 
-            // panelStatTotal
-            // 
-            this.panelStatTotal.BackColor = System.Drawing.Color.White;
-            this.panelStatTotal.Controls.Add(this.lblTotalCustomers);
-            this.panelStatTotal.Controls.Add(this.lblStatTotalTitle);
-            this.panelStatTotal.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panelStatTotal.Location = new System.Drawing.Point(0, 0);
-            this.panelStatTotal.Margin = new System.Windows.Forms.Padding(0, 0, 14, 0);
-            this.panelStatTotal.Name = "panelStatTotal";
-            this.panelStatTotal.Padding = new System.Windows.Forms.Padding(16, 14, 14, 14);
-            this.panelStatTotal.Size = new System.Drawing.Size(159, 108);
-            this.panelStatTotal.TabIndex = 0;
-            // 
-            // lblTotalCustomers
-            // 
-            this.lblTotalCustomers.BackColor = System.Drawing.Color.White;
-            this.lblTotalCustomers.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lblTotalCustomers.Font = new System.Drawing.Font("Hanken Grotesk", 22F, System.Drawing.FontStyle.Bold);
-            this.lblTotalCustomers.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(24)))), ((int)(((byte)(22)))));
-            this.lblTotalCustomers.Location = new System.Drawing.Point(16, 30);
-            this.lblTotalCustomers.Name = "lblTotalCustomers";
-            this.lblTotalCustomers.Size = new System.Drawing.Size(129, 64);
-            this.lblTotalCustomers.TabIndex = 1;
-            this.lblTotalCustomers.Text = "2";
-            this.lblTotalCustomers.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            // 
-            // lblStatTotalTitle
-            // 
-            this.lblStatTotalTitle.BackColor = System.Drawing.Color.White;
-            this.lblStatTotalTitle.Dock = System.Windows.Forms.DockStyle.Top;
-            this.lblStatTotalTitle.Font = new System.Drawing.Font("Hanken Grotesk", 8.25F, System.Drawing.FontStyle.Bold);
-            this.lblStatTotalTitle.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(65)))), ((int)(((byte)(72)))), ((int)(((byte)(71)))));
-            this.lblStatTotalTitle.Location = new System.Drawing.Point(16, 14);
-            this.lblStatTotalTitle.Name = "lblStatTotalTitle";
-            this.lblStatTotalTitle.Size = new System.Drawing.Size(129, 16);
-            this.lblStatTotalTitle.TabIndex = 0;
-            this.lblStatTotalTitle.Text = "TOTAL CUSTOMERS";
-            // 
-            // panelStatActive
-            // 
-            this.panelStatActive.BackColor = System.Drawing.Color.White;
-            this.panelStatActive.Controls.Add(this.lblActiveCustomers);
-            this.panelStatActive.Controls.Add(this.lblStatActiveTitle);
-            this.panelStatActive.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panelStatActive.Location = new System.Drawing.Point(173, 0);
-            this.panelStatActive.Margin = new System.Windows.Forms.Padding(0, 0, 14, 0);
-            this.panelStatActive.Name = "panelStatActive";
-            this.panelStatActive.Padding = new System.Windows.Forms.Padding(16, 14, 14, 14);
-            this.panelStatActive.Size = new System.Drawing.Size(159, 108);
-            this.panelStatActive.TabIndex = 1;
-            // 
-            // lblActiveCustomers
-            // 
-            this.lblActiveCustomers.BackColor = System.Drawing.Color.White;
-            this.lblActiveCustomers.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lblActiveCustomers.Font = new System.Drawing.Font("Hanken Grotesk", 22F, System.Drawing.FontStyle.Bold);
-            this.lblActiveCustomers.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(24)))), ((int)(((byte)(22)))));
-            this.lblActiveCustomers.Location = new System.Drawing.Point(16, 30);
-            this.lblActiveCustomers.Name = "lblActiveCustomers";
-            this.lblActiveCustomers.Size = new System.Drawing.Size(129, 64);
-            this.lblActiveCustomers.TabIndex = 1;
-            this.lblActiveCustomers.Text = "1";
-            this.lblActiveCustomers.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            // 
-            // lblStatActiveTitle
-            // 
-            this.lblStatActiveTitle.BackColor = System.Drawing.Color.White;
-            this.lblStatActiveTitle.Dock = System.Windows.Forms.DockStyle.Top;
-            this.lblStatActiveTitle.Font = new System.Drawing.Font("Hanken Grotesk", 8.25F, System.Drawing.FontStyle.Bold);
-            this.lblStatActiveTitle.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(65)))), ((int)(((byte)(72)))), ((int)(((byte)(71)))));
-            this.lblStatActiveTitle.Location = new System.Drawing.Point(16, 14);
-            this.lblStatActiveTitle.Name = "lblStatActiveTitle";
-            this.lblStatActiveTitle.Size = new System.Drawing.Size(129, 16);
-            this.lblStatActiveTitle.TabIndex = 0;
-            this.lblStatActiveTitle.Text = "ENABLED";
-            // 
-            // panelStatInactive
-            // 
-            this.panelStatInactive.BackColor = System.Drawing.Color.White;
-            this.panelStatInactive.Controls.Add(this.lblInactiveCustomers);
-            this.panelStatInactive.Controls.Add(this.lblStatInactiveTitle);
-            this.panelStatInactive.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panelStatInactive.Location = new System.Drawing.Point(346, 0);
-            this.panelStatInactive.Margin = new System.Windows.Forms.Padding(0);
-            this.panelStatInactive.Name = "panelStatInactive";
-            this.panelStatInactive.Padding = new System.Windows.Forms.Padding(16, 14, 14, 14);
-            this.panelStatInactive.Size = new System.Drawing.Size(174, 108);
-            this.panelStatInactive.TabIndex = 2;
-            // 
-            // lblInactiveCustomers
-            // 
-            this.lblInactiveCustomers.BackColor = System.Drawing.Color.White;
-            this.lblInactiveCustomers.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lblInactiveCustomers.Font = new System.Drawing.Font("Hanken Grotesk", 22F, System.Drawing.FontStyle.Bold);
-            this.lblInactiveCustomers.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(24)))), ((int)(((byte)(22)))));
-            this.lblInactiveCustomers.Location = new System.Drawing.Point(16, 30);
-            this.lblInactiveCustomers.Name = "lblInactiveCustomers";
-            this.lblInactiveCustomers.Size = new System.Drawing.Size(144, 64);
-            this.lblInactiveCustomers.TabIndex = 1;
-            this.lblInactiveCustomers.Text = "1";
-            this.lblInactiveCustomers.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            // 
-            // lblStatInactiveTitle
-            // 
-            this.lblStatInactiveTitle.BackColor = System.Drawing.Color.White;
-            this.lblStatInactiveTitle.Dock = System.Windows.Forms.DockStyle.Top;
-            this.lblStatInactiveTitle.Font = new System.Drawing.Font("Hanken Grotesk", 8.25F, System.Drawing.FontStyle.Bold);
-            this.lblStatInactiveTitle.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(65)))), ((int)(((byte)(72)))), ((int)(((byte)(71)))));
-            this.lblStatInactiveTitle.Location = new System.Drawing.Point(16, 14);
-            this.lblStatInactiveTitle.Name = "lblStatInactiveTitle";
-            this.lblStatInactiveTitle.Size = new System.Drawing.Size(144, 16);
-            this.lblStatInactiveTitle.TabIndex = 0;
-            this.lblStatInactiveTitle.Text = "DISABLED";
-            // 
             // ManageCustomersForm
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(244)))), ((int)(((byte)(251)))), ((int)(((byte)(250)))));
             this.ClientSize = new System.Drawing.Size(1060, 720);
             this.Controls.Add(this.panelScrollHost);
-            this.Font = new System.Drawing.Font("Hanken Grotesk", 9F);
+            this.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F);
             this.Name = "ManageCustomersForm";
             this.Text = "Manage Customers";
             this.panelScrollHost.ResumeLayout(false);
-            this.panelScrollHost.PerformLayout();
             this.tableLayoutRoot.ResumeLayout(false);
             this.panelHeader.ResumeLayout(false);
             this.panelHeader.PerformLayout();
             this.flowHeaderActions.ResumeLayout(false);
+            this.tableStatsRow.ResumeLayout(false);
+            this.panelStatTotal.ResumeLayout(false);
+            this.panelStatActive.ResumeLayout(false);
+            this.panelStatInactive.ResumeLayout(false);
             this.panelToolbar.ResumeLayout(false);
             this.panelToolbar.PerformLayout();
             this.flowToolbarRight.ResumeLayout(false);
@@ -698,10 +699,6 @@ namespace SmartMed.UI
             this.panelFooter.PerformLayout();
             this.flowPager.ResumeLayout(false);
             this.flowPager.PerformLayout();
-            this.tableStatsRow.ResumeLayout(false);
-            this.panelStatTotal.ResumeLayout(false);
-            this.panelStatActive.ResumeLayout(false);
-            this.panelStatInactive.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }

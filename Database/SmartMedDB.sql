@@ -59,8 +59,9 @@ CREATE TABLE [Order] (
     PaymentMethod   NVARCHAR(30) NOT NULL DEFAULT 'Cash on Pickup',
     PaymentStatus   NVARCHAR(30) NOT NULL DEFAULT 'Pay on Pickup',
     PaymentReference NVARCHAR(50) NULL,
+    CancellationReason NVARCHAR(500) NULL,
     CONSTRAINT FK_Order_Customer FOREIGN KEY (CustomerID) REFERENCES Customer(CustomerID),
-    CONSTRAINT CK_Order_Status CHECK (Status IN ('Pending', 'Ready for Pickup', 'Delivered'))
+    CONSTRAINT CK_Order_Status CHECK (Status IN ('Pending', 'Ready for Pickup', 'Delivered', 'Cancelled'))
 );
 
 CREATE TABLE OrderItem (

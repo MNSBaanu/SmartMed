@@ -133,6 +133,7 @@ namespace SmartMed.UI
                     OrderService.StatusPending,
                     OrderService.StatusReadyForPickup,
                     OrderService.StatusDelivered,
+                    OrderService.StatusCancelled,
                     "Flagged"
                 });
                 cmbStatus.SelectedIndex = 0;
@@ -229,7 +230,8 @@ namespace SmartMed.UI
         {
             var rxStatus = _orders.GetPrescriptionStatusDisplay(order.OrderID);
             var displayStatus = order.Status;
-            if (string.Equals(rxStatus, PrescriptionService.StatusRejected, StringComparison.OrdinalIgnoreCase))
+            if (!string.Equals(order.Status, OrderService.StatusCancelled, StringComparison.OrdinalIgnoreCase)
+                && string.Equals(rxStatus, PrescriptionService.StatusRejected, StringComparison.OrdinalIgnoreCase))
                 displayStatus = "Flagged";
 
             return new OrderRow
@@ -246,7 +248,8 @@ namespace SmartMed.UI
                 Prescription = _orders.GetPrescriptionDisplay(order.OrderID),
                 HasPrescription = _orders.OrderHasPrescription(order.OrderID),
                 OrderDateValue = order.OrderDate,
-                IsNew = AdminOrderAlerts.IsNew(order)
+                IsNew = AdminOrderAlerts.IsNew(order),
+                CancellationReason = order.CancellationReason
             };
         }
 
@@ -308,6 +311,7 @@ namespace SmartMed.UI
                     Prescription = r.Prescription,
                     RxStatus = r.RxStatus,
                     Status = r.RawStatus,
+                    CancelReason = string.IsNullOrWhiteSpace(r.CancellationReason) ? "—" : r.CancellationReason,
                     Verify = "Verify",
                     Reject = "Reject",
                     Cancel = "Cancel",
@@ -383,10 +387,19 @@ namespace SmartMed.UI
             SetDisplayIndex("Prescription", 4);
             SetDisplayIndex("RxStatus", 5);
             SetDisplayIndex("Status", 6);
-            SetDisplayIndex("Verify", 7);
-            SetDisplayIndex("Reject", 8);
-            SetDisplayIndex("Cancel", 9);
-            SetDisplayIndex("View", 10);
+            SetDisplayIndex("CancelReason", 7);
+            SetDisplayIndex("Verify", 8);
+            SetDisplayIndex("Reject", 9);
+            SetDisplayIndex("Cancel", 10);
+            SetDisplayIndex("View", 11);
+
+            if (gridOrders.Columns.Contains("CancelReason"))
+            {
+                var col = gridOrders.Columns["CancelReason"];
+                col.HeaderText = "Cancel Reason";
+                col.MinimumWidth = 120;
+                col.ReadOnly = true;
+            }
         }
 
         private void SetDisplayIndex(string columnName, int displayIndex)
@@ -727,9 +740,15 @@ namespace SmartMed.UI
                     e.CellStyle.ForeColor = Color.FromArgb(27, 79, 71);
                     e.CellStyle.Font = UiTheme.UiFontBold;
                 }
+                else if (string.Equals(status, OrderService.StatusCancelled, StringComparison.OrdinalIgnoreCase))
+                {
+                    e.CellStyle.BackColor = Color.FromArgb(243, 244, 246);
+                    e.CellStyle.ForeColor = Color.FromArgb(55, 65, 81);
+                    e.CellStyle.Font = UiTheme.UiFontBold;
+                }
 
                 if (canUpdate)
-                    e.CellStyle.ForeColor = UiTheme.AdminTeal;
+                    e.CellStyle.ForeColor = Color.FromArgb(27, 79, 71);
 
                 return;
             }
@@ -839,13 +858,13 @@ namespace SmartMed.UI
                         "SmartMed", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     return;
                 }
-                if (MessageBox.Show("Cancel this order and restore stock?", "Confirm Cancel",
-                        MessageBoxButtons.YesNo, MessageBoxIcon.Warning) != DialogResult.Yes)
+
+                if (!CancelReasonDialog.TryGetReason(FindForm(), out var reason))
                     return;
 
                 try
                 {
-                    _orders.CancelOrderAsAdmin(orderId);
+                    _orders.CancelOrderAsAdmin(orderId, reason);
                     LoadOrders();
                     MessageBox.Show("Order cancelled and stock restored.", "SmartMed",
                         MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -876,8 +895,10 @@ namespace SmartMed.UI
                 "",
                 "Line items:"
             };
+            if (!string.IsNullOrWhiteSpace(order.CancellationReason))
+                lines.Insert(5, $"Cancel reason: {order.CancellationReason}");
             if (!string.IsNullOrWhiteSpace(order.PaymentReference))
-                lines.Insert(7, $"Payment Ref: {order.PaymentReference}");
+                lines.Insert(string.IsNullOrWhiteSpace(order.CancellationReason) ? 7 : 8, $"Payment Ref: {order.PaymentReference}");
             foreach (var item in items)
                 lines.Add($"  • {item.MedicineName} x{item.Quantity} — LKR {item.Subtotal:N2}");
 
@@ -961,6 +982,7 @@ namespace SmartMed.UI
             public string Reject { get; set; }
             public string Cancel { get; set; }
             public string View { get; set; }
+            public string CancelReason { get; set; }
         }
 
         private sealed class OrderRow
@@ -978,6 +1000,7 @@ namespace SmartMed.UI
             public string Prescription { get; set; }
             public bool HasPrescription { get; set; }
             public bool IsNew { get; set; }
+            public string CancellationReason { get; set; }
         }
     }
 }

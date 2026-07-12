@@ -14,6 +14,7 @@ namespace SmartMed.Services
         public const string StatusPending = "Pending";
         public const string StatusReadyForPickup = "Ready for Pickup";
         public const string StatusDelivered = "Delivered";
+        public const string StatusCancelled = "Cancelled";
 
         private static readonly string[] ValidStatuses =
         {
@@ -154,18 +155,24 @@ namespace SmartMed.Services
             return orderId;
         }
 
-        public void CancelOrder(int orderId, int customerId)
+        public void CancelOrder(int orderId, int customerId, string reason)
         {
-            CancelPendingOrder(orderId, customerId);
+            CancelPendingOrder(orderId, customerId, reason);
         }
 
-        public void CancelOrderAsAdmin(int orderId)
+        public void CancelOrderAsAdmin(int orderId, string reason)
         {
-            CancelPendingOrder(orderId, null);
+            CancelPendingOrder(orderId, null, reason);
         }
 
-        private void CancelPendingOrder(int orderId, int? customerId)
+        private void CancelPendingOrder(int orderId, int? customerId, string reason)
         {
+            if (ValidationService.IsNullOrWhiteSpace(reason))
+                throw new ArgumentException("A cancellation reason is required.");
+            reason = reason.Trim();
+            if (reason.Length > 500)
+                throw new ArgumentException("Cancellation reason must be 500 characters or fewer.");
+
             var order = _orders.GetById(orderId);
             if (order == null)
                 throw new InvalidOperationException("Order not found.");
@@ -178,7 +185,7 @@ namespace SmartMed.Services
             foreach (var item in items)
                 _medicines.RestoreStock(item.MedicineID, item.Quantity);
 
-            _orders.DeleteOrder(orderId);
+            _orders.MarkCancelled(orderId, reason);
         }
 
         public DataTable BuildCustomerOrderExportTable(int customerId)
@@ -189,6 +196,7 @@ namespace SmartMed.Services
             table.Columns.Add("Status");
             table.Columns.Add("Total (LKR)");
             table.Columns.Add("Prescription");
+            table.Columns.Add("Cancellation Reason");
 
             foreach (var order in GetByCustomer(customerId))
             {
@@ -197,7 +205,8 @@ namespace SmartMed.Services
                     order.OrderDate.ToString("MMM dd, yyyy hh:mm tt"),
                     order.Status,
                     order.TotalAmount.ToString("N2"),
-                    GetPrescriptionDisplay(order.OrderID));
+                    GetPrescriptionDisplay(order.OrderID),
+                    string.IsNullOrWhiteSpace(order.CancellationReason) ? "—" : order.CancellationReason);
             }
 
             return table;

@@ -13,6 +13,7 @@ namespace SmartMed.Models
         public string PaymentMethod { get; set; }
         public string PaymentStatus { get; set; }
         public string PaymentReference { get; set; }
+        public string CancellationReason { get; set; }
 
         public void CalculateTotal() { }
         public void UpdateStatus(string status) { }

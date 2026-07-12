@@ -36,18 +36,23 @@ namespace SmartMed.Services
                 ("Order Ref", typeof(string)),
                 ("Order Date", typeof(string)),
                 ("Status", typeof(string)),
-                ("Total", typeof(string)));
+                ("Total", typeof(string)),
+                ("Cancel Reason", typeof(string)));
 
             if (source == null) return table;
 
             foreach (DataRow row in source.Rows)
             {
                 var orderId = Convert.ToInt32(row["OrderID"]);
+                var reason = source.Columns.Contains("CancellationReason") && row["CancellationReason"] != DBNull.Value
+                    ? row["CancellationReason"]?.ToString()
+                    : null;
                 table.Rows.Add(
                     $"#SM-{orderId:D4}",
                     FormatDateTime(row["OrderDate"]),
                     row["Status"]?.ToString(),
-                    FormatCurrency(row["TotalAmount"]));
+                    FormatCurrency(row["TotalAmount"]),
+                    string.IsNullOrWhiteSpace(reason) ? "—" : reason);
             }
 
             return table;

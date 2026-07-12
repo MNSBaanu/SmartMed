@@ -329,6 +329,7 @@ namespace SmartMed.UI
             "Pending",
             "Ready for Pickup",
             "Delivered",
+            "Cancelled",
             "Flagged"});
             this.cmbStatus.Location = new System.Drawing.Point(0, 20);
             this.cmbStatus.Name = "cmbStatus";

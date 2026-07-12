@@ -107,10 +107,13 @@ namespace SmartMed.UI
                 o.Status,
                 Total = $"LKR {o.TotalAmount:N2}",
                 Payment = FormatPayment(o),
-                Prescription = _orders.GetPrescriptionDisplay(o.OrderID)
+                Prescription = _orders.GetPrescriptionDisplay(o.OrderID),
+                CancelReason = string.IsNullOrWhiteSpace(o.CancellationReason) ? "—" : o.CancellationReason
             }).ToList());
             if (gridOrders.Columns.Contains("OrderID"))
                 gridOrders.Columns["OrderID"].Visible = false;
+            if (gridOrders.Columns.Contains("CancelReason"))
+                gridOrders.Columns["CancelReason"].HeaderText = "Cancel Reason";
             UiTheme.BeautifyGridHeaders(gridOrders);
             gridItems.DataSource = null;
             _selectedOrderId = null;
@@ -171,13 +174,12 @@ namespace SmartMed.UI
                 return;
             }
 
-            if (SmartMedMessageBox.Show("Cancel this order and restore stock?", "Confirm Cancel",
-                    MessageBoxButtons.YesNo, MessageBoxIcon.Question) != DialogResult.Yes)
+            if (!CancelReasonDialog.TryGetReason(FindForm(), out var reason))
                 return;
 
             try
             {
-                _orders.CancelOrder(_selectedOrderId.Value, Session.CurrentCustomer.CustomerID);
+                _orders.CancelOrder(_selectedOrderId.Value, Session.CurrentCustomer.CustomerID, reason);
                 RefreshOrders();
                 SmartMedMessageBox.Show("Order cancelled.", "Cancel Order", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
