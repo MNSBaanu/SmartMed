@@ -437,7 +437,6 @@ namespace SmartMed.UI
             this.lblBrandIcon.TabIndex = 0;
             this.lblBrandIcon.Text = "Rx";
             this.lblBrandIcon.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.lblBrandIcon.Click += new System.EventHandler(this.lblBrandIcon_Click);
             // 
             // LoginForm
             // 
@@ -452,7 +451,6 @@ namespace SmartMed.UI
             this.Name = "LoginForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "SmartMed ? Clinical Login";
-            this.Load += new System.EventHandler(this.LoginForm_Load);
             this.panelTitleBar.ResumeLayout(false);
             this.panelTitleBar.PerformLayout();
             this.pnlTitleIcon.ResumeLayout(false);

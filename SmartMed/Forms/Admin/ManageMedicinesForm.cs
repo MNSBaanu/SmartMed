@@ -128,26 +128,25 @@ namespace SmartMed.UI
             if (_runtimeWired) return;
             _runtimeWired = true;
 
-            btnAdd.Click += (s, e) => ShowMedicineDialog(null);
-            btnExport.Click += BtnExport_Click;
-            btnViewExpiryAlerts.Click += BtnViewExpiryAlerts_Click;
-            btnClear.Click += BtnClear_Click;
+            // Placeholder chrome cannot be expressed in the Designer.
             UiTheme.WireClinicalPlaceholderTextBox(txtSearch, "Search");
             UiTheme.WireClinicalPlaceholderTextBox(txtMinPrice, "Min");
             UiTheme.WireClinicalPlaceholderTextBox(txtMaxPrice, "Max");
-            btnSearch.Click += (s, e) => ApplyFilters();
-            txtSearch.KeyDown += TxtSearch_KeyDown;
-            txtSearch.TextChanged += (s, e) => ApplyFilters();
-            cmbCategory.SelectedIndexChanged += (s, e) => ApplyFilters();
-            txtMinPrice.TextChanged += (s, e) => ApplyFilters();
-            txtMaxPrice.TextChanged += (s, e) => ApplyFilters();
-            gridMedicines.CellFormatting += GridMedicines_CellFormatting;
-            gridMedicines.CellContentClick += GridMedicines_CellContentClick;
-            gridMedicines.RowPrePaint += GridMedicines_RowPrePaint;
-            gridMedicines.SelectionChanged += GridMedicines_SelectionChanged;
         }
 
-        private void BtnClear_Click(object sender, EventArgs e)
+        private void btnAdd_Click(object sender, EventArgs e) => ShowMedicineDialog(null);
+
+        private void btnSearch_Click(object sender, EventArgs e) => ApplyFilters();
+
+        private void txtSearch_TextChanged(object sender, EventArgs e) => ApplyFilters();
+
+        private void cmbCategory_SelectedIndexChanged(object sender, EventArgs e) => ApplyFilters();
+
+        private void txtMinPrice_TextChanged(object sender, EventArgs e) => ApplyFilters();
+
+        private void txtMaxPrice_TextChanged(object sender, EventArgs e) => ApplyFilters();
+
+        private void btnClear_Click(object sender, EventArgs e)
         {
             ClearMedicineFilters();
         }
@@ -174,7 +173,7 @@ namespace SmartMed.UI
             textBox.Text = placeholder;
         }
 
-        private void TxtSearch_KeyDown(object sender, KeyEventArgs e)
+        private void txtSearch_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Enter)
             {
@@ -340,7 +339,7 @@ namespace SmartMed.UI
                 : Color.FromArgb(53, 103, 94);
         }
 
-        private void BtnViewExpiryAlerts_Click(object sender, EventArgs e) =>
+        private void btnViewExpiryAlerts_Click(object sender, EventArgs e) =>
             ExpiryAlertsDialog.Show(FindForm(), _expiryAlertLines);
 
         private static string FormatPromoDate(DateTime? date) =>
@@ -352,7 +351,7 @@ namespace SmartMed.UI
             return Rules.IsPromotionActive(m) ? "Active" : "Scheduled";
         }
 
-        private void BtnExport_Click(object sender, EventArgs e)
+        private void btnExport_Click(object sender, EventArgs e)
         {
             try
             {
@@ -382,7 +381,7 @@ namespace SmartMed.UI
             }
         }
 
-        private void GridMedicines_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        private void gridMedicines_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
             if (e.RowIndex < 0 || !_servicesReady) return;
 
@@ -427,7 +426,7 @@ namespace SmartMed.UI
             }
         }
 
-        private void GridMedicines_SelectionChanged(object sender, EventArgs e)
+        private void gridMedicines_SelectionChanged(object sender, EventArgs e)
         {
             if (gridMedicines.CurrentRow == null || gridMedicines.CurrentRow.IsNewRow)
             {
@@ -438,7 +437,7 @@ namespace SmartMed.UI
             _selectedId = cell?.Value != null ? Convert.ToInt32(cell.Value) : (int?)null;
         }
 
-        private void GridMedicines_RowPrePaint(object sender, DataGridViewRowPrePaintEventArgs e)
+        private void gridMedicines_RowPrePaint(object sender, DataGridViewRowPrePaintEventArgs e)
         {
             if (e.RowIndex < 0 || gridMedicines.Rows[e.RowIndex].IsNewRow) return;
             var idCell = gridMedicines.Rows[e.RowIndex].Cells["MedicineID"];
@@ -466,7 +465,7 @@ namespace SmartMed.UI
             }
         }
 
-        private void GridMedicines_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
+        private void gridMedicines_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
         {
             if (e.RowIndex < 0 || gridMedicines.Rows[e.RowIndex].Cells["MedicineID"]?.Value == null)
                 return;

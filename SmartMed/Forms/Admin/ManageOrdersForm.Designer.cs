@@ -209,6 +209,7 @@ namespace SmartMed.UI
             this.btnApplyFilters.TabIndex = 0;
             this.btnApplyFilters.Text = "Apply Filters";
             this.btnApplyFilters.UseVisualStyleBackColor = false;
+            this.btnApplyFilters.Click += new System.EventHandler(this.btnApplyFilters_Click);
             // 
             // btnExport
             // 
@@ -224,6 +225,7 @@ namespace SmartMed.UI
             this.btnExport.TabIndex = 1;
             this.btnExport.Text = "Export Data";
             this.btnExport.UseVisualStyleBackColor = false;
+            this.btnExport.Click += new System.EventHandler(this.btnExport_Click);
             // 
             // panelFieldDate
             // 
@@ -457,6 +459,15 @@ namespace SmartMed.UI
             this.gridOrders.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.gridOrders.Size = new System.Drawing.Size(1010, 362);
             this.gridOrders.TabIndex = 0;
+            this.gridOrders.CellBeginEdit += new System.Windows.Forms.DataGridViewCellCancelEventHandler(this.gridOrders_CellBeginEdit);
+            this.gridOrders.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.gridOrders_CellClick);
+            this.gridOrders.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.gridOrders_CellContentClick);
+            this.gridOrders.CellFormatting += new System.Windows.Forms.DataGridViewCellFormattingEventHandler(this.gridOrders_CellFormatting);
+            this.gridOrders.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.gridOrders_CellValueChanged);
+            this.gridOrders.CurrentCellDirtyStateChanged += new System.EventHandler(this.gridOrders_CurrentCellDirtyStateChanged);
+            this.gridOrders.DataError += new System.Windows.Forms.DataGridViewDataErrorEventHandler(this.gridOrders_DataError);
+            this.gridOrders.EditingControlShowing += new System.Windows.Forms.DataGridViewEditingControlShowingEventHandler(this.gridOrders_EditingControlShowing);
+            this.gridOrders.SelectionChanged += new System.EventHandler(this.gridOrders_SelectionChanged);
             // 
             // panelFooter
             // 
@@ -498,6 +509,7 @@ namespace SmartMed.UI
             this.btnPagePrev.TabIndex = 0;
             this.btnPagePrev.Text = "<";
             this.btnPagePrev.UseVisualStyleBackColor = false;
+            this.btnPagePrev.Click += new System.EventHandler(this.btnPagePrev_Click);
             // 
             // lblPageInfo
             // 
@@ -526,6 +538,7 @@ namespace SmartMed.UI
             this.btnPageNext.TabIndex = 2;
             this.btnPageNext.Text = ">";
             this.btnPageNext.UseVisualStyleBackColor = false;
+            this.btnPageNext.Click += new System.EventHandler(this.btnPageNext_Click);
             // 
             // tableStatsRow
             // 

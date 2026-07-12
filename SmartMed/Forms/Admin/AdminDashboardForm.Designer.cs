@@ -174,6 +174,7 @@ namespace SmartMed.UI
             this.btnRefresh.TabIndex = 1;
             this.btnRefresh.Text = "Refresh";
             this.btnRefresh.UseVisualStyleBackColor = false;
+            this.btnRefresh.Click += new System.EventHandler(this.btnRefresh_Click);
             // 
             // lblPageSubtitle
             // 
@@ -465,6 +466,7 @@ namespace SmartMed.UI
             this.gridLowStock.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.gridLowStock.Size = new System.Drawing.Size(504, 152);
             this.gridLowStock.TabIndex = 0;
+            this.gridLowStock.CellFormatting += new System.Windows.Forms.DataGridViewCellFormattingEventHandler(this.gridLowStock_CellFormatting);
             // 
             // MedicineName
             // 
@@ -590,6 +592,7 @@ namespace SmartMed.UI
             this.gridExpiry.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.gridExpiry.Size = new System.Drawing.Size(490, 152);
             this.gridExpiry.TabIndex = 0;
+            this.gridExpiry.CellFormatting += new System.Windows.Forms.DataGridViewCellFormattingEventHandler(this.gridExpiry_CellFormatting);
             // 
             // BatchId
             // 
@@ -701,6 +704,8 @@ namespace SmartMed.UI
             this.gridRecent.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.gridRecent.Size = new System.Drawing.Size(1010, 188);
             this.gridRecent.TabIndex = 0;
+            this.gridRecent.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.gridRecent_CellContentClick);
+            this.gridRecent.CellFormatting += new System.Windows.Forms.DataGridViewCellFormattingEventHandler(this.gridRecent_CellFormatting);
             // 
             // OrderRef
             // 
@@ -774,6 +779,7 @@ namespace SmartMed.UI
             this.btnPrint.TabIndex = 1;
             this.btnPrint.Text = "Print";
             this.btnPrint.UseVisualStyleBackColor = false;
+            this.btnPrint.Click += new System.EventHandler(this.btnPrint_Click);
             // 
             // lblRecentHeaderTitle
             // 

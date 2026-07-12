@@ -259,13 +259,5 @@ namespace SmartMed.UI
                 SmartMedMessageBox.Show(ex.Message, "Login Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
         }
-
-        private void LoginForm_Load(object sender, EventArgs e)
-        {
-        }
-
-        private void lblBrandIcon_Click(object sender, EventArgs e)
-        {
-        }
     }
 }

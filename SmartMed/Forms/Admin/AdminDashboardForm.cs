@@ -16,7 +16,6 @@ namespace SmartMed.UI
         private bool _servicesReady;
 
         private List<object> _recentRows = new List<object>();
-        private bool _runtimeWired;
         private bool _chromeApplied;
 
         public AdminDashboardForm()
@@ -39,8 +38,6 @@ namespace SmartMed.UI
         {
             base.OnLoad(e);
             ApplyViewChrome();
-            if (_servicesReady)
-                WireRuntimeBehavior();
         }
 
         protected override void DoRefreshPage() => LoadDashboardData();
@@ -64,9 +61,6 @@ namespace SmartMed.UI
             WirePanelBorder(panelLowStockOuter);
             WirePanelBorder(panelExpiryOuter);
             WirePanelBorder(panelRecentOuter);
-
-            gridLowStock.CellFormatting += GridAlertStatus_CellFormatting;
-            gridExpiry.CellFormatting += GridAlertStatus_CellFormatting;
         }
 
         private static void WirePanelBorder(Panel panel)
@@ -99,15 +93,23 @@ namespace SmartMed.UI
             };
         }
 
-        private void WireRuntimeBehavior()
-        {
-            if (_runtimeWired) return;
-            _runtimeWired = true;
+        private void btnRefresh_Click(object sender, EventArgs e) => LoadDashboardData();
 
-            btnRefresh.Click += (s, e) => LoadDashboardData();
-            btnPrint.Click += BtnPrintRecent_Click;
-            gridRecent.CellFormatting += GridRecent_CellFormatting;
-            gridRecent.CellContentClick += GridRecent_CellContentClick;
+        private void btnPrint_Click(object sender, EventArgs e)
+        {
+            if (gridRecent.Rows.Count == 0)
+            {
+                MessageBox.Show("No recent orders to print.", "Print", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return;
+            }
+            try
+            {
+                ExportHelper.PrintGrid(gridRecent, "Recent Fulfillment Activity");
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Print Failed", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
         }
 
         protected override void LoadDesignTimePreview()
@@ -185,7 +187,13 @@ namespace SmartMed.UI
             gridRecent.Columns["Actions"].DisplayIndex = gridRecent.Columns.Count - 1;
         }
 
-        private static void GridAlertStatus_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
+        private void gridLowStock_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e) =>
+            ApplyAlertStatusCellFormatting(sender, e);
+
+        private void gridExpiry_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e) =>
+            ApplyAlertStatusCellFormatting(sender, e);
+
+        private static void ApplyAlertStatusCellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
         {
             if (e.RowIndex < 0 || e.ColumnIndex < 0) return;
             var grid = (DataGridView)sender;
@@ -220,7 +228,7 @@ namespace SmartMed.UI
             }
         }
 
-        private void GridRecent_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
+        private void gridRecent_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
         {
             if (e.RowIndex < 0 || e.ColumnIndex < 0) return;
             if (UiTheme.IsSelectedRow(gridRecent, e.RowIndex))
@@ -254,7 +262,7 @@ namespace SmartMed.UI
             }
         }
 
-        private void GridRecent_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        private void gridRecent_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
             if (e.RowIndex < 0 || gridRecent.Columns[e.ColumnIndex].Name != "Actions") return;
             GoToAdminSection(AdminHostForm.AdminNavItem.Orders);
@@ -275,23 +283,6 @@ namespace SmartMed.UI
                 }
             }
             host?.NavigateTo(nav);
-        }
-
-        private void BtnPrintRecent_Click(object sender, EventArgs e)
-        {
-            if (gridRecent.Rows.Count == 0)
-            {
-                MessageBox.Show("No recent orders to print.", "Print", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                return;
-            }
-            try
-            {
-                ExportHelper.PrintGrid(gridRecent, "Recent Fulfillment Activity");
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message, "Print Failed", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-            }
         }
 
         private static string FormatRelativeTime(DateTime orderDate)

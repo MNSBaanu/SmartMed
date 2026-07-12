@@ -19,7 +19,6 @@ namespace SmartMed.UI
         private List<CustomerRow> _allRows = new List<CustomerRow>();
         private List<CustomerRow> _filteredRows = new List<CustomerRow>();
         private int? _selectedId;
-        private bool _runtimeWired;
         private bool _chromeApplied;
 
         public ManageCustomersForm()
@@ -39,8 +38,6 @@ namespace SmartMed.UI
         {
             base.OnLoad(e);
             ApplyViewChrome();
-            if (_servicesReady)
-                WireRuntimeBehavior();
         }
 
         protected override void DoRefreshPage() => LoadCustomers();
@@ -116,20 +113,11 @@ namespace SmartMed.UI
             };
         }
 
-        private void WireRuntimeBehavior()
-        {
-            if (_runtimeWired) return;
-            _runtimeWired = true;
+        private void btnAdd_Click(object sender, EventArgs e) => ShowCustomerDialog(null);
 
-            btnAdd.Click += (s, e) => ShowCustomerDialog(null);
-            btnReload.Click += (s, e) => RefreshPage();
-            txtSearch.TextChanged += (s, e) => ApplyFilters();
-            btnExport.Click += BtnExport_Click;
-            btnPrint.Click += BtnPrint_Click;
-            gridCustomers.CellFormatting += GridCustomers_CellFormatting;
-            gridCustomers.CellContentClick += GridCustomers_CellContentClick;
-            gridCustomers.SelectionChanged += GridCustomers_SelectionChanged;
-        }
+        private void btnReload_Click(object sender, EventArgs e) => RefreshPage();
+
+        private void txtSearch_TextChanged(object sender, EventArgs e) => ApplyFilters();
 
         private void EditCustomer(int customerId)
         {
@@ -340,7 +328,7 @@ namespace SmartMed.UI
             gridCustomers.Columns.Add(column);
         }
 
-        private void GridCustomers_SelectionChanged(object sender, EventArgs e)
+        private void gridCustomers_SelectionChanged(object sender, EventArgs e)
         {
             if (gridCustomers.CurrentRow == null)
             {
@@ -357,7 +345,7 @@ namespace SmartMed.UI
             gridCustomers.ClearSelection();
         }
 
-        private void GridCustomers_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        private void gridCustomers_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
             if (e.RowIndex < 0 || !_servicesReady) return;
 
@@ -379,7 +367,7 @@ namespace SmartMed.UI
                 RemoveCustomer(id);
         }
 
-        private void GridCustomers_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
+        private void gridCustomers_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
         {
             if (e.RowIndex < 0 || e.ColumnIndex < 0) return;
 
@@ -545,7 +533,7 @@ namespace SmartMed.UI
         private List<Customer> GetFilteredCustomers() =>
             _filteredRows.Select(r => r.Customer).Where(c => c != null).ToList();
 
-        private void BtnExport_Click(object sender, EventArgs e)
+        private void btnExport_Click(object sender, EventArgs e)
         {
             try
             {
@@ -567,7 +555,7 @@ namespace SmartMed.UI
             }
         }
 
-        private void BtnPrint_Click(object sender, EventArgs e)
+        private void btnPrint_Click(object sender, EventArgs e)
         {
             if (gridCustomers.Rows.Count == 0)
             {
