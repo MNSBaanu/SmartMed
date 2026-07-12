@@ -308,9 +308,9 @@ namespace SmartMed.UI
                     Prescription = r.Prescription,
                     RxStatus = r.RxStatus,
                     Status = r.RawStatus,
-                    Verify = CanReviewRx(r) ? "Verify" : string.Empty,
-                    Reject = CanReviewRx(r) ? "Reject" : string.Empty,
-                    Cancel = CanCancelOrder(r) ? "Cancel" : string.Empty,
+                    Verify = "Verify",
+                    Reject = "Reject",
+                    Cancel = "Cancel",
                     View = "View"
                 })
                 .ToList();
@@ -745,6 +745,16 @@ namespace SmartMed.UI
 
                 e.CellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
                 e.CellStyle.Font = UiTheme.UiFontBold;
+
+                var allowed = columnName == "View"
+                    || (columnName == "Cancel" ? CanCancelOrder(row) : CanReviewRx(row));
+
+                if (!allowed)
+                {
+                    e.CellStyle.ForeColor = UiTheme.AdminMuted;
+                    return;
+                }
+
                 e.CellStyle.ForeColor = columnName == "Verify" || columnName == "View"
                     ? UiTheme.AdminTeal
                     : UiTheme.Danger;
@@ -760,9 +770,6 @@ namespace SmartMed.UI
             if (colName != "View" && colName != "Verify" && colName != "Reject" && colName != "Cancel")
                 return;
 
-            var cellValue = gridOrders.Rows[e.RowIndex].Cells[colName].Value?.ToString();
-            if (string.IsNullOrEmpty(cellValue)) return;
-
             var orderId = Convert.ToInt32(gridOrders.Rows[e.RowIndex].Cells["OrderID"].Value);
             var row = GetOrderRow(e.RowIndex);
 
@@ -774,7 +781,13 @@ namespace SmartMed.UI
 
             if (colName == "Verify")
             {
-                if (!CanReviewRx(row)) return;
+                if (!CanReviewRx(row))
+                {
+                    MessageBox.Show(
+                        "Verify is only available when a prescription is pending review.",
+                        "SmartMed", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    return;
+                }
                 try
                 {
                     _orders.VerifyPrescription(orderId);
@@ -791,7 +804,13 @@ namespace SmartMed.UI
 
             if (colName == "Reject")
             {
-                if (!CanReviewRx(row)) return;
+                if (!CanReviewRx(row))
+                {
+                    MessageBox.Show(
+                        "Reject is only available when a prescription is pending review.",
+                        "SmartMed", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    return;
+                }
                 if (MessageBox.Show(
                         "Reject this prescription? The order cannot move forward until a valid prescription is provided.",
                         "Reject Prescription", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) != DialogResult.Yes)
@@ -813,7 +832,13 @@ namespace SmartMed.UI
 
             if (colName == "Cancel")
             {
-                if (!CanCancelOrder(row)) return;
+                if (!CanCancelOrder(row))
+                {
+                    MessageBox.Show(
+                        "Cancel is only available while the order is Pending.",
+                        "SmartMed", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    return;
+                }
                 if (MessageBox.Show("Cancel this order and restore stock?", "Confirm Cancel",
                         MessageBoxButtons.YesNo, MessageBoxIcon.Warning) != DialogResult.Yes)
                     return;
