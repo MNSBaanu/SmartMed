@@ -242,7 +242,7 @@ namespace SmartMed.UI
             this.lblTotalCustomers.Name = "lblTotalCustomers";
             this.lblTotalCustomers.Size = new System.Drawing.Size(293, 64);
             this.lblTotalCustomers.TabIndex = 1;
-            this.lblTotalCustomers.Text = "2";
+            this.lblTotalCustomers.Text = "-";
             this.lblTotalCustomers.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // lblStatTotalTitle
@@ -280,7 +280,7 @@ namespace SmartMed.UI
             this.lblActiveCustomers.Name = "lblActiveCustomers";
             this.lblActiveCustomers.Size = new System.Drawing.Size(293, 64);
             this.lblActiveCustomers.TabIndex = 1;
-            this.lblActiveCustomers.Text = "1";
+            this.lblActiveCustomers.Text = "-";
             this.lblActiveCustomers.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // lblStatActiveTitle
@@ -318,7 +318,7 @@ namespace SmartMed.UI
             this.lblInactiveCustomers.Name = "lblInactiveCustomers";
             this.lblInactiveCustomers.Size = new System.Drawing.Size(308, 64);
             this.lblInactiveCustomers.TabIndex = 1;
-            this.lblInactiveCustomers.Text = "1";
+            this.lblInactiveCustomers.Text = "-";
             this.lblInactiveCustomers.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // lblStatInactiveTitle

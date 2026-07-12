@@ -114,30 +114,13 @@ namespace SmartMed.UI
         protected override void LoadDesignTimePreview()
         {
             ApplyViewChrome();
-            lblStockValue.Text = "128";
-            lblOrdersValue.Text = "4";
-            lblSalesValue.Text = "245,600";
-            lblCustomersValue.Text = "86";
-
-            gridLowStock.DataSource = new[]
-            {
-                new { MedicineName = "Amoxicillin 500mg", Level = "8 units", Status = "LOW" },
-                new { MedicineName = "Metformin 850mg", Level = "3 units", Status = "CRITICAL" }
-            };
-            UiTheme.BeautifyGridHeaders(gridLowStock);
-
-            gridExpiry.DataSource = new[]
-            {
-                new { BatchId = "#M-003", Medicine = "Metformin 850mg", DueDate = "EXPIRED" },
-                new { BatchId = "#M-001", Medicine = "Amoxicillin 500mg", DueDate = "18 Days" }
-            };
-            UiTheme.BeautifyGridHeaders(gridExpiry);
-
-            _recentRows = new List<object>
-            {
-                new { OrderRef = "#SM-0001", CustomerName = "Jane Perera", FulfillmentStatus = OrderService.StatusPending, Timestamp = "2 hours ago" },
-                new { OrderRef = "#SM-0002", CustomerName = "Kamal Silva", FulfillmentStatus = OrderService.StatusDelivered, Timestamp = "1 day ago" }
-            };
+            lblStockValue.Text = "-";
+            lblOrdersValue.Text = "-";
+            lblSalesValue.Text = "-";
+            lblCustomersValue.Text = "-";
+            gridLowStock.DataSource = null;
+            gridExpiry.DataSource = null;
+            _recentRows = new List<object>();
             BindRecentGrid(_recentRows);
         }
 

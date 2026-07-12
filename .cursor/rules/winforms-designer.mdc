@@ -23,7 +23,7 @@ alwaysApply: true
 ## Code-built page content (Manage Medicines, Customers, etc.)
 - Override `InitializePageContent()`: call `BuildPageContent()` once (`_pageBuilt` guard).
 - `BuildPageContent()` must call `BuildContent()` then `LoadDesignTimePreview()` when `IsDesignHost()`.
-- `LoadDesignTimePreview()` uses in-memory mock models (same shape as runtime) and the same `BindGrid` / `UpdateStats` helpers as runtime.
+- `LoadDesignTimePreview()` is chrome-only (empty grids / "—" stats). Do not load mock rows or open services.
 - Runtime data load (`LoadMedicines()`, etc.) runs only when `!IsDesignHost()`.
 - Stats, expiry alerts, and grid formatting must not require `MedicineService` / DB when `IsDesignHost()` is true.
 
@@ -31,7 +31,7 @@ alwaysApply: true
 When changing an admin page UI, verify all of the following:
 1. Designer shows the same controls as runtime (grid, search, form, stats, alerts).
 2. `lblTopSubtitle` matches the page name in both designer and runtime.
-3. `LoadDesignTimePreview()` populates representative mock data.
+3. `LoadDesignTimePreview()` stays empty of sample data (chrome / blank only).
 4. No service/repository is constructed during design time.
 5. `AutoScaleDimensions` stays `7F, 15F` on all admin forms (match `AdminShellForm`).
 6. Do not save stale `btnClose` / `btnNavLogout` positions in Designer files; anchors + `SyncShellChrome()` own placement.

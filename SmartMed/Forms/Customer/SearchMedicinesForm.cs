@@ -45,18 +45,7 @@ namespace SmartMed.UI
         protected override void LoadDesignTimePreview()
         {
             ApplyViewChrome();
-
-            if (cmbCategory.Items.Count == 0)
-            {
-                cmbCategory.Items.Add("All categories");
-                cmbCategory.Items.Add("Wellness");
-                cmbCategory.SelectedIndex = 0;
-            }
-
-            UiTheme.SetGridDataSource(grid, DesignTimePreviewData.SearchMedicineRows());
-            if (grid.Columns.Contains("MedicineID"))
-                grid.Columns["MedicineID"].Visible = false;
-            UiTheme.BeautifyGridHeaders(grid);
+            UiTheme.SetGridDataSource(grid, new object[0]);
             AddCartColumns();
         }
 

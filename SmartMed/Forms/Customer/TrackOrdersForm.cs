@@ -42,14 +42,9 @@ namespace SmartMed.UI
         protected override void LoadDesignTimePreview()
         {
             ApplyViewChrome();
-
-            UiTheme.SetGridDataSource(gridOrders, DesignTimePreviewData.TrackOrderRows());
-            if (gridOrders.Columns.Contains("OrderID"))
-                gridOrders.Columns["OrderID"].Visible = false;
-            UiTheme.BeautifyGridHeaders(gridOrders);
-            UiTheme.SetGridDataSource(gridItems, DesignTimePreviewData.TrackOrderItemRows());
-            UiTheme.BeautifyGridHeaders(gridItems);
-            _selectedOrderId = 1;
+            UiTheme.SetGridDataSource(gridOrders, new object[0]);
+            UiTheme.SetGridDataSource(gridItems, new object[0]);
+            _selectedOrderId = null;
         }
 
         private void ApplyViewChrome()

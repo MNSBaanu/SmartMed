@@ -38,12 +38,10 @@ namespace SmartMed.UI
         protected override void LoadDesignTimePreview()
         {
             ApplyViewChrome();
-
-            var customer = DesignTimePreviewData.SampleCustomer();
-            txtName.Text = customer.Name;
-            txtEmail.Text = customer.Email;
-            txtPhone.Text = customer.Phone;
-            txtAddress.Text = customer.Address;
+            txtName.Text = string.Empty;
+            txtEmail.Text = string.Empty;
+            txtPhone.Text = string.Empty;
+            txtAddress.Text = string.Empty;
         }
 
         private void ApplyViewChrome()

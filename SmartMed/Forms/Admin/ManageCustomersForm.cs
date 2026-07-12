@@ -48,40 +48,12 @@ namespace SmartMed.UI
         protected override void LoadDesignTimePreview()
         {
             ApplyViewChrome();
-
-            var sample = DesignTimePreviewData.SampleCustomer();
             _allRows = new List<CustomerRow>();
-            for (var i = 1; i <= 15; i++)
-            {
-                var active = i % 3 != 0;
-                _allRows.Add(new CustomerRow
-                {
-                    CustomerID = 1000 + i,
-                    CustomerRef = $"#SM-{1000 + i:D5}",
-                    Name = i == 1 ? sample.Name : $"Customer {i}",
-                    ContactInfo = i == 1
-                        ? $"{sample.Email} / {sample.Phone}"
-                        : $"user{i}@example.com / 077{i:D7}",
-                    LastOrder = active ? DateTime.Today.AddDays(-i * 5).ToString("yyyy-MM-dd") : "—",
-                    OrderCount = active ? i % 5 : 0,
-                    ActivityStatus = active ? "ACTIVE" : "INACTIVE",
-                    AccountStatus = active ? "ENABLED" : "DISABLED",
-                    Customer = i == 1
-                        ? sample
-                        : new Customer
-                        {
-                            CustomerID = 1000 + i,
-                            Name = $"Customer {i}",
-                            Email = $"user{i}@example.com",
-                            Phone = $"077{i:D7}",
-                            Address = $"{i} Main Street",
-                            IsActive = active
-                        }
-                });
-            }
             _filteredRows = _allRows;
             BindPage();
-            UpdateStats();
+            lblTotalCustomers.Text = "-";
+            lblActiveCustomers.Text = "-";
+            lblInactiveCustomers.Text = "-";
         }
 
         private void ApplyViewChrome()

@@ -49,61 +49,13 @@ namespace SmartMed.UI
         protected override void LoadDesignTimePreview()
         {
             ApplyViewChrome();
-
-            var now = DateTime.Now;
-            _allRows = new List<OrderRow>
-            {
-                new OrderRow
-                {
-                    OrderID = 1,
-                    OrderRef = "#ORD-0001",
-                    CustomerName = "Jane Perera",
-                    CustomerRef = "PAT-001-01",
-                    OrderDate = now.AddDays(-1).ToString("MMM dd, yyyy HH:mm"),
-                    TotalAmount = "LKR 1,250.00",
-                    Status = OrderService.StatusPending,
-                    RawStatus = OrderService.StatusPending,
-                    RxStatus = PrescriptionService.StatusPending,
-                    Prescription = "rx_jane.pdf",
-                    HasPrescription = true,
-                    OrderDateValue = now.AddDays(-1),
-                    IsNew = true
-                },
-                new OrderRow
-                {
-                    OrderID = 2,
-                    OrderRef = "#ORD-0002",
-                    CustomerName = "Kamal Silva",
-                    CustomerRef = "PAT-002-02",
-                    OrderDate = now.AddDays(-2).ToString("MMM dd, yyyy HH:mm"),
-                    TotalAmount = "LKR 640.00",
-                    Status = OrderService.StatusReadyForPickup,
-                    RawStatus = OrderService.StatusReadyForPickup,
-                    RxStatus = PrescriptionService.StatusVerified,
-                    Prescription = "rx_kamal.pdf",
-                    HasPrescription = true,
-                    OrderDateValue = now.AddDays(-2)
-                },
-                new OrderRow
-                {
-                    OrderID = 3,
-                    OrderRef = "#ORD-0003",
-                    CustomerName = "Nimali Jay",
-                    CustomerRef = "PAT-003-03",
-                    OrderDate = now.AddDays(-3).ToString("MMM dd, yyyy HH:mm"),
-                    TotalAmount = "LKR 890.00",
-                    Status = OrderService.StatusDelivered,
-                    RawStatus = OrderService.StatusDelivered,
-                    RxStatus = "—",
-                    Prescription = "—",
-                    HasPrescription = false,
-                    OrderDateValue = now.AddDays(-3)
-                }
-            };
+            _allRows = new List<OrderRow>();
             _filteredRows = _allRows;
             _currentPage = 1;
             BindPage();
-            UpdateStats();
+            lblVolume.Text = "-";
+            lblAvgTime.Text = "-";
+            lblFlags.Text = "-";
         }
 
         private void ApplyViewChrome()
@@ -616,7 +568,7 @@ namespace SmartMed.UI
 
             if (_filteredRows.Count == 0)
             {
-                lblAvgTime.Text = "—";
+                lblAvgTime.Text = "-";
                 lblFlags.Text = "0";
                 return;
             }
@@ -631,7 +583,7 @@ namespace SmartMed.UI
             }
             else
             {
-                lblAvgTime.Text = "—";
+                lblAvgTime.Text = "-";
             }
 
             lblFlags.Text = _filteredRows.Count(r => r.Status == "Flagged").ToString("D2");

@@ -100,7 +100,7 @@ namespace SmartMed.UI
             this.lblPageSubtitle.Name = "lblPageSubtitle";
             this.lblPageSubtitle.Size = new System.Drawing.Size(420, 18);
             this.lblPageSubtitle.TabIndex = 1;
-            this.lblPageSubtitle.Text = "Welcome, Jane Perera — browse medicines, manage your cart, and track orders.";
+            this.lblPageSubtitle.Text = "Welcome - browse medicines, manage your cart, and track orders.";
             // 
             // lblPageTitle
             // 
@@ -155,7 +155,7 @@ namespace SmartMed.UI
             this.lblCart.Name = "lblCart";
             this.lblCart.Size = new System.Drawing.Size(293, 46);
             this.lblCart.TabIndex = 1;
-            this.lblCart.Text = "2";
+            this.lblCart.Text = "-";
             this.lblCart.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // lblStatCartTitle
@@ -193,7 +193,7 @@ namespace SmartMed.UI
             this.lblOrders.Name = "lblOrders";
             this.lblOrders.Size = new System.Drawing.Size(293, 46);
             this.lblOrders.TabIndex = 1;
-            this.lblOrders.Text = "1";
+            this.lblOrders.Text = "-";
             this.lblOrders.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // lblStatOrdersTitle
@@ -230,7 +230,7 @@ namespace SmartMed.UI
             this.lblPromotions.Name = "lblPromotions";
             this.lblPromotions.Size = new System.Drawing.Size(308, 46);
             this.lblPromotions.TabIndex = 1;
-            this.lblPromotions.Text = "3";
+            this.lblPromotions.Text = "-";
             this.lblPromotions.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // lblStatPromotionsTitle

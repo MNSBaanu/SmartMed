@@ -187,7 +187,7 @@ namespace SmartMed.UI
             this.txtName.Name = "txtName";
             this.txtName.Size = new System.Drawing.Size(978, 25);
             this.txtName.TabIndex = 1;
-            this.txtName.Text = "Jane Perera";
+            this.txtName.Text = "";
             // 
             // lblEmail
             // 
@@ -211,7 +211,7 @@ namespace SmartMed.UI
             this.txtEmail.Name = "txtEmail";
             this.txtEmail.Size = new System.Drawing.Size(978, 25);
             this.txtEmail.TabIndex = 3;
-            this.txtEmail.Text = "jane.perera@example.com";
+            this.txtEmail.Text = "";
             // 
             // lblPhone
             // 
@@ -236,7 +236,7 @@ namespace SmartMed.UI
             this.txtPhone.Name = "txtPhone";
             this.txtPhone.Size = new System.Drawing.Size(978, 25);
             this.txtPhone.TabIndex = 5;
-            this.txtPhone.Text = "0771234567";
+            this.txtPhone.Text = "";
             // 
             // lblAddress
             // 
@@ -262,7 +262,7 @@ namespace SmartMed.UI
             this.txtAddress.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.txtAddress.Size = new System.Drawing.Size(978, 52);
             this.txtAddress.TabIndex = 7;
-            this.txtAddress.Text = "12 Hospital Road, Colombo";
+            this.txtAddress.Text = "";
             // 
             // flowActions
             // 

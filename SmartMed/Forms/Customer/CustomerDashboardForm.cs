@@ -62,14 +62,11 @@ namespace SmartMed.UI
         protected override void LoadDesignTimePreview()
         {
             ApplyViewChrome();
-
-            lblPageSubtitle.Text =
-                "Welcome, Jane Perera — browse medicines, manage your cart, and track orders.";
-            lblCart.Text = "2";
-            lblOrders.Text = "1";
-            lblPromotions.Text = "3";
-            UiTheme.SetGridDataSource(gridRecent, DesignTimePreviewData.CustomerDashboardOrders());
-            UiTheme.BeautifyGridHeaders(gridRecent);
+            lblPageSubtitle.Text = "Welcome - browse medicines, manage your cart, and track orders.";
+            lblCart.Text = "-";
+            lblOrders.Text = "-";
+            lblPromotions.Text = "-";
+            UiTheme.SetGridDataSource(gridRecent, new object[0]);
         }
 
         private void ApplyViewChrome()

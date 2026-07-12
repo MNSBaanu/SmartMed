@@ -40,11 +40,10 @@ namespace SmartMed.UI
         protected override void LoadDesignTimePreview()
         {
             ApplyViewChrome();
-
-            UiTheme.SetGridDataSource(gridCart, DesignTimePreviewData.CartRows());
+            UiTheme.SetGridDataSource(gridCart, new object[0]);
             BeautifyCartGrid();
-            lblTotal.Text = "Checkout total: LKR 975.00 (2 items)";
-            lblRxNote.Visible = true;
+            lblTotal.Text = "Checkout total: -";
+            lblRxNote.Visible = false;
         }
 
         private void ApplyViewChrome()

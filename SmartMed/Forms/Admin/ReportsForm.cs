@@ -84,16 +84,15 @@ namespace SmartMed.UI
             UpdatePeriodStyles();
             UpdateStatTitlesForTab();
 
-            _currentReportTable = DesignTimePreviewData.SalesReportTable();
-            _sourceReportTable = _currentReportTable;
-            BindReportGrid(_currentReportTable);
-            UiTheme.BeautifyGridHeaders(gridReport);
-            lblTotalRevenue.Text = "LKR 3,340.00";
-            lblTotalOrders.Text = "2";
-            lblLowStock.Text = "1";
-            lblOutstanding.Text = "LKR 890.00";
-            lblFooterStatus.Text = "Design preview — sample sales report.";
-            _reportViewed = true;
+            _currentReportTable = null;
+            _sourceReportTable = null;
+            BindReportGrid(null);
+            lblTotalRevenue.Text = "-";
+            lblTotalOrders.Text = "-";
+            lblLowStock.Text = "-";
+            lblOutstanding.Text = "-";
+            lblFooterStatus.Text = string.Empty;
+            _reportViewed = false;
             UpdatePreviewDisplay();
             UpdateExportButtons();
         }
@@ -395,10 +394,10 @@ namespace SmartMed.UI
         private void ClearSummaryStats()
         {
             if (lblTotalRevenue == null) return;
-            lblTotalRevenue.Text = "—";
-            lblTotalOrders.Text = "—";
-            lblLowStock.Text = "—";
-            lblOutstanding.Text = "—";
+            lblTotalRevenue.Text = "-";
+            lblTotalOrders.Text = "-";
+            lblLowStock.Text = "-";
+            lblOutstanding.Text = "-";
         }
 
         private void UpdateExportButtons()

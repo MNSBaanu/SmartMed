@@ -250,7 +250,7 @@ namespace SmartMed.UI
             this.lblTotal.Name = "lblTotal";
             this.lblTotal.Size = new System.Drawing.Size(1012, 28);
             this.lblTotal.TabIndex = 3;
-            this.lblTotal.Text = "Total: LKR 975.00 (2 items)";
+            this.lblTotal.Text = "Checkout total: -";
             this.lblTotal.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // lblRxNote

@@ -262,7 +262,7 @@ namespace SmartMed.UI
             this.lblStockValue.Name = "lblStockValue";
             this.lblStockValue.Size = new System.Drawing.Size(209, 64);
             this.lblStockValue.TabIndex = 1;
-            this.lblStockValue.Text = "128";
+            this.lblStockValue.Text = "-";
             this.lblStockValue.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // lblStatStockTitle
@@ -300,7 +300,7 @@ namespace SmartMed.UI
             this.lblOrdersValue.Name = "lblOrdersValue";
             this.lblOrdersValue.Size = new System.Drawing.Size(209, 64);
             this.lblOrdersValue.TabIndex = 1;
-            this.lblOrdersValue.Text = "4";
+            this.lblOrdersValue.Text = "-";
             this.lblOrdersValue.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // lblStatOrdersTitle
@@ -338,7 +338,7 @@ namespace SmartMed.UI
             this.lblSalesValue.Name = "lblSalesValue";
             this.lblSalesValue.Size = new System.Drawing.Size(209, 64);
             this.lblSalesValue.TabIndex = 1;
-            this.lblSalesValue.Text = "245,600";
+            this.lblSalesValue.Text = "-";
             this.lblSalesValue.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // lblStatSalesTitle
@@ -376,7 +376,7 @@ namespace SmartMed.UI
             this.lblCustomersValue.Name = "lblCustomersValue";
             this.lblCustomersValue.Size = new System.Drawing.Size(223, 64);
             this.lblCustomersValue.TabIndex = 1;
-            this.lblCustomersValue.Text = "86";
+            this.lblCustomersValue.Text = "-";
             this.lblCustomersValue.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // lblStatUsersTitle

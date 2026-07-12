@@ -440,7 +440,7 @@ namespace SmartMed.UI
             this.lblTotalItems.Name = "lblTotalItems";
             this.lblTotalItems.Size = new System.Drawing.Size(293, 64);
             this.lblTotalItems.TabIndex = 1;
-            this.lblTotalItems.Text = "12";
+            this.lblTotalItems.Text = "-";
             this.lblTotalItems.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // lblStatTotalTitle
@@ -478,7 +478,7 @@ namespace SmartMed.UI
             this.lblLowStock.Name = "lblLowStock";
             this.lblLowStock.Size = new System.Drawing.Size(293, 64);
             this.lblLowStock.TabIndex = 1;
-            this.lblLowStock.Text = "2";
+            this.lblLowStock.Text = "-";
             this.lblLowStock.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // lblStatLowTitle
@@ -515,7 +515,7 @@ namespace SmartMed.UI
             this.lblExpiringSoon.Name = "lblExpiringSoon";
             this.lblExpiringSoon.Size = new System.Drawing.Size(308, 64);
             this.lblExpiringSoon.TabIndex = 1;
-            this.lblExpiringSoon.Text = "91.7%";
+            this.lblExpiringSoon.Text = "-";
             this.lblExpiringSoon.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // lblStatComplianceTitle

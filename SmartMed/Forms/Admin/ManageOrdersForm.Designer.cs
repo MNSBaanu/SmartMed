@@ -569,7 +569,7 @@ namespace SmartMed.UI
             this.lblVolume.Name = "lblVolume";
             this.lblVolume.Size = new System.Drawing.Size(293, 48);
             this.lblVolume.TabIndex = 1;
-            this.lblVolume.Text = "2";
+            this.lblVolume.Text = "-";
             this.lblVolume.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // lblStatVolumeTitle
@@ -607,7 +607,7 @@ namespace SmartMed.UI
             this.lblAvgTime.Name = "lblAvgTime";
             this.lblAvgTime.Size = new System.Drawing.Size(293, 48);
             this.lblAvgTime.TabIndex = 1;
-            this.lblAvgTime.Text = "—";
+            this.lblAvgTime.Text = "-";
             this.lblAvgTime.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // lblStatAvgTitle
@@ -644,7 +644,7 @@ namespace SmartMed.UI
             this.lblFlags.Name = "lblFlags";
             this.lblFlags.Size = new System.Drawing.Size(308, 48);
             this.lblFlags.TabIndex = 1;
-            this.lblFlags.Text = "00";
+            this.lblFlags.Text = "-";
             this.lblFlags.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // lblStatFlagsTitle

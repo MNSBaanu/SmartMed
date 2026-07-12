@@ -357,7 +357,7 @@ namespace SmartMed.UI
             this.txtPhone.MaxLength = 14;
             this.txtPhone.Name = "txtPhone";
             this.txtPhone.Size = new System.Drawing.Size(216, 40);
-            this.txtPhone.Text = "0771234567";
+            this.txtPhone.Text = "";
             this.txtPhone.TabIndex = 7;
             // 
             // lblPhone
@@ -381,7 +381,7 @@ namespace SmartMed.UI
             this.txtEmail.Location = new System.Drawing.Point(32, 216);
             this.txtEmail.Name = "txtEmail";
             this.txtEmail.Size = new System.Drawing.Size(216, 40);
-            this.txtEmail.Text = "jane@hospital.com";
+            this.txtEmail.Text = "";
             this.txtEmail.TabIndex = 5;
             // 
             // lblEmail
@@ -405,7 +405,7 @@ namespace SmartMed.UI
             this.txtFullName.Location = new System.Drawing.Point(32, 140);
             this.txtFullName.Name = "txtFullName";
             this.txtFullName.Size = new System.Drawing.Size(456, 40);
-            this.txtFullName.Text = "Dr. Jane Smith";
+            this.txtFullName.Text = "";
             this.txtFullName.TabIndex = 3;
             // 
             // lblFullName

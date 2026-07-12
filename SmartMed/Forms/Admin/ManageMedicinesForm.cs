@@ -54,12 +54,14 @@ namespace SmartMed.UI
         protected override void LoadDesignTimePreview()
         {
             ApplyViewChrome();
-
-            _allMedicines = DesignTimePreviewData.Medicines();
-            RefreshCategoryFilter();
+            _allMedicines = new List<Medicine>();
             BindGrid(_allMedicines);
-            UpdateStats(_allMedicines);
-            UpdateExpiryAlerts(_allMedicines);
+            lblTotalItems.Text = "-";
+            lblLowStock.Text = "-";
+            lblExpiringSoon.Text = "-";
+            _expiryAlertLines = new List<string>();
+            if (btnViewExpiryAlerts != null)
+                btnViewExpiryAlerts.Text = "Alerts (0)";
         }
 
         private void ApplyViewChrome()

@@ -276,7 +276,7 @@ namespace SmartMed.UI
             this.lblTotalRevenue.Name = "lblTotalRevenue";
             this.lblTotalRevenue.Size = new System.Drawing.Size(209, 64);
             this.lblTotalRevenue.TabIndex = 1;
-            this.lblTotalRevenue.Text = "LKR 3,340.00";
+            this.lblTotalRevenue.Text = "-";
             this.lblTotalRevenue.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // lblStatTitleRevenue
@@ -314,7 +314,7 @@ namespace SmartMed.UI
             this.lblTotalOrders.Name = "lblTotalOrders";
             this.lblTotalOrders.Size = new System.Drawing.Size(209, 64);
             this.lblTotalOrders.TabIndex = 1;
-            this.lblTotalOrders.Text = "2";
+            this.lblTotalOrders.Text = "-";
             this.lblTotalOrders.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // lblStatTitleOrders
@@ -352,7 +352,7 @@ namespace SmartMed.UI
             this.lblLowStock.Name = "lblLowStock";
             this.lblLowStock.Size = new System.Drawing.Size(209, 64);
             this.lblLowStock.TabIndex = 1;
-            this.lblLowStock.Text = "1";
+            this.lblLowStock.Text = "-";
             this.lblLowStock.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // lblStatTitleLowStock
@@ -389,7 +389,7 @@ namespace SmartMed.UI
             this.lblOutstanding.Name = "lblOutstanding";
             this.lblOutstanding.Size = new System.Drawing.Size(223, 64);
             this.lblOutstanding.TabIndex = 1;
-            this.lblOutstanding.Text = "LKR 890.00";
+            this.lblOutstanding.Text = "-";
             this.lblOutstanding.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // lblStatTitleOutstanding
@@ -683,18 +683,6 @@ namespace SmartMed.UI
             this.gridReport.RowHeadersVisible = false;
             this.gridReport.RowHeadersWidth = 51;
             this.gridReport.RowTemplate.Height = 36;
-            this.gridReport.Rows.Add(new object[] {
-            "#SM-0001",
-            "Jane Perera",
-            "2026-06-28",
-            "LKR 2,450.00",
-            "Delivered"});
-            this.gridReport.Rows.Add(new object[] {
-            "#SM-0002",
-            "Kamal Silva",
-            "2026-06-29",
-            "LKR 890.00",
-            "Pending"});
             this.gridReport.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.gridReport.Size = new System.Drawing.Size(1010, 278);
             this.gridReport.TabIndex = 0;
@@ -778,7 +766,7 @@ namespace SmartMed.UI
             this.lblFooterStatus.Padding = new System.Windows.Forms.Padding(12, 0, 0, 0);
             this.lblFooterStatus.Size = new System.Drawing.Size(1012, 28);
             this.lblFooterStatus.TabIndex = 0;
-            this.lblFooterStatus.Text = "Design preview — sample sales report.";
+            this.lblFooterStatus.Text = "";
             this.lblFooterStatus.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // ReportsForm
