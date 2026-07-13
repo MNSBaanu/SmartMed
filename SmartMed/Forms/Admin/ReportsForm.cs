@@ -10,9 +10,9 @@ namespace SmartMed.UI
 {
     public sealed partial class ReportsForm : EmbeddedPageForm
     {
-        private ReportService _reports;
-        private CustomerService _customers;
-        private bool _servicesReady;
+        private readonly ReportService _reports;
+        private readonly CustomerService _customers;
+        private readonly bool _servicesReady;
         private bool _runtimeWired;
         private bool _chromeApplied;
         private Label _lblPreviewPlaceholder;
@@ -199,25 +199,25 @@ namespace SmartMed.UI
             ResetReportPreview();
         }
 
-        private void btnSalesTab_Click(object sender, EventArgs e) =>
+        private void BtnSalesTab_Click(object sender, EventArgs e) =>
             SwitchTab(ReportTab.SalesPerformance);
 
-        private void btnInventoryTab_Click(object sender, EventArgs e) =>
+        private void BtnInventoryTab_Click(object sender, EventArgs e) =>
             SwitchTab(ReportTab.MedicineInventory);
 
-        private void btnHistoryTab_Click(object sender, EventArgs e) =>
+        private void BtnHistoryTab_Click(object sender, EventArgs e) =>
             SwitchTab(ReportTab.CustomerOrderHistory);
 
-        private void btnWeekPeriod_Click(object sender, EventArgs e) =>
+        private void BtnWeekPeriod_Click(object sender, EventArgs e) =>
             SwitchPeriod(ReportPeriod.Week);
 
-        private void btnMonthPeriod_Click(object sender, EventArgs e) =>
+        private void BtnMonthPeriod_Click(object sender, EventArgs e) =>
             SwitchPeriod(ReportPeriod.Month);
 
-        private void btnYearPeriod_Click(object sender, EventArgs e) =>
+        private void BtnYearPeriod_Click(object sender, EventArgs e) =>
             SwitchPeriod(ReportPeriod.Year);
 
-        private void cmbCustomer_SelectedIndexChanged(object sender, EventArgs e)
+        private void CmbCustomer_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (_reportViewed)
                 LoadActiveReport();
@@ -414,7 +414,7 @@ namespace SmartMed.UI
             btnExportPdf.Enabled = canExport;
         }
 
-        private void btnViewReport_Click(object sender, EventArgs e)
+        private void BtnViewReport_Click(object sender, EventArgs e)
         {
             EnsureRuntimeReady();
             if (!TryLoadActiveReport())
@@ -558,7 +558,7 @@ namespace SmartMed.UI
             lblOutstanding.Text = $"LKR {_reports.GetOutstandingAmount(_activePeriod):N2}";
         }
 
-        private void gridReport_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
+        private void GridReport_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
         {
             if (_activeTab != ReportTab.MedicineInventory || e.RowIndex < 0) return;
             if (UiTheme.IsSelectedRow(gridReport, e.RowIndex))
@@ -589,9 +589,9 @@ namespace SmartMed.UI
             }
         }
 
-        private void btnExportCsv_Click(object sender, EventArgs e) => ExportReport(isPdf: false);
+        private void BtnExportCsv_Click(object sender, EventArgs e) => ExportReport(isPdf: false);
 
-        private void btnExportPdf_Click(object sender, EventArgs e) => ExportReport(isPdf: true);
+        private void BtnExportPdf_Click(object sender, EventArgs e) => ExportReport(isPdf: true);
 
         private void ExportReport(bool isPdf)
         {
