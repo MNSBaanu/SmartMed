@@ -64,7 +64,7 @@ namespace SmartMed.UI
 
         private static void WirePanelBorder(Panel panel)
         {
-            if (panel == null || panel.Tag as string == "dash-border") return;
+            if (panel is null || panel.Tag is "dash-border") return;
             panel.Tag = "dash-border";
             panel.Paint += (s, e) =>
             {
@@ -78,7 +78,7 @@ namespace SmartMed.UI
 
         private static void WireStatCard(Panel card, Color accent)
         {
-            if (card == null || card.Tag as string == "dash-stat") return;
+            if (card is null || card.Tag is "dash-stat") return;
             card.Tag = "dash-stat";
             card.Paint += (s, e) =>
             {
@@ -269,19 +269,20 @@ namespace SmartMed.UI
 
         private void GoToAdminSection(AdminHostForm.AdminNavItem nav)
         {
-            var host = FindForm() as AdminHostForm;
-            if (host == null)
+            if (FindForm() is AdminHostForm host)
             {
-                for (Control parent = Parent; parent != null; parent = parent.Parent)
+                host.NavigateTo(nav);
+                return;
+            }
+
+            for (Control parent = Parent; parent != null; parent = parent.Parent)
+            {
+                if (parent is AdminHostForm adminHost)
                 {
-                    if (parent is AdminHostForm adminHost)
-                    {
-                        host = adminHost;
-                        break;
-                    }
+                    adminHost.NavigateTo(nav);
+                    return;
                 }
             }
-            host?.NavigateTo(nav);
         }
 
         private static string FormatRelativeTime(DateTime orderDate)

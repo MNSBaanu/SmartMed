@@ -95,7 +95,7 @@ namespace SmartMed.UI
 
         private static void WirePanelBorder(Panel panel)
         {
-            if (panel == null || panel.Tag as string == "dash-border") return;
+            if (panel is null || panel.Tag is "dash-border") return;
             panel.Tag = "dash-border";
             panel.Paint += (s, e) =>
             {
@@ -109,7 +109,7 @@ namespace SmartMed.UI
 
         private static void WireStatCard(Panel card, Color accent)
         {
-            if (card == null || card.Tag as string == "dash-stat") return;
+            if (card is null || card.Tag is "dash-stat") return;
             card.Tag = "dash-stat";
             card.Paint += (s, e) =>
             {

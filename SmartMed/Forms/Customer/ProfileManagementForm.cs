@@ -104,7 +104,8 @@ namespace SmartMed.UI
                 };
                 _customers.UpdateProfile(updated);
                 Session.CurrentCustomer = _customers.GetById(customer.CustomerID);
-                (FindForm() as CustomerHostForm)?.RefreshProfileDisplay();
+                if (FindForm() is CustomerHostForm host)
+                    host.RefreshProfileDisplay();
 
                 SmartMedMessageBox.Show("Profile updated.", "Profile", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }

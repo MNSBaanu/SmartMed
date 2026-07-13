@@ -8,9 +8,9 @@ namespace SmartMed.UI
 {
     public sealed partial class PlaceOrderForm : EmbeddedPageForm
     {
-        private OrderService _orders;
-        private MedicineService _medicines;
-        private bool _servicesReady;
+        private readonly OrderService _orders;
+        private readonly MedicineService _medicines;
+        private readonly bool _servicesReady;
         private bool _runtimeWired;
         private bool _chromeApplied;
 
