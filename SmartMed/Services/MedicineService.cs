@@ -150,9 +150,8 @@ namespace SmartMed.Services
         public void Update(Medicine item)
         {
             ValidateMedicine(item, isNew: false);
-            var existing = _medicines.GetById(item.MedicineID);
-            if (existing == null)
-                throw new InvalidOperationException("Medicine not found.");
+            var existing = _medicines.GetById(item.MedicineID)
+                ?? throw new InvalidOperationException("Medicine not found.");
             if (!string.Equals(existing.MedicineName, item.MedicineName, StringComparison.OrdinalIgnoreCase)
                 && _medicines.NameExists(item.MedicineName))
                 throw new InvalidOperationException("This medicine is already in the inventory list.");
