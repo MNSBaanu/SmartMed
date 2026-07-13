@@ -18,6 +18,7 @@ namespace SmartMed.UI
 
         private readonly AuthService _auth;
         private bool _passwordVisible;
+        private bool _fieldNavigationWired;
 
         public event EventHandler LoginSucceeded;
 
@@ -66,12 +67,17 @@ namespace SmartMed.UI
             RestoreLoginAppearance();
         }
 
-        /// <summary>Runtime-only input behavior (placeholders, password toggle).</summary>
+        /// <summary>Runtime-only input behavior (placeholders, password toggle, Enter navigation).</summary>
         private void WireRuntimeBehavior()
         {
             UiTheme.WireClinicalPlaceholderTextBox(txtUsername, "Enter email or username");
             UiTheme.WireClinicalPasswordField(pnlPasswordField, txtPassword, btnTogglePassword, "Enter your password");
             SetPasswordVisible(_passwordVisible);
+            if (!_fieldNavigationWired)
+            {
+                UiTheme.EnableFieldNavigation(btnLogin, txtUsername, txtPassword);
+                _fieldNavigationWired = true;
+            }
         }
 
         private void LayoutLoginContent()
@@ -92,8 +98,15 @@ namespace SmartMed.UI
 
         private void PanelMain_Resize(object sender, EventArgs e) => LayoutLoginContent();
 
-        private void TxtPassword_GotFocus(object sender, EventArgs e) =>
-            SetPasswordVisible(_passwordVisible);
+        private void TxtPassword_GotFocus(object sender, EventArgs e)
+        {
+            // Defer until after UiTheme placeholder GotFocus clears tip text, then re-apply mask.
+            BeginInvoke(new Action(() =>
+            {
+                if (!IsDisposed && txtPassword != null && !txtPassword.IsDisposed)
+                    SetPasswordVisible(_passwordVisible);
+            }));
+        }
 
         internal void RestoreLoginAppearance()
         {
@@ -130,20 +143,6 @@ namespace SmartMed.UI
 
         private void BtnTogglePassword_Click(object sender, EventArgs e) =>
             SetPasswordVisible(!_passwordVisible);
-
-        private void TxtUsername_KeyDown(object sender, KeyEventArgs e)
-        {
-            if (e.KeyCode != Keys.Enter) return;
-            e.SuppressKeyPress = true;
-            txtPassword.Focus();
-        }
-
-        private void TxtPassword_KeyDown(object sender, KeyEventArgs e)
-        {
-            if (e.KeyCode != Keys.Enter) return;
-            e.SuppressKeyPress = true;
-            PerformLogin();
-        }
 
         private void LnkForgot_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {

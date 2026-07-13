@@ -88,7 +88,7 @@ namespace SmartMed.UI
             this.lblTitleBarText.Name = "lblTitleBarText";
             this.lblTitleBarText.Size = new System.Drawing.Size(180, 18);
             this.lblTitleBarText.TabIndex = 1;
-            this.lblTitleBarText.Text = "SmartMed ? Clinical Login";
+            this.lblTitleBarText.Text = "SmartMed \u2014 Clinical Login";
             // 
             // pnlTitleIcon
             // 
@@ -144,7 +144,7 @@ namespace SmartMed.UI
             this.lblCopyright.Name = "lblCopyright";
             this.lblCopyright.Size = new System.Drawing.Size(440, 20);
             this.lblCopyright.TabIndex = 1;
-            this.lblCopyright.Text = "? 2024 SmartMed Pharmacy ? Licensed to Clinical Precision Ltd.";
+            this.lblCopyright.Text = "\u00A9 2024 SmartMed Pharmacy \u2014 Licensed to Clinical Precision Ltd.";
             this.lblCopyright.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // lblSecurityLine
@@ -157,7 +157,7 @@ namespace SmartMed.UI
             this.lblSecurityLine.Name = "lblSecurityLine";
             this.lblSecurityLine.Size = new System.Drawing.Size(440, 20);
             this.lblSecurityLine.TabIndex = 0;
-            this.lblSecurityLine.Text = "CLINICAL SECURITY STANDARD ? SSL ACTIVE";
+            this.lblSecurityLine.Text = "CLINICAL SECURITY STANDARD \u2014 SSL ACTIVE";
             this.lblSecurityLine.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // panelLoginCard
@@ -287,7 +287,6 @@ namespace SmartMed.UI
             this.txtPassword.TabIndex = 0;
             this.txtPassword.Text = "Enter your password";
             this.txtPassword.GotFocus += new System.EventHandler(this.TxtPassword_GotFocus);
-            this.txtPassword.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TxtPassword_KeyDown);
             // 
             // btnTogglePassword
             // 
@@ -331,7 +330,6 @@ namespace SmartMed.UI
             this.txtUsername.Size = new System.Drawing.Size(376, 24);
             this.txtUsername.TabIndex = 6;
             this.txtUsername.Text = "Enter email or username";
-            this.txtUsername.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TxtUsername_KeyDown);
             // 
             // lblUsername
             // 
@@ -426,7 +424,7 @@ namespace SmartMed.UI
             this.MinimumSize = new System.Drawing.Size(1024, 640);
             this.Name = "LoginForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "SmartMed ? Clinical Login";
+            this.Text = "SmartMed \u2014 Clinical Login";
             this.panelTitleBar.ResumeLayout(false);
             this.panelTitleBar.PerformLayout();
             this.pnlTitleIcon.ResumeLayout(false);
