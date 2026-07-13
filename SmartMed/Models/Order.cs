@@ -16,6 +16,6 @@ namespace SmartMed.Models
         public string CancellationReason { get; set; }
 
         public void CalculateTotal() { }
-        public void UpdateStatus(string status) { }
+        public void UpdateStatus(string status) => Status = status;
     }
 }
