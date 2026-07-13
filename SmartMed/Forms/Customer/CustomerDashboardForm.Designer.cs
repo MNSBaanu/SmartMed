@@ -75,7 +75,7 @@ namespace SmartMed.UI
             this.tableLayoutRoot.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutRoot.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutRoot.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutRoot.Size = new System.Drawing.Size(1012, 520);
+            this.tableLayoutRoot.Size = new System.Drawing.Size(1012, 672);
             this.tableLayoutRoot.TabIndex = 0;
             // 
             // panelHeader
@@ -94,23 +94,24 @@ namespace SmartMed.UI
             // 
             this.lblPageSubtitle.AutoSize = true;
             this.lblPageSubtitle.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(244)))), ((int)(((byte)(251)))), ((int)(((byte)(250)))));
-            this.lblPageSubtitle.Font = new System.Drawing.Font("Hanken Grotesk", 9F);
+            this.lblPageSubtitle.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F);
             this.lblPageSubtitle.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(65)))), ((int)(((byte)(72)))), ((int)(((byte)(71)))));
             this.lblPageSubtitle.Location = new System.Drawing.Point(0, 44);
             this.lblPageSubtitle.Name = "lblPageSubtitle";
-            this.lblPageSubtitle.Size = new System.Drawing.Size(420, 18);
+            this.lblPageSubtitle.Size = new System.Drawing.Size(448, 18);
             this.lblPageSubtitle.TabIndex = 1;
             this.lblPageSubtitle.Text = "Welcome - browse medicines, manage your cart, and track orders.";
+            this.lblPageSubtitle.Click += new System.EventHandler(this.lblPageSubtitle_Click);
             // 
             // lblPageTitle
             // 
             this.lblPageTitle.AutoSize = true;
             this.lblPageTitle.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(244)))), ((int)(((byte)(251)))), ((int)(((byte)(250)))));
-            this.lblPageTitle.Font = new System.Drawing.Font("Hanken Grotesk", 20F, System.Drawing.FontStyle.Bold);
+            this.lblPageTitle.Font = new System.Drawing.Font("Microsoft Sans Serif", 20F, System.Drawing.FontStyle.Bold);
             this.lblPageTitle.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(24)))), ((int)(((byte)(22)))));
             this.lblPageTitle.Location = new System.Drawing.Point(0, 8);
             this.lblPageTitle.Name = "lblPageTitle";
-            this.lblPageTitle.Size = new System.Drawing.Size(178, 36);
+            this.lblPageTitle.Size = new System.Drawing.Size(277, 39);
             this.lblPageTitle.TabIndex = 0;
             this.lblPageTitle.Text = "Customer Home";
             // 
@@ -150,7 +151,7 @@ namespace SmartMed.UI
             // 
             this.lblCart.BackColor = System.Drawing.Color.White;
             this.lblCart.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lblCart.Font = new System.Drawing.Font("Hanken Grotesk", 22F, System.Drawing.FontStyle.Bold);
+            this.lblCart.Font = new System.Drawing.Font("Microsoft Sans Serif", 22F, System.Drawing.FontStyle.Bold);
             this.lblCart.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(24)))), ((int)(((byte)(22)))));
             this.lblCart.Location = new System.Drawing.Point(16, 30);
             this.lblCart.Name = "lblCart";
@@ -163,7 +164,7 @@ namespace SmartMed.UI
             // 
             this.lblStatCartTitle.BackColor = System.Drawing.Color.White;
             this.lblStatCartTitle.Dock = System.Windows.Forms.DockStyle.Top;
-            this.lblStatCartTitle.Font = new System.Drawing.Font("Hanken Grotesk", 8.25F, System.Drawing.FontStyle.Bold);
+            this.lblStatCartTitle.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold);
             this.lblStatCartTitle.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(65)))), ((int)(((byte)(72)))), ((int)(((byte)(71)))));
             this.lblStatCartTitle.Location = new System.Drawing.Point(16, 14);
             this.lblStatCartTitle.Name = "lblStatCartTitle";
@@ -189,7 +190,7 @@ namespace SmartMed.UI
             // 
             this.lblOrders.BackColor = System.Drawing.Color.White;
             this.lblOrders.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lblOrders.Font = new System.Drawing.Font("Hanken Grotesk", 22F, System.Drawing.FontStyle.Bold);
+            this.lblOrders.Font = new System.Drawing.Font("Microsoft Sans Serif", 22F, System.Drawing.FontStyle.Bold);
             this.lblOrders.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(24)))), ((int)(((byte)(22)))));
             this.lblOrders.Location = new System.Drawing.Point(16, 30);
             this.lblOrders.Name = "lblOrders";
@@ -197,18 +198,20 @@ namespace SmartMed.UI
             this.lblOrders.TabIndex = 1;
             this.lblOrders.Text = "-";
             this.lblOrders.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.lblOrders.Click += new System.EventHandler(this.lblOrders_Click);
             // 
             // lblStatOrdersTitle
             // 
             this.lblStatOrdersTitle.BackColor = System.Drawing.Color.White;
             this.lblStatOrdersTitle.Dock = System.Windows.Forms.DockStyle.Top;
-            this.lblStatOrdersTitle.Font = new System.Drawing.Font("Hanken Grotesk", 8.25F, System.Drawing.FontStyle.Bold);
+            this.lblStatOrdersTitle.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold);
             this.lblStatOrdersTitle.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(65)))), ((int)(((byte)(72)))), ((int)(((byte)(71)))));
             this.lblStatOrdersTitle.Location = new System.Drawing.Point(16, 14);
             this.lblStatOrdersTitle.Name = "lblStatOrdersTitle";
             this.lblStatOrdersTitle.Size = new System.Drawing.Size(293, 16);
             this.lblStatOrdersTitle.TabIndex = 0;
             this.lblStatOrdersTitle.Text = "ACTIVE ORDERS";
+            this.lblStatOrdersTitle.Click += new System.EventHandler(this.lblStatOrdersTitle_Click);
             // 
             // panelStatPromotions
             // 
@@ -216,10 +219,10 @@ namespace SmartMed.UI
             this.panelStatPromotions.Controls.Add(this.lblPromotions);
             this.panelStatPromotions.Controls.Add(this.lblStatPromotionsTitle);
             this.panelStatPromotions.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panelStatPromotions.Location = new System.Drawing.Point(674, 0);
+            this.panelStatPromotions.Location = new System.Drawing.Point(677, 3);
             this.panelStatPromotions.Name = "panelStatPromotions";
             this.panelStatPromotions.Padding = new System.Windows.Forms.Padding(16, 14, 14, 14);
-            this.panelStatPromotions.Size = new System.Drawing.Size(338, 90);
+            this.panelStatPromotions.Size = new System.Drawing.Size(332, 84);
             this.panelStatPromotions.TabIndex = 2;
             this.panelStatPromotions.Paint += new System.Windows.Forms.PaintEventHandler(this.PanelStatPromotions_Paint);
             // 
@@ -227,11 +230,11 @@ namespace SmartMed.UI
             // 
             this.lblPromotions.BackColor = System.Drawing.Color.White;
             this.lblPromotions.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lblPromotions.Font = new System.Drawing.Font("Hanken Grotesk", 22F, System.Drawing.FontStyle.Bold);
+            this.lblPromotions.Font = new System.Drawing.Font("Microsoft Sans Serif", 22F, System.Drawing.FontStyle.Bold);
             this.lblPromotions.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(24)))), ((int)(((byte)(22)))));
             this.lblPromotions.Location = new System.Drawing.Point(16, 30);
             this.lblPromotions.Name = "lblPromotions";
-            this.lblPromotions.Size = new System.Drawing.Size(308, 46);
+            this.lblPromotions.Size = new System.Drawing.Size(302, 40);
             this.lblPromotions.TabIndex = 1;
             this.lblPromotions.Text = "-";
             this.lblPromotions.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -240,11 +243,11 @@ namespace SmartMed.UI
             // 
             this.lblStatPromotionsTitle.BackColor = System.Drawing.Color.White;
             this.lblStatPromotionsTitle.Dock = System.Windows.Forms.DockStyle.Top;
-            this.lblStatPromotionsTitle.Font = new System.Drawing.Font("Hanken Grotesk", 8.25F, System.Drawing.FontStyle.Bold);
+            this.lblStatPromotionsTitle.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold);
             this.lblStatPromotionsTitle.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(65)))), ((int)(((byte)(72)))), ((int)(((byte)(71)))));
             this.lblStatPromotionsTitle.Location = new System.Drawing.Point(16, 14);
             this.lblStatPromotionsTitle.Name = "lblStatPromotionsTitle";
-            this.lblStatPromotionsTitle.Size = new System.Drawing.Size(308, 16);
+            this.lblStatPromotionsTitle.Size = new System.Drawing.Size(302, 16);
             this.lblStatPromotionsTitle.TabIndex = 0;
             this.lblStatPromotionsTitle.Text = "PROMOTIONS";
             // 
@@ -258,7 +261,7 @@ namespace SmartMed.UI
             this.panelGridOuter.Margin = new System.Windows.Forms.Padding(0, 0, 0, 16);
             this.panelGridOuter.Name = "panelGridOuter";
             this.panelGridOuter.Padding = new System.Windows.Forms.Padding(1);
-            this.panelGridOuter.Size = new System.Drawing.Size(1012, 258);
+            this.panelGridOuter.Size = new System.Drawing.Size(1012, 454);
             this.panelGridOuter.TabIndex = 2;
             this.panelGridOuter.Paint += new System.Windows.Forms.PaintEventHandler(this.PanelGridOuter_Paint);
             // 
@@ -270,7 +273,7 @@ namespace SmartMed.UI
             this.panelGridBody.Location = new System.Drawing.Point(1, 37);
             this.panelGridBody.Name = "panelGridBody";
             this.panelGridBody.Padding = new System.Windows.Forms.Padding(0, 4, 0, 0);
-            this.panelGridBody.Size = new System.Drawing.Size(1010, 220);
+            this.panelGridBody.Size = new System.Drawing.Size(1010, 416);
             this.panelGridBody.TabIndex = 1;
             // 
             // gridRecent
@@ -287,9 +290,10 @@ namespace SmartMed.UI
             this.gridRecent.Name = "gridRecent";
             this.gridRecent.ReadOnly = true;
             this.gridRecent.RowHeadersVisible = false;
+            this.gridRecent.RowHeadersWidth = 51;
             this.gridRecent.RowTemplate.Height = 36;
             this.gridRecent.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.gridRecent.Size = new System.Drawing.Size(1010, 216);
+            this.gridRecent.Size = new System.Drawing.Size(1010, 412);
             this.gridRecent.TabIndex = 0;
             // 
             // panelGridHeader
@@ -307,35 +311,25 @@ namespace SmartMed.UI
             // 
             this.lblGridTitle.AutoSize = true;
             this.lblGridTitle.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(238)))), ((int)(((byte)(245)))), ((int)(((byte)(244)))));
-            this.lblGridTitle.Font = new System.Drawing.Font("Hanken Grotesk", 8.25F, System.Drawing.FontStyle.Bold);
+            this.lblGridTitle.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold);
             this.lblGridTitle.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(22)))), ((int)(((byte)(29)))), ((int)(((byte)(29)))));
             this.lblGridTitle.Location = new System.Drawing.Point(12, 10);
             this.lblGridTitle.Name = "lblGridTitle";
-            this.lblGridTitle.Size = new System.Drawing.Size(96, 16);
+            this.lblGridTitle.Size = new System.Drawing.Size(114, 17);
             this.lblGridTitle.TabIndex = 0;
             this.lblGridTitle.Text = "Recent Orders";
             // 
             // CustomerDashboardForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(244)))), ((int)(((byte)(251)))), ((int)(((byte)(250)))));
             this.ClientSize = new System.Drawing.Size(1060, 720);
-            this.ControlBox = false;
             this.Controls.Add(this.panelScrollHost);
-            this.Font = new System.Drawing.Font("Hanken Grotesk", 9F);
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
-            this.MaximizeBox = false;
-            this.MinimizeBox = false;
+            this.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F);
             this.Name = "CustomerDashboardForm";
-            this.ShowIcon = false;
-            this.ShowInTaskbar = false;
-            this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;
             this.Text = "Customer Home";
             this.panelScrollHost.ResumeLayout(false);
-            this.panelScrollHost.PerformLayout();
             this.tableLayoutRoot.ResumeLayout(false);
-            this.tableLayoutRoot.PerformLayout();
             this.panelHeader.ResumeLayout(false);
             this.panelHeader.PerformLayout();
             this.tableStatsRow.ResumeLayout(false);
@@ -348,6 +342,7 @@ namespace SmartMed.UI
             this.panelGridHeader.ResumeLayout(false);
             this.panelGridHeader.PerformLayout();
             this.ResumeLayout(false);
+
         }
 
         #endregion

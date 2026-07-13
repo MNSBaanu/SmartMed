@@ -8,9 +8,9 @@ namespace SmartMed.UI
 {
     public sealed partial class CustomerDashboardForm : EmbeddedPageForm
     {
-        private OrderService _orders;
-        private MedicineService _medicines;
-        private bool _servicesReady;
+        private readonly OrderService _orders;
+        private readonly MedicineService _medicines;
+        private readonly bool _servicesReady;
         private bool _chromeApplied;
 
         public CustomerDashboardForm()
@@ -92,5 +92,19 @@ namespace SmartMed.UI
         private void PanelStatPromotions_Paint(object sender, PaintEventArgs e) =>
             UiTheme.DrawStatCardAccent(panelStatPromotions, e, Color.FromArgb(16, 185, 129));
 
+        private void lblOrders_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void lblStatOrdersTitle_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void lblPageSubtitle_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 }
