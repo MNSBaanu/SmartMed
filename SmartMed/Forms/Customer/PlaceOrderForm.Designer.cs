@@ -207,6 +207,7 @@ namespace SmartMed.UI
             this.btnRemoveSelected.TabIndex = 0;
             this.btnRemoveSelected.Text = "Remove Selected";
             this.btnRemoveSelected.UseVisualStyleBackColor = false;
+            this.btnRemoveSelected.Click += new System.EventHandler(this.BtnRemoveSelected_Click);
             // 
             // btnClearCart
             // 
@@ -223,6 +224,7 @@ namespace SmartMed.UI
             this.btnClearCart.TabIndex = 1;
             this.btnClearCart.Text = "Clear Cart";
             this.btnClearCart.UseVisualStyleBackColor = false;
+            this.btnClearCart.Click += new System.EventHandler(this.BtnClearCart_Click);
             // 
             // btnPlaceOrder
             // 
@@ -238,6 +240,7 @@ namespace SmartMed.UI
             this.btnPlaceOrder.TabIndex = 2;
             this.btnPlaceOrder.Text = "Proceed to Payment";
             this.btnPlaceOrder.UseVisualStyleBackColor = false;
+            this.btnPlaceOrder.Click += new System.EventHandler(this.BtnPlaceOrder_Click);
             // 
             // lblTotal
             // 

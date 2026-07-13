@@ -78,13 +78,6 @@ namespace SmartMed.UI
             if (_runtimeWired) return;
             _runtimeWired = true;
 
-            btnRemoveSelected.Click += BtnRemove_Click;
-            btnClearCart.Click += (s, e) =>
-            {
-                CartService.Clear(_medicines);
-                RefreshCart();
-            };
-            btnPlaceOrder.Click += BtnPlace_Click;
             gridCart.ReadOnly = false;
             gridCart.EditMode = DataGridViewEditMode.EditOnEnter;
             gridCart.SelectionMode = DataGridViewSelectionMode.CellSelect;
@@ -357,7 +350,7 @@ namespace SmartMed.UI
             }
         }
 
-        private void BtnRemove_Click(object sender, EventArgs e)
+        private void BtnRemoveSelected_Click(object sender, EventArgs e)
         {
             if (gridCart.CurrentRow == null) return;
             var id = Convert.ToInt32(gridCart.CurrentRow.Cells["MedicineID"].Value);
@@ -365,7 +358,13 @@ namespace SmartMed.UI
             RefreshCart();
         }
 
-        private void BtnPlace_Click(object sender, EventArgs e)
+        private void BtnClearCart_Click(object sender, EventArgs e)
+        {
+            CartService.Clear(_medicines);
+            RefreshCart();
+        }
+
+        private void BtnPlaceOrder_Click(object sender, EventArgs e)
         {
             if (!_servicesReady) return;
 
