@@ -116,14 +116,14 @@ namespace SmartMed.Services
             Persist();
         }
 
-        public static void Clear(MedicineService medicines = null)
+        public static void Clear(MedicineService _ = null)
         {
             Lines.Clear();
             if (_customerId.HasValue)
                 Repository.Clear(_customerId.Value);
         }
 
-        public static void ReleaseAll(MedicineService medicines) => Unload();
+        public static void ReleaseAll(MedicineService _) => Unload();
 
         public static void Discard()
         {
@@ -138,9 +138,8 @@ namespace SmartMed.Services
             if (quantity <= 0)
                 throw new ArgumentException("Quantity must be greater than zero.");
 
-            var fresh = medicines.GetById(medicine.MedicineID);
-            if (fresh == null)
-                throw new InvalidOperationException("Medicine not found.");
+            var fresh = medicines.GetById(medicine.MedicineID)
+                ?? throw new InvalidOperationException("Medicine not found.");
             medicines.ValidateForCustomerPurchase(fresh);
 
             var existing = Lines.FirstOrDefault(l => l.MedicineID == medicine.MedicineID);
@@ -167,7 +166,7 @@ namespace SmartMed.Services
             Persist();
         }
 
-        public static void Remove(int medicineId, MedicineService medicines)
+        public static void Remove(int medicineId, MedicineService _)
         {
             var line = Lines.FirstOrDefault(l => l.MedicineID == medicineId);
             if (line == null) return;
@@ -199,9 +198,8 @@ namespace SmartMed.Services
 
             if (medicines != null)
             {
-                var fresh = medicines.GetById(medicineId);
-                if (fresh == null)
-                    throw new InvalidOperationException("Medicine not found.");
+                var fresh = medicines.GetById(medicineId)
+                    ?? throw new InvalidOperationException("Medicine not found.");
                 if (quantity > fresh.StockQuantity)
                     throw new InvalidOperationException("Quantity exceeds available stock.");
 
