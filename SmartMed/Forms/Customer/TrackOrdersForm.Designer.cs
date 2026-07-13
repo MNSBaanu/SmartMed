@@ -193,6 +193,7 @@ namespace SmartMed.UI
             this.panelOrdersOuter.Padding = new System.Windows.Forms.Padding(1);
             this.panelOrdersOuter.Size = new System.Drawing.Size(1012, 258);
             this.panelOrdersOuter.TabIndex = 2;
+            this.panelOrdersOuter.Paint += new System.Windows.Forms.PaintEventHandler(this.PanelOrdersOuter_Paint);
             // 
             // panelOrdersBody
             // 
@@ -260,6 +261,7 @@ namespace SmartMed.UI
             this.panelItemsOuter.Padding = new System.Windows.Forms.Padding(1);
             this.panelItemsOuter.Size = new System.Drawing.Size(1012, 216);
             this.panelItemsOuter.TabIndex = 3;
+            this.panelItemsOuter.Paint += new System.Windows.Forms.PaintEventHandler(this.PanelItemsOuter_Paint);
             // 
             // panelItemsBody
             // 

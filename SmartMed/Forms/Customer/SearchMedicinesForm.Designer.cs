@@ -248,6 +248,7 @@ namespace SmartMed.UI
             this.panelGridOuter.Padding = new System.Windows.Forms.Padding(1);
             this.panelGridOuter.Size = new System.Drawing.Size(1012, 318);
             this.panelGridOuter.TabIndex = 2;
+            this.panelGridOuter.Paint += new System.Windows.Forms.PaintEventHandler(this.PanelGridOuter_Paint);
             // 
             // panelGridBody
             // 

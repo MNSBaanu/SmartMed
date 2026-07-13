@@ -251,7 +251,7 @@ namespace SmartMed.UI
             this.btnClose.TabIndex = 2;
             this.btnClose.Text = "\u00d7";
             this.btnClose.UseVisualStyleBackColor = false;
-            this.btnClose.Click += new System.EventHandler(this.BtnCancel_Click);
+            this.btnClose.Click += new System.EventHandler(this.BtnClose_Click);
             // 
             // lblCardTitle
             // 

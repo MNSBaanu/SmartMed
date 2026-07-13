@@ -67,6 +67,8 @@ namespace SmartMed.UI
             Close();
         }
 
+        private void BtnClose_Click(object sender, EventArgs e) => BtnCancel_Click(sender, e);
+
         private void BtnSave_Click(object sender, EventArgs e)
         {
             try

@@ -144,6 +144,7 @@ namespace SmartMed.UI
             this.panelStatCart.Padding = new System.Windows.Forms.Padding(16, 14, 14, 14);
             this.panelStatCart.Size = new System.Drawing.Size(323, 90);
             this.panelStatCart.TabIndex = 0;
+            this.panelStatCart.Paint += new System.Windows.Forms.PaintEventHandler(this.PanelStatCart_Paint);
             // 
             // lblCart
             // 
@@ -182,6 +183,7 @@ namespace SmartMed.UI
             this.panelStatOrders.Padding = new System.Windows.Forms.Padding(16, 14, 14, 14);
             this.panelStatOrders.Size = new System.Drawing.Size(323, 90);
             this.panelStatOrders.TabIndex = 1;
+            this.panelStatOrders.Paint += new System.Windows.Forms.PaintEventHandler(this.PanelStatOrders_Paint);
             // 
             // lblOrders
             // 
@@ -219,6 +221,7 @@ namespace SmartMed.UI
             this.panelStatPromotions.Padding = new System.Windows.Forms.Padding(16, 14, 14, 14);
             this.panelStatPromotions.Size = new System.Drawing.Size(338, 90);
             this.panelStatPromotions.TabIndex = 2;
+            this.panelStatPromotions.Paint += new System.Windows.Forms.PaintEventHandler(this.PanelStatPromotions_Paint);
             // 
             // lblPromotions
             // 
@@ -257,6 +260,7 @@ namespace SmartMed.UI
             this.panelGridOuter.Padding = new System.Windows.Forms.Padding(1);
             this.panelGridOuter.Size = new System.Drawing.Size(1012, 258);
             this.panelGridOuter.TabIndex = 2;
+            this.panelGridOuter.Paint += new System.Windows.Forms.PaintEventHandler(this.PanelGridOuter_Paint);
             // 
             // panelGridBody
             // 

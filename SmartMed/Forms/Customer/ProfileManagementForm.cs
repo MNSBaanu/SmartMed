@@ -57,22 +57,10 @@ namespace SmartMed.UI
             UiTheme.StyleTextBox(txtPhone);
             UiTheme.StyleTextBox(txtAddress);
 
-            WirePanelBorder(panelFormOuter);
         }
 
-        private static void WirePanelBorder(Panel panel)
-        {
-            if (panel == null || panel.Tag as string == "dash-border") return;
-            panel.Tag = "dash-border";
-            panel.Paint += (s, e) =>
-            {
-                var rect = panel.ClientRectangle;
-                rect.Width -= 1;
-                rect.Height -= 1;
-                using (var pen = new Pen(UiTheme.AdminOutline))
-                    e.Graphics.DrawRectangle(pen, rect);
-            };
-        }
+        private void PanelFormOuter_Paint(object sender, PaintEventArgs e) =>
+            UiTheme.DrawOuterPanelBorder(panelFormOuter, e);
 
         private void WireRuntimeBehavior()
         {

@@ -57,24 +57,13 @@ namespace SmartMed.UI
 
             UiTheme.ApplyClinicalGrid(gridOrders);
             UiTheme.ApplyClinicalGrid(gridItems);
-
-            WirePanelBorder(panelOrdersOuter);
-            WirePanelBorder(panelItemsOuter);
         }
 
-        private static void WirePanelBorder(Panel panel)
-        {
-            if (panel == null || panel.Tag as string == "dash-border") return;
-            panel.Tag = "dash-border";
-            panel.Paint += (s, e) =>
-            {
-                var rect = panel.ClientRectangle;
-                rect.Width -= 1;
-                rect.Height -= 1;
-                using (var pen = new Pen(UiTheme.AdminOutline))
-                    e.Graphics.DrawRectangle(pen, rect);
-            };
-        }
+        private void PanelOrdersOuter_Paint(object sender, PaintEventArgs e) =>
+            UiTheme.DrawOuterPanelBorder(panelOrdersOuter, e);
+
+        private void PanelItemsOuter_Paint(object sender, PaintEventArgs e) =>
+            UiTheme.DrawOuterPanelBorder(panelItemsOuter, e);
 
         private void WireRuntimeBehavior()
         {

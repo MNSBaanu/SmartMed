@@ -78,42 +78,19 @@ namespace SmartMed.UI
             AdminPageView.ApplyChrome(this);
 
             UiTheme.ApplyClinicalGrid(gridRecent);
-
-            WirePanelBorder(panelGridOuter);
-            WireStatCard(panelStatCart, UiTheme.AdminTeal);
-            WireStatCard(panelStatOrders, Color.FromArgb(59, 130, 246));
-            WireStatCard(panelStatPromotions, Color.FromArgb(16, 185, 129));
         }
 
-        private static void WirePanelBorder(Panel panel)
-        {
-            if (panel == null || panel.Tag as string == "dash-border") return;
-            panel.Tag = "dash-border";
-            panel.Paint += (s, e) =>
-            {
-                var rect = panel.ClientRectangle;
-                rect.Width -= 1;
-                rect.Height -= 1;
-                using (var pen = new Pen(UiTheme.AdminOutline))
-                    e.Graphics.DrawRectangle(pen, rect);
-            };
-        }
+        private void PanelGridOuter_Paint(object sender, PaintEventArgs e) =>
+            UiTheme.DrawOuterPanelBorder(panelGridOuter, e);
 
-        private static void WireStatCard(Panel card, Color accent)
-        {
-            if (card == null || card.Tag as string == "dash-stat") return;
-            card.Tag = "dash-stat";
-            card.Paint += (s, e) =>
-            {
-                var rect = card.ClientRectangle;
-                rect.Width -= 1;
-                rect.Height -= 1;
-                using (var pen = new Pen(UiTheme.AdminOutline))
-                    e.Graphics.DrawRectangle(pen, rect);
-                using (var brush = new SolidBrush(accent))
-                    e.Graphics.FillRectangle(brush, 0, 0, 4, rect.Height);
-            };
-        }
+        private void PanelStatCart_Paint(object sender, PaintEventArgs e) =>
+            UiTheme.DrawStatCardAccent(panelStatCart, e, UiTheme.AdminTeal);
+
+        private void PanelStatOrders_Paint(object sender, PaintEventArgs e) =>
+            UiTheme.DrawStatCardAccent(panelStatOrders, e, Color.FromArgb(59, 130, 246));
+
+        private void PanelStatPromotions_Paint(object sender, PaintEventArgs e) =>
+            UiTheme.DrawStatCardAccent(panelStatPromotions, e, Color.FromArgb(16, 185, 129));
 
     }
 }

@@ -66,8 +66,6 @@ namespace SmartMed.UI
             UiTheme.ApplyFlatButton(btnSearch, UiButtonStyle.Primary);
             UiTheme.ApplyFlatButton(btnClear, UiButtonStyle.Secondary);
 
-            WirePanelBorder(panelGridOuter);
-
             if (cmbCategory.Items.Count == 0)
             {
                 cmbCategory.Items.Add("All categories");
@@ -75,19 +73,8 @@ namespace SmartMed.UI
             }
         }
 
-        private static void WirePanelBorder(Panel panel)
-        {
-            if (panel == null || panel.Tag as string == "dash-border") return;
-            panel.Tag = "dash-border";
-            panel.Paint += (s, e) =>
-            {
-                var rect = panel.ClientRectangle;
-                rect.Width -= 1;
-                rect.Height -= 1;
-                using (var pen = new Pen(UiTheme.AdminOutline))
-                    e.Graphics.DrawRectangle(pen, rect);
-            };
-        }
+        private void PanelGridOuter_Paint(object sender, PaintEventArgs e) =>
+            UiTheme.DrawOuterPanelBorder(panelGridOuter, e);
 
         private void WireRuntimeBehavior()
         {

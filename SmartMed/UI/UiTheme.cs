@@ -430,6 +430,26 @@ namespace SmartMed.UI
             };
         }
 
+        public static void DrawOuterPanelBorder(Control control, PaintEventArgs e)
+        {
+            if (control == null) return;
+            var rect = control.ClientRectangle;
+            rect.Width -= 1;
+            rect.Height -= 1;
+            using (var pen = new Pen(AdminOutline))
+                e.Graphics.DrawRectangle(pen, rect);
+        }
+
+        public static void DrawStatCardAccent(Control control, PaintEventArgs e, Color accent)
+        {
+            DrawOuterPanelBorder(control, e);
+            if (control == null) return;
+            var rect = control.ClientRectangle;
+            rect.Height -= 1;
+            using (var brush = new SolidBrush(accent))
+                e.Graphics.FillRectangle(brush, 0, 0, 4, rect.Height);
+        }
+
         public static void StyleClinicalFieldLabel(Label label)
         {
             if (label == null) return;

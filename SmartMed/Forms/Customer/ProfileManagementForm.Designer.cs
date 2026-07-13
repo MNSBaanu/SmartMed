@@ -135,6 +135,7 @@ namespace SmartMed.UI
             this.panelFormOuter.Padding = new System.Windows.Forms.Padding(1);
             this.panelFormOuter.Size = new System.Drawing.Size(1012, 260);
             this.panelFormOuter.TabIndex = 2;
+            this.panelFormOuter.Paint += new System.Windows.Forms.PaintEventHandler(this.PanelFormOuter_Paint);
             // 
             // tableFields
             // 
