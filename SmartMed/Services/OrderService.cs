@@ -58,9 +58,8 @@ namespace SmartMed.Services
             if (!ValidStatuses.Contains(status))
                 throw new ArgumentException("Invalid order status.");
 
-            var order = _orders.GetById(orderId);
-            if (order == null)
-                throw new InvalidOperationException("Order not found.");
+            var order = _orders.GetById(orderId)
+                ?? throw new InvalidOperationException("Order not found.");
 
             var transitionError = GetTransitionError(order.Status, status);
             if (transitionError != null)
@@ -116,9 +115,8 @@ namespace SmartMed.Services
 
             foreach (var line in cart)
             {
-                var medicine = _medicines.GetById(line.MedicineID);
-                if (medicine == null)
-                    throw new InvalidOperationException($"Medicine not found: {line.MedicineName}");
+                var medicine = _medicines.GetById(line.MedicineID)
+                    ?? throw new InvalidOperationException($"Medicine not found: {line.MedicineName}");
                 if (medicine.ExpiryDate.Date < DateTime.Today)
                     throw new InvalidOperationException($"{medicine.MedicineName} has expired and cannot be ordered.");
                 if (medicine.StockQuantity < line.Quantity)
@@ -173,9 +171,8 @@ namespace SmartMed.Services
             if (reason.Length > 500)
                 throw new ArgumentException("Cancellation reason must be 500 characters or fewer.");
 
-            var order = _orders.GetById(orderId);
-            if (order == null)
-                throw new InvalidOperationException("Order not found.");
+            var order = _orders.GetById(orderId)
+                ?? throw new InvalidOperationException("Order not found.");
             if (customerId.HasValue && order.CustomerID != customerId.Value)
                 throw new InvalidOperationException("You can only cancel your own orders.");
             if (order.Status != StatusPending)
