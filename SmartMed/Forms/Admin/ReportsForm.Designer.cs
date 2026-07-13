@@ -171,7 +171,7 @@ namespace SmartMed.UI
             this.btnViewReport.TabIndex = 0;
             this.btnViewReport.Text = "View Report";
             this.btnViewReport.UseVisualStyleBackColor = false;
-            this.btnViewReport.Click += new System.EventHandler(this.btnViewReport_Click);
+            this.btnViewReport.Click += new System.EventHandler(this.BtnViewReport_Click);
             // 
             // btnExportCsv
             // 
@@ -190,7 +190,7 @@ namespace SmartMed.UI
             this.btnExportCsv.TabIndex = 1;
             this.btnExportCsv.Text = "Export CSV";
             this.btnExportCsv.UseVisualStyleBackColor = false;
-            this.btnExportCsv.Click += new System.EventHandler(this.btnExportCsv_Click);
+            this.btnExportCsv.Click += new System.EventHandler(this.BtnExportCsv_Click);
             // 
             // btnExportPdf
             // 
@@ -209,7 +209,7 @@ namespace SmartMed.UI
             this.btnExportPdf.TabIndex = 2;
             this.btnExportPdf.Text = "Export PDF";
             this.btnExportPdf.UseVisualStyleBackColor = false;
-            this.btnExportPdf.Click += new System.EventHandler(this.btnExportPdf_Click);
+            this.btnExportPdf.Click += new System.EventHandler(this.BtnExportPdf_Click);
             // 
             // lblPageSubtitle
             // 
@@ -452,7 +452,7 @@ namespace SmartMed.UI
             this.btnSalesTab.TabIndex = 0;
             this.btnSalesTab.Text = "Sales Performance";
             this.btnSalesTab.UseVisualStyleBackColor = false;
-            this.btnSalesTab.Click += new System.EventHandler(this.btnSalesTab_Click);
+            this.btnSalesTab.Click += new System.EventHandler(this.BtnSalesTab_Click);
             // 
             // btnInventoryTab
             // 
@@ -472,7 +472,7 @@ namespace SmartMed.UI
             this.btnInventoryTab.TabIndex = 1;
             this.btnInventoryTab.Text = "Medicine Inventory";
             this.btnInventoryTab.UseVisualStyleBackColor = false;
-            this.btnInventoryTab.Click += new System.EventHandler(this.btnInventoryTab_Click);
+            this.btnInventoryTab.Click += new System.EventHandler(this.BtnInventoryTab_Click);
             // 
             // btnHistoryTab
             // 
@@ -491,7 +491,7 @@ namespace SmartMed.UI
             this.btnHistoryTab.TabIndex = 2;
             this.btnHistoryTab.Text = "Customer Order History";
             this.btnHistoryTab.UseVisualStyleBackColor = false;
-            this.btnHistoryTab.Click += new System.EventHandler(this.btnHistoryTab_Click);
+            this.btnHistoryTab.Click += new System.EventHandler(this.BtnHistoryTab_Click);
             // 
             // panelPeriodFilter
             // 
@@ -532,7 +532,7 @@ namespace SmartMed.UI
             this.btnWeekPeriod.TabIndex = 0;
             this.btnWeekPeriod.Text = "Week";
             this.btnWeekPeriod.UseVisualStyleBackColor = false;
-            this.btnWeekPeriod.Click += new System.EventHandler(this.btnWeekPeriod_Click);
+            this.btnWeekPeriod.Click += new System.EventHandler(this.BtnWeekPeriod_Click);
             // 
             // btnMonthPeriod
             // 
@@ -549,7 +549,7 @@ namespace SmartMed.UI
             this.btnMonthPeriod.TabIndex = 1;
             this.btnMonthPeriod.Text = "Month";
             this.btnMonthPeriod.UseVisualStyleBackColor = false;
-            this.btnMonthPeriod.Click += new System.EventHandler(this.btnMonthPeriod_Click);
+            this.btnMonthPeriod.Click += new System.EventHandler(this.BtnMonthPeriod_Click);
             // 
             // btnYearPeriod
             // 
@@ -565,7 +565,7 @@ namespace SmartMed.UI
             this.btnYearPeriod.TabIndex = 2;
             this.btnYearPeriod.Text = "Year";
             this.btnYearPeriod.UseVisualStyleBackColor = false;
-            this.btnYearPeriod.Click += new System.EventHandler(this.btnYearPeriod_Click);
+            this.btnYearPeriod.Click += new System.EventHandler(this.BtnYearPeriod_Click);
             // 
             // lblPeriodLabel
             // 
@@ -601,7 +601,7 @@ namespace SmartMed.UI
             this.cmbCustomer.Name = "cmbCustomer";
             this.cmbCustomer.Size = new System.Drawing.Size(320, 26);
             this.cmbCustomer.TabIndex = 1;
-            this.cmbCustomer.SelectedIndexChanged += new System.EventHandler(this.cmbCustomer_SelectedIndexChanged);
+            this.cmbCustomer.SelectedIndexChanged += new System.EventHandler(this.CmbCustomer_SelectedIndexChanged);
             // 
             // lblCustomerLabel
             // 
@@ -696,7 +696,7 @@ namespace SmartMed.UI
             this.gridReport.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.gridReport.Size = new System.Drawing.Size(1010, 278);
             this.gridReport.TabIndex = 0;
-            this.gridReport.CellFormatting += new System.Windows.Forms.DataGridViewCellFormattingEventHandler(this.gridReport_CellFormatting);
+            this.gridReport.CellFormatting += new System.Windows.Forms.DataGridViewCellFormattingEventHandler(this.GridReport_CellFormatting);
             // 
             // colOrderRef
             // 
