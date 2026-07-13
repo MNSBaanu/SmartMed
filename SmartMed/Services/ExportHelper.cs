@@ -56,9 +56,9 @@ namespace SmartMed.Services
             var colCount = table.Columns.Count;
             var colWidths = BuildColumnWidths(table, XUnit.FromPoint(595).Point - margin * 2);
 
-            PdfPage page = null;
-            XGraphics gfx = null;
-            var y = margin;
+            PdfPage page;
+            XGraphics gfx;
+            double y;
 
             void BeginPage(bool withHeader)
             {
