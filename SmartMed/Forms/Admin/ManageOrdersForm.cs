@@ -12,8 +12,8 @@ namespace SmartMed.UI
     {
         private const int PageSize = 10;
 
-        private OrderService _orders;
-        private bool _servicesReady;
+        private readonly OrderService _orders;
+        private readonly bool _servicesReady;
         private bool _runtimeWired;
         private bool _chromeApplied;
 
@@ -154,11 +154,11 @@ namespace SmartMed.UI
             };
         }
 
-        private void btnApplyFilters_Click(object sender, EventArgs e) => ApplyFilters();
+        private void BtnApplyFilters_Click(object sender, EventArgs e) => ApplyFilters();
 
-        private void btnPagePrev_Click(object sender, EventArgs e) => ChangePage(-1);
+        private void BtnPagePrev_Click(object sender, EventArgs e) => ChangePage(-1);
 
-        private void btnPageNext_Click(object sender, EventArgs e) => ChangePage(1);
+        private void BtnPageNext_Click(object sender, EventArgs e) => ChangePage(1);
 
         private void LoadOrders()
         {
@@ -466,7 +466,7 @@ namespace SmartMed.UI
             return _filteredRows.FirstOrDefault(r => r.OrderID == orderId);
         }
 
-        private void gridOrders_CurrentCellDirtyStateChanged(object sender, EventArgs e)
+        private void GridOrders_CurrentCellDirtyStateChanged(object sender, EventArgs e)
         {
             if (gridOrders.IsCurrentCellDirty
                 && gridOrders.CurrentCell is DataGridViewComboBoxCell)
@@ -475,7 +475,7 @@ namespace SmartMed.UI
             }
         }
 
-        private void gridOrders_EditingControlShowing(object sender, DataGridViewEditingControlShowingEventArgs e)
+        private void GridOrders_EditingControlShowing(object sender, DataGridViewEditingControlShowingEventArgs e)
         {
             if (gridOrders.CurrentCell?.OwningColumn?.Name != "Status") return;
             if (!(e.Control is ComboBox combo)) return;
@@ -497,14 +497,14 @@ namespace SmartMed.UI
             combo.SelectedItem = row.RawStatus;
         }
 
-        private void gridOrders_DataError(object sender, DataGridViewDataErrorEventArgs e)
+        private void GridOrders_DataError(object sender, DataGridViewDataErrorEventArgs e)
         {
             if (e.ColumnIndex < 0 || e.RowIndex < 0) return;
             if (gridOrders.Columns[e.ColumnIndex].Name != "Status") return;
             e.ThrowException = false;
         }
 
-        private void gridOrders_CellValueChanged(object sender, DataGridViewCellEventArgs e)
+        private void GridOrders_CellValueChanged(object sender, DataGridViewCellEventArgs e)
         {
             if (_suppressGridEvents || e.RowIndex < 0 || !_servicesReady) return;
             if (gridOrders.Columns[e.ColumnIndex].Name != "Status") return;
@@ -528,7 +528,7 @@ namespace SmartMed.UI
             }
         }
 
-        private void gridOrders_CellBeginEdit(object sender, DataGridViewCellCancelEventArgs e)
+        private void GridOrders_CellBeginEdit(object sender, DataGridViewCellCancelEventArgs e)
         {
             if (e.RowIndex < 0 || e.ColumnIndex < 0) return;
             if (gridOrders.Columns[e.ColumnIndex].Name != "Status") return;
@@ -536,7 +536,7 @@ namespace SmartMed.UI
                 e.Cancel = true;
         }
 
-        private void gridOrders_CellClick(object sender, DataGridViewCellEventArgs e)
+        private void GridOrders_CellClick(object sender, DataGridViewCellEventArgs e)
         {
             if (e.RowIndex < 0 || !_servicesReady) return;
             var colName = gridOrders.Columns[e.ColumnIndex].Name;
@@ -588,7 +588,7 @@ namespace SmartMed.UI
             BindPage();
         }
 
-        private void gridOrders_SelectionChanged(object sender, EventArgs e)
+        private void GridOrders_SelectionChanged(object sender, EventArgs e)
         {
             if (gridOrders.CurrentRow == null)
             {
@@ -600,7 +600,7 @@ namespace SmartMed.UI
                 _selectedOrderId = Convert.ToInt32(cell.Value);
         }
 
-        private void gridOrders_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
+        private void GridOrders_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
         {
             if (e.RowIndex < 0 || e.ColumnIndex < 0) return;
 
@@ -726,7 +726,7 @@ namespace SmartMed.UI
             }
         }
 
-        private void gridOrders_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        private void GridOrders_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
             if (e.RowIndex < 0 || !_servicesReady) return;
 
@@ -882,7 +882,7 @@ namespace SmartMed.UI
             }
         }
 
-        private void btnExport_Click(object sender, EventArgs e)
+        private void BtnExport_Click(object sender, EventArgs e)
         {
             if (_filteredRows.Count == 0)
             {
