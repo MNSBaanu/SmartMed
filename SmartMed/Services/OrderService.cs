@@ -226,13 +226,6 @@ namespace SmartMed.Services
 
         public void ExportOrdersToCsv(IEnumerable<Order> orders, string filePath)
         {
-            var customerId = orders.FirstOrDefault()?.CustomerID ?? 0;
-            if (customerId > 0)
-            {
-                ExportCustomerOrderHistoryToCsv(customerId, filePath);
-                return;
-            }
-
             var sb = new StringBuilder();
             sb.AppendLine("OrderID,OrderDate,Status,TotalAmount");
             foreach (var order in orders)
