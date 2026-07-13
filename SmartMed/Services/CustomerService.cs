@@ -79,9 +79,8 @@ namespace SmartMed.Services
             if (customer.CustomerID <= 0)
                 throw new ArgumentException("Select a customer to update.");
             ValidateCustomer(customer, isNew: false);
-            var existing = _customers.GetById(customer.CustomerID);
-            if (existing == null)
-                throw new InvalidOperationException("Customer not found.");
+            var existing = _customers.GetById(customer.CustomerID)
+                ?? throw new InvalidOperationException("Customer not found.");
             if (!string.Equals(existing.Email, customer.Email, StringComparison.OrdinalIgnoreCase)
                 && _customers.EmailExists(customer.Email))
                 throw new InvalidOperationException("Email already registered.");
@@ -93,9 +92,8 @@ namespace SmartMed.Services
         {
             if (customerId <= 0)
                 throw new ArgumentException("Select a customer to update.");
-            var existing = _customers.GetById(customerId);
-            if (existing == null)
-                throw new InvalidOperationException("Customer not found.");
+            _ = _customers.GetById(customerId)
+                ?? throw new InvalidOperationException("Customer not found.");
             _customers.SetActiveStatus(customerId, isActive);
         }
 
