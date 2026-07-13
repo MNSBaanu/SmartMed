@@ -8,8 +8,8 @@ namespace SmartMed.UI
 {
     public sealed partial class ProfileManagementForm : EmbeddedPageForm
     {
-        private CustomerService _customers;
-        private bool _servicesReady;
+        private readonly CustomerService _customers;
+        private readonly bool _servicesReady;
         private bool _runtimeWired;
         private bool _chromeApplied;
 
@@ -89,9 +89,8 @@ namespace SmartMed.UI
 
             try
             {
-                var customer = Session.CurrentCustomer;
-                if (customer == null)
-                    throw new InvalidOperationException("Please log in again.");
+                var customer = Session.CurrentCustomer
+                    ?? throw new InvalidOperationException("Please log in again.");
 
                 var updated = new Customer
                 {
