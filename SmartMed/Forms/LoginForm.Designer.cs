@@ -40,8 +40,6 @@ namespace SmartMed.UI
             this.lblCopyright = new System.Windows.Forms.Label();
             this.lblSecurityLine = new System.Windows.Forms.Label();
             this.panelLoginCard = new System.Windows.Forms.Panel();
-            this.panelError = new System.Windows.Forms.Panel();
-            this.lblError = new System.Windows.Forms.Label();
             this.lnkForgot = new System.Windows.Forms.LinkLabel();
             this.btnQuickCustomer = new System.Windows.Forms.Button();
             this.btnQuickAdmin = new System.Windows.Forms.Button();
@@ -64,7 +62,6 @@ namespace SmartMed.UI
             this.panelMain.SuspendLayout();
             this.panelFooter.SuspendLayout();
             this.panelLoginCard.SuspendLayout();
-            this.panelError.SuspendLayout();
             this.pnlPasswordField.SuspendLayout();
             this.pnlBrandIcon.SuspendLayout();
             this.SuspendLayout();
@@ -166,7 +163,6 @@ namespace SmartMed.UI
             // panelLoginCard
             // 
             this.panelLoginCard.BackColor = System.Drawing.Color.White;
-            this.panelLoginCard.Controls.Add(this.panelError);
             this.panelLoginCard.Controls.Add(this.lnkForgot);
             this.panelLoginCard.Controls.Add(this.btnQuickCustomer);
             this.panelLoginCard.Controls.Add(this.btnQuickAdmin);
@@ -186,28 +182,6 @@ namespace SmartMed.UI
             this.panelLoginCard.Padding = new System.Windows.Forms.Padding(32);
             this.panelLoginCard.Size = new System.Drawing.Size(440, 568);
             this.panelLoginCard.TabIndex = 0;
-            // 
-            // panelError
-            // 
-            this.panelError.BackColor = System.Drawing.Color.White;
-            this.panelError.Controls.Add(this.lblError);
-            this.panelError.Location = new System.Drawing.Point(32, 500);
-            this.panelError.Name = "panelError";
-            this.panelError.Padding = new System.Windows.Forms.Padding(12, 8, 12, 8);
-            this.panelError.Size = new System.Drawing.Size(0, 0);
-            this.panelError.TabIndex = 15;
-            this.panelError.Visible = false;
-            // 
-            // lblError
-            // 
-            this.lblError.BackColor = System.Drawing.Color.White;
-            this.lblError.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lblError.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
-            this.lblError.ForeColor = System.Drawing.Color.White;
-            this.lblError.Location = new System.Drawing.Point(12, 8);
-            this.lblError.Name = "lblError";
-            this.lblError.Size = new System.Drawing.Size(0, 0);
-            this.lblError.TabIndex = 0;
             // 
             // lnkForgot
             // 
@@ -460,7 +434,6 @@ namespace SmartMed.UI
             this.panelFooter.ResumeLayout(false);
             this.panelLoginCard.ResumeLayout(false);
             this.panelLoginCard.PerformLayout();
-            this.panelError.ResumeLayout(false);
             this.pnlPasswordField.ResumeLayout(false);
             this.pnlPasswordField.PerformLayout();
             this.pnlBrandIcon.ResumeLayout(false);
@@ -519,10 +492,6 @@ namespace SmartMed.UI
         private System.Windows.Forms.Button btnQuickCustomer;
 
         private System.Windows.Forms.LinkLabel lnkForgot;
-
-        private System.Windows.Forms.Panel panelError;
-
-        private System.Windows.Forms.Label lblError;
 
         private System.Windows.Forms.Panel panelFooter;
 

@@ -37,7 +37,6 @@ namespace SmartMed.UI
         {
             InitializeComponent();
             DoubleBuffered = true;
-            HideErrorPanel();
             ApplyViewChrome();
             if (!DesignHostHelper.IsDesignHost(this))
             {
@@ -64,19 +63,7 @@ namespace SmartMed.UI
             txtUsername.Clear();
             txtPassword.Clear();
             _passwordVisible = false;
-            HideErrorPanel();
             RestoreLoginAppearance();
-        }
-
-        private void HideErrorPanel()
-        {
-            if (panelError == null || lblError == null) return;
-
-            panelError.Visible = false;
-            lblError.Text = string.Empty;
-            panelError.BackColor = Color.White;
-            lblError.ForeColor = Color.White;
-            lblError.BackColor = Color.White;
         }
 
         /// <summary>Runtime-only input behavior (placeholders, password toggle).</summary>
@@ -84,10 +71,6 @@ namespace SmartMed.UI
         {
             UiTheme.WireClinicalPlaceholderTextBox(txtUsername, "Enter email or username");
             UiTheme.WireClinicalPasswordField(pnlPasswordField, txtPassword, btnTogglePassword, "Enter your password");
-
-            HideErrorPanel();
-            panelError.SendToBack();
-            lnkForgot.BringToFront();
             SetPasswordVisible(_passwordVisible);
         }
 
@@ -210,8 +193,6 @@ namespace SmartMed.UI
         private void PerformLogin()
         {
             if (_auth == null) return;
-
-            HideErrorPanel();
 
             try
             {
