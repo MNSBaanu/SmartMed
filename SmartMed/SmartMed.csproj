@@ -5,7 +5,7 @@
     <UseWindowsForms>true</UseWindowsForms>
     <RootNamespace>SmartMed</RootNamespace>
     <AssemblyName>SmartMed</AssemblyName>
-    <StartupObject>SmartMed.UI.Program</StartupObject>
+    <StartupObject>SmartMed.Program</StartupObject>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <PlatformTarget>AnyCPU</PlatformTarget>
     <Prefer32Bit>false</Prefer32Bit>

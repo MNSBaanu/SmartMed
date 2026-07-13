@@ -1,8 +1,9 @@
 using System;
 using System.Windows.Forms;
 using SmartMed.Data;
+using SmartMed.UI;
 
-namespace SmartMed.UI
+namespace SmartMed
 {
     internal static class Program
     {
