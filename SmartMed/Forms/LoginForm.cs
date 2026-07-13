@@ -147,11 +147,10 @@ namespace SmartMed.UI
 
         private void lnkForgot_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            SmartMedMessageBox.Show(
-                "Please contact your pharmacy administrator to reset your password.",
-                "Forgot Password",
-                MessageBoxButtons.OK,
-                MessageBoxIcon.Information);
+            using (var dlg = new ForgotPasswordForm())
+            {
+                dlg.ShowDialog(this);
+            }
         }
 
         private void btnRegister_Click(object sender, EventArgs e)

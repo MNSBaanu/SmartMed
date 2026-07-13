@@ -47,6 +47,15 @@
     <EmbeddedResource Update="Forms\ChangePasswordForm.resx">
       <DependentUpon>ChangePasswordForm.cs</DependentUpon>
     </EmbeddedResource>
+    <Compile Update="Forms\ForgotPasswordForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Forms\ForgotPasswordForm.Designer.cs">
+      <DependentUpon>ForgotPasswordForm.cs</DependentUpon>
+    </Compile>
+    <EmbeddedResource Update="Forms\ForgotPasswordForm.resx">
+      <DependentUpon>ForgotPasswordForm.cs</DependentUpon>
+    </EmbeddedResource>
     <Compile Update="Forms\LoginForm.cs">
       <SubType>Form</SubType>
     </Compile>

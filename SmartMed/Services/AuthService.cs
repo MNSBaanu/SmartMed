@@ -66,5 +66,40 @@ namespace SmartMed.Services
 
             _adminRepo.UpdatePassword(adminId, newPassword);
         }
+
+        /// <summary>Reset password without the old password (forgot-password flow).</summary>
+        public void ResetPassword(string identity, string newPassword)
+        {
+            if (ValidationService.IsNullOrWhiteSpace(identity))
+                throw new System.ArgumentException("Email or username is required.");
+            if (ValidationService.IsNullOrWhiteSpace(newPassword))
+                throw new System.ArgumentException("New password is required.");
+            if (newPassword.Length < 6)
+                throw new System.ArgumentException("New password must be at least 6 characters.");
+
+            identity = identity.Trim();
+
+            var admin = _adminRepo.GetByUsernameOrEmail(identity);
+            if (admin != null)
+            {
+                _adminRepo.UpdatePassword(admin.AdminID, newPassword);
+                return;
+            }
+
+            if (ValidationService.IsValidEmail(identity))
+            {
+                var customer = _customerRepo.GetByEmail(identity);
+                if (customer != null)
+                {
+                    if (!customer.IsActive)
+                        throw new System.InvalidOperationException(
+                            "This account has been deactivated. Please contact the pharmacy administrator.");
+                    _customerRepo.UpdatePassword(customer.CustomerID, newPassword);
+                    return;
+                }
+            }
+
+            throw new System.InvalidOperationException("Account not found.");
+        }
     }
 }

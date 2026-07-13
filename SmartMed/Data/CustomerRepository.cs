@@ -21,6 +21,15 @@ namespace SmartMed.Data
             return Map(table.Rows[0]);
         }
 
+        public Customer GetByEmail(string email)
+        {
+            var table = DatabaseHelper.ExecuteQuery(
+                $"SELECT {SelectColumns} FROM Customer WHERE Email=@e",
+                new SqlParameter("@e", email));
+            if (table.Rows.Count == 0) return null;
+            return Map(table.Rows[0]);
+        }
+
         public Customer GetById(int id)
         {
             var table = DatabaseHelper.ExecuteQuery(
