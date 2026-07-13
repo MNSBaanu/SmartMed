@@ -157,7 +157,7 @@ namespace SmartMed.UI
             this.btnExport.TabIndex = 0;
             this.btnExport.Text = "Export";
             this.btnExport.UseVisualStyleBackColor = false;
-            this.btnExport.Click += new System.EventHandler(this.btnExport_Click);
+            this.btnExport.Click += new System.EventHandler(this.BtnExport_Click);
             // 
             // btnPrint
             // 
@@ -175,7 +175,7 @@ namespace SmartMed.UI
             this.btnPrint.TabIndex = 1;
             this.btnPrint.Text = "Print";
             this.btnPrint.UseVisualStyleBackColor = false;
-            this.btnPrint.Click += new System.EventHandler(this.btnPrint_Click);
+            this.btnPrint.Click += new System.EventHandler(this.BtnPrint_Click);
             // 
             // lblPageSubtitle
             // 
@@ -383,7 +383,7 @@ namespace SmartMed.UI
             this.txtSearch.Name = "txtSearch";
             this.txtSearch.Size = new System.Drawing.Size(200, 24);
             this.txtSearch.TabIndex = 1;
-            this.txtSearch.TextChanged += new System.EventHandler(this.txtSearch_TextChanged);
+            this.txtSearch.TextChanged += new System.EventHandler(this.TxtSearch_TextChanged);
             // 
             // flowToolbarLeft
             // 
@@ -414,7 +414,7 @@ namespace SmartMed.UI
             this.btnAdd.TabIndex = 0;
             this.btnAdd.Text = "+ Add Customer";
             this.btnAdd.UseVisualStyleBackColor = false;
-            this.btnAdd.Click += new System.EventHandler(this.btnAdd_Click);
+            this.btnAdd.Click += new System.EventHandler(this.BtnAdd_Click);
             // 
             // btnReload
             // 
@@ -432,7 +432,7 @@ namespace SmartMed.UI
             this.btnReload.TabIndex = 3;
             this.btnReload.Text = "Reload";
             this.btnReload.UseVisualStyleBackColor = false;
-            this.btnReload.Click += new System.EventHandler(this.btnReload_Click);
+            this.btnReload.Click += new System.EventHandler(this.BtnReload_Click);
             // 
             // panelGridOuter
             // 
@@ -516,9 +516,9 @@ namespace SmartMed.UI
             this.gridCustomers.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.gridCustomers.Size = new System.Drawing.Size(1010, 270);
             this.gridCustomers.TabIndex = 0;
-            this.gridCustomers.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.gridCustomers_CellContentClick);
-            this.gridCustomers.CellFormatting += new System.Windows.Forms.DataGridViewCellFormattingEventHandler(this.gridCustomers_CellFormatting);
-            this.gridCustomers.SelectionChanged += new System.EventHandler(this.gridCustomers_SelectionChanged);
+            this.gridCustomers.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.GridCustomers_CellContentClick);
+            this.gridCustomers.CellFormatting += new System.Windows.Forms.DataGridViewCellFormattingEventHandler(this.GridCustomers_CellFormatting);
+            this.gridCustomers.SelectionChanged += new System.EventHandler(this.GridCustomers_SelectionChanged);
             // 
             // colCustomerID
             // 

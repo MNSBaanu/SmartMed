@@ -12,9 +12,9 @@ namespace SmartMed.UI
     {
         private const int ActiveOrderDays = 90;
 
-        private CustomerService _customers;
-        private OrderService _orders;
-        private bool _servicesReady;
+        private readonly CustomerService _customers;
+        private readonly OrderService _orders;
+        private readonly bool _servicesReady;
 
         private List<CustomerRow> _allRows = new List<CustomerRow>();
         private List<CustomerRow> _filteredRows = new List<CustomerRow>();
@@ -113,11 +113,11 @@ namespace SmartMed.UI
             };
         }
 
-        private void btnAdd_Click(object sender, EventArgs e) => ShowCustomerDialog(null);
+        private void BtnAdd_Click(object sender, EventArgs e) => ShowCustomerDialog(null);
 
-        private void btnReload_Click(object sender, EventArgs e) => RefreshPage();
+        private void BtnReload_Click(object sender, EventArgs e) => RefreshPage();
 
-        private void txtSearch_TextChanged(object sender, EventArgs e) => ApplyFilters();
+        private void TxtSearch_TextChanged(object sender, EventArgs e) => ApplyFilters();
 
         private void EditCustomer(int customerId)
         {
@@ -328,7 +328,7 @@ namespace SmartMed.UI
             gridCustomers.Columns.Add(column);
         }
 
-        private void gridCustomers_SelectionChanged(object sender, EventArgs e)
+        private void GridCustomers_SelectionChanged(object sender, EventArgs e)
         {
             if (gridCustomers.CurrentRow == null)
             {
@@ -345,7 +345,7 @@ namespace SmartMed.UI
             gridCustomers.ClearSelection();
         }
 
-        private void gridCustomers_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        private void GridCustomers_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
             if (e.RowIndex < 0 || !_servicesReady) return;
 
@@ -367,7 +367,7 @@ namespace SmartMed.UI
                 RemoveCustomer(id);
         }
 
-        private void gridCustomers_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
+        private void GridCustomers_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
         {
             if (e.RowIndex < 0 || e.ColumnIndex < 0) return;
 
@@ -533,7 +533,7 @@ namespace SmartMed.UI
         private List<Customer> GetFilteredCustomers() =>
             _filteredRows.Select(r => r.Customer).Where(c => c != null).ToList();
 
-        private void btnExport_Click(object sender, EventArgs e)
+        private void BtnExport_Click(object sender, EventArgs e)
         {
             try
             {
@@ -555,7 +555,7 @@ namespace SmartMed.UI
             }
         }
 
-        private void btnPrint_Click(object sender, EventArgs e)
+        private void BtnPrint_Click(object sender, EventArgs e)
         {
             if (gridCustomers.Rows.Count == 0)
             {
