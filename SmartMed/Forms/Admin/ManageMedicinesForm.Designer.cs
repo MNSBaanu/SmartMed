@@ -139,7 +139,7 @@ namespace SmartMed.UI
             this.btnExport.TabIndex = 0;
             this.btnExport.Text = "Export PDF";
             this.btnExport.UseVisualStyleBackColor = false;
-            this.btnExport.Click += new System.EventHandler(this.btnExport_Click);
+            this.btnExport.Click += new System.EventHandler(this.BtnExport_Click);
             // 
             // btnAdd
             // 
@@ -156,7 +156,7 @@ namespace SmartMed.UI
             this.btnAdd.TabIndex = 1;
             this.btnAdd.Text = "+ Add Medicine";
             this.btnAdd.UseVisualStyleBackColor = false;
-            this.btnAdd.Click += new System.EventHandler(this.btnAdd_Click);
+            this.btnAdd.Click += new System.EventHandler(this.BtnAdd_Click);
             // 
             // btnViewExpiryAlerts
             // 
@@ -173,7 +173,7 @@ namespace SmartMed.UI
             this.btnViewExpiryAlerts.TabIndex = 2;
             this.btnViewExpiryAlerts.Text = "Alerts (0)";
             this.btnViewExpiryAlerts.UseVisualStyleBackColor = false;
-            this.btnViewExpiryAlerts.Click += new System.EventHandler(this.btnViewExpiryAlerts_Click);
+            this.btnViewExpiryAlerts.Click += new System.EventHandler(this.BtnViewExpiryAlerts_Click);
             // 
             // lblPageSubtitle
             // 
@@ -242,10 +242,10 @@ namespace SmartMed.UI
             this.gridMedicines.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.gridMedicines.Size = new System.Drawing.Size(1010, 406);
             this.gridMedicines.TabIndex = 0;
-            this.gridMedicines.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.gridMedicines_CellContentClick);
-            this.gridMedicines.CellFormatting += new System.Windows.Forms.DataGridViewCellFormattingEventHandler(this.gridMedicines_CellFormatting);
-            this.gridMedicines.RowPrePaint += new System.Windows.Forms.DataGridViewRowPrePaintEventHandler(this.gridMedicines_RowPrePaint);
-            this.gridMedicines.SelectionChanged += new System.EventHandler(this.gridMedicines_SelectionChanged);
+            this.gridMedicines.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.GridMedicines_CellContentClick);
+            this.gridMedicines.CellFormatting += new System.Windows.Forms.DataGridViewCellFormattingEventHandler(this.GridMedicines_CellFormatting);
+            this.gridMedicines.RowPrePaint += new System.Windows.Forms.DataGridViewRowPrePaintEventHandler(this.GridMedicines_RowPrePaint);
+            this.gridMedicines.SelectionChanged += new System.EventHandler(this.GridMedicines_SelectionChanged);
             // 
             // panelGridHeader
             // 
@@ -339,7 +339,7 @@ namespace SmartMed.UI
             this.cmbCategory.Name = "cmbCategory";
             this.cmbCategory.Size = new System.Drawing.Size(130, 26);
             this.cmbCategory.TabIndex = 1;
-            this.cmbCategory.SelectedIndexChanged += new System.EventHandler(this.cmbCategory_SelectedIndexChanged);
+            this.cmbCategory.SelectedIndexChanged += new System.EventHandler(this.CmbCategory_SelectedIndexChanged);
             // 
             // txtSearch
             // 
@@ -348,8 +348,8 @@ namespace SmartMed.UI
             this.txtSearch.Name = "txtSearch";
             this.txtSearch.Size = new System.Drawing.Size(140, 25);
             this.txtSearch.TabIndex = 2;
-            this.txtSearch.TextChanged += new System.EventHandler(this.txtSearch_TextChanged);
-            this.txtSearch.KeyDown += new System.Windows.Forms.KeyEventHandler(this.txtSearch_KeyDown);
+            this.txtSearch.TextChanged += new System.EventHandler(this.TxtSearch_TextChanged);
+            this.txtSearch.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TxtSearch_KeyDown);
             // 
             // btnSearch
             // 
@@ -365,7 +365,7 @@ namespace SmartMed.UI
             this.btnSearch.TabIndex = 4;
             this.btnSearch.Text = "Search";
             this.btnSearch.UseVisualStyleBackColor = false;
-            this.btnSearch.Click += new System.EventHandler(this.btnSearch_Click);
+            this.btnSearch.Click += new System.EventHandler(this.BtnSearch_Click);
             // 
             // lblPriceLabel
             // 
@@ -386,7 +386,7 @@ namespace SmartMed.UI
             this.txtMinPrice.Name = "txtMinPrice";
             this.txtMinPrice.Size = new System.Drawing.Size(56, 25);
             this.txtMinPrice.TabIndex = 6;
-            this.txtMinPrice.TextChanged += new System.EventHandler(this.txtMinPrice_TextChanged);
+            this.txtMinPrice.TextChanged += new System.EventHandler(this.TxtMinPrice_TextChanged);
             // 
             // txtMaxPrice
             // 
@@ -395,7 +395,7 @@ namespace SmartMed.UI
             this.txtMaxPrice.Name = "txtMaxPrice";
             this.txtMaxPrice.Size = new System.Drawing.Size(56, 25);
             this.txtMaxPrice.TabIndex = 7;
-            this.txtMaxPrice.TextChanged += new System.EventHandler(this.txtMaxPrice_TextChanged);
+            this.txtMaxPrice.TextChanged += new System.EventHandler(this.TxtMaxPrice_TextChanged);
             // 
             // btnClear
             // 
@@ -411,7 +411,7 @@ namespace SmartMed.UI
             this.btnClear.TabIndex = 8;
             this.btnClear.Text = "Clear";
             this.btnClear.UseVisualStyleBackColor = false;
-            this.btnClear.Click += new System.EventHandler(this.btnClear_Click);
+            this.btnClear.Click += new System.EventHandler(this.BtnClear_Click);
             // 
             // tableStatsRow
             // 

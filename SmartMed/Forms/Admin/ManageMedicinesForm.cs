@@ -16,9 +16,9 @@ namespace SmartMed.UI
             "Wellness", "Other"
         };
 
-        private MedicineService _medicines;
+        private readonly MedicineService _medicines;
         private MedicineService _medicineRules;
-        private bool _servicesReady;
+        private readonly bool _servicesReady;
         private bool _runtimeWired;
         private bool _chromeApplied;
 
@@ -134,19 +134,19 @@ namespace SmartMed.UI
             UiTheme.WireClinicalPlaceholderTextBox(txtMaxPrice, "Max");
         }
 
-        private void btnAdd_Click(object sender, EventArgs e) => ShowMedicineDialog(null);
+        private void BtnAdd_Click(object sender, EventArgs e) => ShowMedicineDialog(null);
 
-        private void btnSearch_Click(object sender, EventArgs e) => ApplyFilters();
+        private void BtnSearch_Click(object sender, EventArgs e) => ApplyFilters();
 
-        private void txtSearch_TextChanged(object sender, EventArgs e) => ApplyFilters();
+        private void TxtSearch_TextChanged(object sender, EventArgs e) => ApplyFilters();
 
-        private void cmbCategory_SelectedIndexChanged(object sender, EventArgs e) => ApplyFilters();
+        private void CmbCategory_SelectedIndexChanged(object sender, EventArgs e) => ApplyFilters();
 
-        private void txtMinPrice_TextChanged(object sender, EventArgs e) => ApplyFilters();
+        private void TxtMinPrice_TextChanged(object sender, EventArgs e) => ApplyFilters();
 
-        private void txtMaxPrice_TextChanged(object sender, EventArgs e) => ApplyFilters();
+        private void TxtMaxPrice_TextChanged(object sender, EventArgs e) => ApplyFilters();
 
-        private void btnClear_Click(object sender, EventArgs e)
+        private void BtnClear_Click(object sender, EventArgs e)
         {
             ClearMedicineFilters();
         }
@@ -173,7 +173,7 @@ namespace SmartMed.UI
             textBox.Text = placeholder;
         }
 
-        private void txtSearch_KeyDown(object sender, KeyEventArgs e)
+        private void TxtSearch_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Enter)
             {
@@ -226,7 +226,7 @@ namespace SmartMed.UI
             var filtered = GetFilteredMedicines();
             BindGrid(filtered);
             UpdateStats(_allMedicines);
-            UpdateExpiryAlerts(_allMedicines);
+            UpdateExpiryAlerts();
         }
 
         private void BindGrid(List<Medicine> items)
@@ -238,7 +238,7 @@ namespace SmartMed.UI
                 ID = $"#M-{m.MedicineID:D4}",
                 Name = m.MedicineName,
                 m.Category,
-                Dosage = m.Dosage,
+                m.Dosage,
                 Stock = m.StockQuantity,
                 Price = Rules.GetEffectivePrice(m).ToString("N2"),
                 Expiry = m.ExpiryDate.ToString("yyyy-MM-dd"),
@@ -327,7 +327,7 @@ namespace SmartMed.UI
             lblExpiringSoon.Text = $"{Rules.CompliancePercent(all):N1}%";
         }
 
-        private void UpdateExpiryAlerts(List<Medicine> all)
+        private void UpdateExpiryAlerts()
         {
             if (btnViewExpiryAlerts == null) return;
 
@@ -339,7 +339,7 @@ namespace SmartMed.UI
                 : Color.FromArgb(53, 103, 94);
         }
 
-        private void btnViewExpiryAlerts_Click(object sender, EventArgs e) =>
+        private void BtnViewExpiryAlerts_Click(object sender, EventArgs e) =>
             ExpiryAlertsDialog.Show(FindForm(), _expiryAlertLines);
 
         private static string FormatPromoDate(DateTime? date) =>
@@ -351,7 +351,7 @@ namespace SmartMed.UI
             return Rules.IsPromotionActive(m) ? "Active" : "Scheduled";
         }
 
-        private void btnExport_Click(object sender, EventArgs e)
+        private void BtnExport_Click(object sender, EventArgs e)
         {
             try
             {
@@ -381,7 +381,7 @@ namespace SmartMed.UI
             }
         }
 
-        private void gridMedicines_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        private void GridMedicines_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
             if (e.RowIndex < 0 || !_servicesReady) return;
 
@@ -426,7 +426,7 @@ namespace SmartMed.UI
             }
         }
 
-        private void gridMedicines_SelectionChanged(object sender, EventArgs e)
+        private void GridMedicines_SelectionChanged(object sender, EventArgs e)
         {
             if (gridMedicines.CurrentRow == null || gridMedicines.CurrentRow.IsNewRow)
             {
@@ -437,7 +437,7 @@ namespace SmartMed.UI
             _selectedId = cell?.Value != null ? Convert.ToInt32(cell.Value) : (int?)null;
         }
 
-        private void gridMedicines_RowPrePaint(object sender, DataGridViewRowPrePaintEventArgs e)
+        private void GridMedicines_RowPrePaint(object sender, DataGridViewRowPrePaintEventArgs e)
         {
             if (e.RowIndex < 0 || gridMedicines.Rows[e.RowIndex].IsNewRow) return;
             var idCell = gridMedicines.Rows[e.RowIndex].Cells["MedicineID"];
@@ -465,7 +465,7 @@ namespace SmartMed.UI
             }
         }
 
-        private void gridMedicines_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
+        private void GridMedicines_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
         {
             if (e.RowIndex < 0 || gridMedicines.Rows[e.RowIndex].Cells["MedicineID"]?.Value == null)
                 return;
