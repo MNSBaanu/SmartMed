@@ -62,9 +62,8 @@ namespace SmartMed.Services
 
         private void SetStatus(int orderId, string newStatus, string requiredCurrent)
         {
-            var prescription = GetByOrderId(orderId);
-            if (prescription == null)
-                throw new InvalidOperationException("This order has no prescription to review.");
+            var prescription = GetByOrderId(orderId)
+                ?? throw new InvalidOperationException("This order has no prescription to review.");
 
             if (!string.Equals(prescription.Status, requiredCurrent, StringComparison.OrdinalIgnoreCase))
                 throw new InvalidOperationException($"Prescription is already {prescription.Status}.");
