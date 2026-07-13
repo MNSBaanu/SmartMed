@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
@@ -10,10 +9,10 @@ namespace SmartMed.UI
 {
     public sealed partial class AdminDashboardForm : EmbeddedPageForm
     {
-        private ReportService _reports;
-        private OrderService _orders;
-        private MedicineService _medicines;
-        private bool _servicesReady;
+        private readonly ReportService _reports;
+        private readonly OrderService _orders;
+        private readonly MedicineService _medicines;
+        private readonly bool _servicesReady;
 
         private List<object> _recentRows = new List<object>();
         private bool _chromeApplied;
@@ -93,9 +92,9 @@ namespace SmartMed.UI
             };
         }
 
-        private void btnRefresh_Click(object sender, EventArgs e) => LoadDashboardData();
+        private void BtnRefresh_Click(object sender, EventArgs e) => LoadDashboardData();
 
-        private void btnPrint_Click(object sender, EventArgs e)
+        private void BtnPrint_Click(object sender, EventArgs e)
         {
             if (gridRecent.Rows.Count == 0)
             {
@@ -187,10 +186,10 @@ namespace SmartMed.UI
             gridRecent.Columns["Actions"].DisplayIndex = gridRecent.Columns.Count - 1;
         }
 
-        private void gridLowStock_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e) =>
+        private void GridLowStock_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e) =>
             ApplyAlertStatusCellFormatting(sender, e);
 
-        private void gridExpiry_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e) =>
+        private void GridExpiry_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e) =>
             ApplyAlertStatusCellFormatting(sender, e);
 
         private static void ApplyAlertStatusCellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
@@ -228,7 +227,7 @@ namespace SmartMed.UI
             }
         }
 
-        private void gridRecent_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
+        private void GridRecent_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
         {
             if (e.RowIndex < 0 || e.ColumnIndex < 0) return;
             if (UiTheme.IsSelectedRow(gridRecent, e.RowIndex))
@@ -262,7 +261,7 @@ namespace SmartMed.UI
             }
         }
 
-        private void gridRecent_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        private void GridRecent_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
             if (e.RowIndex < 0 || gridRecent.Columns[e.ColumnIndex].Name != "Actions") return;
             GoToAdminSection(AdminHostForm.AdminNavItem.Orders);
