@@ -157,7 +157,7 @@ namespace SmartMed.UI
             _recentRows = _orders.GetAll().Take(8).Select(o => (object)new
             {
                 OrderRef = $"#SM-{o.OrderID:D4}",
-                CustomerName = o.CustomerName,
+                o.CustomerName,
                 FulfillmentStatus = o.Status,
                 Timestamp = FormatRelativeTime(o.OrderDate)
             }).ToList();
