@@ -73,8 +73,8 @@ namespace SmartMed.UI
             this.panelMain.Name = "panelMain";
             this.panelMain.Size = new System.Drawing.Size(720, 748);
             this.panelMain.TabIndex = 0;
-            this.panelMain.Paint += new System.Windows.Forms.PaintEventHandler(this.panelMain_Paint);
-            this.panelMain.Resize += new System.EventHandler(this.panelMain_Resize);
+            this.panelMain.Paint += new System.Windows.Forms.PaintEventHandler(this.PanelMain_Paint);
+            this.panelMain.Resize += new System.EventHandler(this.PanelMain_Resize);
             // 
             // panelRegisterCard
             // 
@@ -115,7 +115,7 @@ namespace SmartMed.UI
             this.btnReturnLogin.TabIndex = 3;
             this.btnReturnLogin.Text = "Return to Login";
             this.btnReturnLogin.UseVisualStyleBackColor = false;
-            this.btnReturnLogin.Click += new System.EventHandler(this.btnReturnLogin_Click);
+            this.btnReturnLogin.Click += new System.EventHandler(this.BtnReturnLogin_Click);
             // 
             // lblSuccessMessage
             // 
@@ -248,7 +248,7 @@ namespace SmartMed.UI
             this.lnkBackLogin.TabStop = true;
             this.lnkBackLogin.Text = "Already have an account? Back to Login";
             this.lnkBackLogin.VisitedLinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(27)))), ((int)(((byte)(79)))), ((int)(((byte)(71)))));
-            this.lnkBackLogin.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.lnkBackLogin_LinkClicked);
+            this.lnkBackLogin.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.LnkBackLogin_LinkClicked);
             // 
             // btnRegister
             // 
@@ -264,7 +264,7 @@ namespace SmartMed.UI
             this.btnRegister.TabIndex = 15;
             this.btnRegister.Text = "Register Professional Account";
             this.btnRegister.UseVisualStyleBackColor = false;
-            this.btnRegister.Click += new System.EventHandler(this.btnRegister_Click);
+            this.btnRegister.Click += new System.EventHandler(this.BtnRegister_Click);
             // 
             // chkTerms
             // 
@@ -469,7 +469,7 @@ namespace SmartMed.UI
             this.btnClose.TabIndex = 2;
             this.btnClose.Text = "\u00d7";
             this.btnClose.UseVisualStyleBackColor = false;
-            this.btnClose.Click += new System.EventHandler(this.btnClose_Click);
+            this.btnClose.Click += new System.EventHandler(this.BtnClose_Click);
             // 
             // lblCardTitle
             // 

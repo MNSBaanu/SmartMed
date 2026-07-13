@@ -90,9 +90,9 @@ namespace SmartMed.UI
             panelFooter.Top = panelLoginCard.Bottom + CardFooterGap;
         }
 
-        private void panelMain_Resize(object sender, EventArgs e) => LayoutLoginContent();
+        private void PanelMain_Resize(object sender, EventArgs e) => LayoutLoginContent();
 
-        private void txtPassword_GotFocus(object sender, EventArgs e) =>
+        private void TxtPassword_GotFocus(object sender, EventArgs e) =>
             SetPasswordVisible(_passwordVisible);
 
         internal void RestoreLoginAppearance()
@@ -120,7 +120,7 @@ namespace SmartMed.UI
             UiTheme.SetPasswordToggleText(btnTogglePassword, visible);
         }
 
-        private void panelMain_Paint(object sender, PaintEventArgs e)
+        private void PanelMain_Paint(object sender, PaintEventArgs e)
         {
             var rect = panelMain.ClientRectangle;
             if (rect.Width <= 0 || rect.Height <= 0) return;
@@ -128,24 +128,24 @@ namespace SmartMed.UI
                 e.Graphics.FillRectangle(brush, rect);
         }
 
-        private void btnTogglePassword_Click(object sender, EventArgs e) =>
+        private void BtnTogglePassword_Click(object sender, EventArgs e) =>
             SetPasswordVisible(!_passwordVisible);
 
-        private void txtUsername_KeyDown(object sender, KeyEventArgs e)
+        private void TxtUsername_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode != Keys.Enter) return;
             e.SuppressKeyPress = true;
             txtPassword.Focus();
         }
 
-        private void txtPassword_KeyDown(object sender, KeyEventArgs e)
+        private void TxtPassword_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode != Keys.Enter) return;
             e.SuppressKeyPress = true;
             PerformLogin();
         }
 
-        private void lnkForgot_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        private void LnkForgot_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             using (var dlg = new ForgotPasswordForm())
             {
@@ -153,7 +153,7 @@ namespace SmartMed.UI
             }
         }
 
-        private void btnRegister_Click(object sender, EventArgs e)
+        private void BtnRegister_Click(object sender, EventArgs e)
         {
             Hide();
             try
@@ -171,12 +171,12 @@ namespace SmartMed.UI
             }
         }
 
-        private void btnLogin_Click(object sender, EventArgs e) => PerformLogin();
+        private void BtnLogin_Click(object sender, EventArgs e) => PerformLogin();
 
-        private void btnQuickAdmin_Click(object sender, EventArgs e) =>
+        private void BtnQuickAdmin_Click(object sender, EventArgs e) =>
             PerformLoginWith(DemoAdminUsername, DemoAdminPassword);
 
-        private void btnQuickCustomer_Click(object sender, EventArgs e) =>
+        private void BtnQuickCustomer_Click(object sender, EventArgs e) =>
             PerformLoginWith(DemoCustomerEmail, DemoCustomerPassword);
 
         private void PerformLoginWith(string identity, string password)

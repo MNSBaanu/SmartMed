@@ -62,7 +62,7 @@ namespace SmartMed.UI
             panelRegisterCard.Top = top;
         }
 
-        private void panelMain_Paint(object sender, PaintEventArgs e)
+        private void PanelMain_Paint(object sender, PaintEventArgs e)
         {
             var rect = panelMain.ClientRectangle;
             if (rect.Width <= 0 || rect.Height <= 0) return;
@@ -70,24 +70,24 @@ namespace SmartMed.UI
                 e.Graphics.FillRectangle(brush, rect);
         }
 
-        private void panelMain_Resize(object sender, EventArgs e) => LayoutRegistrationContent();
+        private void PanelMain_Resize(object sender, EventArgs e) => LayoutRegistrationContent();
 
-        private void btnClose_Click(object sender, EventArgs e)
+        private void BtnClose_Click(object sender, EventArgs e)
         {
             DialogResult = DialogResult.Cancel;
             Close();
         }
 
-        private void lnkBackLogin_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e) =>
-            btnClose_Click(sender, e);
+        private void LnkBackLogin_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e) =>
+            BtnClose_Click(sender, e);
 
-        private void btnReturnLogin_Click(object sender, EventArgs e)
+        private void BtnReturnLogin_Click(object sender, EventArgs e)
         {
             DialogResult = DialogResult.OK;
             Close();
         }
 
-        private void btnRegister_Click(object sender, EventArgs e)
+        private void BtnRegister_Click(object sender, EventArgs e)
         {
             if (_auth == null) return;
 

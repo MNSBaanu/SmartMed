@@ -121,8 +121,8 @@ namespace SmartMed.UI
             this.panelMain.Name = "panelMain";
             this.panelMain.Size = new System.Drawing.Size(720, 660);
             this.panelMain.TabIndex = 1;
-            this.panelMain.Paint += new System.Windows.Forms.PaintEventHandler(this.panelMain_Paint);
-            this.panelMain.Resize += new System.EventHandler(this.panelMain_Resize);
+            this.panelMain.Paint += new System.Windows.Forms.PaintEventHandler(this.PanelMain_Paint);
+            this.panelMain.Resize += new System.EventHandler(this.PanelMain_Resize);
             // 
             // panelFooter
             // 
@@ -197,7 +197,7 @@ namespace SmartMed.UI
             this.lnkForgot.TabStop = true;
             this.lnkForgot.Text = "Forgot password?";
             this.lnkForgot.VisitedLinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(27)))), ((int)(((byte)(79)))), ((int)(((byte)(71)))));
-            this.lnkForgot.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.lnkForgot_LinkClicked);
+            this.lnkForgot.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.LnkForgot_LinkClicked);
             // 
             // btnQuickCustomer
             // 
@@ -213,7 +213,7 @@ namespace SmartMed.UI
             this.btnQuickCustomer.TabIndex = 13;
             this.btnQuickCustomer.Text = "Customer Login";
             this.btnQuickCustomer.UseVisualStyleBackColor = false;
-            this.btnQuickCustomer.Click += new System.EventHandler(this.btnQuickCustomer_Click);
+            this.btnQuickCustomer.Click += new System.EventHandler(this.BtnQuickCustomer_Click);
             // 
             // btnQuickAdmin
             // 
@@ -229,7 +229,7 @@ namespace SmartMed.UI
             this.btnQuickAdmin.TabIndex = 12;
             this.btnQuickAdmin.Text = "Admin Login";
             this.btnQuickAdmin.UseVisualStyleBackColor = false;
-            this.btnQuickAdmin.Click += new System.EventHandler(this.btnQuickAdmin_Click);
+            this.btnQuickAdmin.Click += new System.EventHandler(this.BtnQuickAdmin_Click);
             // 
             // btnRegister
             // 
@@ -245,7 +245,7 @@ namespace SmartMed.UI
             this.btnRegister.TabIndex = 11;
             this.btnRegister.Text = "Register";
             this.btnRegister.UseVisualStyleBackColor = false;
-            this.btnRegister.Click += new System.EventHandler(this.btnRegister_Click);
+            this.btnRegister.Click += new System.EventHandler(this.BtnRegister_Click);
             // 
             // btnLogin
             // 
@@ -261,7 +261,7 @@ namespace SmartMed.UI
             this.btnLogin.TabIndex = 10;
             this.btnLogin.Text = "Login";
             this.btnLogin.UseVisualStyleBackColor = false;
-            this.btnLogin.Click += new System.EventHandler(this.btnLogin_Click);
+            this.btnLogin.Click += new System.EventHandler(this.BtnLogin_Click);
             // 
             // pnlPasswordField
             // 
@@ -286,8 +286,8 @@ namespace SmartMed.UI
             this.txtPassword.Size = new System.Drawing.Size(289, 17);
             this.txtPassword.TabIndex = 0;
             this.txtPassword.Text = "Enter your password";
-            this.txtPassword.GotFocus += new System.EventHandler(this.txtPassword_GotFocus);
-            this.txtPassword.KeyDown += new System.Windows.Forms.KeyEventHandler(this.txtPassword_KeyDown);
+            this.txtPassword.GotFocus += new System.EventHandler(this.TxtPassword_GotFocus);
+            this.txtPassword.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TxtPassword_KeyDown);
             // 
             // btnTogglePassword
             // 
@@ -306,7 +306,7 @@ namespace SmartMed.UI
             this.btnTogglePassword.TabIndex = 1;
             this.btnTogglePassword.Text = "Show";
             this.btnTogglePassword.UseVisualStyleBackColor = false;
-            this.btnTogglePassword.Click += new System.EventHandler(this.btnTogglePassword_Click);
+            this.btnTogglePassword.Click += new System.EventHandler(this.BtnTogglePassword_Click);
             // 
             // lblPassword
             // 
@@ -331,7 +331,7 @@ namespace SmartMed.UI
             this.txtUsername.Size = new System.Drawing.Size(376, 24);
             this.txtUsername.TabIndex = 6;
             this.txtUsername.Text = "Enter email or username";
-            this.txtUsername.KeyDown += new System.Windows.Forms.KeyEventHandler(this.txtUsername_KeyDown);
+            this.txtUsername.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TxtUsername_KeyDown);
             // 
             // lblUsername
             // 

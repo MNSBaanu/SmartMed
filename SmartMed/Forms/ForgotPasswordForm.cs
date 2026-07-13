@@ -38,7 +38,7 @@ namespace SmartMed.UI
             UiTheme.EnableFieldNavigation(btnSave, txtIdentity, txtNew, txtConfirm);
         }
 
-        private void panelMain_Paint(object sender, PaintEventArgs e)
+        private void PanelMain_Paint(object sender, PaintEventArgs e)
         {
             var rect = panelMain.ClientRectangle;
             if (rect.Width <= 0 || rect.Height <= 0) return;
@@ -46,15 +46,15 @@ namespace SmartMed.UI
                 e.Graphics.FillRectangle(brush, rect);
         }
 
-        private void btnCancel_Click(object sender, EventArgs e)
+        private void BtnCancel_Click(object sender, EventArgs e)
         {
             DialogResult = DialogResult.Cancel;
             Close();
         }
 
-        private void btnClose_Click(object sender, EventArgs e) => btnCancel_Click(sender, e);
+        private void BtnClose_Click(object sender, EventArgs e) => BtnCancel_Click(sender, e);
 
-        private void btnSave_Click(object sender, EventArgs e)
+        private void BtnSave_Click(object sender, EventArgs e)
         {
             try
             {
