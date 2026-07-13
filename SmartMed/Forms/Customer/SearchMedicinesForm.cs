@@ -11,8 +11,8 @@ namespace SmartMed.UI
 {
     public sealed partial class SearchMedicinesForm : EmbeddedPageForm
     {
-        private MedicineService _medicines;
-        private bool _servicesReady;
+        private readonly MedicineService _medicines;
+        private readonly bool _servicesReady;
         private bool _runtimeWired;
         private bool _chromeApplied;
 
@@ -374,8 +374,8 @@ namespace SmartMed.UI
                 var col = DataGridView.Columns[e.ColumnIndex] as DataGridViewNumericUpDownColumn;
                 var min = col?.Minimum ?? 1;
                 var max = col?.Maximum ?? 99;
-                var current = 1m;
-                decimal.TryParse(Value?.ToString(), NumberStyles.Any, CultureInfo.InvariantCulture, out current);
+                if (!decimal.TryParse(Value?.ToString(), NumberStyles.Any, CultureInfo.InvariantCulture, out var current))
+                    current = 1m;
 
                 if (UpRect(cellRect).Contains(local))
                     current = Math.Min(max, current + 1);
