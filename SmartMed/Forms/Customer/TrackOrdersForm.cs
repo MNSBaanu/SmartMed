@@ -80,12 +80,6 @@ namespace SmartMed.UI
         {
             if (_runtimeWired) return;
             _runtimeWired = true;
-
-            btnCancelPending.Click += BtnCancel_Click;
-            btnExportCsv.Click += BtnExportCsv_Click;
-            btnExportPdf.Click += BtnExportPdf_Click;
-            gridOrders.SelectionChanged += GridOrders_SelectionChanged;
-            gridOrders.CellDoubleClick += GridOrders_CellDoubleClick;
         }
 
         private void RefreshOrders()
@@ -158,7 +152,7 @@ namespace SmartMed.UI
             }
         }
 
-        private void BtnCancel_Click(object sender, EventArgs e)
+        private void BtnCancelPending_Click(object sender, EventArgs e)
         {
             if (!_servicesReady) return;
 

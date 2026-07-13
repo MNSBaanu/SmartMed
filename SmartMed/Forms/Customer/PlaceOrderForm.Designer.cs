@@ -153,6 +153,11 @@ namespace SmartMed.UI
             this.gridCart.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.gridCart.Size = new System.Drawing.Size(1010, 256);
             this.gridCart.TabIndex = 0;
+            this.gridCart.CurrentCellDirtyStateChanged += new System.EventHandler(this.GridCart_CurrentCellDirtyStateChanged);
+            this.gridCart.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.GridCart_CellValueChanged);
+            this.gridCart.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.GridCart_CellContentClick);
+            this.gridCart.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.GridCart_CellClick);
+            this.gridCart.CellFormatting += new System.Windows.Forms.DataGridViewCellFormattingEventHandler(this.GridCart_CellFormatting);
             // 
             // panelGridHeader
             // 

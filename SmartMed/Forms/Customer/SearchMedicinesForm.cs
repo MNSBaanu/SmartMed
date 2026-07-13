@@ -98,19 +98,11 @@ namespace SmartMed.UI
             UiTheme.WireClinicalPlaceholderTextBox(txtMinPrice, "Min");
             UiTheme.WireClinicalPlaceholderTextBox(txtMaxPrice, "Max");
 
-            btnSearch.Click += (s, e) => ApplyFilters();
-            btnClear.Click += BtnClear_Click;
-            txtSearch.KeyDown += TxtSearch_KeyDown;
-            txtSearch.TextChanged += (s, e) => ApplyFilters();
-            cmbCategory.SelectedIndexChanged += (s, e) => ApplyFilters();
-            txtMinPrice.TextChanged += (s, e) => ApplyFilters();
-            txtMaxPrice.TextChanged += (s, e) => ApplyFilters();
-            grid.CellContentClick += Grid_CellContentClick;
-            grid.CellDoubleClick += Grid_CellDoubleClick;
-
             RefreshCategoryFilter();
             ApplyFilters();
         }
+
+        private void BtnSearch_Click(object sender, EventArgs e) => ApplyFilters();
 
         private void BtnClear_Click(object sender, EventArgs e)
         {
@@ -129,6 +121,11 @@ namespace SmartMed.UI
                 ApplyFilters();
             }
         }
+
+        private void TxtSearch_TextChanged(object sender, EventArgs e) => ApplyFilters();
+        private void TxtMinPrice_TextChanged(object sender, EventArgs e) => ApplyFilters();
+        private void TxtMaxPrice_TextChanged(object sender, EventArgs e) => ApplyFilters();
+        private void CmbCategory_SelectedIndexChanged(object sender, EventArgs e) => ApplyFilters();
 
         private void RefreshCategoryFilter()
         {

@@ -81,11 +81,6 @@ namespace SmartMed.UI
             gridCart.ReadOnly = false;
             gridCart.EditMode = DataGridViewEditMode.EditOnEnter;
             gridCart.SelectionMode = DataGridViewSelectionMode.CellSelect;
-            gridCart.CurrentCellDirtyStateChanged += GridCart_CurrentCellDirtyStateChanged;
-            gridCart.CellValueChanged += GridCart_CellValueChanged;
-            gridCart.CellContentClick += GridCart_CellContentClick;
-            gridCart.CellClick += GridCart_CellClick;
-            gridCart.CellFormatting += GridCart_CellFormatting;
         }
 
         private void RefreshCart()

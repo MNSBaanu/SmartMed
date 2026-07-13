@@ -146,6 +146,7 @@ namespace SmartMed.UI
             this.btnCancelPending.TabIndex = 0;
             this.btnCancelPending.Text = "Cancel Pending Order";
             this.btnCancelPending.UseVisualStyleBackColor = false;
+            this.btnCancelPending.Click += new System.EventHandler(this.BtnCancelPending_Click);
             // 
             // btnExportCsv
             // 
@@ -162,6 +163,7 @@ namespace SmartMed.UI
             this.btnExportCsv.TabIndex = 1;
             this.btnExportCsv.Text = "Export CSV";
             this.btnExportCsv.UseVisualStyleBackColor = false;
+            this.btnExportCsv.Click += new System.EventHandler(this.BtnExportCsv_Click);
             // 
             // btnExportPdf
             // 
@@ -177,6 +179,7 @@ namespace SmartMed.UI
             this.btnExportPdf.TabIndex = 2;
             this.btnExportPdf.Text = "Export PDF";
             this.btnExportPdf.UseVisualStyleBackColor = false;
+            this.btnExportPdf.Click += new System.EventHandler(this.BtnExportPdf_Click);
             // 
             // panelOrdersOuter
             // 
@@ -220,6 +223,8 @@ namespace SmartMed.UI
             this.gridOrders.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.gridOrders.Size = new System.Drawing.Size(1010, 216);
             this.gridOrders.TabIndex = 0;
+            this.gridOrders.SelectionChanged += new System.EventHandler(this.GridOrders_SelectionChanged);
+            this.gridOrders.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.GridOrders_CellDoubleClick);
             // 
             // panelOrdersHeader
             // 

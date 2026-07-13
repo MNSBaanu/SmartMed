@@ -79,9 +79,6 @@ namespace SmartMed.UI
             if (_runtimeWired) return;
             _runtimeWired = true;
 
-            btnSaveProfile.Click += BtnSave_Click;
-            btnChangePassword.Click += (s, e) => ShowChangePasswordDialog();
-
             UiTheme.EnableFieldNavigation(btnSaveProfile, txtName, txtEmail, txtPhone, txtAddress);
         }
 
@@ -98,7 +95,7 @@ namespace SmartMed.UI
             txtAddress.Text = customer.Address;
         }
 
-        private void BtnSave_Click(object sender, EventArgs e)
+        private void BtnSaveProfile_Click(object sender, EventArgs e)
         {
             if (!_servicesReady) return;
 
@@ -129,7 +126,7 @@ namespace SmartMed.UI
             }
         }
 
-        private void ShowChangePasswordDialog()
+        private void BtnChangePassword_Click(object sender, EventArgs e)
         {
             if (!_servicesReady) return;
 

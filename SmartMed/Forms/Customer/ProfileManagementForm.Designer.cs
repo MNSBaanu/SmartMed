@@ -293,6 +293,7 @@ namespace SmartMed.UI
             this.btnSaveProfile.TabIndex = 0;
             this.btnSaveProfile.Text = "Save Profile";
             this.btnSaveProfile.UseVisualStyleBackColor = false;
+            this.btnSaveProfile.Click += new System.EventHandler(this.BtnSaveProfile_Click);
             // 
             // btnChangePassword
             // 
@@ -308,6 +309,7 @@ namespace SmartMed.UI
             this.btnChangePassword.TabIndex = 1;
             this.btnChangePassword.Text = "Change Password";
             this.btnChangePassword.UseVisualStyleBackColor = false;
+            this.btnChangePassword.Click += new System.EventHandler(this.BtnChangePassword_Click);
             // 
             // ProfileManagementForm
             // 
