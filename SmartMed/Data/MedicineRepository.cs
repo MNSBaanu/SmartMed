@@ -131,6 +131,16 @@ namespace SmartMed.Data
                     new SqlParameter("@id", medicineId)) > 0;
         }
 
+        public bool ReduceStock(SqlConnection connection, SqlTransaction transaction, int medicineId, int quantity)
+        {
+            if (quantity <= 0) return false;
+            return DatabaseHelper.ExecuteNonQuery(
+                    connection, transaction,
+                    "UPDATE Medicine SET StockQuantity = StockQuantity - @q WHERE MedicineID=@id AND StockQuantity >= @q",
+                    new SqlParameter("@q", quantity),
+                    new SqlParameter("@id", medicineId)) > 0;
+        }
+
         public void RestoreStock(int medicineId, int quantity)
         {
             if (quantity <= 0) return;

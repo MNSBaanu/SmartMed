@@ -62,36 +62,73 @@ namespace SmartMed.Data
             return list;
         }
 
-        public int CreateOrder(int customerId, List<OrderItem> items, string paymentMethod, string paymentStatus, string paymentReference)
+        public int CreateOrder(
+            int customerId,
+            List<OrderItem> items,
+            string paymentMethod,
+            string paymentStatus,
+            string paymentReference,
+            string prescriptionFilePath = null,
+            int? rxCustomerId = null)
         {
             decimal total = 0;
             foreach (var item in items)
                 total += item.Subtotal;
 
-            DatabaseHelper.ExecuteNonQuery(
-                @"INSERT INTO [Order] (CustomerID, OrderDate, Status, TotalAmount, PaymentMethod, PaymentStatus, PaymentReference)
-                  VALUES (@cid, GETDATE(), 'Pending', @total, @pm, @ps, @pref)",
-                new SqlParameter("@cid", customerId),
-                new SqlParameter("@total", total),
-                new SqlParameter("@pm", paymentMethod),
-                new SqlParameter("@ps", paymentStatus),
-                new SqlParameter("@pref", (object)paymentReference ?? DBNull.Value));
-
-            int orderId = Convert.ToInt32(DatabaseHelper.ExecuteScalar("SELECT MAX(OrderID) FROM [Order]"));
-
-            foreach (var item in items)
+            using (var conn = DatabaseHelper.GetConnection())
             {
-                DatabaseHelper.ExecuteNonQuery(
-                    @"INSERT INTO OrderItem (OrderID, MedicineID, Quantity, UnitPrice, Subtotal)
-                      VALUES (@oid, @mid, @q, @u, @s)",
-                    new SqlParameter("@oid", orderId),
-                    new SqlParameter("@mid", item.MedicineID),
-                    new SqlParameter("@q", item.Quantity),
-                    new SqlParameter("@u", item.UnitPrice),
-                    new SqlParameter("@s", item.Subtotal));
-            }
+                conn.Open();
+                using (var tx = conn.BeginTransaction())
+                {
+                    try
+                    {
+                        var prefParam = new SqlParameter("@pref", (object)paymentReference ?? DBNull.Value);
+                        int orderId = Convert.ToInt32(DatabaseHelper.ExecuteScalar(
+                            conn, tx,
+                            @"INSERT INTO [Order] (CustomerID, OrderDate, Status, TotalAmount, PaymentMethod, PaymentStatus, PaymentReference)
+                              OUTPUT INSERTED.OrderID
+                              VALUES (@cid, GETDATE(), 'Pending', @total, @pm, @ps, @pref)",
+                            new SqlParameter("@cid", customerId),
+                            new SqlParameter("@total", total),
+                            new SqlParameter("@pm", paymentMethod),
+                            new SqlParameter("@ps", paymentStatus),
+                            prefParam));
 
-            return orderId;
+                        var medicines = new MedicineRepository();
+                        foreach (var item in items)
+                        {
+                            DatabaseHelper.ExecuteNonQuery(
+                                conn, tx,
+                                @"INSERT INTO OrderItem (OrderID, MedicineID, Quantity, UnitPrice, Subtotal)
+                                  VALUES (@oid, @mid, @q, @u, @s)",
+                                new SqlParameter("@oid", orderId),
+                                new SqlParameter("@mid", item.MedicineID),
+                                new SqlParameter("@q", item.Quantity),
+                                new SqlParameter("@u", item.UnitPrice),
+                                new SqlParameter("@s", item.Subtotal));
+
+                            if (!medicines.ReduceStock(conn, tx, item.MedicineID, item.Quantity))
+                                throw new InvalidOperationException(
+                                    $"Insufficient stock for medicine ID {item.MedicineID}.");
+                        }
+
+                        if (!string.IsNullOrWhiteSpace(prescriptionFilePath))
+                        {
+                            int prescriptionCustomerId = rxCustomerId ?? customerId;
+                            new PrescriptionRepository().Insert(
+                                conn, tx, prescriptionCustomerId, orderId, prescriptionFilePath);
+                        }
+
+                        tx.Commit();
+                        return orderId;
+                    }
+                    catch
+                    {
+                        try { tx.Rollback(); } catch { /* already completed */ }
+                        throw;
+                    }
+                }
+            }
         }
 
         public void UpdateStatus(int orderId, string status)

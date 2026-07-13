@@ -17,6 +17,17 @@ namespace SmartMed.Data
                 new SqlParameter("@file", filePath));
         }
 
+        public void Insert(SqlConnection connection, SqlTransaction transaction, int customerId, int orderId, string filePath)
+        {
+            DatabaseHelper.ExecuteNonQuery(
+                connection, transaction,
+                @"INSERT INTO Prescription (CustomerID, OrderID, PrescriptionFile, UploadDate, Status)
+                  VALUES (@cid, @oid, @file, GETDATE(), 'Pending')",
+                new SqlParameter("@cid", customerId),
+                new SqlParameter("@oid", orderId),
+                new SqlParameter("@file", filePath));
+        }
+
         public Prescription GetByOrderId(int orderId)
         {
             var table = DatabaseHelper.ExecuteQuery(

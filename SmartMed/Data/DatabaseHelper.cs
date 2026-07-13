@@ -39,11 +39,18 @@ namespace SmartMed.Data
         public static int ExecuteNonQuery(string sql, params SqlParameter[] parameters)
         {
             using (var conn = GetConnection())
-            using (var cmd = new SqlCommand(sql, conn))
+            {
+                conn.Open();
+                return ExecuteNonQuery(conn, null, sql, parameters);
+            }
+        }
+
+        public static int ExecuteNonQuery(SqlConnection connection, SqlTransaction transaction, string sql, params SqlParameter[] parameters)
+        {
+            using (var cmd = new SqlCommand(sql, connection, transaction))
             {
                 if (parameters != null)
                     cmd.Parameters.AddRange(parameters);
-                conn.Open();
                 return cmd.ExecuteNonQuery();
             }
         }
@@ -51,11 +58,18 @@ namespace SmartMed.Data
         public static object ExecuteScalar(string sql, params SqlParameter[] parameters)
         {
             using (var conn = GetConnection())
-            using (var cmd = new SqlCommand(sql, conn))
+            {
+                conn.Open();
+                return ExecuteScalar(conn, null, sql, parameters);
+            }
+        }
+
+        public static object ExecuteScalar(SqlConnection connection, SqlTransaction transaction, string sql, params SqlParameter[] parameters)
+        {
+            using (var cmd = new SqlCommand(sql, connection, transaction))
             {
                 if (parameters != null)
                     cmd.Parameters.AddRange(parameters);
-                conn.Open();
                 return cmd.ExecuteScalar();
             }
         }

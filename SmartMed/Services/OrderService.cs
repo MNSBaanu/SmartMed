@@ -141,16 +141,32 @@ namespace SmartMed.Services
             if (ValidationService.IsNullOrWhiteSpace(paymentStatus))
                 throw new ArgumentException("Payment status is required.");
 
-            var orderId = _orders.CreateOrder(customerId, orderItems, paymentMethod, paymentStatus, paymentReference);
-
-            foreach (var item in orderItems)
-                _medicines.ReduceStock(item.MedicineID, item.Quantity);
-
+            string prescriptionDestPath = null;
             if (requiresRx)
-                _prescriptions.SavePrescription(customerId, orderId, prescriptionSourcePath);
+                prescriptionDestPath = _prescriptions.PreparePrescriptionFile(customerId, prescriptionSourcePath);
 
-            AdminOrderAlerts.NotifyOrderPlaced(orderId);
-            return orderId;
+            try
+            {
+                var orderId = _orders.CreateOrder(
+                    customerId,
+                    orderItems,
+                    paymentMethod,
+                    paymentStatus,
+                    paymentReference,
+                    prescriptionDestPath,
+                    requiresRx ? customerId : (int?)null);
+
+                AdminOrderAlerts.NotifyOrderPlaced(orderId);
+                return orderId;
+            }
+            catch
+            {
+                if (prescriptionDestPath != null)
+                {
+                    try { File.Delete(prescriptionDestPath); } catch { /* orphan file is acceptable */ }
+                }
+                throw;
+            }
         }
 
         public void CancelOrder(int orderId, int customerId, string reason)

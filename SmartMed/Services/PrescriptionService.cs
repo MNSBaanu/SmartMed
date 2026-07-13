@@ -15,15 +15,21 @@ namespace SmartMed.Services
 
         public void SavePrescription(int customerId, int orderId, string sourcePath)
         {
-            if (customerId <= 0)
-                throw new ArgumentException("Customer is required.");
             if (orderId <= 0)
                 throw new ArgumentException("Order is required.");
+
+            var dest = PreparePrescriptionFile(customerId, sourcePath);
+            _prescriptions.Insert(customerId, orderId, dest);
+        }
+
+        public string PreparePrescriptionFile(int customerId, string sourcePath)
+        {
+            if (customerId <= 0)
+                throw new ArgumentException("Customer is required.");
             if (ValidationService.IsNullOrWhiteSpace(sourcePath) || !File.Exists(sourcePath))
                 throw new ArgumentException("Select a valid prescription file.");
 
-            var dest = CopyPrescriptionFile(customerId, sourcePath);
-            _prescriptions.Insert(customerId, orderId, dest);
+            return CopyPrescriptionFile(customerId, sourcePath);
         }
 
         public Prescription GetByOrderId(int orderId) => _prescriptions.GetByOrderId(orderId);
