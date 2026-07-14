@@ -63,6 +63,29 @@ namespace SmartMed.Data
             return Convert.ToInt32(result) > 0;
         }
 
+        public bool HasOrderOrPrescriptionHistory(int medicineId)
+        {
+            var orderItems = Convert.ToInt32(DatabaseHelper.ExecuteScalar(
+                "SELECT COUNT(*) FROM OrderItem WHERE MedicineID = @id",
+                new SqlParameter("@id", medicineId)));
+            if (orderItems > 0) return true;
+
+            var prescriptions = Convert.ToInt32(DatabaseHelper.ExecuteScalar(
+                "SELECT COUNT(*) FROM Prescription WHERE MedicineID = @id",
+                new SqlParameter("@id", medicineId)));
+            return prescriptions > 0;
+        }
+
+        public void Delete(int medicineId)
+        {
+            DatabaseHelper.ExecuteNonQuery(
+                "DELETE FROM CartItem WHERE MedicineID=@id",
+                new SqlParameter("@id", medicineId));
+            DatabaseHelper.ExecuteNonQuery(
+                "DELETE FROM Medicine WHERE MedicineID=@id",
+                new SqlParameter("@id", medicineId));
+        }
+
         public void Insert(Medicine item)
         {
             DatabaseHelper.ExecuteNonQuery(

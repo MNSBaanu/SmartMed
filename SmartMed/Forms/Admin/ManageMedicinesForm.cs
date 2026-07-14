@@ -247,7 +247,8 @@ namespace SmartMed.UI
                 StartDate = FormatPromoDate(m.PromotionStartDate),
                 EndDate = FormatPromoDate(m.PromotionEndDate),
                 Promo = FormatPromotionStatus(m),
-                Status = GetStatusLabel(m)
+                Status = GetStatusLabel(m),
+                CatalogAction = m.IsActive ? "Deactivate" : "Activate"
             }).ToList();
 
             UiTheme.SetGridDataSource(gridMedicines, rows);
@@ -263,43 +264,70 @@ namespace SmartMed.UI
         private void EnsureGridActionColumns()
         {
             AddOrConfigureButtonColumn("Edit", "Edit", 68);
-            AddOrConfigureButtonColumn("Deactivate", "Deactivate", 96);
+            AddOrConfigureButtonColumn("CatalogAction", "Catalog", 112, "CatalogAction");
+            AddOrConfigureButtonColumn("Delete", "Delete", 80);
+
+            if (gridMedicines.Columns.Contains("Deactivate"))
+                gridMedicines.Columns.Remove("Deactivate");
 
             if (gridMedicines.Columns.Contains("Edit"))
-                gridMedicines.Columns["Edit"].DisplayIndex = gridMedicines.Columns.Count - 2;
-            if (gridMedicines.Columns.Contains("Deactivate"))
-                gridMedicines.Columns["Deactivate"].DisplayIndex = gridMedicines.Columns.Count - 1;
+                gridMedicines.Columns["Edit"].DisplayIndex = gridMedicines.Columns.Count - 3;
+            if (gridMedicines.Columns.Contains("CatalogAction"))
+                gridMedicines.Columns["CatalogAction"].DisplayIndex = gridMedicines.Columns.Count - 2;
+            if (gridMedicines.Columns.Contains("Delete"))
+                gridMedicines.Columns["Delete"].DisplayIndex = gridMedicines.Columns.Count - 1;
         }
 
-        private void AddOrConfigureButtonColumn(string name, string text, int width)
+        private void AddOrConfigureButtonColumn(string name, string text, int width, string dataPropertyName = null)
         {
             if (gridMedicines.Columns[name] is DataGridViewButtonColumn existing)
             {
                 existing.HeaderText = text;
-                existing.Text = text;
                 existing.Width = width;
                 existing.MinimumWidth = width;
+                if (!string.IsNullOrEmpty(dataPropertyName))
+                {
+                    existing.DataPropertyName = dataPropertyName;
+                    existing.UseColumnTextForButtonValue = false;
+                }
+                else
+                {
+                    existing.Text = text;
+                    existing.UseColumnTextForButtonValue = true;
+                }
                 return;
             }
 
             if (gridMedicines.Columns.Contains(name))
                 gridMedicines.Columns.Remove(name);
 
-            gridMedicines.Columns.Add(new DataGridViewButtonColumn
+            var column = new DataGridViewButtonColumn
             {
                 Name = name,
                 HeaderText = text,
-                Text = text,
-                UseColumnTextForButtonValue = true,
                 Width = width,
                 MinimumWidth = width,
                 FlatStyle = FlatStyle.Flat,
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.None
-            });
+            };
+
+            if (!string.IsNullOrEmpty(dataPropertyName))
+            {
+                column.DataPropertyName = dataPropertyName;
+                column.UseColumnTextForButtonValue = false;
+            }
+            else
+            {
+                column.Text = text;
+                column.UseColumnTextForButtonValue = true;
+            }
+
+            gridMedicines.Columns.Add(column);
         }
 
         private string GetStatusLabel(Medicine m)
         {
+            if (!m.IsActive) return "Inactive";
             var expiry = Rules.CheckExpiry(m);
             if (expiry == MedicineService.ExpiryExpired) return "Expired";
             if (expiry == MedicineService.ExpiryExpiringSoon) return "Expiring Soon";
@@ -386,16 +414,27 @@ namespace SmartMed.UI
             if (e.RowIndex < 0 || !_servicesReady) return;
 
             var colName = gridMedicines.Columns[e.ColumnIndex].Name;
-            if (colName != "Edit" && colName != "Deactivate") return;
+            if (colName != "Edit" && colName != "CatalogAction" && colName != "Delete") return;
 
             var idCell = gridMedicines.Rows[e.RowIndex].Cells["MedicineID"];
             if (idCell?.Value == null) return;
 
             var id = Convert.ToInt32(idCell.Value);
             if (colName == "Edit")
+            {
                 EditMedicine(id);
-            else
-                DeactivateMedicine(id);
+                return;
+            }
+
+            if (colName == "Delete")
+            {
+                DeleteMedicine(id);
+                return;
+            }
+
+            var actionCell = gridMedicines.Rows[e.RowIndex].Cells["CatalogAction"];
+            var activate = string.Equals(actionCell?.Value?.ToString(), "Activate", StringComparison.OrdinalIgnoreCase);
+            ToggleCatalogStatus(id, activate);
         }
 
         private void EditMedicine(int medicineId)
@@ -406,11 +445,37 @@ namespace SmartMed.UI
             ShowMedicineDialog(medicine);
         }
 
-        private void DeactivateMedicine(int medicineId)
+        private void ToggleCatalogStatus(int medicineId, bool activate)
+        {
+            var action = activate ? "activate" : "deactivate";
+            var message = activate
+                ? "Activate this medicine and show it in the customer catalog again?"
+                : "Deactivate this medicine? It will be hidden from customers. Order history is kept.";
+            if (SmartMedMessageBox.Show(message,
+                    activate ? "Confirm Activate" : "Confirm Deactivate",
+                    MessageBoxButtons.YesNo,
+                    activate ? MessageBoxIcon.Question : MessageBoxIcon.Warning) != DialogResult.Yes)
+                return;
+
+            try
+            {
+                _medicines.SetActive(medicineId, activate);
+                RefreshPage();
+                SmartMedMessageBox.Show(
+                    activate ? "Medicine activated." : "Medicine deactivated.",
+                    "SmartMed", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+            catch (Exception ex)
+            {
+                SmartMedMessageBox.Show(ex.Message, "Catalog Update Failed", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
+        }
+
+        private void DeleteMedicine(int medicineId)
         {
             if (SmartMedMessageBox.Show(
-                    "Remove this medicine from the catalog? It will be deactivated and hidden from customers. Order history is kept.",
-                    "Confirm Deactivate",
+                    "Permanently delete this medicine? This cannot be undone. Prefer deactivate if the medicine appears in past orders.",
+                    "Confirm Delete",
                     MessageBoxButtons.YesNo, MessageBoxIcon.Warning) != DialogResult.Yes)
                 return;
 
@@ -419,12 +484,12 @@ namespace SmartMed.UI
                 _medicines.Delete(medicineId);
                 _selectedId = null;
                 RefreshPage();
-                SmartMedMessageBox.Show("Medicine removed from catalog.", "SmartMed",
+                SmartMedMessageBox.Show("Medicine deleted.", "SmartMed",
                     MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
             catch (Exception ex)
             {
-                SmartMedMessageBox.Show(ex.Message, "Deactivate Failed", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                SmartMedMessageBox.Show(ex.Message, "Delete Failed", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
         }
 
@@ -509,7 +574,13 @@ namespace SmartMed.UI
             else if (columnName == "Status")
             {
                 var status = e.Value?.ToString() ?? "";
-                if (string.Equals(status, "Expired", StringComparison.OrdinalIgnoreCase))
+                if (string.Equals(status, "Inactive", StringComparison.OrdinalIgnoreCase))
+                {
+                    e.CellStyle.BackColor = Color.FromArgb(226, 232, 240);
+                    e.CellStyle.ForeColor = Color.FromArgb(71, 85, 105);
+                    e.CellStyle.Font = UiTheme.UiFontBold;
+                }
+                else if (string.Equals(status, "Expired", StringComparison.OrdinalIgnoreCase))
                 {
                     e.CellStyle.BackColor = Color.FromArgb(255, 220, 220);
                     e.CellStyle.ForeColor = Color.DarkRed;
@@ -560,7 +631,16 @@ namespace SmartMed.UI
                 e.CellStyle.ForeColor = UiTheme.AdminTeal;
                 e.CellStyle.Font = UiTheme.UiFontBold;
             }
-            else if (columnName == "Deactivate")
+            else if (columnName == "CatalogAction")
+            {
+                e.CellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
+                var action = e.Value?.ToString() ?? string.Empty;
+                e.CellStyle.ForeColor = string.Equals(action, "Deactivate", StringComparison.OrdinalIgnoreCase)
+                    ? UiTheme.Danger
+                    : UiTheme.AdminTeal;
+                e.CellStyle.Font = UiTheme.UiFontBold;
+            }
+            else if (columnName == "Delete")
             {
                 e.CellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
                 e.CellStyle.ForeColor = UiTheme.Danger;

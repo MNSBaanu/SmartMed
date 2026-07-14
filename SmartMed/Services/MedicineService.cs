@@ -179,8 +179,22 @@ namespace SmartMed.Services
 
         public void Delete(int medicineId)
         {
-            // Soft-remove the medicine from sale instead of deleting its history.
-            SetActive(medicineId, false);
+            if (medicineId <= 0)
+                throw new ArgumentException("Select a medicine to delete.");
+
+            if (_medicines.GetById(medicineId) == null)
+                throw new InvalidOperationException("Medicine not found.");
+
+            if (_medicines.HasActiveOrPendingOrderItems(medicineId))
+                throw new InvalidOperationException(
+                    "Cannot delete this medicine because it is linked to pending or ready-for-pickup orders.");
+
+            if (_medicines.HasOrderOrPrescriptionHistory(medicineId))
+                throw new InvalidOperationException(
+                    "Cannot permanently delete this medicine because it appears in order history. Deactivate it instead.");
+
+            _medicines.Delete(medicineId);
+            CartService.RemoveMedicineFromAllCarts(medicineId);
         }
 
         public void SetActive(int medicineId, bool isActive)
@@ -188,16 +202,16 @@ namespace SmartMed.Services
             if (medicineId <= 0)
                 throw new ArgumentException(isActive
                     ? "Select a medicine to reactivate."
-                    : "Select a medicine to delete.");
+                    : "Select a medicine to deactivate.");
 
             var medicine = _medicines.GetById(medicineId)
                 ?? throw new InvalidOperationException("Medicine not found.");
 
             if (medicine.IsActive == isActive)
             {
-                if (!isActive)
-                    throw new InvalidOperationException("This medicine is already deactivated.");
-                return;
+                throw new InvalidOperationException(isActive
+                    ? "This medicine is already active."
+                    : "This medicine is already deactivated.");
             }
 
             // Do not remove a medicine that is still needed for open customer orders.
