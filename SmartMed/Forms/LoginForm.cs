@@ -210,6 +210,7 @@ namespace SmartMed.UI
                 var admin = _auth.AdminLogin(identity, password);
                 if (admin != null)
                 {
+                    admin.Password = null;
                     Session.CurrentAdmin = admin;
                     LoginSucceeded?.Invoke(this, EventArgs.Empty);
                     return;
@@ -220,6 +221,7 @@ namespace SmartMed.UI
                     var customer = _auth.CustomerLogin(identity, password);
                     if (customer != null)
                     {
+                        customer.Password = null;
                         Session.CurrentCustomer = customer;
                         CartService.LoadForCustomer(customer.CustomerID, new MedicineService());
                         LoginSucceeded?.Invoke(this, EventArgs.Empty);

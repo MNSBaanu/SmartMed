@@ -13,7 +13,20 @@ namespace SmartMed.Services
             if (ValidationService.IsNullOrWhiteSpace(username) || ValidationService.IsNullOrWhiteSpace(password))
                 throw new System.ArgumentException("Username and password are required.");
 
-            return _adminRepo.GetByCredentials(username.Trim(), password);
+            var admin = _adminRepo.GetByUsernameOrEmail(username.Trim());
+            if (admin == null || !PasswordHasher.Verify(password, admin.Password))
+                return null;
+
+            UpgradePasswordIfNeeded(
+                admin.Password,
+                password,
+                hash =>
+                {
+                    _adminRepo.UpdatePassword(admin.AdminID, hash);
+                    admin.Password = hash;
+                });
+
+            return admin;
         }
 
         public Customer CustomerLogin(string email, string password)
@@ -23,9 +36,21 @@ namespace SmartMed.Services
             if (ValidationService.IsNullOrWhiteSpace(password))
                 throw new System.ArgumentException("Password is required.");
 
-            var customer = _customerRepo.GetByCredentials(email.Trim(), password);
-            if (customer != null && !customer.IsActive)
+            var customer = _customerRepo.GetByEmail(email.Trim());
+            if (customer == null || !PasswordHasher.Verify(password, customer.Password))
+                return null;
+
+            if (!customer.IsActive)
                 throw new System.InvalidOperationException("This account has been deactivated. Please contact the pharmacy administrator.");
+
+            UpgradePasswordIfNeeded(
+                customer.Password,
+                password,
+                hash =>
+                {
+                    _customerRepo.UpdatePassword(customer.CustomerID, hash);
+                    customer.Password = hash;
+                });
 
             return customer;
         }
@@ -48,6 +73,7 @@ namespace SmartMed.Services
             if (_customerRepo.EmailExists(customer.Email))
                 throw new System.InvalidOperationException("Email already registered.");
 
+            customer.Password = PasswordHasher.Hash(customer.Password);
             _customerRepo.Insert(customer);
         }
 
@@ -61,10 +87,10 @@ namespace SmartMed.Services
                 throw new System.ArgumentException("New password must be at least 6 characters.");
 
             var admin = _adminRepo.GetById(adminId);
-            if (admin == null || admin.Password != currentPassword)
+            if (admin == null || !PasswordHasher.Verify(currentPassword, admin.Password))
                 throw new System.InvalidOperationException("Current password is incorrect.");
 
-            _adminRepo.UpdatePassword(adminId, newPassword);
+            _adminRepo.UpdatePassword(adminId, PasswordHasher.Hash(newPassword));
         }
 
         /// <summary>Reset password without the old password (forgot-password flow).</summary>
@@ -78,11 +104,12 @@ namespace SmartMed.Services
                 throw new System.ArgumentException("New password must be at least 6 characters.");
 
             identity = identity.Trim();
+            var hashed = PasswordHasher.Hash(newPassword);
 
             var admin = _adminRepo.GetByUsernameOrEmail(identity);
             if (admin != null)
             {
-                _adminRepo.UpdatePassword(admin.AdminID, newPassword);
+                _adminRepo.UpdatePassword(admin.AdminID, hashed);
                 return;
             }
 
@@ -94,12 +121,19 @@ namespace SmartMed.Services
                     if (!customer.IsActive)
                         throw new System.InvalidOperationException(
                             "This account has been deactivated. Please contact the pharmacy administrator.");
-                    _customerRepo.UpdatePassword(customer.CustomerID, newPassword);
+                    _customerRepo.UpdatePassword(customer.CustomerID, hashed);
                     return;
                 }
             }
 
             throw new System.InvalidOperationException("Account not found.");
+        }
+
+        private static void UpgradePasswordIfNeeded(string stored, string plain, System.Action<string> saveHash)
+        {
+            if (PasswordHasher.LooksHashed(stored))
+                return;
+            saveHash(PasswordHasher.Hash(plain));
         }
     }
 }

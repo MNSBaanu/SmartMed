@@ -10,17 +10,6 @@ namespace SmartMed.Data
         private const string SelectColumns =
             "CustomerID, FullName, Email, Phone, Address, Password, IsActive";
 
-        public Customer GetByCredentials(string email, string password)
-        {
-            var table = DatabaseHelper.ExecuteQuery(
-                $"SELECT {SelectColumns} FROM Customer WHERE Email=@e AND Password=@p",
-                new SqlParameter("@e", email),
-                new SqlParameter("@p", password));
-
-            if (table.Rows.Count == 0) return null;
-            return Map(table.Rows[0]);
-        }
-
         public Customer GetByEmail(string email)
         {
             var table = DatabaseHelper.ExecuteQuery(

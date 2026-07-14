@@ -87,14 +87,14 @@ namespace SmartMed.UI
                     if (Session.CurrentAdmin == null)
                         throw new InvalidOperationException("Admin session expired.");
                     auth.ChangeAdminPassword(Session.CurrentAdmin.AdminID, txtCurrent.Text, txtNew.Text);
-                    Session.CurrentAdmin.Password = txtNew.Text;
+                    Session.CurrentAdmin.Password = null;
                 }
                 else
                 {
                     if (Session.CurrentCustomer == null)
                         throw new InvalidOperationException("Customer session expired.");
                     customers.ChangePassword(Session.CurrentCustomer.CustomerID, txtCurrent.Text, txtNew.Text);
-                    Session.CurrentCustomer.Password = txtNew.Text;
+                    Session.CurrentCustomer.Password = null;
                 }
 
                 SmartMedMessageBox.Show("Password updated successfully.", Text, MessageBoxButtons.OK, MessageBoxIcon.Information);

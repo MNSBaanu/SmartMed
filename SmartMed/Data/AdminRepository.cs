@@ -6,13 +6,11 @@ namespace SmartMed.Data
 {
     public class AdminRepository
     {
-        public Admin GetByCredentials(string username, string password)
+        public Admin GetByUsernameOrEmail(string identity)
         {
             var table = DatabaseHelper.ExecuteQuery(
-                "SELECT AdminID, Username, Password, Email FROM Admin WHERE (Username=@u OR Email=@u) AND Password=@p",
-                new SqlParameter("@u", username),
-                new SqlParameter("@p", password));
-
+                "SELECT AdminID, Username, Password, Email FROM Admin WHERE Username=@i OR Email=@i",
+                new SqlParameter("@i", identity));
             if (table.Rows.Count == 0) return null;
             return Map(table.Rows[0]);
         }
@@ -22,15 +20,6 @@ namespace SmartMed.Data
             var table = DatabaseHelper.ExecuteQuery(
                 "SELECT AdminID, Username, Password, Email FROM Admin WHERE AdminID=@id",
                 new SqlParameter("@id", adminId));
-            if (table.Rows.Count == 0) return null;
-            return Map(table.Rows[0]);
-        }
-
-        public Admin GetByUsernameOrEmail(string identity)
-        {
-            var table = DatabaseHelper.ExecuteQuery(
-                "SELECT AdminID, Username, Password, Email FROM Admin WHERE Username=@i OR Email=@i",
-                new SqlParameter("@i", identity));
             if (table.Rows.Count == 0) return null;
             return Map(table.Rows[0]);
         }

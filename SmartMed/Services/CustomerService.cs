@@ -35,11 +35,12 @@ namespace SmartMed.Services
                 throw new ArgumentException("New password must be at least 6 characters.");
 
             var customer = _customers.GetById(customerId);
-            if (customer == null || customer.Password != currentPassword)
+            if (customer == null || !PasswordHasher.Verify(currentPassword, customer.Password))
                 throw new InvalidOperationException("Current password is incorrect.");
 
-            _customers.UpdatePassword(customerId, newPassword);
-            customer.Password = newPassword;
+            var hashed = PasswordHasher.Hash(newPassword);
+            _customers.UpdatePassword(customerId, hashed);
+            customer.Password = hashed;
         }
 
         public void ExportToCsv(IList<Customer> customers, string filePath)
@@ -71,6 +72,7 @@ namespace SmartMed.Services
                 throw new InvalidOperationException("Email already registered.");
             if (ValidationService.IsNullOrWhiteSpace(customer.Password))
                 customer.Password = defaultPassword;
+            customer.Password = PasswordHasher.Hash(customer.Password);
             _customers.Insert(customer);
         }
 

@@ -98,11 +98,13 @@ namespace SmartMed.UI
                     Name = txtName.Text.Trim(),
                     Email = txtEmail.Text.Trim(),
                     Phone = txtPhone.Text.Trim(),
-                    Address = txtAddress.Text.Trim(),
-                    Password = customer.Password
+                    Address = txtAddress.Text.Trim()
                 };
                 _customers.UpdateProfile(updated);
-                Session.CurrentCustomer = _customers.GetById(customer.CustomerID);
+                var refreshed = _customers.GetById(customer.CustomerID);
+                if (refreshed != null)
+                    refreshed.Password = null;
+                Session.CurrentCustomer = refreshed;
                 if (FindForm() is CustomerHostForm host)
                     host.RefreshProfileDisplay();
 

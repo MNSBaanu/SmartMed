@@ -14,7 +14,7 @@ GO
 CREATE TABLE Admin (
     AdminID   INT IDENTITY(1,1) PRIMARY KEY,
     Username  NVARCHAR(50)  NOT NULL UNIQUE,
-    Password  NVARCHAR(100) NOT NULL,
+    Password  NVARCHAR(256) NOT NULL, 
     Email     NVARCHAR(100) NOT NULL
 );
 
@@ -24,7 +24,7 @@ CREATE TABLE Customer (
     Email      NVARCHAR(100) NOT NULL UNIQUE,
     Phone      NVARCHAR(20)  NOT NULL,
     Address    NVARCHAR(200) NOT NULL,
-    Password   NVARCHAR(100) NOT NULL,
+    Password   NVARCHAR(256) NOT NULL,
     IsActive   BIT NOT NULL DEFAULT 1
 );
 
@@ -102,16 +102,20 @@ GO
 
 -- ---------------------------------------------------------------------------
 -- Seed data (demo logins, mixed catalog: meds/wellness only)
+-- Passwords stored as PBKDF2-SHA256 (Rfc2898DeriveBytes, 100000 iterations, 32-byte hash).
+-- Format: iterations$saltBase64$hashBase64 (see PasswordHasher)
+-- Demo plaintext (for login): admin123 / Customer123 / customer123 / Customer123
+-- Fixed salts (16 bytes, last byte 1..4) so seeds are reproducible.
 -- ---------------------------------------------------------------------------
 
 INSERT INTO Admin (Username, Password, Email)
-VALUES (N'admin', N'admin123', N'admin@smartmed.lk');
+VALUES (N'admin', N'100000$AAAAAAAAAAAAAAAAAAAAAQ==$yWsCnUmJjkvSHVoBAzJtW4j3Vl7wobUZIS5YvUKjMpU=', N'admin@smartmed.lk');
 
 INSERT INTO Customer (FullName, Email, Phone, Address, Password, IsActive)
 VALUES
-    (N'Jane Customer', N'customer@gmail.com', N'0771234567', N'12 Hospital Road, Colombo', N'Customer123', 1),
-    (N'John Doe', N'john@email.com', N'0779876543', N'45 Main Street, Kandy', N'customer123', 1),
-    (N'Kamal Silva', N'kamal@email.com', N'0712345678', N'8 Lake Road, Galle', N'Customer123', 1);
+    (N'Jane Customer', N'customer@gmail.com', N'0771234567', N'12 Hospital Road, Colombo', N'100000$AAAAAAAAAAAAAAAAAAAAAg==$HvBMuEdPKF45iIfPiMZCLS8zO3N8dqtekH+oTdrusOU=', 1),
+    (N'John Doe', N'john@email.com', N'0779876543', N'45 Main Street, Kandy', N'100000$AAAAAAAAAAAAAAAAAAAAAw==$uIN7l+CkuW2bTzy1sUyNE9N0CpPbChipRJ5apx7gwgA=', 1),
+    (N'Kamal Silva', N'kamal@email.com', N'0712345678', N'8 Lake Road, Galle', N'100000$AAAAAAAAAAAAAAAAAAAABA==$q5T94VvBc3hEHXKKshyh9S+xRXsWmS4sPH3aO8anMYc=', 1);
 
 INSERT INTO Medicine (
     MedicineName, Category, Dosage, Price, StockQuantity, Supplier, ExpiryDate,
