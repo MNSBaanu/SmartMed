@@ -402,9 +402,18 @@ namespace SmartMed.UI
                     MessageBoxButtons.OK,
                     MessageBoxIcon.Information);
             }
-            catch (Exception ex)
+            catch (ArgumentException ex)
             {
                 SmartMedMessageBox.Show(ex.Message, "Order Failed", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
+            catch (InvalidOperationException ex)
+            {
+                SmartMedMessageBox.Show(ex.Message, "Order Failed", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
+            catch (Exception ex)
+            {
+                SmartMedMessageBox.Show("Unable to place the order.\n" + ex.Message, "Order Failed",
+                    MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
         }
     }

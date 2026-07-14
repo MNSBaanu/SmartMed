@@ -210,8 +210,10 @@ namespace SmartMed.UI
 
         private List<Medicine> GetFilteredMedicines()
         {
-            decimal? minPrice = decimal.TryParse(UiTheme.ReadTextBoxValue(txtMinPrice), out var min) ? min : (decimal?)null;
-            decimal? maxPrice = decimal.TryParse(UiTheme.ReadTextBoxValue(txtMaxPrice), out var max) ? max : (decimal?)null;
+            decimal? minPrice = ValidationService.IsNonNegativeDecimal(UiTheme.ReadTextBoxValue(txtMinPrice), out var min)
+                ? min : (decimal?)null;
+            decimal? maxPrice = ValidationService.IsNonNegativeDecimal(UiTheme.ReadTextBoxValue(txtMaxPrice), out var max)
+                ? max : (decimal?)null;
             var category = cmbCategory?.SelectedIndex > 0 ? cmbCategory.SelectedItem?.ToString() : null;
             if (_servicesReady)
                 return _medicines.Search(UiTheme.ReadTextBoxValue(txtSearch), category, minPrice, maxPrice);
@@ -759,9 +761,18 @@ namespace SmartMed.UI
                         MessageBox.Show(isEdit ? "Medicine updated." : "Medicine added.", "SmartMed",
                             MessageBoxButtons.OK, MessageBoxIcon.Information);
                     }
-                    catch (Exception ex)
+                    catch (ArgumentException ex)
                     {
                         MessageBox.Show(ex.Message, "Save Failed", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    }
+                    catch (InvalidOperationException ex)
+                    {
+                        MessageBox.Show(ex.Message, "Save Failed", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show("Unable to save this medicine.\n" + ex.Message, "Save Failed",
+                            MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     }
                 };
 
@@ -776,15 +787,17 @@ namespace SmartMed.UI
             TextBox txtDescription, TextBox txtActiveIngredient, TextBox txtUsageInstructions,
             TextBox txtWarnings, TextBox txtSideEffects, TextBox txtPackSize)
         {
-            if (!int.TryParse(txtStock.Text.Trim(), out var stock))
-                throw new ArgumentException("Stock quantity must be a valid number.");
-            if (!decimal.TryParse(txtPrice.Text.Trim(), out var price))
-                throw new ArgumentException("Price must be a valid number.");
+            // Use shared numeric validation so dialogs match ValidationService rules.
+            if (!ValidationService.IsNonNegativeInt(txtStock.Text.Trim(), out var stock))
+                throw new ArgumentException("Stock quantity must be a valid number that is 0 or greater.");
+            if (!ValidationService.IsNonNegativeDecimal(txtPrice.Text.Trim(), out var price))
+                throw new ArgumentException("Price must be a valid number that is 0 or greater.");
 
             var discountText = txtDiscount.Text.Trim();
             var discount = 0m;
-            if (!string.IsNullOrEmpty(discountText) && !decimal.TryParse(discountText, out discount))
-                throw new ArgumentException("Discount must be a valid number.");
+            if (!string.IsNullOrEmpty(discountText)
+                && !ValidationService.IsNonNegativeDecimal(discountText, out discount))
+                throw new ArgumentException("Discount must be a valid number that is 0 or greater.");
 
             return new Medicine
             {

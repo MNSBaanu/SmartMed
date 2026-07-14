@@ -507,9 +507,18 @@ namespace SmartMed.UI
                         MessageBox.Show(isEdit ? "Customer updated." : "Customer added.", "SmartMed",
                             MessageBoxButtons.OK, MessageBoxIcon.Information);
                     }
-                    catch (Exception ex)
+                    catch (ArgumentException ex)
                     {
                         MessageBox.Show(ex.Message, "Save Failed", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    }
+                    catch (InvalidOperationException ex)
+                    {
+                        MessageBox.Show(ex.Message, "Save Failed", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show("Unable to save this customer.\n" + ex.Message, "Save Failed",
+                            MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     }
                 };
 

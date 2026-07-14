@@ -101,9 +101,18 @@ namespace SmartMed.UI
                 DialogResult = DialogResult.OK;
                 Close();
             }
-            catch (Exception ex)
+            catch (ArgumentException ex)
             {
                 SmartMedMessageBox.Show(ex.Message, Text, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
+            catch (InvalidOperationException ex)
+            {
+                SmartMedMessageBox.Show(ex.Message, Text, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
+            catch (Exception ex)
+            {
+                SmartMedMessageBox.Show("Unable to update password.\n" + ex.Message, Text,
+                    MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
         }
     }

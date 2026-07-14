@@ -28,8 +28,11 @@ namespace SmartMed.Services
             return digits.Length == 10 && digits.All(char.IsDigit);
         }
 
-        public static bool IsPositiveDecimal(string value, out decimal result) =>
+        public static bool IsNonNegativeDecimal(string value, out decimal result) =>
             decimal.TryParse(value, out result) && result >= 0;
+
+        public static bool IsPositiveDecimal(string value, out decimal result) =>
+            IsNonNegativeDecimal(value, out result);
 
         public static bool IsPositiveInt(string value, out int result) =>
             int.TryParse(value, out result) && result > 0;

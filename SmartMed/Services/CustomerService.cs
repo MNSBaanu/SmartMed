@@ -74,6 +74,8 @@ namespace SmartMed.Services
             // Admin-created accounts get a temporary password when none is entered.
             if (ValidationService.IsNullOrWhiteSpace(customer.Password))
                 customer.Password = defaultPassword;
+            if (customer.Password.Length < 6)
+                throw new ArgumentException("Password must be at least 6 characters.");
             customer.Password = PasswordHasher.Hash(customer.Password);
             _customers.Insert(customer);
         }

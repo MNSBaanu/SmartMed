@@ -74,6 +74,8 @@ namespace SmartMed.Services
                 throw new System.ArgumentException("Address is required.");
             if (ValidationService.IsNullOrWhiteSpace(customer.Password))
                 throw new System.ArgumentException("Password is required.");
+            if (customer.Password.Length < 6)
+                throw new System.ArgumentException("Password must be at least 6 characters.");
 
             // Prevent two customers from registering with the same email.
             if (_customerRepo.EmailExists(customer.Email))

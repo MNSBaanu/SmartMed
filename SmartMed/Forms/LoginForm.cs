@@ -229,9 +229,18 @@ namespace SmartMed.UI
 
                 SmartMedMessageBox.Show(InvalidCredentialsMessage, "Login", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
-            catch (Exception ex)
+            catch (ArgumentException ex)
             {
                 SmartMedMessageBox.Show(ex.Message, "Login Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
+            catch (InvalidOperationException ex)
+            {
+                SmartMedMessageBox.Show(ex.Message, "Login Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
+            catch (Exception ex)
+            {
+                SmartMedMessageBox.Show("Unable to sign in.\n" + ex.Message, "Login Error",
+                    MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
         }
     }

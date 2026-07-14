@@ -120,9 +120,18 @@ namespace SmartMed.UI
                 _auth.RegisterCustomer(customer);
                 ShowSuccess();
             }
-            catch (Exception ex)
+            catch (ArgumentException ex)
             {
                 SmartMedMessageBox.Show(ex.Message, "Registration Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
+            catch (InvalidOperationException ex)
+            {
+                SmartMedMessageBox.Show(ex.Message, "Registration Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
+            catch (Exception ex)
+            {
+                SmartMedMessageBox.Show("Unable to complete registration.\n" + ex.Message, "Registration Error",
+                    MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
         }
 
