@@ -46,6 +46,7 @@ namespace SmartMed.Services
             return results;
         }
 
+        /// <summary>Applies name, category, then price filters in sequence (linear search).</summary>
         public static List<Medicine> Search(List<Medicine> medicines, string name, string category, decimal? minPrice, decimal? maxPrice)
         {
             var results = medicines;

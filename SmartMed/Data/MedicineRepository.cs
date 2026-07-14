@@ -127,6 +127,7 @@ namespace SmartMed.Data
                 new SqlParameter("@id", medicineId));
         }
 
+        // Atomic decrement: StockQuantity >= @q prevents overselling under concurrent orders.
         public bool ReduceStock(int medicineId, int quantity)
         {
             if (quantity <= 0) return false;
@@ -157,6 +158,7 @@ namespace SmartMed.Data
 
         public DataTable GetExpiryReport()
         {
+            // Same 30-day window as MedicineService.CheckExpiry (SQL CASE for reports).
             return DatabaseHelper.ExecuteQuery(
                 @"SELECT MedicineName, Category, StockQuantity, ExpiryDate,
                   CASE WHEN ExpiryDate < CAST(GETDATE() AS DATE) THEN 'Expired'

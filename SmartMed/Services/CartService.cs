@@ -86,6 +86,7 @@ namespace SmartMed.Services
                 }
                 catch
                 {
+                    // Skip expired / inactive / out-of-stock lines so the cart only shows sellable items.
                     continue;
                 }
 

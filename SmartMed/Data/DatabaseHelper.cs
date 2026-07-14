@@ -5,9 +5,6 @@ using System.Data.SqlClient;
 
 namespace SmartMed.Data
 {
-    /// <summary>
-    /// Provides SQL Server connection and common database operations.
-    /// </summary>
     public static class DatabaseHelper
     {
         public static string ConnectionString =>

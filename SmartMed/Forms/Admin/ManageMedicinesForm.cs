@@ -151,7 +151,6 @@ namespace SmartMed.UI
             ClearMedicineFilters();
         }
 
-        /// <summary>Clears search/price inputs and resets category, then shows the full list.</summary>
         private void ClearMedicineFilters()
         {
             ClearFilterInput(txtSearch, "Search");

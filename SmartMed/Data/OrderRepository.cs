@@ -63,7 +63,8 @@ namespace SmartMed.Data
         }
 
         /// <summary>
-        /// Creates an order and inserts one Prescription row per attachment (medicineId + filePath).
+        /// Creates an order in one transaction: insert order/items, reduce stock per line,
+        /// then insert one Prescription row per attachment (medicineId + filePath).
         /// </summary>
         public int CreateOrder(
             int customerId,

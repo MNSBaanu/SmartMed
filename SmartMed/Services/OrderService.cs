@@ -66,6 +66,7 @@ namespace SmartMed.Services
             if (transitionError != null)
                 throw new InvalidOperationException(transitionError);
 
+            // Advancing past Pending requires verified Rx when the order has attachments.
             if (status == StatusReadyForPickup || status == StatusDelivered)
             {
                 if (_prescriptions.HasPrescription(orderId))
@@ -81,6 +82,7 @@ namespace SmartMed.Services
             _orders.UpdateStatus(orderId, status);
         }
 
+        // Allowed flow: Pending → Ready for Pickup → Delivered (Delivered is terminal; no return to Pending).
         private static string GetTransitionError(string currentStatus, string newStatus)
         {
             if (currentStatus == newStatus)
@@ -288,7 +290,6 @@ namespace SmartMed.Services
 
         public string GetPrescriptionDisplay(int orderId) => _prescriptions.GetDisplayName(orderId);
 
-        /// <summary>First Rx file path (compat). Prefer <see cref="GetPrescriptionFilePaths"/>.</summary>
         public string GetPrescriptionFilePath(int orderId) => _prescriptions.GetFilePath(orderId);
 
         public IReadOnlyList<string> GetPrescriptionFilePaths(int orderId) =>
@@ -301,10 +302,8 @@ namespace SmartMed.Services
 
         public bool OrderHasPrescription(int orderId) => _prescriptions.HasPrescription(orderId);
 
-        /// <summary>Verify all prescriptions on the order.</summary>
         public void VerifyPrescription(int orderId) => _prescriptions.Verify(orderId);
 
-        /// <summary>Reject all prescriptions on the order.</summary>
         public void RejectPrescription(int orderId) => _prescriptions.Reject(orderId);
 
         public void VerifyPrescriptionById(int orderId, int prescriptionId) =>

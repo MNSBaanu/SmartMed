@@ -206,6 +206,7 @@ namespace SmartMed.Services
                 CartService.RemoveMedicineFromAllCarts(medicineId);
         }
 
+        // Expired = past today; ExpiringSoon = within warningDays (default 30); else Valid.
         public string CheckExpiry(Medicine m, int warningDays = 30)
         {
             if (m == null)
@@ -221,6 +222,7 @@ namespace SmartMed.Services
 
         public bool IsLowStock(Medicine m, int threshold = 20) => m.StockQuantity <= threshold;
 
+        // Promo applies when flagged, discount > 0, and today falls on/between start and end dates (inclusive).
         public bool IsPromotionActive(Medicine m)
         {
             if (m == null || !m.IsOnPromotion || m.DiscountPercent <= 0)
@@ -234,6 +236,7 @@ namespace SmartMed.Services
             return true;
         }
 
+        // Effective price = list price × (1 − DiscountPercent/100) while the promotion window is active.
         public decimal GetEffectivePrice(Medicine m)
         {
             if (IsPromotionActive(m))

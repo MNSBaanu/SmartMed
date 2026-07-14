@@ -36,6 +36,10 @@ namespace SmartMed.Services
         public const string PharmacyAccountNumber = "001234567890";
         public const string PharmacyBranch = "Colombo Main";
 
+        /// <summary>
+        /// Validates the chosen method and returns a local payment result (no external gateway).
+        /// Card / bank transfer → Paid; cash on pickup → Pay on Pickup.
+        /// </summary>
         public static PaymentResult Process(PaymentRequest request, decimal amount)
         {
             if (request == null)
@@ -115,6 +119,7 @@ namespace SmartMed.Services
             };
         }
 
+        // MM/YY is valid through the last calendar day of that month.
         private static bool IsExpiryInFuture(string expiry)
         {
             var parts = expiry.Split('/');

@@ -159,11 +159,9 @@ namespace SmartMed.Services
         /// <summary>Sets every prescription on the order to Rejected (admin order-level).</summary>
         public void Reject(int orderId) => SetOrderStatus(orderId, StatusRejected, StatusPending);
 
-        /// <summary>Verify one prescription row; orderId scopes the lookup.</summary>
         public void VerifyById(int orderId, int prescriptionId) =>
             SetPrescriptionStatus(orderId, prescriptionId, StatusVerified, StatusPending);
 
-        /// <summary>Reject one prescription row; orderId scopes the lookup.</summary>
         public void RejectById(int orderId, int prescriptionId) =>
             SetPrescriptionStatus(orderId, prescriptionId, StatusRejected, StatusPending);
 
