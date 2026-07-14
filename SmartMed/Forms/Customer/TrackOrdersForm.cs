@@ -93,13 +93,45 @@ namespace SmartMed.UI
             if (gridOrders.Columns.Contains("CancelReason"))
                 gridOrders.Columns["CancelReason"].HeaderText = "Cancel Reason";
             UiTheme.BeautifyGridHeaders(gridOrders);
-            gridItems.DataSource = null;
-            _selectedOrderId = null;
+
+            // Binding may fire SelectionChanged then this used to clear items afterward.
+            // Always sync items from the current selection after bind.
+            if (gridOrders.Rows.Count > 0)
+            {
+                if (gridOrders.CurrentRow == null || gridOrders.CurrentRow.Index < 0)
+                {
+                    gridOrders.ClearSelection();
+                    gridOrders.Rows[0].Selected = true;
+                    var firstVisible = gridOrders.Columns.Cast<DataGridViewColumn>()
+                        .FirstOrDefault(c => c.Visible);
+                    if (firstVisible != null)
+                        gridOrders.CurrentCell = gridOrders.Rows[0].Cells[firstVisible.Index];
+                }
+                LoadSelectedOrderItems();
+            }
+            else
+            {
+                gridItems.DataSource = null;
+                _selectedOrderId = null;
+            }
         }
 
         private void GridOrders_SelectionChanged(object sender, EventArgs e)
         {
-            if (!_servicesReady || gridOrders?.CurrentRow == null) return;
+            if (!_servicesReady) return;
+            LoadSelectedOrderItems();
+        }
+
+        private void LoadSelectedOrderItems()
+        {
+            if (!_servicesReady || gridOrders?.CurrentRow == null
+                || gridOrders.CurrentRow.Index < 0
+                || !gridOrders.Columns.Contains("OrderID"))
+            {
+                gridItems.DataSource = null;
+                _selectedOrderId = null;
+                return;
+            }
 
             _selectedOrderId = Convert.ToInt32(gridOrders.CurrentRow.Cells["OrderID"].Value);
             var items = _orders.GetItems(_selectedOrderId.Value);
