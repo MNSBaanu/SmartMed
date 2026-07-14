@@ -103,24 +103,27 @@ namespace SmartMed.Services
             _adminRepo.UpdatePassword(adminId, PasswordHasher.Hash(newPassword));
         }
 
-        public void ResetPassword(string identity, string newPassword)
+        public void ResetPassword(string identity, string currentPassword, string newPassword)
         {
-            // Allow forgotten-password reset without knowing the old password.
+            // Require the current password so email/username alone cannot reset an account.
             if (ValidationService.IsNullOrWhiteSpace(identity))
                 throw new System.ArgumentException("Email or username is required.");
+            if (ValidationService.IsNullOrWhiteSpace(currentPassword))
+                throw new System.ArgumentException("Current password is required.");
             if (ValidationService.IsNullOrWhiteSpace(newPassword))
                 throw new System.ArgumentException("New password is required.");
             if (newPassword.Length < 6)
                 throw new System.ArgumentException("New password must be at least 6 characters.");
 
             identity = identity.Trim();
-            var hashed = PasswordHasher.Hash(newPassword);
 
             // Try to match an admin first, then a customer by email.
             var admin = _adminRepo.GetByUsernameOrEmail(identity);
             if (admin != null)
             {
-                _adminRepo.UpdatePassword(admin.AdminID, hashed);
+                if (!PasswordHasher.Verify(currentPassword, admin.Password))
+                    throw new System.InvalidOperationException("Current password is incorrect.");
+                _adminRepo.UpdatePassword(admin.AdminID, PasswordHasher.Hash(newPassword));
                 return;
             }
 
@@ -132,7 +135,9 @@ namespace SmartMed.Services
                     if (!customer.IsActive)
                         throw new System.InvalidOperationException(
                             "This account has been deactivated. Please contact the pharmacy administrator.");
-                    _customerRepo.UpdatePassword(customer.CustomerID, hashed);
+                    if (!PasswordHasher.Verify(currentPassword, customer.Password))
+                        throw new System.InvalidOperationException("Current password is incorrect.");
+                    _customerRepo.UpdatePassword(customer.CustomerID, PasswordHasher.Hash(newPassword));
                     return;
                 }
             }

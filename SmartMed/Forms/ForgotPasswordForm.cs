@@ -33,11 +33,13 @@ namespace SmartMed.UI
         private void WireRuntimeBehavior()
         {
             UiTheme.WireClinicalPlaceholderTextBox(txtIdentity, "Email or username");
+            UiTheme.WireClinicalPasswordTextBox(txtCurrent);
             UiTheme.WireClinicalPasswordTextBox(txtNew);
             UiTheme.WireClinicalPasswordTextBox(txtConfirm);
+            UiTheme.AddPasswordToggleBeside(txtCurrent);
             UiTheme.AddPasswordToggleBeside(txtNew);
             UiTheme.AddPasswordToggleBeside(txtConfirm);
-            UiTheme.EnableFieldNavigation(btnSave, txtIdentity, txtNew, txtConfirm);
+            UiTheme.EnableFieldNavigation(btnSave, txtIdentity, txtCurrent, txtNew, txtConfirm);
         }
 
         private void PanelMain_Paint(object sender, PaintEventArgs e)
@@ -61,6 +63,7 @@ namespace SmartMed.UI
             try
             {
                 var identity = UiTheme.ReadTextBoxValue(txtIdentity);
+                var currentPassword = txtCurrent.Text.Trim();
                 var newPassword = txtNew.Text.Trim();
                 var confirm = txtConfirm.Text.Trim();
 
@@ -71,7 +74,7 @@ namespace SmartMed.UI
                     return;
                 }
 
-                new AuthService().ResetPassword(identity, newPassword);
+                new AuthService().ResetPassword(identity, currentPassword, newPassword);
                 SmartMedMessageBox.Show(
                     "Password reset successfully. You can sign in with your new password.",
                     Text,
