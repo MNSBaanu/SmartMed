@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Data.SqlClient;
 using System.Linq;
 using SmartMed.Data;
 using SmartMed.Models;
@@ -111,8 +112,26 @@ namespace SmartMed.Services
                 throw new ArgumentException("Select a customer to delete.");
             if (_customers.GetById(customerId) == null)
                 throw new InvalidOperationException("Customer not found.");
-            _customers.Delete(customerId);
+
+            if (_orders.GetByCustomer(customerId).Count > 0)
+                throw new InvalidOperationException(
+                    "Cannot remove this customer because they have existing orders. Deactivate the account instead.");
+
+            try
+            {
+                _customers.Delete(customerId);
+            }
+            catch (SqlException ex) when (IsOrderCustomerFkConflict(ex))
+            {
+                throw new InvalidOperationException(
+                    "Cannot remove this customer because they have existing orders. Deactivate the account instead.",
+                    ex);
+            }
         }
+
+        private static bool IsOrderCustomerFkConflict(SqlException ex) =>
+            ex != null
+            && (ex.Number == 547 || ex.Message.IndexOf("FK_Order_Customer", StringComparison.OrdinalIgnoreCase) >= 0);
 
         public void GetOrderStats(IReadOnlyList<Customer> all, out int withOrders, out int withoutOrders)
         {
