@@ -12,7 +12,5 @@ namespace SmartMed.Models
         public decimal ListPrice { get; set; }
         public decimal DiscountPercent { get; set; }
         public bool RequiresPrescription { get; set; }
-
-        public void CalculateSubtotal() { }
     }
 }

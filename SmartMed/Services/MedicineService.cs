@@ -208,6 +208,9 @@ namespace SmartMed.Services
 
         public string CheckExpiry(Medicine m, int warningDays = 30)
         {
+            if (m == null)
+                return ExpiryExpired;
+
             var today = DateTime.Today;
             if (m.ExpiryDate.Date < today)
                 return ExpiryExpired;
