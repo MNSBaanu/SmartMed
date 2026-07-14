@@ -81,15 +81,29 @@ CREATE TABLE OrderItem (
     CONSTRAINT FK_OrderItem_Medicine FOREIGN KEY (MedicineID) REFERENCES Medicine(MedicineID)
 );
 
+-- Prescription.MedicineID: one row per Rx medicine on an order (CartItem.PrescriptionPath stays per-line).
+-- Existing DBs (do not re-run full script):
+--   IF COL_LENGTH('dbo.Prescription', 'MedicineID') IS NULL
+--   BEGIN
+--     ALTER TABLE Prescription ADD MedicineID INT NULL;
+--     ALTER TABLE Prescription ADD CONSTRAINT FK_Prescription_Medicine
+--       FOREIGN KEY (MedicineID) REFERENCES Medicine(MedicineID);
+--     -- Add UNIQUE only if no duplicate (OrderID, MedicineID) rows exist:
+--     ALTER TABLE Prescription ADD CONSTRAINT UQ_Prescription_Order_Medicine
+--       UNIQUE (OrderID, MedicineID);
+--   END
 CREATE TABLE Prescription (
     PrescriptionID   INT IDENTITY(1,1) PRIMARY KEY,
     CustomerID       INT NOT NULL,
     OrderID          INT NOT NULL,
+    MedicineID       INT NULL,
     PrescriptionFile NVARCHAR(255) NOT NULL,
     UploadDate       DATETIME NOT NULL DEFAULT GETDATE(),
     Status           NVARCHAR(30) NOT NULL DEFAULT 'Pending',
     CONSTRAINT FK_Prescription_Customer FOREIGN KEY (CustomerID) REFERENCES Customer(CustomerID),
-    CONSTRAINT FK_Prescription_Order FOREIGN KEY (OrderID) REFERENCES [Order](OrderID)
+    CONSTRAINT FK_Prescription_Order FOREIGN KEY (OrderID) REFERENCES [Order](OrderID),
+    CONSTRAINT FK_Prescription_Medicine FOREIGN KEY (MedicineID) REFERENCES Medicine(MedicineID),
+    CONSTRAINT UQ_Prescription_Order_Medicine UNIQUE (OrderID, MedicineID)
 );
 
 CREATE TABLE CartItem (
@@ -204,7 +218,7 @@ VALUES
     (@Order3, @ParaId, 1, 120.00, 120.00),
     (@Order3, @VitCId, 3, 256.67, 770.00);
 
-INSERT INTO Prescription (CustomerID, OrderID, PrescriptionFile, UploadDate, Status)
-VALUES (@JaneId, @Order2, N'seed_rx_jane.pdf', DATEADD(DAY, -1, GETDATE()), N'Pending');
+INSERT INTO Prescription (CustomerID, OrderID, MedicineID, PrescriptionFile, UploadDate, Status)
+VALUES (@JaneId, @Order2, @AmoxId, N'seed_rx_jane.pdf', DATEADD(DAY, -1, GETDATE()), N'Pending');
 
 GO

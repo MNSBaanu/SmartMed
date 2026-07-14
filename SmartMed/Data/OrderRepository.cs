@@ -62,13 +62,16 @@ namespace SmartMed.Data
             return list;
         }
 
+        /// <summary>
+        /// Creates an order and inserts one Prescription row per attachment (medicineId + filePath).
+        /// </summary>
         public int CreateOrder(
             int customerId,
             List<OrderItem> items,
             string paymentMethod,
             string paymentStatus,
             string paymentReference,
-            string prescriptionFilePath = null,
+            IList<PrescriptionRepository.PrescriptionAttachment> prescriptions = null,
             int? rxCustomerId = null)
         {
             decimal total = 0;
@@ -112,11 +115,11 @@ namespace SmartMed.Data
                                     $"Insufficient stock for medicine ID {item.MedicineID}.");
                         }
 
-                        if (!string.IsNullOrWhiteSpace(prescriptionFilePath))
+                        if (prescriptions != null && prescriptions.Count > 0)
                         {
                             int prescriptionCustomerId = rxCustomerId ?? customerId;
-                            new PrescriptionRepository().Insert(
-                                conn, tx, prescriptionCustomerId, orderId, prescriptionFilePath);
+                            new PrescriptionRepository().InsertMany(
+                                conn, tx, prescriptionCustomerId, orderId, prescriptions);
                         }
 
                         tx.Commit();
@@ -129,6 +132,37 @@ namespace SmartMed.Data
                     }
                 }
             }
+        }
+
+        /// <summary>
+        /// Backward-compatible stub: wraps a single file as one attachment with MedicineID null.
+        /// Prefer the overload that accepts <see cref="PrescriptionRepository.PrescriptionAttachment"/> list.
+        /// </summary>
+        public int CreateOrder(
+            int customerId,
+            List<OrderItem> items,
+            string paymentMethod,
+            string paymentStatus,
+            string paymentReference,
+            string prescriptionFilePath,
+            int? rxCustomerId = null)
+        {
+            IList<PrescriptionRepository.PrescriptionAttachment> prescriptions = null;
+            if (!string.IsNullOrWhiteSpace(prescriptionFilePath))
+            {
+                prescriptions = new List<PrescriptionRepository.PrescriptionAttachment>
+                {
+                    new PrescriptionRepository.PrescriptionAttachment
+                    {
+                        MedicineID = null,
+                        FilePath = prescriptionFilePath
+                    }
+                };
+            }
+
+            return CreateOrder(
+                customerId, items, paymentMethod, paymentStatus, paymentReference,
+                prescriptions, rxCustomerId);
         }
 
         public void UpdateStatus(int orderId, string status)

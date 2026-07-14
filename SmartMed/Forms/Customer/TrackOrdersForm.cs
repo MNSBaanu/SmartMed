@@ -120,25 +120,9 @@ namespace SmartMed.UI
             if (gridOrders.Columns[e.ColumnIndex].Name != "Prescription") return;
 
             var orderId = Convert.ToInt32(gridOrders.Rows[e.RowIndex].Cells["OrderID"].Value);
-            var filePath = _orders.GetPrescriptionFilePath(orderId);
-            if (string.IsNullOrWhiteSpace(filePath)) return;
+            if (!_orders.OrderHasPrescription(orderId)) return;
 
-            if (!System.IO.File.Exists(filePath))
-            {
-                SmartMedMessageBox.Show("Prescription file is no longer available on this device.", "Prescription",
-                    MessageBoxButtons.OK, MessageBoxIcon.Information);
-                return;
-            }
-
-            try
-            {
-                System.Diagnostics.Process.Start(filePath);
-            }
-            catch (Exception ex)
-            {
-                SmartMedMessageBox.Show($"Could not open prescription file.\n{ex.Message}", "Prescription",
-                    MessageBoxButtons.OK, MessageBoxIcon.Warning);
-            }
+            PrescriptionFilesDialog.Open(FindForm(), _orders.GetPrescriptionFilePaths(orderId));
         }
 
         private void BtnCancelPending_Click(object sender, EventArgs e)

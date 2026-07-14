@@ -1,9 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.IO;
 using System.Linq;
 using System.Text;
-using System.IO;
 using SmartMed.Data;
 using SmartMed.Models;
 
@@ -102,7 +102,11 @@ namespace SmartMed.Services
             return "Invalid order status transition.";
         }
 
-        public int PlaceOrder(int customerId, IReadOnlyList<CartLine> cart, string prescriptionSourcePath,
+        /// <summary>
+        /// Places an order from cart lines. Each RequiresPrescription line must have PrescriptionPath;
+        /// one Prescription row is stored per (OrderID, MedicineID).
+        /// </summary>
+        public int PlaceOrder(int customerId, IReadOnlyList<CartLine> cart,
             string paymentMethod, string paymentStatus, string paymentReference)
         {
             if (customerId <= 0)
@@ -111,7 +115,7 @@ namespace SmartMed.Services
                 throw new InvalidOperationException("Your cart is empty.");
 
             var orderItems = new List<OrderItem>();
-            var requiresRx = false;
+            var rxPaths = new List<KeyValuePair<int, string>>();
 
             foreach (var line in cart)
             {
@@ -123,8 +127,14 @@ namespace SmartMed.Services
                     throw new InvalidOperationException($"{medicine.MedicineName} has expired and cannot be ordered.");
                 if (medicine.StockQuantity < line.Quantity)
                     throw new InvalidOperationException($"Insufficient stock for {medicine.MedicineName}.");
+
                 if (medicine.RequiresPrescription)
-                    requiresRx = true;
+                {
+                    if (ValidationService.IsNullOrWhiteSpace(line.PrescriptionPath))
+                        throw new InvalidOperationException(
+                            $"Upload a prescription for {medicine.MedicineName} before placing the order.");
+                    rxPaths.Add(new KeyValuePair<int, string>(line.MedicineID, line.PrescriptionPath));
+                }
 
                 orderItems.Add(new OrderItem
                 {
@@ -135,17 +145,14 @@ namespace SmartMed.Services
                 });
             }
 
-            if (requiresRx && ValidationService.IsNullOrWhiteSpace(prescriptionSourcePath))
-                throw new InvalidOperationException("Upload a prescription for Rx medicines before placing the order.");
-
             if (ValidationService.IsNullOrWhiteSpace(paymentMethod))
                 throw new ArgumentException("Payment method is required.");
             if (ValidationService.IsNullOrWhiteSpace(paymentStatus))
                 throw new ArgumentException("Payment status is required.");
 
-            string prescriptionDestPath = null;
-            if (requiresRx)
-                prescriptionDestPath = _prescriptions.PreparePrescriptionFile(customerId, prescriptionSourcePath);
+            List<PrescriptionRepository.PrescriptionAttachment> attachments = null;
+            if (rxPaths.Count > 0)
+                attachments = _prescriptions.PrepareAttachments(customerId, rxPaths);
 
             try
             {
@@ -155,20 +162,36 @@ namespace SmartMed.Services
                     paymentMethod,
                     paymentStatus,
                     paymentReference,
-                    prescriptionDestPath,
-                    requiresRx ? customerId : (int?)null);
+                    attachments,
+                    attachments != null && attachments.Count > 0 ? (int?)customerId : null);
 
                 AdminOrderAlerts.NotifyOrderPlaced(orderId);
                 return orderId;
             }
             catch
             {
-                if (prescriptionDestPath != null)
+                if (attachments != null)
                 {
-                    try { File.Delete(prescriptionDestPath); } catch { /* orphan file is acceptable */ }
+                    foreach (var attachment in attachments)
+                    {
+                        if (attachment == null || string.IsNullOrWhiteSpace(attachment.FilePath))
+                            continue;
+                        try { File.Delete(attachment.FilePath); } catch { /* orphan file is acceptable */ }
+                    }
                 }
                 throw;
             }
+        }
+
+        /// <summary>
+        /// Compatibility overload: <paramref name="prescriptionSourcePath"/> is ignored;
+        /// Rx files are taken from each <see cref="CartLine.PrescriptionPath"/>.
+        /// Prefer the overload without this parameter.
+        /// </summary>
+        public int PlaceOrder(int customerId, IReadOnlyList<CartLine> cart, string prescriptionSourcePath,
+            string paymentMethod, string paymentStatus, string paymentReference)
+        {
+            return PlaceOrder(customerId, cart, paymentMethod, paymentStatus, paymentReference);
         }
 
         public void CancelOrder(int orderId, int customerId, string reason)
@@ -264,15 +287,30 @@ namespace SmartMed.Services
 
         public string GetPrescriptionDisplay(int orderId) => _prescriptions.GetDisplayName(orderId);
 
+        /// <summary>First Rx file path (compat). Prefer <see cref="GetPrescriptionFilePaths"/>.</summary>
         public string GetPrescriptionFilePath(int orderId) => _prescriptions.GetFilePath(orderId);
+
+        public IReadOnlyList<string> GetPrescriptionFilePaths(int orderId) =>
+            _prescriptions.GetFilePaths(orderId);
+
+        public List<Prescription> GetPrescriptions(int orderId) =>
+            _prescriptions.GetAllByOrderId(orderId);
 
         public string GetPrescriptionStatusDisplay(int orderId) => _prescriptions.GetStatusDisplay(orderId);
 
         public bool OrderHasPrescription(int orderId) => _prescriptions.HasPrescription(orderId);
 
+        /// <summary>Verify all prescriptions on the order.</summary>
         public void VerifyPrescription(int orderId) => _prescriptions.Verify(orderId);
 
+        /// <summary>Reject all prescriptions on the order.</summary>
         public void RejectPrescription(int orderId) => _prescriptions.Reject(orderId);
+
+        public void VerifyPrescriptionById(int orderId, int prescriptionId) =>
+            _prescriptions.VerifyById(orderId, prescriptionId);
+
+        public void RejectPrescriptionById(int orderId, int prescriptionId) =>
+            _prescriptions.RejectById(orderId, prescriptionId);
 
         public List<RecentOrderSummary> GetRecentSummaries(int take)
         {

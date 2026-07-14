@@ -756,7 +756,7 @@ namespace SmartMed.UI
                 {
                     _orders.VerifyPrescription(orderId);
                     LoadOrders();
-                    MessageBox.Show("Prescription verified.", "SmartMed",
+                    MessageBox.Show("All prescriptions on this order verified.", "SmartMed",
                         MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
                 catch (Exception ex)
@@ -776,7 +776,7 @@ namespace SmartMed.UI
                     return;
                 }
                 if (MessageBox.Show(
-                        "Reject this prescription? The order cannot move forward until a valid prescription is provided.",
+                        "Reject all prescriptions on this order? The order cannot move forward until valid prescriptions are provided.",
                         "Reject Prescription", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) != DialogResult.Yes)
                     return;
 
@@ -784,7 +784,7 @@ namespace SmartMed.UI
                 {
                     _orders.RejectPrescription(orderId);
                     LoadOrders();
-                    MessageBox.Show("Prescription rejected.", "SmartMed",
+                    MessageBox.Show("All prescriptions on this order rejected.", "SmartMed",
                         MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
                 catch (Exception ex)
@@ -827,6 +827,7 @@ namespace SmartMed.UI
             if (order == null) return;
 
             var items = _orders.GetItems(orderId);
+            var prescriptions = _orders.GetPrescriptions(orderId);
             var lines = new List<string>
             {
                 $"Order: #ORD-{order.OrderID:D4}",
@@ -835,20 +836,49 @@ namespace SmartMed.UI
                 $"Status: {order.Status}",
                 $"Total: LKR {order.TotalAmount:N2}",
                 $"Payment: {order.PaymentMethod} ({order.PaymentStatus})",
-                $"Prescription: {_orders.GetPrescriptionDisplay(orderId)}",
                 $"Rx Status: {_orders.GetPrescriptionStatusDisplay(orderId)}",
-                "",
-                "Line items:"
             };
             if (!string.IsNullOrWhiteSpace(order.CancellationReason))
                 lines.Insert(5, $"Cancel reason: {order.CancellationReason}");
             if (!string.IsNullOrWhiteSpace(order.PaymentReference))
-                lines.Insert(string.IsNullOrWhiteSpace(order.CancellationReason) ? 7 : 8, $"Payment Ref: {order.PaymentReference}");
+                lines.Add($"Payment Ref: {order.PaymentReference}");
+
+            if (prescriptions == null || prescriptions.Count == 0)
+            {
+                lines.Add("Prescription: —");
+            }
+            else
+            {
+                lines.Add($"Prescriptions ({prescriptions.Count}):");
+                foreach (var rx in prescriptions)
+                {
+                    var name = string.IsNullOrWhiteSpace(rx.PrescriptionFile)
+                        ? "—"
+                        : System.IO.Path.GetFileName(rx.PrescriptionFile);
+                    var status = string.IsNullOrWhiteSpace(rx.Status) ? "—" : rx.Status;
+                    lines.Add($"  • {name} [{status}]");
+                }
+            }
+
+            lines.Add("");
+            lines.Add("Line items:");
             foreach (var item in items)
                 lines.Add($"  • {item.MedicineName} x{item.Quantity} — LKR {item.Subtotal:N2}");
 
+            var hasRx = prescriptions != null && prescriptions.Count > 0;
+            var prompt = hasRx
+                ? (prescriptions.Count == 1 ? "Open prescription file?" : "Open prescription files?")
+                : null;
+
+            if (prompt == null)
+            {
+                MessageBox.Show(string.Join(Environment.NewLine, lines), "Order Details",
+                    MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return;
+            }
+
             var result = MessageBox.Show(
-                string.Join(Environment.NewLine, lines) + Environment.NewLine + Environment.NewLine + "Open prescription file?",
+                string.Join(Environment.NewLine, lines) + Environment.NewLine + Environment.NewLine + prompt,
                 "Order Details",
                 MessageBoxButtons.YesNo,
                 MessageBoxIcon.Information);
@@ -859,27 +889,7 @@ namespace SmartMed.UI
 
         private void OpenPrescription(int orderId)
         {
-            var filePath = _orders.GetPrescriptionFilePath(orderId);
-            if (string.IsNullOrWhiteSpace(filePath))
-            {
-                MessageBox.Show("No prescription file for this order.", "Prescription",
-                    MessageBoxButtons.OK, MessageBoxIcon.Information);
-                return;
-            }
-            if (!System.IO.File.Exists(filePath))
-            {
-                MessageBox.Show("Prescription file is not available.", "Prescription",
-                    MessageBoxButtons.OK, MessageBoxIcon.Information);
-                return;
-            }
-            try
-            {
-                System.Diagnostics.Process.Start(filePath);
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message, "Prescription", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-            }
+            PrescriptionFilesDialog.Open(FindForm(), _orders.GetPrescriptionFilePaths(orderId));
         }
 
         private void BtnExport_Click(object sender, EventArgs e)
