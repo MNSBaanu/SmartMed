@@ -521,7 +521,7 @@ namespace SmartMed.UI
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message, "Update Failed", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                SmartMedMessageBox.Show(ex.Message, "Update Failed", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 _suppressGridEvents = true;
                 gridOrders.Rows[e.RowIndex].Cells["Status"].Value = _statusEditOriginal;
                 _suppressGridEvents = false;
@@ -747,7 +747,7 @@ namespace SmartMed.UI
             {
                 if (!CanReviewRx(row))
                 {
-                    MessageBox.Show(
+                    SmartMedMessageBox.Show(
                         "Verify is only available when a prescription is pending review.",
                         "SmartMed", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     return;
@@ -756,12 +756,12 @@ namespace SmartMed.UI
                 {
                     _orders.VerifyPrescription(orderId);
                     LoadOrders();
-                    MessageBox.Show("All prescriptions on this order verified.", "SmartMed",
+                    SmartMedMessageBox.Show("All prescriptions on this order verified.", "SmartMed",
                         MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show(ex.Message, "Verify Failed", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    SmartMedMessageBox.Show(ex.Message, "Verify Failed", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 }
                 return;
             }
@@ -770,12 +770,12 @@ namespace SmartMed.UI
             {
                 if (!CanReviewRx(row))
                 {
-                    MessageBox.Show(
+                    SmartMedMessageBox.Show(
                         "Reject is only available when a prescription is pending review.",
                         "SmartMed", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     return;
                 }
-                if (MessageBox.Show(
+                if (SmartMedMessageBox.Show(
                         "Reject all prescriptions on this order? The order cannot move forward until valid prescriptions are provided.",
                         "Reject Prescription", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) != DialogResult.Yes)
                     return;
@@ -784,12 +784,12 @@ namespace SmartMed.UI
                 {
                     _orders.RejectPrescription(orderId);
                     LoadOrders();
-                    MessageBox.Show("All prescriptions on this order rejected.", "SmartMed",
+                    SmartMedMessageBox.Show("All prescriptions on this order rejected.", "SmartMed",
                         MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show(ex.Message, "Reject Failed", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    SmartMedMessageBox.Show(ex.Message, "Reject Failed", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 }
                 return;
             }
@@ -798,7 +798,7 @@ namespace SmartMed.UI
             {
                 if (!CanCancelOrder(row))
                 {
-                    MessageBox.Show(
+                    SmartMedMessageBox.Show(
                         "Cancel is only available while the order is Pending.",
                         "SmartMed", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     return;
@@ -811,12 +811,12 @@ namespace SmartMed.UI
                 {
                     _orders.CancelOrderAsAdmin(orderId, reason);
                     LoadOrders();
-                    MessageBox.Show("Order cancelled and stock restored.", "SmartMed",
+                    SmartMedMessageBox.Show("Order cancelled and stock restored.", "SmartMed",
                         MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show(ex.Message, "Cancel Failed", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    SmartMedMessageBox.Show(ex.Message, "Cancel Failed", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 }
             }
         }
@@ -872,12 +872,12 @@ namespace SmartMed.UI
 
             if (prompt == null)
             {
-                MessageBox.Show(string.Join(Environment.NewLine, lines), "Order Details",
+                SmartMedMessageBox.Show(string.Join(Environment.NewLine, lines), "Order Details",
                     MessageBoxButtons.OK, MessageBoxIcon.Information);
                 return;
             }
 
-            var result = MessageBox.Show(
+            var result = SmartMedMessageBox.Show(
                 string.Join(Environment.NewLine, lines) + Environment.NewLine + Environment.NewLine + prompt,
                 "Order Details",
                 MessageBoxButtons.YesNo,
@@ -896,7 +896,7 @@ namespace SmartMed.UI
         {
             if (_filteredRows.Count == 0)
             {
-                MessageBox.Show("No orders to export.", "Export", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                SmartMedMessageBox.Show("No orders to export.", "Export", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 return;
             }
 
@@ -914,11 +914,11 @@ namespace SmartMed.UI
                         .Where(o => o != null)
                         .ToList();
                     _orders.ExportOrdersToCsv(orders, dlg.FileName);
-                    MessageBox.Show("Export complete.", "Export", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    SmartMedMessageBox.Show("Export complete.", "Export", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show(ex.Message, "Export Failed", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    SmartMedMessageBox.Show(ex.Message, "Export Failed", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 }
             }
         }

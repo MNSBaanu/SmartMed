@@ -39,12 +39,20 @@ namespace SmartMed.UI
 
         private void WireRuntimeBehavior()
         {
+            lblFullName.Text = ValidationService.RequiredLabel("FULL NAME");
+            lblEmail.Text = ValidationService.RequiredLabel("CLINICAL EMAIL");
+            lblPhone.Text = ValidationService.RequiredLabel("PHONE NUMBER");
+            lblAddress.Text = ValidationService.RequiredLabel("HOME ADDRESS");
+            lblPassword.Text = ValidationService.RequiredLabel("PASSWORD");
+
             UiTheme.WireClinicalPlaceholderTextBox(txtFullName, "Dr. Jane Smith");
             UiTheme.WireClinicalPlaceholderTextBox(txtEmail, "jane@hospital.com");
             UiTheme.WireClinicalPlaceholderTextBox(txtPhone, "0771234567");
             UiTheme.WireClinicalPlaceholderTextBox(txtAddress, "Enter your home address");
             UiTheme.WireClinicalPasswordTextBox(txtPassword);
             UiTheme.WireClinicalPasswordTextBox(txtConfirm);
+            UiTheme.AddPasswordToggleBeside(txtPassword);
+            UiTheme.AddPasswordToggleBeside(txtConfirm);
 
             UiTheme.EnableFieldNavigation(btnRegister,
                 txtFullName, txtEmail, txtPhone, txtAddress, txtPassword, txtConfirm);

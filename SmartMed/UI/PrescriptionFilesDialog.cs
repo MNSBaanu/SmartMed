@@ -19,7 +19,7 @@ namespace SmartMed.UI
 
             if (paths.Count == 0)
             {
-                MessageBox.Show(owner, "No prescription file for this order.", "Prescription",
+                SmartMedMessageBox.Show(owner, "No prescription file for this order.", "Prescription",
                     MessageBoxButtons.OK, MessageBoxIcon.Information);
                 return;
             }
@@ -104,7 +104,7 @@ namespace SmartMed.UI
         {
             if (string.IsNullOrWhiteSpace(filePath) || !File.Exists(filePath))
             {
-                MessageBox.Show(owner, "Prescription file is not available.", "Prescription",
+                SmartMedMessageBox.Show(owner, "Prescription file is not available.", "Prescription",
                     MessageBoxButtons.OK, MessageBoxIcon.Information);
                 return;
             }
@@ -115,7 +115,7 @@ namespace SmartMed.UI
             }
             catch (Exception ex)
             {
-                MessageBox.Show(owner, ex.Message, "Prescription",
+                SmartMedMessageBox.Show(owner, ex.Message, "Prescription",
                     MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
         }

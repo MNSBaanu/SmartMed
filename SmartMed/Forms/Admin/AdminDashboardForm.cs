@@ -98,7 +98,7 @@ namespace SmartMed.UI
         {
             if (gridRecent.Rows.Count == 0)
             {
-                MessageBox.Show("No recent orders to print.", "Print", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                SmartMedMessageBox.Show("No recent orders to print.", "Print", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 return;
             }
             try
@@ -107,7 +107,7 @@ namespace SmartMed.UI
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message, "Print Failed", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                SmartMedMessageBox.Show(ex.Message, "Print Failed", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
         }
 

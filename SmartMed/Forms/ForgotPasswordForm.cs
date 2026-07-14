@@ -35,6 +35,8 @@ namespace SmartMed.UI
             UiTheme.WireClinicalPlaceholderTextBox(txtIdentity, "Email or username");
             UiTheme.WireClinicalPasswordTextBox(txtNew);
             UiTheme.WireClinicalPasswordTextBox(txtConfirm);
+            UiTheme.AddPasswordToggleBeside(txtNew);
+            UiTheme.AddPasswordToggleBeside(txtConfirm);
             UiTheme.EnableFieldNavigation(btnSave, txtIdentity, txtNew, txtConfirm);
         }
 

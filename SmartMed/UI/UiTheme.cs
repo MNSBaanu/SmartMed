@@ -591,6 +591,44 @@ namespace SmartMed.UI
             button.Text = visible ? "Hide" : "Show";
         }
 
+        /// <summary>
+        /// Places a Show/Hide toggle to the right of a password TextBox (Login-style),
+        /// narrowing the TextBox so Designer layout is preserved.
+        /// </summary>
+        public static Button AddPasswordToggleBeside(TextBox textBox, int toggleWidth = 56)
+        {
+            if (textBox?.Parent == null) return null;
+
+            textBox.Width = Math.Max(40, textBox.Width - toggleWidth - 2);
+
+            var toggle = new Button
+            {
+                Name = "btnToggle_" + textBox.Name,
+                Size = new Size(toggleWidth, textBox.Height),
+                Location = new Point(textBox.Right + 2, textBox.Top),
+                TabStop = false
+            };
+            StyleClinicalPasswordToggleButton(toggle);
+            SetPasswordToggleText(toggle, false);
+
+            var visible = false;
+            toggle.Click += (s, e) =>
+            {
+                visible = !visible;
+                if (!IsPlaceholderActive(textBox))
+                {
+                    textBox.UseSystemPasswordChar = false;
+                    textBox.PasswordChar = visible ? '\0' : PasswordMaskChar;
+                }
+
+                SetPasswordToggleText(toggle, visible);
+            };
+
+            textBox.Parent.Controls.Add(toggle);
+            toggle.BringToFront();
+            return toggle;
+        }
+
         public static void SetPasswordToggleIcon(Button button, bool visible)
         {
             if (button == null) return;

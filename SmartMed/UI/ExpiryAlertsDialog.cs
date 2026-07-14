@@ -11,7 +11,7 @@ namespace SmartMed.UI
         {
             if (alertLines == null || alertLines.Count == 0)
             {
-                MessageBox.Show(owner, "No expiry alerts. All medicines are within safe expiry dates.",
+                SmartMedMessageBox.Show(owner, "No expiry alerts. All medicines are within safe expiry dates.",
                     "Expiry Alerts", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 return;
             }

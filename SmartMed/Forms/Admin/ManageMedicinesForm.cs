@@ -358,7 +358,7 @@ namespace SmartMed.UI
                 var items = GetFilteredMedicines();
                 if (items == null || items.Count == 0)
                 {
-                    MessageBox.Show("No medicines to export.", "Export PDF",
+                    SmartMedMessageBox.Show("No medicines to export.", "Export PDF",
                         MessageBoxButtons.OK, MessageBoxIcon.Information);
                     return;
                 }
@@ -371,13 +371,13 @@ namespace SmartMed.UI
                 {
                     if (dialog.ShowDialog() != DialogResult.OK) return;
                     _medicines.ExportToPdf(items, dialog.FileName);
-                    MessageBox.Show("Inventory exported to PDF.", "Export PDF",
+                    SmartMedMessageBox.Show("Inventory exported to PDF.", "Export PDF",
                         MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message, "Export Failed", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                SmartMedMessageBox.Show(ex.Message, "Export Failed", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
         }
 
@@ -408,7 +408,7 @@ namespace SmartMed.UI
 
         private void DeactivateMedicine(int medicineId)
         {
-            if (MessageBox.Show(
+            if (SmartMedMessageBox.Show(
                     "Remove this medicine from the catalog? It will be deactivated and hidden from customers. Order history is kept.",
                     "Confirm Deactivate",
                     MessageBoxButtons.YesNo, MessageBoxIcon.Warning) != DialogResult.Yes)
@@ -419,12 +419,12 @@ namespace SmartMed.UI
                 _medicines.Delete(medicineId);
                 _selectedId = null;
                 RefreshPage();
-                MessageBox.Show("Medicine removed from catalog.", "SmartMed",
+                SmartMedMessageBox.Show("Medicine removed from catalog.", "SmartMed",
                     MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message, "Deactivate Failed", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                SmartMedMessageBox.Show(ex.Message, "Deactivate Failed", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
         }
 
@@ -758,20 +758,20 @@ namespace SmartMed.UI
                         RefreshPage();
                         dlg.DialogResult = DialogResult.OK;
                         dlg.Close();
-                        MessageBox.Show(isEdit ? "Medicine updated." : "Medicine added.", "SmartMed",
+                        SmartMedMessageBox.Show(isEdit ? "Medicine updated." : "Medicine added.", "SmartMed",
                             MessageBoxButtons.OK, MessageBoxIcon.Information);
                     }
                     catch (ArgumentException ex)
                     {
-                        MessageBox.Show(ex.Message, "Save Failed", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        SmartMedMessageBox.Show(ex.Message, "Save Failed", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     }
                     catch (InvalidOperationException ex)
                     {
-                        MessageBox.Show(ex.Message, "Save Failed", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        SmartMedMessageBox.Show(ex.Message, "Save Failed", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     }
                     catch (Exception ex)
                     {
-                        MessageBox.Show("Unable to save this medicine.\n" + ex.Message, "Save Failed",
+                        SmartMedMessageBox.Show("Unable to save this medicine.\n" + ex.Message, "Save Failed",
                             MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     }
                 };

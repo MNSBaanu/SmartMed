@@ -129,7 +129,7 @@ namespace SmartMed.UI
 
         private void RemoveCustomer(int customerId)
         {
-            if (MessageBox.Show("Remove this customer record?", "Confirm Remove",
+            if (SmartMedMessageBox.Show("Remove this customer record?", "Confirm Remove",
                     MessageBoxButtons.YesNo, MessageBoxIcon.Warning) != DialogResult.Yes)
                 return;
 
@@ -138,19 +138,19 @@ namespace SmartMed.UI
                 _customers.Delete(customerId);
                 _selectedId = null;
                 RefreshPage();
-                MessageBox.Show("Customer removed.", "SmartMed",
+                SmartMedMessageBox.Show("Customer removed.", "SmartMed",
                     MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message, "Remove Failed", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                SmartMedMessageBox.Show(ex.Message, "Remove Failed", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
         }
 
         private void ToggleAccountStatus(int customerId, bool activate)
         {
             var action = activate ? "activate" : "deactivate";
-            if (MessageBox.Show($"Are you sure you want to {action} this customer account?",
+            if (SmartMedMessageBox.Show($"Are you sure you want to {action} this customer account?",
                     activate ? "Confirm Activate" : "Confirm Deactivate",
                     MessageBoxButtons.YesNo, MessageBoxIcon.Question) != DialogResult.Yes)
                 return;
@@ -159,12 +159,12 @@ namespace SmartMed.UI
             {
                 _customers.SetAccountActive(customerId, activate);
                 RefreshPage();
-                MessageBox.Show(activate ? "Customer account activated." : "Customer account deactivated.", "SmartMed",
+                SmartMedMessageBox.Show(activate ? "Customer account activated." : "Customer account deactivated.", "SmartMed",
                     MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message, "Account Update Failed", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                SmartMedMessageBox.Show(ex.Message, "Account Update Failed", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
         }
 
@@ -461,13 +461,13 @@ namespace SmartMed.UI
                     txtAddress.Text = existing.Address;
                 }
 
-                dlg.Controls.Add(MakeFieldLabel("Full Name", 16, 24));
+                dlg.Controls.Add(MakeFieldLabel(ValidationService.RequiredLabel("Full Name"), 16, 24));
                 dlg.Controls.Add(txtName);
-                dlg.Controls.Add(MakeFieldLabel("Email", 16, 80));
+                dlg.Controls.Add(MakeFieldLabel(ValidationService.RequiredLabel("Email"), 16, 80));
                 dlg.Controls.Add(txtEmail);
-                dlg.Controls.Add(MakeFieldLabel("Phone", 16, 136));
+                dlg.Controls.Add(MakeFieldLabel(ValidationService.RequiredLabel("Phone"), 16, 136));
                 dlg.Controls.Add(txtPhone);
-                dlg.Controls.Add(MakeFieldLabel("Address", 16, 192));
+                dlg.Controls.Add(MakeFieldLabel(ValidationService.RequiredLabel("Address"), 16, 192));
                 dlg.Controls.Add(txtAddress);
 
                 var btnSave = AdminUiHelpers.CreateWinButton(isEdit ? "Update" : "Add", true, 88);
@@ -504,20 +504,20 @@ namespace SmartMed.UI
                         RefreshPage();
                         dlg.DialogResult = DialogResult.OK;
                         dlg.Close();
-                        MessageBox.Show(isEdit ? "Customer updated." : "Customer added.", "SmartMed",
+                        SmartMedMessageBox.Show(isEdit ? "Customer updated." : "Customer added.", "SmartMed",
                             MessageBoxButtons.OK, MessageBoxIcon.Information);
                     }
                     catch (ArgumentException ex)
                     {
-                        MessageBox.Show(ex.Message, "Save Failed", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        SmartMedMessageBox.Show(ex.Message, "Save Failed", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     }
                     catch (InvalidOperationException ex)
                     {
-                        MessageBox.Show(ex.Message, "Save Failed", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        SmartMedMessageBox.Show(ex.Message, "Save Failed", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     }
                     catch (Exception ex)
                     {
-                        MessageBox.Show("Unable to save this customer.\n" + ex.Message, "Save Failed",
+                        SmartMedMessageBox.Show("Unable to save this customer.\n" + ex.Message, "Save Failed",
                             MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     }
                 };
@@ -552,13 +552,13 @@ namespace SmartMed.UI
                 {
                     if (dialog.ShowDialog() != DialogResult.OK) return;
                     _customers.ExportToCsv(GetFilteredCustomers(), dialog.FileName);
-                    MessageBox.Show("Customers exported.", "Export",
+                    SmartMedMessageBox.Show("Customers exported.", "Export",
                         MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message, "Export Failed", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                SmartMedMessageBox.Show(ex.Message, "Export Failed", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
         }
 
@@ -566,7 +566,7 @@ namespace SmartMed.UI
         {
             if (gridCustomers.Rows.Count == 0)
             {
-                MessageBox.Show("No customers to print.", "Print", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                SmartMedMessageBox.Show("No customers to print.", "Print", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 return;
             }
 
@@ -576,7 +576,7 @@ namespace SmartMed.UI
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message, "Print Failed", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                SmartMedMessageBox.Show(ex.Message, "Print Failed", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
         }
 

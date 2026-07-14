@@ -76,7 +76,7 @@ namespace SmartMed.UI
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message, "Reports", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                SmartMedMessageBox.Show(ex.Message, "Reports", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
         }
 
@@ -456,7 +456,7 @@ namespace SmartMed.UI
             catch (Exception ex)
             {
                 ResetReportPreview();
-                MessageBox.Show(ex.Message, "Report Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                SmartMedMessageBox.Show(ex.Message, "Report Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return false;
             }
         }
@@ -601,13 +601,13 @@ namespace SmartMed.UI
         {
             if (!_reportViewed || _currentReportTable == null)
             {
-                MessageBox.Show("View the report before exporting.", "Export", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                SmartMedMessageBox.Show("View the report before exporting.", "Export", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 return;
             }
 
             if (_currentReportTable.Rows.Count == 0)
             {
-                MessageBox.Show("Nothing to export.", "Export", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                SmartMedMessageBox.Show("Nothing to export.", "Export", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 return;
             }
 
@@ -628,7 +628,7 @@ namespace SmartMed.UI
                     {
                         if (dialog.ShowDialog(FindForm()) != DialogResult.OK) return;
                         _reports.ExportActiveReportToPdf(_currentReportTable, dialog.FileName, GetReportTitle(), GetReportSubtitle());
-                        MessageBox.Show("Report exported as PDF.", "Export", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        SmartMedMessageBox.Show("Report exported as PDF.", "Export", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     }
                 }
                 else
@@ -641,13 +641,13 @@ namespace SmartMed.UI
                     {
                         if (dialog.ShowDialog(FindForm()) != DialogResult.OK) return;
                         _reports.ExportActiveReportToCsv(_currentReportTable, dialog.FileName);
-                        MessageBox.Show("Report exported as CSV.", "Export", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        SmartMedMessageBox.Show("Report exported as CSV.", "Export", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     }
                 }
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message, "Export Failed", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                SmartMedMessageBox.Show(ex.Message, "Export Failed", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
         }
 

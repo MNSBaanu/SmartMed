@@ -60,7 +60,7 @@ namespace SmartMed.UI
                 {
                     if (string.IsNullOrWhiteSpace(txt.Text))
                     {
-                        MessageBox.Show(dlg, "A cancellation reason is required.", "Cancel Order",
+                        SmartMedMessageBox.Show(dlg, "A cancellation reason is required.", "Cancel Order",
                             MessageBoxButtons.OK, MessageBoxIcon.Warning);
                         return;
                     }
