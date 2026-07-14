@@ -12,6 +12,9 @@ namespace SmartMed.UI
         private const int ContentTopMargin = 24;
 
         private readonly AuthService _auth;
+        private bool _passwordVisible;
+        private bool _confirmVisible;
+        private bool _passwordRemaskWired;
 
         public RegistrationForm()
         {
@@ -34,31 +37,68 @@ namespace SmartMed.UI
         private void ApplyViewChrome()
         {
             AuthFormView.ApplyCardBorder(panelRegisterCard);
+            AuthFormView.ApplyPasswordFieldBorder(pnlFullNameField);
+            AuthFormView.ApplyPasswordFieldBorder(pnlEmailField);
+            AuthFormView.ApplyPasswordFieldBorder(pnlPhoneField);
+            AuthFormView.ApplyPasswordFieldBorder(pnlAddressField);
+            AuthFormView.ApplyPasswordFieldBorder(pnlPasswordField);
+            AuthFormView.ApplyPasswordFieldBorder(pnlConfirmField);
             AuthFormView.StyleFieldLabels(lblFullName, lblEmail, lblPhone, lblAddress, lblPassword, lblConfirm);
             AuthFormView.ApplySoftFieldSurfaces(txtFullName, txtEmail, txtPhone, txtAddress, txtPassword, txtConfirm);
+            lblFullName.BringToFront();
+            lblEmail.BringToFront();
+            lblPhone.BringToFront();
+            lblAddress.BringToFront();
+            lblPassword.BringToFront();
+            lblConfirm.BringToFront();
             LayoutRegistrationContent();
         }
 
         private void WireRuntimeBehavior()
         {
-            lblFullName.Text = ValidationService.RequiredLabel("FULL NAME");
-            lblEmail.Text = ValidationService.RequiredLabel("CLINICAL EMAIL");
-            lblPhone.Text = ValidationService.RequiredLabel("PHONE NUMBER");
-            lblAddress.Text = ValidationService.RequiredLabel("HOME ADDRESS");
-            lblPassword.Text = ValidationService.RequiredLabel("PASSWORD");
-
             AuthFormView.ApplySoftFieldSurfaces(txtFullName, txtEmail, txtPhone, txtAddress, txtPassword, txtConfirm);
             UiTheme.WireClinicalPlaceholderTextBox(txtFullName, "Dr. Jane Smith");
             UiTheme.WireClinicalPlaceholderTextBox(txtEmail, "jane@hospital.com");
             UiTheme.WireClinicalPlaceholderTextBox(txtPhone, "0771234567 or +94771234567");
             UiTheme.WireClinicalPlaceholderTextBox(txtAddress, "Enter your home address");
-            UiTheme.WireClinicalPasswordTextBox(txtPassword);
-            UiTheme.WireClinicalPasswordTextBox(txtConfirm);
-            UiTheme.AddPasswordToggleBeside(txtPassword);
-            UiTheme.AddPasswordToggleBeside(txtConfirm);
+            UiTheme.WireClinicalPasswordField(pnlPasswordField, txtPassword, btnTogglePassword, "Enter password");
+            UiTheme.WireClinicalPasswordField(pnlConfirmField, txtConfirm, btnToggleConfirm, "Confirm password");
+            SetPasswordVisible(txtPassword, btnTogglePassword, false, ref _passwordVisible);
+            SetPasswordVisible(txtConfirm, btnToggleConfirm, false, ref _confirmVisible);
+
+            if (!_passwordRemaskWired)
+            {
+                _passwordRemaskWired = true;
+                btnTogglePassword.Click += (s, e) =>
+                    SetPasswordVisible(txtPassword, btnTogglePassword, !_passwordVisible, ref _passwordVisible);
+                btnToggleConfirm.Click += (s, e) =>
+                    SetPasswordVisible(txtConfirm, btnToggleConfirm, !_confirmVisible, ref _confirmVisible);
+                txtPassword.GotFocus += (s, e) => BeginInvoke(new Action(() =>
+                {
+                    if (!IsDisposed && !txtPassword.IsDisposed)
+                        SetPasswordVisible(txtPassword, btnTogglePassword, _passwordVisible, ref _passwordVisible);
+                }));
+                txtConfirm.GotFocus += (s, e) => BeginInvoke(new Action(() =>
+                {
+                    if (!IsDisposed && !txtConfirm.IsDisposed)
+                        SetPasswordVisible(txtConfirm, btnToggleConfirm, _confirmVisible, ref _confirmVisible);
+                }));
+            }
 
             UiTheme.EnableFieldNavigation(btnRegister,
                 txtFullName, txtEmail, txtPhone, txtAddress, txtPassword, txtConfirm);
+        }
+
+        private static void SetPasswordVisible(TextBox textBox, Button toggle, bool visible, ref bool state)
+        {
+            state = visible;
+            if (!UiTheme.IsPlaceholderActive(textBox))
+            {
+                textBox.UseSystemPasswordChar = false;
+                textBox.PasswordChar = visible ? '\0' : UiTheme.PasswordMaskChar;
+            }
+
+            UiTheme.SetPasswordToggleText(toggle, visible);
         }
 
         private void LayoutRegistrationContent()
@@ -82,14 +122,11 @@ namespace SmartMed.UI
 
         private void PanelMain_Resize(object sender, EventArgs e) => LayoutRegistrationContent();
 
-        private void BtnClose_Click(object sender, EventArgs e)
+        private void LnkBackLogin_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             DialogResult = DialogResult.Cancel;
             Close();
         }
-
-        private void LnkBackLogin_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e) =>
-            BtnClose_Click(sender, e);
 
         private void BtnReturnLogin_Click(object sender, EventArgs e)
         {

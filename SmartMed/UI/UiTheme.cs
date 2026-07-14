@@ -465,7 +465,7 @@ namespace SmartMed.UI
             if (label == null) return;
             label.BorderStyle = BorderStyle.None;
             label.FlatStyle = FlatStyle.Standard;
-            label.Font = UiFont;
+            label.Font = FontAt(8.25F, bold: true);
             label.ForeColor = AdminLabelText;
             label.BackColor = Color.White;
             label.UseMnemonic = false;
@@ -564,17 +564,26 @@ namespace SmartMed.UI
         public static void ApplyClinicalInputShellBorder(Panel shell)
         {
             if (shell == null) return;
-            if (shell.Tag as string == "clinical-input-shell") return;
+
+            shell.BackColor = InputBackground;
+            if (shell.Tag as string == "clinical-input-shell")
+            {
+                shell.Invalidate();
+                return;
+            }
 
             shell.Tag = "clinical-input-shell";
             shell.Paint += (s, e) =>
             {
                 var rect = shell.ClientRectangle;
+                if (rect.Width <= 1 || rect.Height <= 1) return;
                 rect.Width -= 1;
                 rect.Height -= 1;
-                using (var pen = new Pen(AdminOutline))
+                // Slightly stronger than AdminOutline so auth inputs read clearly on mint fill.
+                using (var pen = new Pen(Color.FromArgb(150, 160, 158)))
                     e.Graphics.DrawRectangle(pen, rect);
             };
+            shell.Invalidate();
         }
 
         public static void WireClinicalPasswordField(Panel shell, TextBox textBox, Button toggle, string placeholder)
@@ -582,6 +591,7 @@ namespace SmartMed.UI
             if (shell == null || textBox == null) return;
 
             ApplyClinicalInputShellBorder(shell);
+            StyleClinicalPasswordToggleButton(toggle);
             WireClinicalPlaceholderTextBox(textBox, placeholder);
             SetPasswordToggleText(toggle, false);
         }
