@@ -23,8 +23,9 @@ namespace SmartMed.UI
         private const string TabHistory = "CustomerOrderHistory";
 
         private string _activeTab = TabSales;
-        private ReportPeriod _activePeriod = ReportPeriod.Month;
+        private ReportPeriod _activePeriod = ReportPeriod.Week;
         private bool _reportViewed;
+        private bool _suppressRangeEvents;
         private DataTable _currentReportTable;
         private DataTable _sourceReportTable;
 
@@ -85,6 +86,8 @@ namespace SmartMed.UI
             ApplyViewChrome();
             UpdateTabStyles();
             UpdatePeriodStyles();
+            SyncPeriodDatesToPickers();
+            UpdateDateRangeEnabled();
             UpdateStatTitlesForTab();
 
             _currentReportTable = null;
@@ -127,6 +130,8 @@ namespace SmartMed.UI
             UpdatePeriodFilterVisibility();
             UpdateTabStyles();
             UpdatePeriodStyles();
+            SyncPeriodDatesToPickers();
+            UpdateDateRangeEnabled();
             UpdateStatTitlesForTab();
             EnsurePreviewChrome();
             UpdateExportButtons();
@@ -200,7 +205,9 @@ namespace SmartMed.UI
             if (_runtimeWired) return;
             _runtimeWired = true;
 
-            ResetReportPreview();
+            SyncPeriodDatesToPickers();
+            UpdateDateRangeEnabled();
+            TryLoadActiveReport();
         }
 
         private void BtnSalesTab_Click(object sender, EventArgs e) =>
@@ -220,6 +227,23 @@ namespace SmartMed.UI
 
         private void BtnYearPeriod_Click(object sender, EventArgs e) =>
             SwitchPeriod(ReportPeriod.Year);
+
+        private void ChkDateRange_CheckedChanged(object sender, EventArgs e)
+        {
+            if (_suppressRangeEvents) return;
+            UpdateDateRangeEnabled();
+            UpdatePeriodStyles();
+            if (_servicesReady && !IsDesignHost())
+                LoadActiveReport();
+        }
+
+        private void DtpRange_ValueChanged(object sender, EventArgs e)
+        {
+            if (_suppressRangeEvents) return;
+            if (chkDateRange == null || !chkDateRange.Checked) return;
+            if (_servicesReady && !IsDesignHost())
+                LoadActiveReport();
+        }
 
         private void CmbCustomer_SelectedIndexChanged(object sender, EventArgs e)
         {
@@ -268,15 +292,81 @@ namespace SmartMed.UI
             UpdatePeriodFilterVisibility();
             UpdateTabStyles();
             UpdateStatTitlesForTab();
-            ResetReportPreview();
+
+            if (_servicesReady && !IsDesignHost())
+                LoadActiveReport();
+            else
+                ResetReportPreview();
         }
 
         private void SwitchPeriod(ReportPeriod period)
         {
             _activePeriod = period;
+            _suppressRangeEvents = true;
+            try
+            {
+                if (chkDateRange != null)
+                    chkDateRange.Checked = false;
+                SyncPeriodDatesToPickers();
+                UpdateDateRangeEnabled();
+            }
+            finally
+            {
+                _suppressRangeEvents = false;
+            }
+
             UpdatePeriodStyles();
-            if (_reportViewed)
+            if (_servicesReady && !IsDesignHost())
                 LoadActiveReport();
+        }
+
+        private bool UsesCustomDateRange =>
+            chkDateRange != null && chkDateRange.Checked;
+
+        private void SyncPeriodDatesToPickers()
+        {
+            if (dtpFrom == null || dtpTo == null) return;
+
+            var (from, toExclusive) = ReportPeriodHelper.GetRange(_activePeriod);
+            var toInclusive = toExclusive.AddDays(-1);
+            if (toInclusive < from)
+                toInclusive = from;
+
+            var prior = _suppressRangeEvents;
+            _suppressRangeEvents = true;
+            try
+            {
+                dtpFrom.Value = from;
+                dtpTo.Value = toInclusive;
+            }
+            finally
+            {
+                _suppressRangeEvents = prior;
+            }
+        }
+
+        private void UpdateDateRangeEnabled()
+        {
+            var enabled = UsesCustomDateRange;
+            if (dtpFrom != null) dtpFrom.Enabled = enabled;
+            if (dtpTo != null) dtpTo.Enabled = enabled;
+        }
+
+        private bool TryGetCustomInclusiveRange(out DateTime fromInclusive, out DateTime toInclusive)
+        {
+            fromInclusive = dtpFrom?.Value.Date ?? DateTime.Today;
+            toInclusive = dtpTo?.Value.Date ?? DateTime.Today;
+            if (toInclusive < fromInclusive)
+            {
+                SmartMedMessageBox.Show(
+                    "End date must be on or after the start date.",
+                    "Reports",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Warning);
+                return false;
+            }
+
+            return true;
         }
 
         private void UpdateStatTitlesForTab()
@@ -309,15 +399,17 @@ namespace SmartMed.UI
 
         private void UpdatePeriodFilterVisibility()
         {
+            // Period chrome stays visible on all tabs (including inventory snapshot) for consistency.
             if (panelPeriodFilter != null)
-                panelPeriodFilter.Visible = _activeTab != TabInventory;
+                panelPeriodFilter.Visible = true;
         }
 
         private void UpdatePeriodStyles()
         {
-            StylePeriod(btnWeekPeriod, _activePeriod == ReportPeriod.Week);
-            StylePeriod(btnMonthPeriod, _activePeriod == ReportPeriod.Month);
-            StylePeriod(btnYearPeriod, _activePeriod == ReportPeriod.Year);
+            var highlightPreset = !UsesCustomDateRange;
+            StylePeriod(btnWeekPeriod, highlightPreset && _activePeriod == ReportPeriod.Week);
+            StylePeriod(btnMonthPeriod, highlightPreset && _activePeriod == ReportPeriod.Month);
+            StylePeriod(btnYearPeriod, highlightPreset && _activePeriod == ReportPeriod.Year);
         }
 
         private static void StylePeriod(Button btn, bool active)
@@ -328,6 +420,7 @@ namespace SmartMed.UI
                 btn.BackColor = UiTheme.AdminTeal;
                 btn.ForeColor = Color.White;
                 btn.Font = UiTheme.UiFontBold;
+                btn.FlatAppearance.BorderSize = 0;
             }
             else
             {
@@ -339,7 +432,19 @@ namespace SmartMed.UI
             }
         }
 
-        private string GetPeriodStatusText() => ReportPeriodHelper.GetLabel(_activePeriod);
+        private string GetPeriodStatusText()
+        {
+            if (UsesCustomDateRange && dtpFrom != null && dtpTo != null)
+                return $"{dtpFrom.Value:MMM dd, yyyy} – {dtpTo.Value:MMM dd, yyyy}";
+            return ReportPeriodHelper.GetLabel(_activePeriod);
+        }
+
+        private string GetPeriodFileSuffix()
+        {
+            if (UsesCustomDateRange && dtpFrom != null && dtpTo != null)
+                return $"{dtpFrom.Value:yyyyMMdd}-{dtpTo.Value:yyyyMMdd}";
+            return ReportPeriodHelper.GetFileSuffix(_activePeriod);
+        }
 
         private void UpdateTabStyles()
         {
@@ -440,6 +545,9 @@ namespace SmartMed.UI
 
             try
             {
+                if (UsesCustomDateRange && !TryGetCustomInclusiveRange(out _, out _))
+                    return false;
+
                 if (_activeTab == TabSales)
                     LoadSalesReport();
                 else if (_activeTab == TabInventory)
@@ -463,7 +571,9 @@ namespace SmartMed.UI
 
         private void LoadSalesReport()
         {
-            _sourceReportTable = _reports.GetSalesReport(_activePeriod);
+            _sourceReportTable = UsesCustomDateRange
+                ? _reports.GetSalesReport(dtpFrom.Value.Date, dtpTo.Value.Date)
+                : _reports.GetSalesReport(_activePeriod);
             _currentReportTable = ReportTableFormatter.FormatSalesReport(_sourceReportTable);
             BindReportGrid(_currentReportTable);
             lblFooterStatus.Text =
@@ -484,7 +594,7 @@ namespace SmartMed.UI
 
         private void LoadInventoryReport()
         {
-            _sourceReportTable = _reports.GetStockReport();
+            _sourceReportTable = FetchStockReport();
             _currentReportTable = ReportTableFormatter.FormatStockReport(_sourceReportTable);
             BindReportGrid(_currentReportTable);
 
@@ -494,38 +604,23 @@ namespace SmartMed.UI
             var nearExpiry = ReportTableFormatter.CountColumnValue(_sourceReportTable, "ExpiryStatus", "Near Expiry");
 
             lblFooterStatus.Text =
-                $"Items: {_sourceReportTable.Rows.Count} | Current: {current} | Low stock: {lowStock} | Expired: {expired} | Near expiry: {nearExpiry} | {DateTime.Now:hh:mm tt | MMM dd, yyyy}";
+                $"Items: {_sourceReportTable.Rows.Count} | Current: {current} | Low stock: {lowStock} | Expired: {expired} | Near expiry: {nearExpiry} | {GetPeriodStatusText()} | {DateTime.Now:hh:mm tt | MMM dd, yyyy}";
         }
 
         private void LoadHistoryReport()
         {
             EnsureCustomerFilterLoaded();
 
-            var customerId = GetSelectedCustomerId();
-            if (!customerId.HasValue || customerId.Value <= 0)
-            {
-                _sourceReportTable = CreateEmptyOrderHistorySource();
-                _currentReportTable = ReportTableFormatter.FormatCustomerOrderHistory(_sourceReportTable);
-                BindReportGrid(_currentReportTable);
-                lblFooterStatus.Text = "Select a customer to view order history.";
-                return;
-            }
+            // CustomerID 0 ("All Customers") loads history for every customer in the period.
+            var customerId = GetSelectedCustomerId() ?? 0;
 
-            _sourceReportTable = _reports.GetCustomerOrderHistory(customerId.Value, _activePeriod);
+            _sourceReportTable = UsesCustomDateRange
+                ? _reports.GetCustomerOrderHistory(customerId, dtpFrom.Value.Date, dtpTo.Value.Date)
+                : _reports.GetCustomerOrderHistory(customerId, _activePeriod);
             _currentReportTable = ReportTableFormatter.FormatCustomerOrderHistory(_sourceReportTable);
             BindReportGrid(_currentReportTable);
             lblFooterStatus.Text =
                 $"Items: {_sourceReportTable.Rows.Count} | Customer order history | {cmbCustomer.Text} | {GetPeriodStatusText()} | {DateTime.Now:hh:mm tt}";
-        }
-
-        private static DataTable CreateEmptyOrderHistorySource()
-        {
-            var table = new DataTable();
-            table.Columns.Add("OrderID", typeof(int));
-            table.Columns.Add("OrderDate", typeof(DateTime));
-            table.Columns.Add("Status", typeof(string));
-            table.Columns.Add("TotalAmount", typeof(decimal));
-            return table;
         }
 
         private void UpdateSummaryStats()
@@ -534,7 +629,7 @@ namespace SmartMed.UI
 
             if (_activeTab == TabInventory)
             {
-                var stock = _sourceReportTable ?? _reports.GetStockReport();
+                var stock = _sourceReportTable ?? FetchStockReport();
                 lblTotalRevenue.Text = stock.Rows.Count.ToString("N0");
                 lblTotalOrders.Text = ReportTableFormatter.CountColumnValue(stock, "StockStatus", "Low Stock").ToString("N0");
                 lblLowStock.Text = ReportTableFormatter.CountColumnValue(stock, "ExpiryStatus", "Expired").ToString("N0");
@@ -547,20 +642,35 @@ namespace SmartMed.UI
                 lblTotalRevenue.Text = $"LKR {ReportTableFormatter.SumAmountColumn(_sourceReportTable):N2}";
                 lblTotalOrders.Text = (_sourceReportTable?.Rows.Count ?? 0).ToString("N0");
 
-                var stock = _reports.GetStockReport();
+                var stock = FetchStockReport();
                 lblLowStock.Text = ReportTableFormatter.CountColumnValue(stock, "StockStatus", "Low Stock").ToString("N0");
-                lblOutstanding.Text = $"LKR {_reports.GetOutstandingAmount(_activePeriod):N2}";
+                lblOutstanding.Text = $"LKR {GetOutstandingAmount():N2}";
                 return;
             }
 
-            var sales = _sourceReportTable ?? _reports.GetSalesReport(_activePeriod);
+            var sales = _sourceReportTable ?? FetchSalesReport();
             lblTotalRevenue.Text = $"LKR {ReportTableFormatter.SumAmountColumn(sales):N2}";
             lblTotalOrders.Text = sales.Rows.Count.ToString("N0");
 
-            var inventory = _reports.GetStockReport();
+            var inventory = FetchStockReport();
             lblLowStock.Text = ReportTableFormatter.CountColumnValue(inventory, "StockStatus", "Low Stock").ToString("N0");
-            lblOutstanding.Text = $"LKR {_reports.GetOutstandingAmount(_activePeriod):N2}";
+            lblOutstanding.Text = $"LKR {GetOutstandingAmount():N2}";
         }
+
+        private DataTable FetchSalesReport() =>
+            UsesCustomDateRange
+                ? _reports.GetSalesReport(dtpFrom.Value.Date, dtpTo.Value.Date)
+                : _reports.GetSalesReport(_activePeriod);
+
+        private DataTable FetchStockReport() =>
+            UsesCustomDateRange
+                ? _reports.GetStockReport(dtpFrom.Value.Date, dtpTo.Value.Date)
+                : _reports.GetStockReport(_activePeriod);
+
+        private decimal GetOutstandingAmount() =>
+            UsesCustomDateRange
+                ? _reports.GetOutstandingAmount(dtpFrom.Value.Date, dtpTo.Value.Date)
+                : _reports.GetOutstandingAmount(_activePeriod);
 
         private void GridReport_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
         {
@@ -613,10 +723,7 @@ namespace SmartMed.UI
 
             try
             {
-                var periodSuffix = _activeTab == TabInventory
-                    ? string.Empty
-                    : $"_{ReportPeriodHelper.GetFileSuffix(_activePeriod)}";
-                var baseName = $"{GetExportBaseName()}{periodSuffix}_{DateTime.Now:yyyyMMdd}";
+                var baseName = $"{GetExportBaseName()}_{GetPeriodFileSuffix()}_{DateTime.Now:yyyyMMdd}";
 
                 if (isPdf)
                 {
@@ -661,7 +768,7 @@ namespace SmartMed.UI
         private string GetReportSubtitle()
         {
             if (_activeTab == TabInventory)
-                return $"Generated {DateTime.Now:MMM dd, yyyy hh:mm tt} | Current, low stock, expired, and near-expiry items";
+                return $"Period: {GetPeriodStatusText()} | Current inventory snapshot | Low stock, expired, and near-expiry items | Generated {DateTime.Now:MMM dd, yyyy hh:mm tt}";
 
             if (_activeTab == TabHistory)
                 return $"Customer: {cmbCustomer?.Text} | Period: {GetPeriodStatusText()} | Generated {DateTime.Now:MMM dd, yyyy hh:mm tt}";

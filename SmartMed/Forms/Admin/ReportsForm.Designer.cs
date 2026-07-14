@@ -46,6 +46,11 @@ namespace SmartMed.UI
             this.btnInventoryTab = new System.Windows.Forms.Button();
             this.btnHistoryTab = new System.Windows.Forms.Button();
             this.panelPeriodFilter = new System.Windows.Forms.Panel();
+            this.flowDateRange = new System.Windows.Forms.FlowLayoutPanel();
+            this.chkDateRange = new System.Windows.Forms.CheckBox();
+            this.dtpFrom = new System.Windows.Forms.DateTimePicker();
+            this.lblDateTo = new System.Windows.Forms.Label();
+            this.dtpTo = new System.Windows.Forms.DateTimePicker();
             this.flowPeriodTabs = new System.Windows.Forms.FlowLayoutPanel();
             this.btnWeekPeriod = new System.Windows.Forms.Button();
             this.btnMonthPeriod = new System.Windows.Forms.Button();
@@ -79,6 +84,7 @@ namespace SmartMed.UI
             this.panelTabBar.SuspendLayout();
             this.flowTabs.SuspendLayout();
             this.panelPeriodFilter.SuspendLayout();
+            this.flowDateRange.SuspendLayout();
             this.flowPeriodTabs.SuspendLayout();
             this.panelCustomerFilter.SuspendLayout();
             this.panelGridOuter.SuspendLayout();
@@ -440,6 +446,7 @@ namespace SmartMed.UI
             this.btnHistoryTab.Click += new System.EventHandler(this.BtnHistoryTab_Click);
 
             this.panelPeriodFilter.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(244)))), ((int)(((byte)(251)))), ((int)(((byte)(250)))));
+            this.panelPeriodFilter.Controls.Add(this.flowDateRange);
             this.panelPeriodFilter.Controls.Add(this.flowPeriodTabs);
             this.panelPeriodFilter.Controls.Add(this.lblPeriodLabel);
             this.panelPeriodFilter.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -448,6 +455,59 @@ namespace SmartMed.UI
             this.panelPeriodFilter.Name = "panelPeriodFilter";
             this.panelPeriodFilter.Size = new System.Drawing.Size(1012, 44);
             this.panelPeriodFilter.TabIndex = 3;
+
+            this.flowDateRange.AutoSize = true;
+            this.flowDateRange.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(244)))), ((int)(((byte)(251)))), ((int)(((byte)(250)))));
+            this.flowDateRange.Controls.Add(this.chkDateRange);
+            this.flowDateRange.Controls.Add(this.dtpFrom);
+            this.flowDateRange.Controls.Add(this.lblDateTo);
+            this.flowDateRange.Controls.Add(this.dtpTo);
+            this.flowDateRange.Location = new System.Drawing.Point(286, 6);
+            this.flowDateRange.Name = "flowDateRange";
+            this.flowDateRange.Size = new System.Drawing.Size(380, 30);
+            this.flowDateRange.TabIndex = 2;
+
+            this.chkDateRange.AutoSize = true;
+            this.chkDateRange.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(244)))), ((int)(((byte)(251)))), ((int)(((byte)(250)))));
+            this.chkDateRange.Font = new System.Drawing.Font("Hanken Grotesk", 9F);
+            this.chkDateRange.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(22)))), ((int)(((byte)(29)))), ((int)(((byte)(29)))));
+            this.chkDateRange.Location = new System.Drawing.Point(0, 6);
+            this.chkDateRange.Margin = new System.Windows.Forms.Padding(0, 6, 8, 0);
+            this.chkDateRange.Name = "chkDateRange";
+            this.chkDateRange.Size = new System.Drawing.Size(112, 22);
+            this.chkDateRange.TabIndex = 0;
+            this.chkDateRange.Text = "Use date range";
+            this.chkDateRange.UseVisualStyleBackColor = false;
+            this.chkDateRange.CheckedChanged += new System.EventHandler(this.ChkDateRange_CheckedChanged);
+
+            this.dtpFrom.Enabled = false;
+            this.dtpFrom.Font = new System.Drawing.Font("Hanken Grotesk", 9F);
+            this.dtpFrom.Format = System.Windows.Forms.DateTimePickerFormat.Short;
+            this.dtpFrom.Location = new System.Drawing.Point(120, 3);
+            this.dtpFrom.Name = "dtpFrom";
+            this.dtpFrom.Size = new System.Drawing.Size(120, 25);
+            this.dtpFrom.TabIndex = 1;
+            this.dtpFrom.ValueChanged += new System.EventHandler(this.DtpRange_ValueChanged);
+
+            this.lblDateTo.AutoSize = true;
+            this.lblDateTo.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(244)))), ((int)(((byte)(251)))), ((int)(((byte)(250)))));
+            this.lblDateTo.Font = new System.Drawing.Font("Hanken Grotesk", 9F);
+            this.lblDateTo.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(22)))), ((int)(((byte)(29)))), ((int)(((byte)(29)))));
+            this.lblDateTo.Location = new System.Drawing.Point(248, 8);
+            this.lblDateTo.Margin = new System.Windows.Forms.Padding(8, 8, 8, 0);
+            this.lblDateTo.Name = "lblDateTo";
+            this.lblDateTo.Size = new System.Drawing.Size(17, 18);
+            this.lblDateTo.TabIndex = 2;
+            this.lblDateTo.Text = "to";
+
+            this.dtpTo.Enabled = false;
+            this.dtpTo.Font = new System.Drawing.Font("Hanken Grotesk", 9F);
+            this.dtpTo.Format = System.Windows.Forms.DateTimePickerFormat.Short;
+            this.dtpTo.Location = new System.Drawing.Point(273, 3);
+            this.dtpTo.Name = "dtpTo";
+            this.dtpTo.Size = new System.Drawing.Size(120, 25);
+            this.dtpTo.TabIndex = 3;
+            this.dtpTo.ValueChanged += new System.EventHandler(this.DtpRange_ValueChanged);
 
             this.flowPeriodTabs.AutoSize = true;
             this.flowPeriodTabs.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(244)))), ((int)(((byte)(251)))), ((int)(((byte)(250)))));
@@ -459,12 +519,12 @@ namespace SmartMed.UI
             this.flowPeriodTabs.Size = new System.Drawing.Size(210, 28);
             this.flowPeriodTabs.TabIndex = 1;
 
-            this.btnWeekPeriod.BackColor = System.Drawing.Color.White;
+            this.btnWeekPeriod.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(53)))), ((int)(((byte)(103)))), ((int)(((byte)(94)))));
             this.btnWeekPeriod.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.btnWeekPeriod.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(193)))), ((int)(((byte)(200)))), ((int)(((byte)(198)))));
+            this.btnWeekPeriod.FlatAppearance.BorderSize = 0;
             this.btnWeekPeriod.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnWeekPeriod.Font = new System.Drawing.Font("Hanken Grotesk", 9F);
-            this.btnWeekPeriod.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(22)))), ((int)(((byte)(29)))), ((int)(((byte)(29)))));
+            this.btnWeekPeriod.Font = new System.Drawing.Font("Hanken Grotesk", 9F, System.Drawing.FontStyle.Bold);
+            this.btnWeekPeriod.ForeColor = System.Drawing.Color.White;
             this.btnWeekPeriod.Location = new System.Drawing.Point(0, 0);
             this.btnWeekPeriod.Margin = new System.Windows.Forms.Padding(0, 0, 6, 0);
             this.btnWeekPeriod.Name = "btnWeekPeriod";
@@ -474,12 +534,12 @@ namespace SmartMed.UI
             this.btnWeekPeriod.UseVisualStyleBackColor = false;
             this.btnWeekPeriod.Click += new System.EventHandler(this.BtnWeekPeriod_Click);
 
-            this.btnMonthPeriod.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(53)))), ((int)(((byte)(103)))), ((int)(((byte)(94)))));
+            this.btnMonthPeriod.BackColor = System.Drawing.Color.White;
             this.btnMonthPeriod.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.btnMonthPeriod.FlatAppearance.BorderSize = 0;
+            this.btnMonthPeriod.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(193)))), ((int)(((byte)(200)))), ((int)(((byte)(198)))));
             this.btnMonthPeriod.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnMonthPeriod.Font = new System.Drawing.Font("Hanken Grotesk", 9F, System.Drawing.FontStyle.Bold);
-            this.btnMonthPeriod.ForeColor = System.Drawing.Color.White;
+            this.btnMonthPeriod.Font = new System.Drawing.Font("Hanken Grotesk", 9F);
+            this.btnMonthPeriod.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(22)))), ((int)(((byte)(29)))), ((int)(((byte)(29)))));
             this.btnMonthPeriod.Location = new System.Drawing.Point(70, 0);
             this.btnMonthPeriod.Margin = new System.Windows.Forms.Padding(0, 0, 6, 0);
             this.btnMonthPeriod.Name = "btnMonthPeriod";
@@ -714,6 +774,8 @@ namespace SmartMed.UI
             this.flowTabs.PerformLayout();
             this.panelPeriodFilter.ResumeLayout(false);
             this.panelPeriodFilter.PerformLayout();
+            this.flowDateRange.ResumeLayout(false);
+            this.flowDateRange.PerformLayout();
             this.flowPeriodTabs.ResumeLayout(false);
             this.panelCustomerFilter.ResumeLayout(false);
             this.panelCustomerFilter.PerformLayout();
@@ -757,6 +819,11 @@ namespace SmartMed.UI
         private System.Windows.Forms.Button btnInventoryTab;
         private System.Windows.Forms.Button btnHistoryTab;
         private System.Windows.Forms.Panel panelPeriodFilter;
+        private System.Windows.Forms.FlowLayoutPanel flowDateRange;
+        private System.Windows.Forms.CheckBox chkDateRange;
+        private System.Windows.Forms.DateTimePicker dtpFrom;
+        private System.Windows.Forms.Label lblDateTo;
+        private System.Windows.Forms.DateTimePicker dtpTo;
         private System.Windows.Forms.FlowLayoutPanel flowPeriodTabs;
         private System.Windows.Forms.Button btnWeekPeriod;
         private System.Windows.Forms.Button btnMonthPeriod;

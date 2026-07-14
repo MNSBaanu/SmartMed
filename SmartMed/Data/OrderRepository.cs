@@ -222,28 +222,33 @@ namespace SmartMed.Data
             return Convert.ToDecimal(result);
         }
 
-        public DataTable GetStockReport()
+        public DataTable GetStockReport() =>
+            GetStockReport(DateTime.Today);
+
+        public DataTable GetStockReport(DateTime asOfDate)
         {
-            // Inventory report flags low stock and near-expiry medicines for pharmacy staff.
+            // Inventory flags low stock / near-expiry relative to the report period end date.
+            var asOf = asOfDate.Date;
             return DatabaseHelper.ExecuteQuery(
                 @"SELECT MedicineName, Category, StockQuantity, Price, Supplier, ExpiryDate,
                   CASE WHEN StockQuantity <= 20 THEN 'Low Stock' ELSE 'Current' END AS StockStatus,
-                  CASE WHEN ExpiryDate < CAST(GETDATE() AS DATE) THEN 'Expired'
-                       WHEN ExpiryDate <= DATEADD(day, 30, CAST(GETDATE() AS DATE)) THEN 'Near Expiry'
+                  CASE WHEN ExpiryDate < @asOf THEN 'Expired'
+                       WHEN ExpiryDate <= DATEADD(day, 30, @asOf) THEN 'Near Expiry'
                        ELSE 'Current' END AS ExpiryStatus,
-                  CASE WHEN ExpiryDate < CAST(GETDATE() AS DATE) THEN 'Expired'
-                       WHEN ExpiryDate <= DATEADD(day, 30, CAST(GETDATE() AS DATE)) THEN 'Near Expiry'
+                  CASE WHEN ExpiryDate < @asOf THEN 'Expired'
+                       WHEN ExpiryDate <= DATEADD(day, 30, @asOf) THEN 'Near Expiry'
                        WHEN StockQuantity <= 20 THEN 'Low Stock'
                        ELSE 'Current' END AS InventoryStatus
                   FROM Medicine
                   ORDER BY
                     CASE
-                      WHEN ExpiryDate < CAST(GETDATE() AS DATE) THEN 0
-                      WHEN ExpiryDate <= DATEADD(day, 30, CAST(GETDATE() AS DATE)) THEN 1
+                      WHEN ExpiryDate < @asOf THEN 0
+                      WHEN ExpiryDate <= DATEADD(day, 30, @asOf) THEN 1
                       WHEN StockQuantity <= 20 THEN 2
                       ELSE 3
                     END,
-                    MedicineName");
+                    MedicineName",
+                new SqlParameter("@asOf", asOf));
         }
 
         public DataTable GetCustomerOrderHistory(int customerId) =>
@@ -251,6 +256,18 @@ namespace SmartMed.Data
 
         public DataTable GetCustomerOrderHistory(int customerId, DateTime from, DateTime toExclusive)
         {
+            if (customerId <= 0)
+            {
+                return DatabaseHelper.ExecuteQuery(
+                    @"SELECT o.OrderID, c.FullName AS CustomerName, o.OrderDate, o.Status, o.TotalAmount, o.CancellationReason
+                      FROM [Order] o
+                      INNER JOIN Customer c ON o.CustomerID = c.CustomerID
+                      WHERE o.OrderDate >= @from AND o.OrderDate < @to
+                      ORDER BY o.OrderDate DESC",
+                    new SqlParameter("@from", from),
+                    new SqlParameter("@to", toExclusive));
+            }
+
             return DatabaseHelper.ExecuteQuery(
                 @"SELECT o.OrderID, o.OrderDate, o.Status, o.TotalAmount, o.CancellationReason
                   FROM [Order] o
