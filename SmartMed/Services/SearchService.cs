@@ -121,7 +121,7 @@ namespace SmartMed.Services
             if (string.IsNullOrWhiteSpace(keyword))
                 return new List<Order>(orders);
 
-            // Find orders by reference number, customer name, or status.
+            // Find orders by reference, customer name, status, or payment fields.
             var key = keyword.Trim();
             var results = new List<Order>();
 
@@ -140,6 +140,24 @@ namespace SmartMed.Services
                 }
                 if (order.Status != null
                     && order.Status.IndexOf(key, StringComparison.OrdinalIgnoreCase) >= 0)
+                {
+                    results.Add(order);
+                    continue;
+                }
+                if (order.PaymentMethod != null
+                    && order.PaymentMethod.IndexOf(key, StringComparison.OrdinalIgnoreCase) >= 0)
+                {
+                    results.Add(order);
+                    continue;
+                }
+                if (order.PaymentStatus != null
+                    && order.PaymentStatus.IndexOf(key, StringComparison.OrdinalIgnoreCase) >= 0)
+                {
+                    results.Add(order);
+                    continue;
+                }
+                if (order.PaymentReference != null
+                    && order.PaymentReference.IndexOf(key, StringComparison.OrdinalIgnoreCase) >= 0)
                     results.Add(order);
             }
 
@@ -163,9 +181,13 @@ namespace SmartMed.Services
             if (key.All(char.IsDigit))
                 return order.OrderID.ToString().IndexOf(key, StringComparison.Ordinal) >= 0;
 
-            var orderRef = $"SM-{order.OrderID:D4}";
-            return orderRef.IndexOf(key, StringComparison.OrdinalIgnoreCase) >= 0
-                || $"#{orderRef}".IndexOf(key, StringComparison.OrdinalIgnoreCase) >= 0;
+            // UI shows #ORD-0007; older refs used SM-.
+            var smRef = $"SM-{order.OrderID:D4}";
+            var ordRef = $"ORD-{order.OrderID:D4}";
+            return smRef.IndexOf(key, StringComparison.OrdinalIgnoreCase) >= 0
+                || $"#{smRef}".IndexOf(key, StringComparison.OrdinalIgnoreCase) >= 0
+                || ordRef.IndexOf(key, StringComparison.OrdinalIgnoreCase) >= 0
+                || $"#{ordRef}".IndexOf(key, StringComparison.OrdinalIgnoreCase) >= 0;
         }
     }
 }

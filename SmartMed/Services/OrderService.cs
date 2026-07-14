@@ -45,6 +45,9 @@ namespace SmartMed.Services
 
         public List<Order> GetAll() => _orders.GetAll();
 
+        public List<Order> Search(string keyword) =>
+            SearchService.SearchOrders(GetAll(), keyword);
+
         public List<Order> GetByCustomer(int customerId) => _orders.GetByCustomer(customerId);
 
         public Order GetById(int orderId) => _orders.GetById(orderId);

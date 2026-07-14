@@ -17,7 +17,7 @@ namespace SmartMed.UI
         private bool _runtimeWired;
         private bool _chromeApplied;
 
-        private List<OrderRow> _allRows = new List<OrderRow>();
+        private List<Order> _allOrders = new List<Order>();
         private List<OrderRow> _filteredRows = new List<OrderRow>();
         private int _currentPage = 1;
         private int? _selectedOrderId;
@@ -49,8 +49,8 @@ namespace SmartMed.UI
         protected override void LoadDesignTimePreview()
         {
             ApplyViewChrome();
-            _allRows = new List<OrderRow>();
-            _filteredRows = _allRows;
+            _allOrders = new List<Order>();
+            _filteredRows = new List<OrderRow>();
             _currentPage = 1;
             BindPage();
             lblVolume.Text = "-";
@@ -151,6 +151,17 @@ namespace SmartMed.UI
                 }
                 DoRefreshPage();
             };
+
+            if (txtSearch != null)
+                txtSearch.TextChanged += (s, e) => ApplyFilters();
+            if (cmbStatus != null)
+                cmbStatus.SelectedIndexChanged += (s, e) => ApplyFilters();
+            if (chkDateRange != null)
+                chkDateRange.CheckedChanged += (s, e) => ApplyFilters();
+            if (dtpFrom != null)
+                dtpFrom.ValueChanged += (s, e) => ApplyFilters();
+            if (dtpTo != null)
+                dtpTo.ValueChanged += (s, e) => ApplyFilters();
         }
 
         private void BtnApplyFilters_Click(object sender, EventArgs e) => ApplyFilters();
@@ -163,9 +174,8 @@ namespace SmartMed.UI
         {
             if (!_servicesReady) return;
 
-            _allRows = _orders.GetAll()
+            _allOrders = _orders.GetAll()
                 .OrderByDescending(o => o.OrderDate)
-                .Select(BuildRow)
                 .ToList();
             ApplyFilters();
         }
@@ -203,33 +213,27 @@ namespace SmartMed.UI
 
         private void ApplyFilters()
         {
-            IEnumerable<OrderRow> rows = _allRows;
-
-            var term = txtSearch?.Text?.Trim();
-            if (!string.IsNullOrWhiteSpace(term))
-            {
-                rows = rows.Where(r =>
-                    r.OrderRef.IndexOf(term, StringComparison.OrdinalIgnoreCase) >= 0
-                    || r.CustomerName.IndexOf(term, StringComparison.OrdinalIgnoreCase) >= 0
-                    || r.CustomerRef.IndexOf(term, StringComparison.OrdinalIgnoreCase) >= 0
-                    || r.Status.IndexOf(term, StringComparison.OrdinalIgnoreCase) >= 0);
-            }
+            var term = txtSearch?.Text?.Trim() ?? string.Empty;
+            IEnumerable<Order> orders = SearchService.SearchOrders(_allOrders, term);
 
             var statusFilter = cmbStatus?.SelectedItem?.ToString() ?? "All Statuses";
-            if (statusFilter != "All Statuses")
+            if (!string.Equals(statusFilter, "All Statuses", StringComparison.OrdinalIgnoreCase)
+                && !string.Equals(statusFilter, "Flagged", StringComparison.OrdinalIgnoreCase))
             {
-                if (statusFilter == "Flagged")
-                    rows = rows.Where(r => r.Status == "Flagged");
-                else
-                    rows = rows.Where(r => r.RawStatus == statusFilter);
+                orders = orders.Where(o =>
+                    string.Equals(o.Status, statusFilter, StringComparison.OrdinalIgnoreCase));
             }
 
             if (chkDateRange != null && chkDateRange.Checked)
             {
                 var from = dtpFrom.Value.Date;
                 var to = dtpTo.Value.Date.AddDays(1).AddTicks(-1);
-                rows = rows.Where(r => r.OrderDateValue >= from && r.OrderDateValue <= to);
+                orders = orders.Where(o => o.OrderDate >= from && o.OrderDate <= to);
             }
+
+            IEnumerable<OrderRow> rows = orders.Select(BuildRow);
+            if (string.Equals(statusFilter, "Flagged", StringComparison.OrdinalIgnoreCase))
+                rows = rows.Where(r => r.Status == "Flagged");
 
             _filteredRows = rows.ToList();
             _currentPage = 1;
@@ -250,7 +254,7 @@ namespace SmartMed.UI
                 {
                     OrderID = r.OrderID,
                     OrderRef = r.OrderRef,
-                    Customer = $"{r.CustomerName} ({r.CustomerRef})",
+                    Customer = $"{r.CustomerName ?? "—"} ({r.CustomerRef ?? "—"})",
                     OrderDate = r.OrderDate,
                     TotalAmount = r.TotalAmount,
                     Prescription = r.Prescription,
@@ -831,11 +835,11 @@ namespace SmartMed.UI
             var lines = new List<string>
             {
                 $"Order: #ORD-{order.OrderID:D4}",
-                $"Customer: {order.CustomerName} ({FormatPatientRef(order.CustomerID, order.OrderID)})",
+                $"Customer: {order.CustomerName ?? "—"} ({FormatPatientRef(order.CustomerID, order.OrderID)})",
                 $"Date: {order.OrderDate:MMM dd, yyyy HH:mm}",
-                $"Status: {order.Status}",
+                $"Status: {order.Status ?? "—"}",
                 $"Total: LKR {order.TotalAmount:N2}",
-                $"Payment: {order.PaymentMethod} ({order.PaymentStatus})",
+                $"Payment: {order.PaymentMethod ?? "—"} ({order.PaymentStatus ?? "—"})",
                 $"Rx Status: {_orders.GetPrescriptionStatusDisplay(orderId)}",
             };
             if (!string.IsNullOrWhiteSpace(order.CancellationReason))
