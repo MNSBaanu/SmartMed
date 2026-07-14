@@ -92,23 +92,7 @@ SmartMed/
 
 ---
 
-## Documentation
 
-**Edit the report in Word:** `Report/SmartMed Report.docx` (~2400+ words, all sections filled).
-
-1. Open the file in Microsoft Word.
-2. Fill in cover details (Module, Student ID, Date).
-3. Export to PDF when required for submission: **File → Save As → PDF**.
-
-To regenerate section text from the project (optional):
-
-```powershell
-python scripts/fill_report.py
-```
-
-This overwrites body content in the docx; keep a backup if you have manual edits.
-
----
 
 ## Author
 
