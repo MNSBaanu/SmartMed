@@ -89,22 +89,29 @@ namespace SmartMed.Services
         // Keep order progress one-way: Pending → Ready for Pickup → Delivered.
         private static string GetTransitionError(string currentStatus, string newStatus)
         {
-            if (currentStatus == newStatus)
+            if (string.Equals(currentStatus, newStatus, StringComparison.OrdinalIgnoreCase))
                 return null;
 
-            if (currentStatus == StatusDelivered)
+            if (string.Equals(currentStatus, StatusDelivered, StringComparison.OrdinalIgnoreCase))
                 return "Delivered orders cannot be changed.";
 
-            if (newStatus == StatusReadyForPickup && currentStatus != StatusPending)
+            if (string.Equals(currentStatus, StatusCancelled, StringComparison.OrdinalIgnoreCase))
+                return "Cancelled orders cannot be changed.";
+
+            foreach (var allowed in GetAllowedNextStatuses(currentStatus))
+            {
+                if (string.Equals(allowed, newStatus, StringComparison.OrdinalIgnoreCase))
+                    return null;
+            }
+
+            if (string.Equals(newStatus, StatusPending, StringComparison.OrdinalIgnoreCase))
+                return "Order status cannot be changed back to Pending.";
+
+            if (string.Equals(newStatus, StatusReadyForPickup, StringComparison.OrdinalIgnoreCase))
                 return "Order must be Pending before it can be marked Ready for Pickup.";
 
-            if (newStatus == StatusDelivered
-                && currentStatus != StatusReadyForPickup
-                && currentStatus != StatusPending)
+            if (string.Equals(newStatus, StatusDelivered, StringComparison.OrdinalIgnoreCase))
                 return "Order must be Pending or Ready for Pickup before it can be marked Delivered.";
-
-            if (newStatus == StatusPending)
-                return "Order status cannot be changed back to Pending.";
 
             return "Invalid order status transition.";
         }
