@@ -101,6 +101,7 @@ namespace SmartMed.UI
         private void SyncCartPrices()
         {
             if (!_servicesReady || _medicines == null) return;
+            // Refresh prices before checkout so the customer pays the current amount.
             CartService.RefreshPrices(_medicines);
         }
 

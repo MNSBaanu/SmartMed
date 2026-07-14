@@ -45,6 +45,7 @@ namespace SmartMed.Services
             if (ValidationService.IsNullOrWhiteSpace(request.Method))
                 throw new ArgumentException("Select a payment method.");
 
+            // Record how the customer chose to pay for this order.
             switch (request.Method)
             {
                 case MethodCard:
@@ -65,6 +66,7 @@ namespace SmartMed.Services
 
         private static PaymentResult ProcessCard(PaymentRequest request)
         {
+            // Check that card details look complete before marking payment as paid.
             var digits = ValidationService.NormalizePhoneDigits(request.CardNumber);
             if (digits.Length != 16)
                 throw new ArgumentException("Enter a valid 16-digit card number.");
@@ -93,6 +95,7 @@ namespace SmartMed.Services
 
         private static PaymentResult ProcessBankTransfer(PaymentRequest request)
         {
+            // Collect bank transfer details needed by the pharmacy to confirm the payment.
             if (ValidationService.IsNullOrWhiteSpace(request.BankName))
                 throw new ArgumentException("Your bank name is required.");
 
@@ -117,6 +120,7 @@ namespace SmartMed.Services
 
         private static bool IsExpiryInFuture(string expiry)
         {
+            // Treat the card as valid through the last day of the expiry month.
             var parts = expiry.Split('/');
             if (parts.Length != 2) return false;
 

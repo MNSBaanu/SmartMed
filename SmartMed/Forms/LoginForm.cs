@@ -204,6 +204,7 @@ namespace SmartMed.UI
                     return;
                 }
 
+                // Try admin login first, then customer login when an email was entered.
                 var admin = _auth.AdminLogin(identity, password);
                 if (admin != null)
                 {

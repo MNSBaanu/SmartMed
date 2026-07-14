@@ -25,6 +25,7 @@ namespace SmartMed.Services
             if (!string.Equals(order.Status, OrderService.StatusPending, StringComparison.OrdinalIgnoreCase))
                 return false;
 
+            // Treat pending orders as new until the admin has acknowledged them.
             return order.OrderID > _lastAcknowledgedOrderId || PlacedThisSession.Contains(order.OrderID);
         }
 
@@ -33,6 +34,7 @@ namespace SmartMed.Services
 
         public static void AcknowledgeAll(IEnumerable<Order> orders)
         {
+            // Clear the new-order alerts once staff have reviewed them.
             var maxId = orders?.Select(o => o.OrderID).DefaultIfEmpty(0).Max() ?? 0;
             if (maxId > _lastAcknowledgedOrderId)
                 _lastAcknowledgedOrderId = maxId;

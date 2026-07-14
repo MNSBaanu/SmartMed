@@ -71,6 +71,7 @@ namespace SmartMed.Data
             IList<PrescriptionRepository.PrescriptionAttachment> prescriptions = null,
             int? rxCustomerId = null)
         {
+            // Build the order total from each line before saving.
             decimal total = 0;
             foreach (var item in items)
                 total += item.Subtotal;
@@ -107,6 +108,7 @@ namespace SmartMed.Data
                                 new SqlParameter("@u", item.UnitPrice),
                                 new SqlParameter("@s", item.Subtotal));
 
+                            // Reduce stock when the order is confirmed so items are reserved.
                             if (!medicines.ReduceStock(conn, tx, item.MedicineID, item.Quantity))
                                 throw new InvalidOperationException(
                                     $"Insufficient stock for medicine ID {item.MedicineID}.");
@@ -114,6 +116,7 @@ namespace SmartMed.Data
 
                         if (prescriptions != null && prescriptions.Count > 0)
                         {
+                            // Attach prescriptions linked to this order for pharmacy review.
                             int prescriptionCustomerId = rxCustomerId ?? customerId;
                             new PrescriptionRepository().InsertMany(
                                 conn, tx, prescriptionCustomerId, orderId, prescriptions);
@@ -195,6 +198,7 @@ namespace SmartMed.Data
 
         public DataTable GetSalesReport(DateTime from, DateTime toExclusive)
         {
+            // Sales report includes only completed (delivered) orders in the selected period.
             return DatabaseHelper.ExecuteQuery(
                 @"SELECT o.OrderID, c.FullName AS Customer, o.OrderDate, o.Status, o.TotalAmount
                   FROM [Order] o INNER JOIN Customer c ON o.CustomerID = c.CustomerID
@@ -207,6 +211,7 @@ namespace SmartMed.Data
 
         public decimal GetOutstandingAmount(DateTime from, DateTime toExclusive)
         {
+            // Outstanding value is the total of orders not yet delivered or cancelled.
             var result = DatabaseHelper.ExecuteScalar(
                 @"SELECT ISNULL(SUM(TotalAmount), 0)
                   FROM [Order]
@@ -219,6 +224,7 @@ namespace SmartMed.Data
 
         public DataTable GetStockReport()
         {
+            // Inventory report flags low stock and near-expiry medicines for pharmacy staff.
             return DatabaseHelper.ExecuteQuery(
                 @"SELECT MedicineName, Category, StockQuantity, Price, Supplier, ExpiryDate,
                   CASE WHEN StockQuantity <= 20 THEN 'Low Stock' ELSE 'Current' END AS StockStatus,

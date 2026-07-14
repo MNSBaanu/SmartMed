@@ -174,6 +174,7 @@ namespace SmartMed.UI
         {
             var rxStatus = _orders.GetPrescriptionStatusDisplay(order.OrderID);
             var displayStatus = order.Status;
+            // Show rejected prescriptions as Flagged so staff can spot them quickly.
             if (!string.Equals(order.Status, OrderService.StatusCancelled, StringComparison.OrdinalIgnoreCase)
                 && string.Equals(rxStatus, PrescriptionService.StatusRejected, StringComparison.OrdinalIgnoreCase))
                 displayStatus = "Flagged";

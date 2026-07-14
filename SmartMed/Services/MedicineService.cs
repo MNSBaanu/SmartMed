@@ -32,6 +32,7 @@ namespace SmartMed.Services
 
         public List<Medicine> SearchForCustomers(string name, string category, decimal? minPrice, decimal? maxPrice)
         {
+            // Show customers only medicines that are currently available to buy.
             return SearchService.Search(GetActive(), name, category, minPrice, maxPrice)
                 .Where(IsAvailableForSale)
                 .ToList();
@@ -44,6 +45,7 @@ namespace SmartMed.Services
 
         public void ValidateForCustomerPurchase(Medicine m)
         {
+            // Ensure the medicine is available before allowing the purchase.
             if (m == null)
                 throw new InvalidOperationException("Medicine not found.");
             if (!m.IsActive)
@@ -98,6 +100,7 @@ namespace SmartMed.Services
 
         public void ValidateMedicine(Medicine item, bool isNew)
         {
+            // Check that inventory details are complete and correct before saving.
             if (!isNew && item.MedicineID <= 0)
                 throw new ArgumentException("Select a medicine to update.");
             if (ValidationService.IsNullOrWhiteSpace(item.MedicineName))
@@ -152,6 +155,7 @@ namespace SmartMed.Services
         public void Add(Medicine item)
         {
             ValidateMedicine(item, isNew: true);
+            // Prevent duplicate medicine records from being created.
             if (_medicines.NameExists(item.MedicineName))
                 throw new InvalidOperationException("This medicine is already in the inventory list.");
             item.IsActive = true;
@@ -167,6 +171,7 @@ namespace SmartMed.Services
                 && _medicines.NameExists(item.MedicineName))
                 throw new InvalidOperationException("This medicine is already in the inventory list.");
 
+            // Keep the existing active/inactive status when other details are edited.
             item.IsActive = existing.IsActive;
             if (_medicines.Update(item) == 0)
                 throw new InvalidOperationException("Medicine not found. Select an existing medicine from the list to update.");
@@ -174,6 +179,7 @@ namespace SmartMed.Services
 
         public void Delete(int medicineId)
         {
+            // Soft-remove the medicine from sale instead of deleting its history.
             SetActive(medicineId, false);
         }
 
@@ -194,6 +200,7 @@ namespace SmartMed.Services
                 return;
             }
 
+            // Do not remove a medicine that is still needed for open customer orders.
             if (!isActive && _medicines.HasActiveOrPendingOrderItems(medicineId))
                 throw new InvalidOperationException(
                     "Cannot deactivate this medicine because it is linked to pending or ready-for-pickup orders.");
@@ -206,6 +213,7 @@ namespace SmartMed.Services
 
         public string CheckExpiry(Medicine m, int warningDays = 30)
         {
+            // Decide if the medicine is expired, soon to expire, or still valid to sell.
             if (m == null)
                 return ExpiryExpired;
 
@@ -221,6 +229,7 @@ namespace SmartMed.Services
 
         public bool IsPromotionActive(Medicine m)
         {
+            // Apply the discount only while the promotion dates are current.
             if (m == null || !m.IsOnPromotion || m.DiscountPercent <= 0)
                 return false;
 
@@ -234,6 +243,7 @@ namespace SmartMed.Services
 
         public decimal GetEffectivePrice(Medicine m)
         {
+            // Calculate the final amount the customer needs to pay.
             if (IsPromotionActive(m))
                 return Math.Round(m.Price * (1 - m.DiscountPercent / 100m), 2);
             return m.Price;

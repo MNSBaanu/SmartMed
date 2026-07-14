@@ -44,6 +44,7 @@ namespace SmartMed.Services
             if (medicineSourcePaths == null)
                 throw new ArgumentNullException(nameof(medicineSourcePaths));
 
+            // Copy uploaded prescriptions so they can be stored with the order.
             var attachments = new List<PrescriptionRepository.PrescriptionAttachment>();
             foreach (var pair in medicineSourcePaths)
             {
@@ -124,6 +125,7 @@ namespace SmartMed.Services
             if (prescriptions == null || prescriptions.Count == 0)
                 return null;
 
+            // Order is Pending if any file awaits review, Rejected if any was rejected, Verified only when all pass.
             if (prescriptions.Any(p => string.Equals(p.Status, StatusPending, StringComparison.OrdinalIgnoreCase)))
                 return StatusPending;
             if (prescriptions.Any(p => string.Equals(p.Status, StatusRejected, StringComparison.OrdinalIgnoreCase)))
@@ -140,8 +142,10 @@ namespace SmartMed.Services
             return string.IsNullOrWhiteSpace(status) ? "—" : status;
         }
 
+        // Mark all prescriptions on the order as accepted by the pharmacy.
         public void Verify(int orderId) => SetOrderStatus(orderId, StatusVerified, StatusPending);
 
+        // Mark all prescriptions on the order as rejected by the pharmacy.
         public void Reject(int orderId) => SetOrderStatus(orderId, StatusRejected, StatusPending);
 
         public void VerifyById(int orderId, int prescriptionId) =>

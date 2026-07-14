@@ -12,6 +12,7 @@ namespace SmartMed.Services
             var results = new List<Medicine>();
             if (string.IsNullOrWhiteSpace(keyword)) return medicines;
 
+            // Find medicines whose names contain the search text.
             string key = keyword.Trim().ToLower();
             foreach (var medicine in medicines)
             {
@@ -48,6 +49,7 @@ namespace SmartMed.Services
 
         public static List<Medicine> Search(List<Medicine> medicines, string name, string category, decimal? minPrice, decimal? maxPrice)
         {
+            // Narrow the medicine list by name, category, and price in that order.
             var results = medicines;
             if (!string.IsNullOrWhiteSpace(name))
                 results = SearchByName(results, name);
@@ -67,6 +69,7 @@ namespace SmartMed.Services
             if (string.IsNullOrWhiteSpace(keyword))
                 return new List<Customer>(customers);
 
+            // Find customers by ID, name, email, or phone number.
             var key = keyword.Trim();
             var keyDigits = ValidationService.NormalizePhoneDigits(key);
             var results = new List<Customer>();
@@ -113,6 +116,7 @@ namespace SmartMed.Services
             if (string.IsNullOrWhiteSpace(keyword))
                 return new List<Order>(orders);
 
+            // Find orders by reference number, customer name, or status.
             var key = keyword.Trim();
             var results = new List<Order>();
 

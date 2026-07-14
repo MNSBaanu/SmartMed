@@ -13,6 +13,7 @@ namespace SmartMed.Services
     {
         public static (DateTime From, DateTime ToExclusive) GetRange(ReportPeriod period)
         {
+            // Choose the date range for week, month, or year reports.
             var today = DateTime.Today;
             switch (period)
             {

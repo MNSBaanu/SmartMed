@@ -41,6 +41,7 @@ namespace SmartMed.Data
 
         public void SaveAll(int customerId, IReadOnlyList<StoredCartLine> lines)
         {
+            // Replace the saved cart with the customer's current selections.
             DatabaseHelper.ExecuteNonQuery(
                 "DELETE FROM CartItem WHERE CustomerID = @cid",
                 new SqlParameter("@cid", customerId));

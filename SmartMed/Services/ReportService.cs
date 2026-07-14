@@ -12,6 +12,7 @@ namespace SmartMed.Services
 
         public DataTable GetSalesReport(ReportPeriod period)
         {
+            // Build the sales report for the selected week, month, or year.
             var (from, toExclusive) = ReportPeriodHelper.GetRange(period);
             return _orders.GetSalesReport(from, toExclusive);
         }
@@ -60,11 +61,13 @@ namespace SmartMed.Services
 
         public void ExportActiveReportToCsv(DataTable table, string filePath)
         {
+            // Save the report as a spreadsheet file for office use.
             ExportHelper.ExportDataTableToCsv(table, filePath);
         }
 
         public void ExportActiveReportToPdf(DataTable table, string filePath, string title, string subtitle = null)
         {
+            // Save the report as a printable PDF document.
             ExportHelper.ExportDataTableToPdf(table, filePath, title, subtitle);
         }
     }

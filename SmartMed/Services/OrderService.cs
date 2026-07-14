@@ -23,6 +23,7 @@ namespace SmartMed.Services
 
         public static IReadOnlyList<string> GetAllowedNextStatuses(string currentStatus)
         {
+            // Show only the next statuses the pharmacy is allowed to choose.
             if (string.IsNullOrWhiteSpace(currentStatus))
                 return Array.Empty<string>();
 
@@ -66,6 +67,7 @@ namespace SmartMed.Services
             if (transitionError != null)
                 throw new InvalidOperationException(transitionError);
 
+            // Prescription must be verified before the order can move forward.
             if (status == StatusReadyForPickup || status == StatusDelivered)
             {
                 if (_prescriptions.HasPrescription(orderId))
@@ -81,6 +83,7 @@ namespace SmartMed.Services
             _orders.UpdateStatus(orderId, status);
         }
 
+        // Keep order progress one-way: Pending → Ready for Pickup → Delivered.
         private static string GetTransitionError(string currentStatus, string newStatus)
         {
             if (currentStatus == newStatus)
@@ -119,10 +122,12 @@ namespace SmartMed.Services
                 var medicine = _medicineService.GetById(line.MedicineID)
                     ?? throw new InvalidOperationException($"Medicine not found: {line.MedicineName}");
 
+                // Ensure the medicine is available before allowing the purchase.
                 _medicineService.ValidateForCustomerPurchase(medicine);
                 if (medicine.StockQuantity < line.Quantity)
                     throw new InvalidOperationException($"Insufficient stock for {medicine.MedicineName}.");
 
+                // Check whether a prescription is required before confirming the order.
                 if (medicine.RequiresPrescription)
                 {
                     if (ValidationService.IsNullOrWhiteSpace(line.PrescriptionPath))
@@ -131,6 +136,7 @@ namespace SmartMed.Services
                     rxPaths.Add(new KeyValuePair<int, string>(line.MedicineID, line.PrescriptionPath));
                 }
 
+                // Calculate the final amount the customer needs to pay for this item.
                 var unitPrice = _medicineService.GetEffectivePrice(medicine);
                 orderItems.Add(new OrderItem
                 {
@@ -152,6 +158,7 @@ namespace SmartMed.Services
 
             try
             {
+                // Record the order so the pharmacy can process it.
                 var orderId = _orders.CreateOrder(
                     customerId,
                     orderItems,
@@ -166,6 +173,7 @@ namespace SmartMed.Services
             }
             catch
             {
+                // Remove copied prescription files if the order could not be saved.
                 if (attachments != null)
                 {
                     foreach (var attachment in attachments)
@@ -210,6 +218,7 @@ namespace SmartMed.Services
             if (order.Status != StatusPending)
                 throw new InvalidOperationException("Only pending orders can be cancelled.");
 
+            // Return reserved stock when a pending order is cancelled.
             var items = _orders.GetItems(orderId);
             foreach (var item in items)
                 _medicines.RestoreStock(item.MedicineID, item.Quantity);

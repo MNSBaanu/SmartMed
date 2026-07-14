@@ -54,6 +54,7 @@ namespace SmartMed.Data
 
         public bool HasActiveOrPendingOrderItems(int medicineId)
         {
+            // Check whether the medicine is still used on an open customer order.
             var result = DatabaseHelper.ExecuteScalar(
                 @"SELECT COUNT(*) FROM OrderItem oi
                   INNER JOIN [Order] o ON o.OrderID = oi.OrderID
@@ -127,6 +128,7 @@ namespace SmartMed.Data
 
         public bool ReduceStock(int medicineId, int quantity)
         {
+            // Reduce stock only when enough units are available.
             if (quantity <= 0) return false;
             return DatabaseHelper.ExecuteNonQuery(
                     "UPDATE Medicine SET StockQuantity = StockQuantity - @q WHERE MedicineID=@id AND StockQuantity >= @q",
@@ -155,6 +157,7 @@ namespace SmartMed.Data
 
         public DataTable GetExpiryReport()
         {
+            // List medicines that have expired or will expire soon for pharmacy alerts.
             return DatabaseHelper.ExecuteQuery(
                 @"SELECT MedicineName, Category, StockQuantity, ExpiryDate,
                   CASE WHEN ExpiryDate < CAST(GETDATE() AS DATE) THEN 'Expired'

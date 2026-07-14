@@ -12,6 +12,7 @@ namespace SmartMed.Services
         public static bool IsNullOrWhiteSpace(string value) =>
             string.IsNullOrWhiteSpace(value);
 
+        // Confirm the email address is in a basic valid format.
         public static bool IsValidEmail(string email) =>
             !IsNullOrWhiteSpace(email) && Regex.IsMatch(email, @"^[^@\s]+@[^@\s]+\.[^@\s]+$");
 
@@ -22,6 +23,7 @@ namespace SmartMed.Services
 
         public static bool IsValidSriLankaPhone(string phone)
         {
+            // Local phone numbers must contain exactly 10 digits.
             var digits = NormalizePhoneDigits(phone);
             return digits.Length == 10 && digits.All(char.IsDigit);
         }

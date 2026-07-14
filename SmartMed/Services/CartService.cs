@@ -86,9 +86,11 @@ namespace SmartMed.Services
                 }
                 catch
                 {
+                    // Skip cart lines that can no longer be sold.
                     continue;
                 }
 
+                // Cap the quantity if stock has fallen since the item was added.
                 if (stored.Quantity > fresh.StockQuantity)
                     stored.Quantity = fresh.StockQuantity;
 
@@ -140,6 +142,7 @@ namespace SmartMed.Services
 
             var fresh = medicines.GetById(medicine.MedicineID)
                 ?? throw new InvalidOperationException("Medicine not found.");
+            // Ensure the medicine is available before adding it to the cart.
             medicines.ValidateForCustomerPurchase(fresh);
 
             var existing = Lines.FirstOrDefault(l => l.MedicineID == medicine.MedicineID);
@@ -228,6 +231,7 @@ namespace SmartMed.Services
             if (medicines == null)
                 throw new ArgumentNullException(nameof(medicines));
 
+            // Update cart prices so checkout matches the current pharmacy offer.
             foreach (var line in Lines)
             {
                 var fresh = medicines.GetById(line.MedicineID);

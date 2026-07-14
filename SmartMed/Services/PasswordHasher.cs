@@ -16,6 +16,7 @@ namespace SmartMed.Services
             if (string.IsNullOrEmpty(plain))
                 throw new ArgumentException("Password is required.", nameof(plain));
 
+            // Create a protected password value that cannot be read back as plain text.
             var salt = new byte[SaltSizeBytes];
             using (var rng = RandomNumberGenerator.Create())
                 rng.GetBytes(salt);
@@ -29,6 +30,7 @@ namespace SmartMed.Services
             if (string.IsNullOrEmpty(plain) || string.IsNullOrEmpty(stored))
                 return false;
 
+            // Support both protected passwords and older plain-text values during migration.
             if (!LooksHashed(stored))
                 return FixedTimeEquals(
                     Encoding.UTF8.GetBytes(plain),

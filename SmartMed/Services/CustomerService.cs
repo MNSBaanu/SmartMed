@@ -27,6 +27,7 @@ namespace SmartMed.Services
 
         public void ChangePassword(int customerId, string currentPassword, string newPassword)
         {
+            // Verify the current password before allowing a customer to set a new one.
             if (customerId <= 0)
                 throw new ArgumentException("Customer session is required.");
             if (ValidationService.IsNullOrWhiteSpace(currentPassword) || ValidationService.IsNullOrWhiteSpace(newPassword))
@@ -70,6 +71,7 @@ namespace SmartMed.Services
             ValidateCustomer(customer, isNew: true);
             if (_customers.EmailExists(customer.Email))
                 throw new InvalidOperationException("Email already registered.");
+            // Admin-created accounts get a temporary password when none is entered.
             if (ValidationService.IsNullOrWhiteSpace(customer.Password))
                 customer.Password = defaultPassword;
             customer.Password = PasswordHasher.Hash(customer.Password);
@@ -86,12 +88,14 @@ namespace SmartMed.Services
             if (!string.Equals(existing.Email, customer.Email, StringComparison.OrdinalIgnoreCase)
                 && _customers.EmailExists(customer.Email))
                 throw new InvalidOperationException("Email already registered.");
+            // Keep the existing password when only profile details are updated.
             customer.Password = existing.Password;
             _customers.Update(customer);
         }
 
         public void SetAccountActive(int customerId, bool isActive)
         {
+            // Activate or deactivate a customer account for the pharmacy.
             if (customerId <= 0)
                 throw new ArgumentException("Select a customer to update.");
             _ = _customers.GetById(customerId)
