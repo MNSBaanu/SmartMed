@@ -243,7 +243,7 @@ namespace SmartMed.Services
 
         public bool IsPromotionActive(Medicine m)
         {
-            // Apply the discount only while the promotion dates are current.
+            // Timed promotion flag must be on and within the configured date window.
             if (m == null || !m.IsOnPromotion || m.DiscountPercent <= 0)
                 return false;
 
@@ -255,27 +255,44 @@ namespace SmartMed.Services
             return true;
         }
 
+        /// <summary>
+        /// True when the customer should pay a discounted unit price:
+        /// active timed promotion, or a standing DiscountPercent without a date-bounded promo.
+        /// Scheduled (future) promotions do not discount yet.
+        /// </summary>
+        public bool IsDiscountApplicable(Medicine m)
+        {
+            if (m == null || m.DiscountPercent <= 0)
+                return false;
+            if (m.IsOnPromotion)
+                return IsPromotionActive(m);
+            return true;
+        }
+
         public decimal GetEffectivePrice(Medicine m)
         {
             // Calculate the final amount the customer needs to pay.
-            if (IsPromotionActive(m))
+            if (m == null)
+                return 0m;
+            if (IsDiscountApplicable(m))
                 return Math.Round(m.Price * (1 - m.DiscountPercent / 100m), 2);
             return m.Price;
         }
 
         public string GetCustomerDiscountDisplay(Medicine m) =>
-            m != null && m.DiscountPercent > 0 ? $"{m.DiscountPercent:N0}%" : "—";
+            IsDiscountApplicable(m) ? $"{m.DiscountPercent:N0}%" : "—";
 
         public string GetCustomerPromoDisplay(Medicine m)
         {
             if (m == null) return "—";
             if (IsPromotionActive(m)) return "Active";
             if (m.IsOnPromotion && m.DiscountPercent > 0) return "Scheduled";
+            if (IsDiscountApplicable(m)) return "Discount";
             return "—";
         }
 
         public string GetCustomerOfferDisplay(Medicine m) =>
-            m != null && IsPromotionActive(m) ? $"{m.DiscountPercent:N0}% promo applied" : "—";
+            IsDiscountApplicable(m) ? $"{m.DiscountPercent:N0}% off applied" : "—";
 
         public string GetCustomerStockDisplay(Medicine m)
         {

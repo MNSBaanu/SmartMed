@@ -20,9 +20,9 @@ namespace SmartMed.Services
         public bool SelectedForCheckout { get; set; } = true;
         public decimal Subtotal => UnitPrice * Quantity;
 
-        public string DiscountDisplay => DiscountPercent > 0 ? $"{DiscountPercent:N0}%" : "—";
+        public string DiscountDisplay => PromoApplied ? $"{DiscountPercent:N0}%" : "—";
         public string PromoDisplay => PromoApplied ? "Active" : "—";
-        public string OfferDisplay => PromoApplied ? $"{DiscountPercent:N0}% promo applied" : "—";
+        public string OfferDisplay => PromoApplied ? $"{DiscountPercent:N0}% off applied" : "—";
         public string PrescriptionDisplay => !RequiresPrescription
             ? "—"
             : string.IsNullOrWhiteSpace(PrescriptionPath) ? "Required" : System.IO.Path.GetFileName(PrescriptionPath);
@@ -150,7 +150,7 @@ namespace SmartMed.Services
             if (newTotal > fresh.StockQuantity)
                 throw new InvalidOperationException("Quantity exceeds available stock.");
 
-            var promoApplied = medicines.IsPromotionActive(fresh);
+            var promoApplied = medicines.IsDiscountApplicable(fresh);
             var unitPrice = medicines.GetEffectivePrice(fresh);
 
             if (existing != null)
@@ -215,7 +215,7 @@ namespace SmartMed.Services
                 if (quantity > fresh.StockQuantity)
                     throw new InvalidOperationException("Quantity exceeds available stock.");
 
-                var promoApplied = medicines.IsPromotionActive(fresh);
+                var promoApplied = medicines.IsDiscountApplicable(fresh);
                 line.UnitPrice = medicines.GetEffectivePrice(fresh);
                 line.ListPrice = fresh.Price;
                 line.DiscountPercent = fresh.DiscountPercent;
@@ -241,7 +241,7 @@ namespace SmartMed.Services
                 line.UnitPrice = medicines.GetEffectivePrice(fresh);
                 line.ListPrice = fresh.Price;
                 line.DiscountPercent = fresh.DiscountPercent;
-                line.PromoApplied = medicines.IsPromotionActive(fresh);
+                line.PromoApplied = medicines.IsDiscountApplicable(fresh);
                 line.RequiresPrescription = fresh.RequiresPrescription;
                 line.MedicineName = fresh.MedicineName;
             }
@@ -257,7 +257,7 @@ namespace SmartMed.Services
                 UnitPrice = medicines.GetEffectivePrice(fresh),
                 ListPrice = fresh.Price,
                 DiscountPercent = fresh.DiscountPercent,
-                PromoApplied = medicines.IsPromotionActive(fresh),
+                PromoApplied = medicines.IsDiscountApplicable(fresh),
                 RequiresPrescription = fresh.RequiresPrescription,
                 PrescriptionPath = prescriptionPath,
                 SelectedForCheckout = true

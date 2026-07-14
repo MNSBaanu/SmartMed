@@ -25,7 +25,7 @@ namespace SmartMed.UI
             var isWellness = string.Equals(medicine?.Category, "Wellness", StringComparison.OrdinalIgnoreCase);
             var effectivePrice = medicines.GetEffectivePrice(medicine);
             var listPrice = medicine.Price;
-            var hasPromo = medicines.IsPromotionActive(medicine) && effectivePrice < listPrice;
+            var hasPromo = medicines.IsDiscountApplicable(medicine) && effectivePrice < listPrice;
 
             var panelHeader = new Panel
             {
