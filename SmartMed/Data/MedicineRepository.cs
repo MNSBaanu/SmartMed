@@ -9,13 +9,24 @@ namespace SmartMed.Data
     public class MedicineRepository
     {
         private const string SelectColumns =
-            "MedicineID, MedicineName, Category, Dosage, Price, StockQuantity, Supplier, ExpiryDate, RequiresPrescription, DiscountPercent, IsOnPromotion, PromotionStartDate, PromotionEndDate, Description, ActiveIngredient, UsageInstructions, Warnings, SideEffects, PackSize";
+            "MedicineID, MedicineName, Category, Dosage, Price, StockQuantity, Supplier, ExpiryDate, RequiresPrescription, DiscountPercent, IsOnPromotion, PromotionStartDate, PromotionEndDate, Description, ActiveIngredient, UsageInstructions, Warnings, SideEffects, PackSize, IsActive";
 
         public List<Medicine> GetAll()
         {
             var list = new List<Medicine>();
             var table = DatabaseHelper.ExecuteQuery(
                 $"SELECT {SelectColumns} FROM Medicine ORDER BY MedicineName");
+            foreach (DataRow row in table.Rows)
+                list.Add(Map(row));
+            return list;
+        }
+
+        /// <summary>Active catalog only (shop / customer browse).</summary>
+        public List<Medicine> GetActive()
+        {
+            var list = new List<Medicine>();
+            var table = DatabaseHelper.ExecuteQuery(
+                $"SELECT {SelectColumns} FROM Medicine WHERE IsActive = 1 ORDER BY MedicineName");
             foreach (DataRow row in table.Rows)
                 list.Add(Map(row));
             return list;
@@ -52,20 +63,11 @@ namespace SmartMed.Data
             return Convert.ToInt32(result) > 0;
         }
 
-        public void RemoveDeliveredOrderItemReferences(int medicineId)
-        {
-            DatabaseHelper.ExecuteNonQuery(
-                @"DELETE oi FROM OrderItem oi
-                  INNER JOIN [Order] o ON o.OrderID = oi.OrderID
-                  WHERE oi.MedicineID = @id AND o.Status = 'Delivered'",
-                new SqlParameter("@id", medicineId));
-        }
-
         public void Insert(Medicine item)
         {
             DatabaseHelper.ExecuteNonQuery(
-                @"INSERT INTO Medicine (MedicineName, Category, Dosage, Price, StockQuantity, Supplier, ExpiryDate, RequiresPrescription, DiscountPercent, IsOnPromotion, PromotionStartDate, PromotionEndDate, Description, ActiveIngredient, UsageInstructions, Warnings, SideEffects, PackSize)
-                  VALUES (@n, @c, @d, @p, @s, @su, @e, @r, @disc, @promo, @pStart, @pEnd, @desc, @ai, @usage, @warn, @side, @pack)",
+                @"INSERT INTO Medicine (MedicineName, Category, Dosage, Price, StockQuantity, Supplier, ExpiryDate, RequiresPrescription, DiscountPercent, IsOnPromotion, PromotionStartDate, PromotionEndDate, Description, ActiveIngredient, UsageInstructions, Warnings, SideEffects, PackSize, IsActive)
+                  VALUES (@n, @c, @d, @p, @s, @su, @e, @r, @disc, @promo, @pStart, @pEnd, @desc, @ai, @usage, @warn, @side, @pack, @active)",
                 BuildWriteParameters(item));
         }
 
@@ -79,7 +81,7 @@ namespace SmartMed.Data
                 @"UPDATE Medicine SET MedicineName=@n, Category=@c, Dosage=@d, Price=@p, StockQuantity=@s,
                   Supplier=@su, ExpiryDate=@e, RequiresPrescription=@r, DiscountPercent=@disc, IsOnPromotion=@promo,
                   PromotionStartDate=@pStart, PromotionEndDate=@pEnd, Description=@desc, ActiveIngredient=@ai,
-                  UsageInstructions=@usage, Warnings=@warn, SideEffects=@side, PackSize=@pack
+                  UsageInstructions=@usage, Warnings=@warn, SideEffects=@side, PackSize=@pack, IsActive=@active
                   WHERE MedicineID=@id",
                 parameters.ToArray());
         }
@@ -104,14 +106,17 @@ namespace SmartMed.Data
                 new SqlParameter("@usage", (object)item.UsageInstructions ?? DBNull.Value),
                 new SqlParameter("@warn", (object)item.Warnings ?? DBNull.Value),
                 new SqlParameter("@side", (object)item.SideEffects ?? DBNull.Value),
-                new SqlParameter("@pack", (object)item.PackSize ?? DBNull.Value)
+                new SqlParameter("@pack", (object)item.PackSize ?? DBNull.Value),
+                new SqlParameter("@active", item.IsActive)
             };
 
-        public void Delete(int id)
+        /// <summary>Soft-delete / reactivate. Never removes Medicine or OrderItem rows.</summary>
+        public void SetActive(int medicineId, bool isActive)
         {
             DatabaseHelper.ExecuteNonQuery(
-                "DELETE FROM Medicine WHERE MedicineID=@id",
-                new SqlParameter("@id", id));
+                "UPDATE Medicine SET IsActive=@active WHERE MedicineID=@id",
+                new SqlParameter("@active", isActive),
+                new SqlParameter("@id", medicineId));
         }
 
         public void UpdateStock(int medicineId, int quantityChange)
@@ -158,7 +163,8 @@ namespace SmartMed.Data
                        WHEN ExpiryDate <= DATEADD(day, 30, CAST(GETDATE() AS DATE)) THEN 'Near Expiry'
                        ELSE 'Valid' END AS ExpiryStatus
                   FROM Medicine
-                  WHERE ExpiryDate <= DATEADD(day, 30, CAST(GETDATE() AS DATE))
+                  WHERE IsActive = 1
+                    AND ExpiryDate <= DATEADD(day, 30, CAST(GETDATE() AS DATE))
                   ORDER BY ExpiryDate");
         }
 
@@ -187,7 +193,9 @@ namespace SmartMed.Data
                 UsageInstructions = ReadOptionalString(row, "UsageInstructions"),
                 Warnings = ReadOptionalString(row, "Warnings"),
                 SideEffects = ReadOptionalString(row, "SideEffects"),
-                PackSize = ReadOptionalString(row, "PackSize")
+                PackSize = ReadOptionalString(row, "PackSize"),
+                IsActive = !row.Table.Columns.Contains("IsActive") || row["IsActive"] == DBNull.Value
+                    || Convert.ToBoolean(row["IsActive"])
             };
         }
 

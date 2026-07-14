@@ -175,6 +175,15 @@ namespace SmartMed.Services
             Persist();
         }
 
+        /// <summary>Removes a medicine from every customer's persisted cart and the in-memory session cart.</summary>
+        public static void RemoveMedicineFromAllCarts(int medicineId)
+        {
+            if (medicineId <= 0) return;
+
+            Repository.DeleteByMedicineId(medicineId);
+            Lines.RemoveAll(l => l.MedicineID == medicineId);
+        }
+
         public static void RemoveMany(IEnumerable<int> medicineIds)
         {
             if (medicineIds == null) return;
@@ -200,6 +209,7 @@ namespace SmartMed.Services
             {
                 var fresh = medicines.GetById(medicineId)
                     ?? throw new InvalidOperationException("Medicine not found.");
+                medicines.ValidateForCustomerPurchase(fresh);
                 if (quantity > fresh.StockQuantity)
                     throw new InvalidOperationException("Quantity exceeds available stock.");
 

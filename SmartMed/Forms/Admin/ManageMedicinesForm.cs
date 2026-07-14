@@ -263,12 +263,12 @@ namespace SmartMed.UI
         private void EnsureGridActionColumns()
         {
             AddOrConfigureButtonColumn("Edit", "Edit", 68);
-            AddOrConfigureButtonColumn("Remove", "Remove", 80);
+            AddOrConfigureButtonColumn("Deactivate", "Deactivate", 96);
 
             if (gridMedicines.Columns.Contains("Edit"))
                 gridMedicines.Columns["Edit"].DisplayIndex = gridMedicines.Columns.Count - 2;
-            if (gridMedicines.Columns.Contains("Remove"))
-                gridMedicines.Columns["Remove"].DisplayIndex = gridMedicines.Columns.Count - 1;
+            if (gridMedicines.Columns.Contains("Deactivate"))
+                gridMedicines.Columns["Deactivate"].DisplayIndex = gridMedicines.Columns.Count - 1;
         }
 
         private void AddOrConfigureButtonColumn(string name, string text, int width)
@@ -386,7 +386,7 @@ namespace SmartMed.UI
             if (e.RowIndex < 0 || !_servicesReady) return;
 
             var colName = gridMedicines.Columns[e.ColumnIndex].Name;
-            if (colName != "Edit" && colName != "Remove") return;
+            if (colName != "Edit" && colName != "Deactivate") return;
 
             var idCell = gridMedicines.Rows[e.RowIndex].Cells["MedicineID"];
             if (idCell?.Value == null) return;
@@ -395,7 +395,7 @@ namespace SmartMed.UI
             if (colName == "Edit")
                 EditMedicine(id);
             else
-                RemoveMedicine(id);
+                DeactivateMedicine(id);
         }
 
         private void EditMedicine(int medicineId)
@@ -406,9 +406,11 @@ namespace SmartMed.UI
             ShowMedicineDialog(medicine);
         }
 
-        private void RemoveMedicine(int medicineId)
+        private void DeactivateMedicine(int medicineId)
         {
-            if (MessageBox.Show("Remove this medicine from inventory?", "Confirm Remove",
+            if (MessageBox.Show(
+                    "Remove this medicine from the catalog? It will be deactivated and hidden from customers. Order history is kept.",
+                    "Confirm Deactivate",
                     MessageBoxButtons.YesNo, MessageBoxIcon.Warning) != DialogResult.Yes)
                 return;
 
@@ -417,12 +419,12 @@ namespace SmartMed.UI
                 _medicines.Delete(medicineId);
                 _selectedId = null;
                 RefreshPage();
-                MessageBox.Show("Medicine removed.", "SmartMed",
+                MessageBox.Show("Medicine removed from catalog.", "SmartMed",
                     MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message, "Remove Failed", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show(ex.Message, "Deactivate Failed", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
         }
 
@@ -558,7 +560,7 @@ namespace SmartMed.UI
                 e.CellStyle.ForeColor = UiTheme.AdminTeal;
                 e.CellStyle.Font = UiTheme.UiFontBold;
             }
-            else if (columnName == "Remove")
+            else if (columnName == "Deactivate")
             {
                 e.CellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
                 e.CellStyle.ForeColor = UiTheme.Danger;

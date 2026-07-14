@@ -21,6 +21,9 @@ namespace SmartMed.Services
 
         public List<Medicine> GetAll() => _medicines.GetAll();
 
+        /// <summary>Active catalog for shop / customer browse.</summary>
+        public List<Medicine> GetActive() => _medicines.GetActive();
+
         public Medicine GetById(int id) => _medicines.GetById(id);
 
         public List<Medicine> Search(string name, string category, decimal? minPrice, decimal? maxPrice)
@@ -30,18 +33,22 @@ namespace SmartMed.Services
 
         public List<Medicine> SearchForCustomers(string name, string category, decimal? minPrice, decimal? maxPrice)
         {
-            return Search(name, category, minPrice, maxPrice).Where(IsAvailableForSale).ToList();
+            return SearchService.Search(GetActive(), name, category, minPrice, maxPrice)
+                .Where(IsAvailableForSale)
+                .ToList();
         }
 
         public bool IsExpired(Medicine m) => CheckExpiry(m) == ExpiryExpired;
 
         public bool IsAvailableForSale(Medicine m) =>
-            !IsExpired(m) && m.StockQuantity > 0;
+            m != null && m.IsActive && !IsExpired(m) && m.StockQuantity > 0;
 
         public void ValidateForCustomerPurchase(Medicine m)
         {
             if (m == null)
                 throw new InvalidOperationException("Medicine not found.");
+            if (!m.IsActive)
+                throw new InvalidOperationException($"{m.MedicineName} is no longer available for purchase.");
             if (IsExpired(m))
                 throw new InvalidOperationException($"{m.MedicineName} has expired and cannot be purchased.");
             if (m.StockQuantity <= 0)
@@ -52,6 +59,10 @@ namespace SmartMed.Services
         {
             if (quantity <= 0)
                 throw new ArgumentException("Quantity must be greater than zero.");
+            var medicine = _medicines.GetById(medicineId)
+                ?? throw new InvalidOperationException("Medicine not found.");
+            if (!medicine.IsActive)
+                throw new InvalidOperationException($"{medicine.MedicineName} is no longer available.");
             if (!_medicines.ReduceStock(medicineId, quantity))
                 throw new InvalidOperationException("Insufficient stock.");
         }
@@ -144,6 +155,7 @@ namespace SmartMed.Services
             ValidateMedicine(item, isNew: true);
             if (_medicines.NameExists(item.MedicineName))
                 throw new InvalidOperationException("This medicine is already in the inventory list.");
+            item.IsActive = true;
             _medicines.Insert(item);
         }
 
@@ -155,21 +167,43 @@ namespace SmartMed.Services
             if (!string.Equals(existing.MedicineName, item.MedicineName, StringComparison.OrdinalIgnoreCase)
                 && _medicines.NameExists(item.MedicineName))
                 throw new InvalidOperationException("This medicine is already in the inventory list.");
+            // Preserve soft-delete flag; use SetActive / Delete to change availability.
+            item.IsActive = existing.IsActive;
             if (_medicines.Update(item) == 0)
                 throw new InvalidOperationException("Medicine not found. Select an existing medicine from the list to update.");
         }
 
+        /// <summary>Soft-deactivate. Blocks Pending / Ready-for-Pickup lines; keeps Delivered order history.</summary>
         public void Delete(int medicineId)
         {
+            SetActive(medicineId, false);
+        }
+
+        public void SetActive(int medicineId, bool isActive)
+        {
             if (medicineId <= 0)
-                throw new ArgumentException("Select a medicine to delete.");
-            if (_medicines.GetById(medicineId) == null)
-                throw new InvalidOperationException("Medicine not found.");
-            if (_medicines.HasActiveOrPendingOrderItems(medicineId))
+                throw new ArgumentException(isActive
+                    ? "Select a medicine to reactivate."
+                    : "Select a medicine to delete.");
+
+            var medicine = _medicines.GetById(medicineId)
+                ?? throw new InvalidOperationException("Medicine not found.");
+
+            if (medicine.IsActive == isActive)
+            {
+                if (!isActive)
+                    throw new InvalidOperationException("This medicine is already deactivated.");
+                return;
+            }
+
+            if (!isActive && _medicines.HasActiveOrPendingOrderItems(medicineId))
                 throw new InvalidOperationException(
-                    "Cannot delete this medicine because it is linked to active or pending orders.");
-            _medicines.RemoveDeliveredOrderItemReferences(medicineId);
-            _medicines.Delete(medicineId);
+                    "Cannot deactivate this medicine because it is linked to pending or ready-for-pickup orders.");
+
+            _medicines.SetActive(medicineId, isActive);
+
+            if (!isActive)
+                CartService.RemoveMedicineFromAllCarts(medicineId);
         }
 
         public string CheckExpiry(Medicine m, int warningDays = 30)
@@ -221,6 +255,7 @@ namespace SmartMed.Services
         public string GetCustomerStockDisplay(Medicine m)
         {
             if (m == null) return "—";
+            if (!m.IsActive) return "Unavailable";
             if (IsExpired(m)) return "Unavailable (expired)";
             if (m.StockQuantity <= 0) return "Out of stock";
             if (IsLowStock(m)) return $"Limited stock ({m.StockQuantity} left)";

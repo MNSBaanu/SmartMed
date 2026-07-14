@@ -25,6 +25,7 @@ namespace SmartMed.Models
         public string Warnings { get; set; }
         public string SideEffects { get; set; }
         public string PackSize { get; set; }
+        public bool IsActive { get; set; } = true;
 
         public void AddMedicine() { }
         public void UpdateMedicine() { }

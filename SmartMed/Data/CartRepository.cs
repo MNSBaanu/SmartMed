@@ -66,5 +66,12 @@ namespace SmartMed.Data
                 "DELETE FROM CartItem WHERE CustomerID = @cid",
                 new SqlParameter("@cid", customerId));
         }
+
+        public void DeleteByMedicineId(int medicineId)
+        {
+            DatabaseHelper.ExecuteNonQuery(
+                "DELETE FROM CartItem WHERE MedicineID = @mid",
+                new SqlParameter("@mid", medicineId));
+        }
     }
 }
