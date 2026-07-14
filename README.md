@@ -25,10 +25,20 @@ Built in **C# / .NET Framework 4.8** as a single WinForms project (forms, servic
 ### 1. Database
 
 1. Open **SQL Server Management Studio**.
-2. Run `Database/SmartMedDB.sql`.
-3. Default credentials after seed:
-   - **Admin:** `admin` / `admin123`
-   - **Customer:** `customer@gmail.com` / `Customer123` (quick login button)
+2. Run `Database/SmartMedDB.sql` (schema only — no sample rows).
+3. Create an admin user in SSMS (the app has no admin registration screen), for example:
+
+```sql
+INSERT INTO Admin (Username, Password, Email)
+VALUES (
+  N'admin',
+  N'100000$AAAAAAAAAAAAAAAAAAAAAQ==$yWsCnUmJjkvSHVoBAzJtW4j3Vl7wobUZIS5YvUKjMpU=',
+  N'admin@smartmed.lk'
+);
+-- Login: admin / admin123 (PBKDF2 hash; same format as PasswordHasher)
+```
+
+4. Customers register in the app (or use the registration form).
 
 ### 2. Connection string
 
@@ -67,7 +77,7 @@ SmartMed/
 │   ├── Data/                   # DatabaseHelper + repositories
 │   └── App.config
 ├── Database/
-│   └── SmartMedDB.sql          # Schema + seed data
+│   └── SmartMedDB.sql          # Schema only (no seed data)
 ├── Docs/                       # Diagrams, report, scripts
 └── Document.md                 # Assignment specification
 ```
