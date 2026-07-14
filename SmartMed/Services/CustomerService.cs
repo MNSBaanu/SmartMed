@@ -131,8 +131,7 @@ namespace SmartMed.Services
                 throw new ArgumentException("Valid email is required.");
             if (ValidationService.IsNullOrWhiteSpace(customer.Phone))
                 throw new ArgumentException("Phone is required.");
-            if (!ValidationService.IsValidSriLankaPhone(customer.Phone))
-                throw new ArgumentException(ValidationService.SriLankaPhoneMessage);
+            customer.Phone = ValidationService.ToCanonicalSriLankaPhone(customer.Phone);
             if (ValidationService.IsNullOrWhiteSpace(customer.Address))
                 throw new ArgumentException("Address is required.");
         }

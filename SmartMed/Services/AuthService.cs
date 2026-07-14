@@ -68,8 +68,7 @@ namespace SmartMed.Services
                 throw new System.ArgumentException("Valid email is required.");
             if (ValidationService.IsNullOrWhiteSpace(customer.Phone))
                 throw new System.ArgumentException("Phone is required.");
-            if (!ValidationService.IsValidSriLankaPhone(customer.Phone))
-                throw new System.ArgumentException(ValidationService.SriLankaPhoneMessage);
+            customer.Phone = ValidationService.ToCanonicalSriLankaPhone(customer.Phone);
             if (ValidationService.IsNullOrWhiteSpace(customer.Address))
                 throw new System.ArgumentException("Address is required.");
             if (ValidationService.IsNullOrWhiteSpace(customer.Password))
@@ -80,6 +79,7 @@ namespace SmartMed.Services
             // Prevent two customers from registering with the same email.
             if (_customerRepo.EmailExists(customer.Email))
                 throw new System.InvalidOperationException("Email already registered.");
+
 
             // Store a protected password so the plain text is never saved.
             customer.Password = PasswordHasher.Hash(customer.Password);

@@ -439,7 +439,7 @@ namespace SmartMed.UI
             {
                 var txtName = new TextBox { Left = 16, Top = 40, Width = 380 };
                 var txtEmail = new TextBox { Left = 16, Top = 96, Width = 380 };
-                var txtPhone = new TextBox { Left = 16, Top = 152, Width = 380, MaxLength = 14 };
+                var txtPhone = new TextBox { Left = 16, Top = 152, Width = 380, MaxLength = 18 };
                 var txtAddress = new TextBox
                 {
                     Left = 16,

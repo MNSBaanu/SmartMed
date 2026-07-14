@@ -71,7 +71,9 @@ namespace SmartMed.Services
 
             // Find customers by ID, name, email, or phone number.
             var key = keyword.Trim();
-            var keyDigits = ValidationService.NormalizePhoneDigits(key);
+            var keyDigits = ValidationService.ToSriLankaLocalDigits(key);
+            if (keyDigits.Length == 0)
+                keyDigits = ValidationService.NormalizePhoneDigits(key);
             var results = new List<Customer>();
 
             foreach (var customer in customers)
@@ -93,11 +95,14 @@ namespace SmartMed.Services
                     results.Add(customer);
                     continue;
                 }
-                if (keyDigits.Length > 0
-                    && customer.Phone != null
-                    && ValidationService.NormalizePhoneDigits(customer.Phone)
-                        .IndexOf(keyDigits, StringComparison.Ordinal) >= 0)
-                    results.Add(customer);
+                if (keyDigits.Length > 0 && customer.Phone != null)
+                {
+                    var phoneDigits = ValidationService.ToSriLankaLocalDigits(customer.Phone);
+                    if (phoneDigits.Length == 0)
+                        phoneDigits = ValidationService.NormalizePhoneDigits(customer.Phone);
+                    if (phoneDigits.IndexOf(keyDigits, StringComparison.Ordinal) >= 0)
+                        results.Add(customer);
+                }
             }
             return results;
         }

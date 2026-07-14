@@ -205,7 +205,7 @@ namespace SmartMed.UI
             this.txtPhone.Font = new System.Drawing.Font("Hanken Grotesk", 9F);
             this.txtPhone.Location = new System.Drawing.Point(16, 144);
             this.txtPhone.Margin = new System.Windows.Forms.Padding(0, 0, 0, 8);
-            this.txtPhone.MaxLength = 14;
+            this.txtPhone.MaxLength = 18;
             this.txtPhone.Name = "txtPhone";
             this.txtPhone.Size = new System.Drawing.Size(978, 25);
             this.txtPhone.TabIndex = 5;

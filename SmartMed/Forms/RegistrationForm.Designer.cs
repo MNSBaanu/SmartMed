@@ -309,7 +309,7 @@ namespace SmartMed.UI
             this.txtPhone.Font = new System.Drawing.Font("Hanken Grotesk", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.txtPhone.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(130)))), ((int)(((byte)(138)))), ((int)(((byte)(136)))));
             this.txtPhone.Location = new System.Drawing.Point(272, 216);
-            this.txtPhone.MaxLength = 14;
+            this.txtPhone.MaxLength = 18;
             this.txtPhone.Name = "txtPhone";
             this.txtPhone.Size = new System.Drawing.Size(216, 40);
             this.txtPhone.Text = "";

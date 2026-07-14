@@ -47,7 +47,7 @@ namespace SmartMed.UI
 
             UiTheme.WireClinicalPlaceholderTextBox(txtFullName, "Dr. Jane Smith");
             UiTheme.WireClinicalPlaceholderTextBox(txtEmail, "jane@hospital.com");
-            UiTheme.WireClinicalPlaceholderTextBox(txtPhone, "0771234567");
+            UiTheme.WireClinicalPlaceholderTextBox(txtPhone, "0771234567 or +94771234567");
             UiTheme.WireClinicalPlaceholderTextBox(txtAddress, "Enter your home address");
             UiTheme.WireClinicalPasswordTextBox(txtPassword);
             UiTheme.WireClinicalPasswordTextBox(txtConfirm);
