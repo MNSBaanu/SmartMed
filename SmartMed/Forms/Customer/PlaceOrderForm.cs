@@ -387,7 +387,6 @@ namespace SmartMed.UI
                     payment = paymentDialog.Result;
                 }
 
-                // Rx paths travel on each selected CartLine.PrescriptionPath (multi-Rx).
                 var orderId = _orders.PlaceOrder(
                     customer.CustomerID,
                     selected,

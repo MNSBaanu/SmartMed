@@ -17,8 +17,6 @@ namespace SmartMed.Models
         public bool IsOnPromotion { get; set; }
         public DateTime? PromotionStartDate { get; set; }
         public DateTime? PromotionEndDate { get; set; }
-
-        /// <summary>What the product is for (customer-facing).</summary>
         public string Description { get; set; }
         public string ActiveIngredient { get; set; }
         public string UsageInstructions { get; set; }

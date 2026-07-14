@@ -93,7 +93,6 @@ namespace SmartMed.Services
             _adminRepo.UpdatePassword(adminId, PasswordHasher.Hash(newPassword));
         }
 
-        /// <summary>Reset password without the old password (forgot-password flow).</summary>
         public void ResetPassword(string identity, string newPassword)
         {
             if (ValidationService.IsNullOrWhiteSpace(identity))

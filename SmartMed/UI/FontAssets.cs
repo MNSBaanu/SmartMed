@@ -38,7 +38,6 @@ namespace SmartMed.UI
                 }
                 catch
                 {
-                    // Continue with PrivateFontCollection fallback in UiTheme.
                 }
             }
         }
@@ -149,7 +148,6 @@ namespace SmartMed.UI
                 }
                 catch
                 {
-                    // Ignore invalid paths.
                 }
             }
 
@@ -162,7 +160,6 @@ namespace SmartMed.UI
             }
             catch
             {
-                // Ignore assembly path issues.
             }
 
             try
@@ -177,7 +174,6 @@ namespace SmartMed.UI
             }
             catch
             {
-                // Ignore code-base path issues.
             }
 
             var cursor = AppDomain.CurrentDomain.BaseDirectory;

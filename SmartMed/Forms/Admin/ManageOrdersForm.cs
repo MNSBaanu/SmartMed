@@ -141,7 +141,6 @@ namespace SmartMed.UI
             if (_runtimeWired) return;
             _runtimeWired = true;
 
-            // Static alert bus is not a Designer control.
             AdminOrderAlerts.AlertsChanged += (s, e) =>
             {
                 if (IsDisposed || !_servicesReady) return;

@@ -30,7 +30,6 @@ namespace SmartMed.UI
             }
             catch
             {
-                // Designer host may initialize fonts later.
             }
         }
 
@@ -67,7 +66,6 @@ namespace SmartMed.UI
             RestoreLoginAppearance();
         }
 
-        /// <summary>Runtime-only input behavior (placeholders, password toggle, Enter navigation).</summary>
         private void WireRuntimeBehavior()
         {
             UiTheme.WireClinicalPlaceholderTextBox(txtUsername, "Enter email or username");
@@ -100,7 +98,6 @@ namespace SmartMed.UI
 
         private void TxtPassword_GotFocus(object sender, EventArgs e)
         {
-            // Defer until after UiTheme placeholder GotFocus clears tip text, then re-apply mask.
             BeginInvoke(new Action(() =>
             {
                 if (!IsDisposed && txtPassword != null && !txtPassword.IsDisposed)

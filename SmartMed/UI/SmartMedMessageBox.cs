@@ -4,10 +4,6 @@ using System.Windows.Forms;
 
 namespace SmartMed.UI
 {
-    /// <summary>
-    /// A drop-in replacement for <see cref="MessageBox"/> that renders with the
-    /// Hanken Grotesk font and the SmartMed clinical colour palette.
-    /// </summary>
     public static class SmartMedMessageBox
     {
         public static DialogResult Show(string text)
@@ -96,7 +92,6 @@ namespace SmartMed.UI
                 Controls.Add(contentPanel);
                 Controls.Add(buttonPanel);
 
-                // Size the form
                 int w = Math.Max(contentPanel.PreferredSize.Width, buttonPanel.PreferredSize.Width) + 8;
                 int h = contentPanel.PreferredSize.Height + buttonPanel.PreferredSize.Height + 8;
                 ClientSize = new Size(Math.Max(300, Math.Min(w, 500)), Math.Max(110, Math.Min(h, 320)));

@@ -21,7 +21,6 @@ namespace SmartMed.Services
 
         public List<Medicine> GetAll() => _medicines.GetAll();
 
-        /// <summary>Active catalog for shop / customer browse.</summary>
         public List<Medicine> GetActive() => _medicines.GetActive();
 
         public Medicine GetById(int id) => _medicines.GetById(id);
@@ -167,13 +166,12 @@ namespace SmartMed.Services
             if (!string.Equals(existing.MedicineName, item.MedicineName, StringComparison.OrdinalIgnoreCase)
                 && _medicines.NameExists(item.MedicineName))
                 throw new InvalidOperationException("This medicine is already in the inventory list.");
-            // Preserve soft-delete flag; use SetActive / Delete to change availability.
+
             item.IsActive = existing.IsActive;
             if (_medicines.Update(item) == 0)
                 throw new InvalidOperationException("Medicine not found. Select an existing medicine from the list to update.");
         }
 
-        /// <summary>Soft-deactivate. Blocks Pending / Ready-for-Pickup lines; keeps Delivered order history.</summary>
         public void Delete(int medicineId)
         {
             SetActive(medicineId, false);
@@ -206,7 +204,6 @@ namespace SmartMed.Services
                 CartService.RemoveMedicineFromAllCarts(medicineId);
         }
 
-        // Expired = past today; ExpiringSoon = within warningDays (default 30); else Valid.
         public string CheckExpiry(Medicine m, int warningDays = 30)
         {
             if (m == null)
@@ -222,7 +219,6 @@ namespace SmartMed.Services
 
         public bool IsLowStock(Medicine m, int threshold = 20) => m.StockQuantity <= threshold;
 
-        // Promo applies when flagged, discount > 0, and today falls on/between start and end dates (inclusive).
         public bool IsPromotionActive(Medicine m)
         {
             if (m == null || !m.IsOnPromotion || m.DiscountPercent <= 0)
@@ -236,7 +232,6 @@ namespace SmartMed.Services
             return true;
         }
 
-        // Effective price = list price × (1 − DiscountPercent/100) while the promotion window is active.
         public decimal GetEffectivePrice(Medicine m)
         {
             if (IsPromotionActive(m))

@@ -10,7 +10,6 @@ namespace SmartMed.UI
         void RefreshPage();
     }
 
-    /// <summary>Base for admin/customer pages embedded in a host shell (borderless child form).</summary>
     [ToolboxItem(false)]
     public class EmbeddedPageForm : Form, IEmbeddedPage
     {

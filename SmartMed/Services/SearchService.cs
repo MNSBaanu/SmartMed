@@ -46,7 +46,6 @@ namespace SmartMed.Services
             return results;
         }
 
-        /// <summary>Applies name, category, then price filters in sequence (linear search).</summary>
         public static List<Medicine> Search(List<Medicine> medicines, string name, string category, decimal? minPrice, decimal? maxPrice)
         {
             var results = medicines;
@@ -63,7 +62,6 @@ namespace SmartMed.Services
             return results;
         }
 
-        /// <summary>Linear search O(n) — matches name, email, phone, or customer ID.</summary>
         public static List<Customer> SearchCustomers(IList<Customer> customers, string keyword)
         {
             if (string.IsNullOrWhiteSpace(keyword))
@@ -110,7 +108,6 @@ namespace SmartMed.Services
             return false;
         }
 
-        /// <summary>Matches order ID, customer name, or status.</summary>
         public static List<Order> SearchOrders(IList<Order> orders, string keyword)
         {
             if (string.IsNullOrWhiteSpace(keyword))

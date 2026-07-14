@@ -8,7 +8,7 @@ namespace SmartMed.Data
 {
     public class PrescriptionRepository
     {
-        /// <summary>One prescription file linked to an order line (Rx medicine).</summary>
+
         public sealed class PrescriptionAttachment
         {
             public int? MedicineID { get; set; }
@@ -63,7 +63,6 @@ namespace SmartMed.Data
             }
         }
 
-        /// <summary>All prescription rows for an order (primary for multi-Rx).</summary>
         public List<Prescription> GetAllByOrderId(int orderId)
         {
             var list = new List<Prescription>();
@@ -77,7 +76,6 @@ namespace SmartMed.Data
             return list;
         }
 
-        /// <summary>First prescription for the order (backward compatible).</summary>
         public Prescription GetByOrderId(int orderId)
         {
             var all = GetAllByOrderId(orderId);
@@ -91,7 +89,6 @@ namespace SmartMed.Data
                 new SqlParameter("@oid", orderId));
         }
 
-        /// <summary>Update status for every prescription on the order.</summary>
         public void UpdateStatus(int orderId, string status)
         {
             DatabaseHelper.ExecuteNonQuery(
@@ -100,7 +97,6 @@ namespace SmartMed.Data
                 new SqlParameter("@oid", orderId));
         }
 
-        /// <summary>Update status for a single prescription row.</summary>
         public void UpdateStatusById(int prescriptionId, string status)
         {
             DatabaseHelper.ExecuteNonQuery(

@@ -86,7 +86,6 @@ namespace SmartMed.Services
                 }
                 catch
                 {
-                    // Skip expired / inactive / out-of-stock lines so the cart only shows sellable items.
                     continue;
                 }
 
@@ -176,7 +175,6 @@ namespace SmartMed.Services
             Persist();
         }
 
-        /// <summary>Removes a medicine from every customer's persisted cart and the in-memory session cart.</summary>
         public static void RemoveMedicineFromAllCarts(int medicineId)
         {
             if (medicineId <= 0) return;
@@ -225,10 +223,6 @@ namespace SmartMed.Services
             Persist();
         }
 
-        /// <summary>
-        /// Re-prices cart lines from the DB (effective/promo price). Call before showing checkout totals
-        /// so the UI matches what <see cref="OrderService.PlaceOrder"/> will charge.
-        /// </summary>
         public static void RefreshPrices(MedicineService medicines)
         {
             if (medicines == null)

@@ -8,7 +8,6 @@ using System.Windows.Forms;
 
 namespace SmartMed.UI
 {
-    /// <summary>Lists prescription file names for an order; click / Open launches the selected file.</summary>
     internal static class PrescriptionFilesDialog
     {
         public static void Open(IWin32Window owner, IReadOnlyList<string> filePaths)

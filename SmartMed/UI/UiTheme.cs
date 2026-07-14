@@ -12,7 +12,6 @@ using PdfSharp.Fonts;
 
 namespace SmartMed.UI
 {
-    /// <summary>Clinical auth theme using Stitch Hanken Grotesk.</summary>
     public static class UiTheme
     {
         public static readonly Color AdminSurface = Color.FromArgb(244, 251, 250);
@@ -47,13 +46,6 @@ namespace SmartMed.UI
         public static readonly Color GridSelectionBack = Color.FromArgb(232, 238, 252);
         public static readonly Color GridSelectionFore = Color.FromArgb(52, 64, 96);
 
-        /// <summary>
-        /// Wires Enter / Up / Down keyboard navigation across an ordered set of input
-        /// fields. Enter (and Down) moves to the next field; Up moves to the previous.
-        /// Pressing Enter on the last field invokes <paramref name="submit"/>.
-        /// Up/Down are only intercepted for single-line text boxes so combo boxes,
-        /// date pickers and numeric spinners keep their native arrow behavior.
-        /// </summary>
         public static void EnableFieldNavigation(Control submit, params Control[] fields)
         {
             if (fields == null) return;
@@ -64,8 +56,6 @@ namespace SmartMed.UI
                 if (field == null) continue;
                 int index = i;
 
-                // Claim Enter/Up/Down as input keys so the form's AcceptButton does not
-                // consume Enter as a dialog key before our KeyDown handler runs.
                 field.PreviewKeyDown += (s, e) =>
                 {
                     if (field is ComboBox cb && cb.DroppedDown) return;
@@ -183,7 +173,6 @@ namespace SmartMed.UI
             _initialized = true;
         }
 
-        /// <summary>Sets the form root font and applies Hanken Grotesk to all child controls.</summary>
         public static void ApplyFormFonts(Form form)
         {
             if (form == null) return;
@@ -293,7 +282,6 @@ namespace SmartMed.UI
             }
             catch
             {
-                // Family not registered on this machine.
             }
         }
 
@@ -473,13 +461,11 @@ namespace SmartMed.UI
             if (!string.IsNullOrWhiteSpace(textBox.Text) && !IsPlaceholderActive(textBox))
                 return;
 
-            // ForeColor first so TextChanged readers treat the text as placeholder, not a filter value.
             textBox.ForeColor = PlaceholderText;
             textBox.Text = placeholder;
             textBox.PasswordChar = '\0';
         }
 
-        /// <summary>Placeholder behavior only — does not change bounds, fonts, or colors from Designer.cs.</summary>
         public static void WireClinicalPlaceholderTextBox(TextBox textBox, string placeholder)
         {
             if (textBox == null) return;
@@ -500,7 +486,7 @@ namespace SmartMed.UI
         {
             if (textBox == null) return;
             textBox.Tag = "clinical-placeholder-wired";
-            // Force-clear user input; ApplyPlaceholder alone skips non-empty real text.
+
             textBox.Text = string.Empty;
             ApplyPlaceholder(textBox, placeholder);
         }
@@ -891,9 +877,6 @@ namespace SmartMed.UI
                 EnableFontPropagation(form);
         }
 
-        /// <summary>
-        /// Lays out custom title-bar buttons left-to-right: Minimize, Maximize, Close (matches native Login chrome).
-        /// </summary>
         public static void ArrangeWindowControls(Panel host, Button minimize, Button maximize, Button close)
         {
             if (host == null) return;
@@ -996,7 +979,6 @@ namespace SmartMed.UI
             }
             flow.ResumeLayout(false);
 
-            // Center nav buttons within the flow panel
             flow.Resize -= FlowNavButtons_CenterResize;
             flow.Resize += FlowNavButtons_CenterResize;
             CenterFlowButtons(flow);
@@ -1262,7 +1244,6 @@ namespace SmartMed.UI
             TextRenderer.DrawText(e.Graphics, glyph, UiFontBold, panel.ClientRectangle, color,
                 TextFormatFlags.HorizontalCenter | TextFormatFlags.VerticalCenter);
         }
-
 
         private static string GetNavGlyph(string buttonName)
         {

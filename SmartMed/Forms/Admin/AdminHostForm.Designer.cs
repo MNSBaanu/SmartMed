@@ -43,9 +43,7 @@ namespace SmartMed.UI
             this.flowNavButtons.SuspendLayout();
             this.panelProfile.SuspendLayout();
             this.SuspendLayout();
-            // 
-            // panelTitleBar
-            // 
+
             this.panelTitleBar.Controls.Add(this.lblTitleBar);
             this.panelTitleBar.Controls.Add(this.panelWinControls);
             this.panelTitleBar.Dock = System.Windows.Forms.DockStyle.Top;
@@ -53,18 +51,14 @@ namespace SmartMed.UI
             this.panelTitleBar.Name = "panelTitleBar";
             this.panelTitleBar.Size = new System.Drawing.Size(1463, 38);
             this.panelTitleBar.TabIndex = 0;
-            // 
-            // lblTitleBar
-            // 
+
             this.lblTitleBar.AutoSize = true;
             this.lblTitleBar.Location = new System.Drawing.Point(14, 11);
             this.lblTitleBar.Name = "lblTitleBar";
             this.lblTitleBar.Size = new System.Drawing.Size(348, 16);
             this.lblTitleBar.TabIndex = 0;
             this.lblTitleBar.Text = "SmartMed Clinical Management - Operational Dashboard";
-            // 
-            // panelWinControls
-            // 
+
             this.panelWinControls.Controls.Add(this.btnWinMinimize);
             this.panelWinControls.Controls.Add(this.btnWinMaximize);
             this.panelWinControls.Controls.Add(this.btnWinClose);
@@ -73,9 +67,7 @@ namespace SmartMed.UI
             this.panelWinControls.Name = "panelWinControls";
             this.panelWinControls.Size = new System.Drawing.Size(206, 38);
             this.panelWinControls.TabIndex = 1;
-            // 
-            // btnWinMinimize
-            // 
+
             this.btnWinMinimize.Dock = System.Windows.Forms.DockStyle.Left;
             this.btnWinMinimize.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnWinMinimize.Location = new System.Drawing.Point(138, 0);
@@ -85,9 +77,7 @@ namespace SmartMed.UI
             this.btnWinMinimize.Text = "—";
             this.btnWinMinimize.UseVisualStyleBackColor = false;
             this.btnWinMinimize.Click += new System.EventHandler(this.BtnWinMinimize_Click);
-            // 
-            // btnWinMaximize
-            // 
+
             this.btnWinMaximize.Dock = System.Windows.Forms.DockStyle.Left;
             this.btnWinMaximize.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnWinMaximize.Location = new System.Drawing.Point(69, 0);
@@ -97,9 +87,7 @@ namespace SmartMed.UI
             this.btnWinMaximize.Text = "☐";
             this.btnWinMaximize.UseVisualStyleBackColor = false;
             this.btnWinMaximize.Click += new System.EventHandler(this.BtnWinMaximize_Click);
-            // 
-            // btnWinClose
-            // 
+
             this.btnWinClose.Dock = System.Windows.Forms.DockStyle.Left;
             this.btnWinClose.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnWinClose.Location = new System.Drawing.Point(0, 0);
@@ -109,9 +97,7 @@ namespace SmartMed.UI
             this.btnWinClose.Text = "✕";
             this.btnWinClose.UseVisualStyleBackColor = false;
             this.btnWinClose.Click += new System.EventHandler(this.BtnWinClose_Click);
-            // 
-            // panelStatusBar
-            // 
+
             this.panelStatusBar.Controls.Add(this.lblStatusTime);
             this.panelStatusBar.Controls.Add(this.lblStatusCloud);
             this.panelStatusBar.Controls.Add(this.lblStatusHealth);
@@ -121,9 +107,7 @@ namespace SmartMed.UI
             this.panelStatusBar.Padding = new System.Windows.Forms.Padding(18, 0, 18, 0);
             this.panelStatusBar.Size = new System.Drawing.Size(1463, 30);
             this.panelStatusBar.TabIndex = 2;
-            // 
-            // lblStatusTime
-            // 
+
             this.lblStatusTime.AutoSize = true;
             this.lblStatusTime.Dock = System.Windows.Forms.DockStyle.Right;
             this.lblStatusTime.Location = new System.Drawing.Point(1346, 0);
@@ -133,27 +117,21 @@ namespace SmartMed.UI
             this.lblStatusTime.TabIndex = 2;
             this.lblStatusTime.Text = "Local Time: --:--";
             this.lblStatusTime.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            // 
-            // lblStatusCloud
-            // 
+
             this.lblStatusCloud.AutoSize = true;
             this.lblStatusCloud.Location = new System.Drawing.Point(299, 4);
             this.lblStatusCloud.Name = "lblStatusCloud";
             this.lblStatusCloud.Size = new System.Drawing.Size(115, 16);
             this.lblStatusCloud.TabIndex = 1;
             this.lblStatusCloud.Text = "Cloud Sync Active";
-            // 
-            // lblStatusHealth
-            // 
+
             this.lblStatusHealth.AutoSize = true;
             this.lblStatusHealth.Location = new System.Drawing.Point(18, 4);
             this.lblStatusHealth.Name = "lblStatusHealth";
             this.lblStatusHealth.Size = new System.Drawing.Size(144, 16);
             this.lblStatusHealth.TabIndex = 0;
             this.lblStatusHealth.Text = "System Status: Healthy";
-            // 
-            // panelSidebar
-            // 
+
             this.panelSidebar.Controls.Add(this.flowNavButtons);
             this.panelSidebar.Controls.Add(this.panelProfile);
             this.panelSidebar.Dock = System.Windows.Forms.DockStyle.Top;
@@ -161,9 +139,7 @@ namespace SmartMed.UI
             this.panelSidebar.Name = "panelSidebar";
             this.panelSidebar.Size = new System.Drawing.Size(1463, 60);
             this.panelSidebar.TabIndex = 3;
-            // 
-            // flowNavButtons
-            // 
+
             this.flowNavButtons.Controls.Add(this.btnNavDashboard);
             this.flowNavButtons.Controls.Add(this.btnNavMedicines);
             this.flowNavButtons.Controls.Add(this.btnNavCustomers);
@@ -177,9 +153,7 @@ namespace SmartMed.UI
             this.flowNavButtons.Size = new System.Drawing.Size(1248, 60);
             this.flowNavButtons.TabIndex = 0;
             this.flowNavButtons.WrapContents = false;
-            // 
-            // btnNavDashboard
-            // 
+
             this.btnNavDashboard.Location = new System.Drawing.Point(7, 9);
             this.btnNavDashboard.Margin = new System.Windows.Forms.Padding(2, 9, 2, 9);
             this.btnNavDashboard.Name = "btnNavDashboard";
@@ -188,9 +162,7 @@ namespace SmartMed.UI
             this.btnNavDashboard.Text = "Dashboard";
             this.btnNavDashboard.UseVisualStyleBackColor = false;
             this.btnNavDashboard.Click += new System.EventHandler(this.BtnNavDashboard_Click);
-            // 
-            // btnNavMedicines
-            // 
+
             this.btnNavMedicines.Location = new System.Drawing.Point(148, 9);
             this.btnNavMedicines.Margin = new System.Windows.Forms.Padding(2, 9, 2, 9);
             this.btnNavMedicines.Name = "btnNavMedicines";
@@ -199,9 +171,7 @@ namespace SmartMed.UI
             this.btnNavMedicines.Text = "Medicine";
             this.btnNavMedicines.UseVisualStyleBackColor = false;
             this.btnNavMedicines.Click += new System.EventHandler(this.BtnNavMedicines_Click);
-            // 
-            // btnNavCustomers
-            // 
+
             this.btnNavCustomers.Location = new System.Drawing.Point(289, 9);
             this.btnNavCustomers.Margin = new System.Windows.Forms.Padding(2, 9, 2, 9);
             this.btnNavCustomers.Name = "btnNavCustomers";
@@ -210,9 +180,7 @@ namespace SmartMed.UI
             this.btnNavCustomers.Text = "Customers";
             this.btnNavCustomers.UseVisualStyleBackColor = false;
             this.btnNavCustomers.Click += new System.EventHandler(this.BtnNavCustomers_Click);
-            // 
-            // btnNavOrders
-            // 
+
             this.btnNavOrders.Location = new System.Drawing.Point(430, 9);
             this.btnNavOrders.Margin = new System.Windows.Forms.Padding(2, 9, 2, 9);
             this.btnNavOrders.Name = "btnNavOrders";
@@ -221,9 +189,7 @@ namespace SmartMed.UI
             this.btnNavOrders.Text = "Orders";
             this.btnNavOrders.UseVisualStyleBackColor = false;
             this.btnNavOrders.Click += new System.EventHandler(this.BtnNavOrders_Click);
-            // 
-            // btnNavReports
-            // 
+
             this.btnNavReports.Location = new System.Drawing.Point(571, 9);
             this.btnNavReports.Margin = new System.Windows.Forms.Padding(2, 9, 2, 9);
             this.btnNavReports.Name = "btnNavReports";
@@ -232,9 +198,7 @@ namespace SmartMed.UI
             this.btnNavReports.Text = "Reports";
             this.btnNavReports.UseVisualStyleBackColor = false;
             this.btnNavReports.Click += new System.EventHandler(this.BtnNavReports_Click);
-            // 
-            // btnNavLogout
-            // 
+
             this.btnNavLogout.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Bold);
             this.btnNavLogout.Location = new System.Drawing.Point(712, 9);
             this.btnNavLogout.Margin = new System.Windows.Forms.Padding(2, 9, 2, 9);
@@ -244,9 +208,7 @@ namespace SmartMed.UI
             this.btnNavLogout.Text = "LOGOUT";
             this.btnNavLogout.UseVisualStyleBackColor = false;
             this.btnNavLogout.Click += new System.EventHandler(this.BtnNavLogout_Click);
-            // 
-            // panelProfile
-            // 
+
             this.panelProfile.Controls.Add(this.lblProfileRole);
             this.panelProfile.Controls.Add(this.lblProfileName);
             this.panelProfile.Controls.Add(this.panelAvatar);
@@ -256,42 +218,32 @@ namespace SmartMed.UI
             this.panelProfile.Padding = new System.Windows.Forms.Padding(9, 9, 14, 9);
             this.panelProfile.Size = new System.Drawing.Size(215, 60);
             this.panelProfile.TabIndex = 1;
-            // 
-            // lblProfileRole
-            // 
+
             this.lblProfileRole.AutoSize = true;
             this.lblProfileRole.Location = new System.Drawing.Point(55, 32);
             this.lblProfileRole.Name = "lblProfileRole";
             this.lblProfileRole.Size = new System.Drawing.Size(109, 16);
             this.lblProfileRole.TabIndex = 2;
             this.lblProfileRole.Text = "SYSTEM ADMIN";
-            // 
-            // lblProfileName
-            // 
+
             this.lblProfileName.AutoSize = true;
             this.lblProfileName.Location = new System.Drawing.Point(55, 13);
             this.lblProfileName.Name = "lblProfileName";
             this.lblProfileName.Size = new System.Drawing.Size(119, 16);
             this.lblProfileName.TabIndex = 1;
             this.lblProfileName.Text = "ADMINISTRATOR";
-            // 
-            // panelAvatar
-            // 
+
             this.panelAvatar.Location = new System.Drawing.Point(9, 13);
             this.panelAvatar.Name = "panelAvatar";
             this.panelAvatar.Size = new System.Drawing.Size(37, 34);
             this.panelAvatar.TabIndex = 0;
-            // 
-            // panelContent
-            // 
+
             this.panelContent.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panelContent.Location = new System.Drawing.Point(0, 98);
             this.panelContent.Name = "panelContent";
             this.panelContent.Size = new System.Drawing.Size(1463, 691);
             this.panelContent.TabIndex = 4;
-            // 
-            // AdminHostForm
-            // 
+
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1463, 819);

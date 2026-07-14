@@ -46,9 +46,6 @@ namespace SmartMed.UI
             login.Show();
         }
 
-        // Keep the window state/size consistent when switching between the
-        // login screen and the admin/customer shells (maximized stays maximized,
-        // normal keeps the same bounds). Applied before the target form is shown.
         private static void CopyWindowStateAndSize(Form source, Form target)
         {
             if (source == null || target == null)

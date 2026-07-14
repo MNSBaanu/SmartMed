@@ -5,9 +5,6 @@ using SmartMed.Models;
 
 namespace SmartMed.Services
 {
-    /// <summary>
-    /// Tracks customer-placed orders the admin has not acknowledged yet (in-memory, per app session).
-    /// </summary>
     public static class AdminOrderAlerts
     {
         private static int _lastAcknowledgedOrderId;

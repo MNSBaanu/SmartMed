@@ -41,9 +41,7 @@ namespace SmartMed.UI
             this.flowNavButtons.SuspendLayout();
             this.panelSupport.SuspendLayout();
             this.SuspendLayout();
-            // 
-            // panelTitleBar
-            // 
+
             this.panelTitleBar.Controls.Add(this.lblTitleBar);
             this.panelTitleBar.Controls.Add(this.panelWinControls);
             this.panelTitleBar.Dock = System.Windows.Forms.DockStyle.Top;
@@ -51,18 +49,14 @@ namespace SmartMed.UI
             this.panelTitleBar.Name = "panelTitleBar";
             this.panelTitleBar.Size = new System.Drawing.Size(1280, 36);
             this.panelTitleBar.TabIndex = 0;
-            // 
-            // lblTitleBar
-            // 
+
             this.lblTitleBar.AutoSize = true;
             this.lblTitleBar.Location = new System.Drawing.Point(12, 10);
             this.lblTitleBar.Name = "lblTitleBar";
             this.lblTitleBar.Size = new System.Drawing.Size(184, 15);
             this.lblTitleBar.TabIndex = 0;
             this.lblTitleBar.Text = "SmartMed Health Portal - Home";
-            // 
-            // panelWinControls
-            // 
+
             this.panelWinControls.Controls.Add(this.btnWinMinimize);
             this.panelWinControls.Controls.Add(this.btnWinMaximize);
             this.panelWinControls.Controls.Add(this.btnWinClose);
@@ -71,9 +65,7 @@ namespace SmartMed.UI
             this.panelWinControls.Name = "panelWinControls";
             this.panelWinControls.Size = new System.Drawing.Size(180, 36);
             this.panelWinControls.TabIndex = 1;
-            // 
-            // btnWinMinimize
-            // 
+
             this.btnWinMinimize.Dock = System.Windows.Forms.DockStyle.Left;
             this.btnWinMinimize.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnWinMinimize.Location = new System.Drawing.Point(120, 0);
@@ -83,9 +75,7 @@ namespace SmartMed.UI
             this.btnWinMinimize.Text = "—";
             this.btnWinMinimize.UseVisualStyleBackColor = false;
             this.btnWinMinimize.Click += new System.EventHandler(this.BtnWinMinimize_Click);
-            // 
-            // btnWinMaximize
-            // 
+
             this.btnWinMaximize.Dock = System.Windows.Forms.DockStyle.Left;
             this.btnWinMaximize.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnWinMaximize.Location = new System.Drawing.Point(60, 0);
@@ -95,9 +85,7 @@ namespace SmartMed.UI
             this.btnWinMaximize.Text = "☐";
             this.btnWinMaximize.UseVisualStyleBackColor = false;
             this.btnWinMaximize.Click += new System.EventHandler(this.BtnWinMaximize_Click);
-            // 
-            // btnWinClose
-            // 
+
             this.btnWinClose.Dock = System.Windows.Forms.DockStyle.Left;
             this.btnWinClose.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnWinClose.Location = new System.Drawing.Point(0, 0);
@@ -107,9 +95,7 @@ namespace SmartMed.UI
             this.btnWinClose.Text = "✕";
             this.btnWinClose.UseVisualStyleBackColor = false;
             this.btnWinClose.Click += new System.EventHandler(this.BtnWinClose_Click);
-            // 
-            // panelStatusBar
-            // 
+
             this.panelStatusBar.Controls.Add(this.lblStatusTime);
             this.panelStatusBar.Controls.Add(this.lblStatusCloud);
             this.panelStatusBar.Controls.Add(this.lblStatusHealth);
@@ -119,9 +105,7 @@ namespace SmartMed.UI
             this.panelStatusBar.Padding = new System.Windows.Forms.Padding(16, 0, 16, 0);
             this.panelStatusBar.Size = new System.Drawing.Size(1280, 28);
             this.panelStatusBar.TabIndex = 2;
-            // 
-            // lblStatusTime
-            // 
+
             this.lblStatusTime.AutoSize = true;
             this.lblStatusTime.Dock = System.Windows.Forms.DockStyle.Right;
             this.lblStatusTime.Location = new System.Drawing.Point(1175, 0);
@@ -131,27 +115,21 @@ namespace SmartMed.UI
             this.lblStatusTime.TabIndex = 2;
             this.lblStatusTime.Text = "Local Time: --:--";
             this.lblStatusTime.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            // 
-            // lblStatusCloud
-            // 
+
             this.lblStatusCloud.AutoSize = true;
             this.lblStatusCloud.Location = new System.Drawing.Point(200, 4);
             this.lblStatusCloud.Name = "lblStatusCloud";
             this.lblStatusCloud.Size = new System.Drawing.Size(89, 15);
             this.lblStatusCloud.TabIndex = 1;
             this.lblStatusCloud.Text = "Secure Session";
-            // 
-            // lblStatusHealth
-            // 
+
             this.lblStatusHealth.AutoSize = true;
             this.lblStatusHealth.Location = new System.Drawing.Point(16, 4);
             this.lblStatusHealth.Name = "lblStatusHealth";
             this.lblStatusHealth.Size = new System.Drawing.Size(126, 15);
             this.lblStatusHealth.TabIndex = 0;
             this.lblStatusHealth.Text = "Welcome to SmartMed";
-            // 
-            // panelSidebar
-            // 
+
             this.panelSidebar.Controls.Add(this.flowNavButtons);
             this.panelSidebar.Controls.Add(this.panelSupport);
             this.panelSidebar.Dock = System.Windows.Forms.DockStyle.Top;
@@ -159,9 +137,7 @@ namespace SmartMed.UI
             this.panelSidebar.Name = "panelSidebar";
             this.panelSidebar.Size = new System.Drawing.Size(1280, 56);
             this.panelSidebar.TabIndex = 3;
-            // 
-            // flowNavButtons
-            // 
+
             this.flowNavButtons.Controls.Add(this.btnNavHome);
             this.flowNavButtons.Controls.Add(this.btnNavBrowse);
             this.flowNavButtons.Controls.Add(this.btnNavCart);
@@ -176,9 +152,7 @@ namespace SmartMed.UI
             this.flowNavButtons.Size = new System.Drawing.Size(1148, 56);
             this.flowNavButtons.TabIndex = 0;
             this.flowNavButtons.WrapContents = false;
-            // 
-            // btnNavHome
-            // 
+
             this.btnNavHome.Location = new System.Drawing.Point(6, 8);
             this.btnNavHome.Margin = new System.Windows.Forms.Padding(2, 8, 2, 8);
             this.btnNavHome.Name = "btnNavHome";
@@ -187,9 +161,7 @@ namespace SmartMed.UI
             this.btnNavHome.Text = "Home";
             this.btnNavHome.UseVisualStyleBackColor = false;
             this.btnNavHome.Click += new System.EventHandler(this.BtnNavHome_Click);
-            // 
-            // btnNavBrowse
-            // 
+
             this.btnNavBrowse.Location = new System.Drawing.Point(130, 8);
             this.btnNavBrowse.Margin = new System.Windows.Forms.Padding(2, 8, 2, 8);
             this.btnNavBrowse.Name = "btnNavBrowse";
@@ -198,9 +170,7 @@ namespace SmartMed.UI
             this.btnNavBrowse.Text = "Browse Medicine";
             this.btnNavBrowse.UseVisualStyleBackColor = false;
             this.btnNavBrowse.Click += new System.EventHandler(this.BtnNavBrowse_Click);
-            // 
-            // btnNavCart
-            // 
+
             this.btnNavCart.Location = new System.Drawing.Point(274, 8);
             this.btnNavCart.Margin = new System.Windows.Forms.Padding(2, 8, 2, 8);
             this.btnNavCart.Name = "btnNavCart";
@@ -209,9 +179,7 @@ namespace SmartMed.UI
             this.btnNavCart.Text = "My Cart";
             this.btnNavCart.UseVisualStyleBackColor = false;
             this.btnNavCart.Click += new System.EventHandler(this.BtnNavCart_Click);
-            // 
-            // btnNavOrders
-            // 
+
             this.btnNavOrders.Location = new System.Drawing.Point(398, 8);
             this.btnNavOrders.Margin = new System.Windows.Forms.Padding(2, 8, 2, 8);
             this.btnNavOrders.Name = "btnNavOrders";
@@ -220,9 +188,7 @@ namespace SmartMed.UI
             this.btnNavOrders.Text = "My Orders";
             this.btnNavOrders.UseVisualStyleBackColor = false;
             this.btnNavOrders.Click += new System.EventHandler(this.BtnNavOrders_Click);
-            // 
-            // btnNavProfile
-            // 
+
             this.btnNavProfile.Location = new System.Drawing.Point(522, 8);
             this.btnNavProfile.Margin = new System.Windows.Forms.Padding(2, 8, 2, 8);
             this.btnNavProfile.Name = "btnNavProfile";
@@ -231,9 +197,7 @@ namespace SmartMed.UI
             this.btnNavProfile.Text = "My Profile";
             this.btnNavProfile.UseVisualStyleBackColor = false;
             this.btnNavProfile.Click += new System.EventHandler(this.BtnNavProfile_Click);
-            // 
-            // btnNavLogout
-            // 
+
             this.btnNavLogout.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Bold);
             this.btnNavLogout.Location = new System.Drawing.Point(646, 8);
             this.btnNavLogout.Margin = new System.Windows.Forms.Padding(2, 8, 2, 8);
@@ -243,9 +207,7 @@ namespace SmartMed.UI
             this.btnNavLogout.Text = "LOGOUT";
             this.btnNavLogout.UseVisualStyleBackColor = false;
             this.btnNavLogout.Click += new System.EventHandler(this.BtnNavLogout_Click);
-            // 
-            // panelSupport
-            // 
+
             this.panelSupport.Controls.Add(this.btnSupportContact);
             this.panelSupport.Dock = System.Windows.Forms.DockStyle.Right;
             this.panelSupport.Location = new System.Drawing.Point(1148, 0);
@@ -253,9 +215,7 @@ namespace SmartMed.UI
             this.panelSupport.Padding = new System.Windows.Forms.Padding(8, 8, 12, 8);
             this.panelSupport.Size = new System.Drawing.Size(132, 56);
             this.panelSupport.TabIndex = 1;
-            // 
-            // btnSupportContact
-            // 
+
             this.btnSupportContact.Dock = System.Windows.Forms.DockStyle.Fill;
             this.btnSupportContact.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnSupportContact.Location = new System.Drawing.Point(8, 8);
@@ -265,17 +225,13 @@ namespace SmartMed.UI
             this.btnSupportContact.Text = "CONTACT";
             this.btnSupportContact.UseVisualStyleBackColor = false;
             this.btnSupportContact.Click += new System.EventHandler(this.BtnSupportContact_Click);
-            // 
-            // panelContent
-            // 
+
             this.panelContent.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panelContent.Location = new System.Drawing.Point(0, 92);
             this.panelContent.Name = "panelContent";
             this.panelContent.Size = new System.Drawing.Size(1280, 648);
             this.panelContent.TabIndex = 4;
-            // 
-            // CustomerHostForm
-            // 
+
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1280, 768);

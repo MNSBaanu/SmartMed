@@ -21,7 +21,6 @@ namespace SmartMed.Data
             return list;
         }
 
-        /// <summary>Active catalog only (shop / customer browse).</summary>
         public List<Medicine> GetActive()
         {
             var list = new List<Medicine>();
@@ -110,7 +109,6 @@ namespace SmartMed.Data
                 new SqlParameter("@active", item.IsActive)
             };
 
-        /// <summary>Soft-delete / reactivate. Never removes Medicine or OrderItem rows.</summary>
         public void SetActive(int medicineId, bool isActive)
         {
             DatabaseHelper.ExecuteNonQuery(
@@ -127,7 +125,6 @@ namespace SmartMed.Data
                 new SqlParameter("@id", medicineId));
         }
 
-        // Atomic decrement: StockQuantity >= @q prevents overselling under concurrent orders.
         public bool ReduceStock(int medicineId, int quantity)
         {
             if (quantity <= 0) return false;
@@ -158,7 +155,6 @@ namespace SmartMed.Data
 
         public DataTable GetExpiryReport()
         {
-            // Same 30-day window as MedicineService.CheckExpiry (SQL CASE for reports).
             return DatabaseHelper.ExecuteQuery(
                 @"SELECT MedicineName, Category, StockQuantity, ExpiryDate,
                   CASE WHEN ExpiryDate < CAST(GETDATE() AS DATE) THEN 'Expired'

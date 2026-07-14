@@ -15,7 +15,6 @@ namespace SmartMed.Services
 
         private readonly PrescriptionRepository _prescriptions = new PrescriptionRepository();
 
-        /// <summary>Copy one Rx file and insert a Prescription row for (orderId, medicineId).</summary>
         public void SavePrescription(int customerId, int orderId, int medicineId, string sourcePath)
         {
             if (orderId <= 0)
@@ -27,7 +26,6 @@ namespace SmartMed.Services
             _prescriptions.Insert(customerId, orderId, dest, medicineId);
         }
 
-        /// <summary>Copy and insert every medicineId → source path for an order.</summary>
         public void SavePrescriptions(int customerId, int orderId, IEnumerable<KeyValuePair<int, string>> medicineSourcePaths)
         {
             if (orderId <= 0)
@@ -39,10 +37,6 @@ namespace SmartMed.Services
                 SavePrescription(customerId, orderId, pair.Key, pair.Value);
         }
 
-        /// <summary>
-        /// Copies source files into the Prescriptions folder and builds CreateOrder attachments.
-        /// Caller should delete dest paths if the order transaction fails.
-        /// </summary>
         public List<PrescriptionRepository.PrescriptionAttachment> PrepareAttachments(
             int customerId,
             IEnumerable<KeyValuePair<int, string>> medicineSourcePaths)
@@ -81,14 +75,12 @@ namespace SmartMed.Services
 
         public List<Prescription> GetAllByOrderId(int orderId) => _prescriptions.GetAllByOrderId(orderId);
 
-        /// <summary>First prescription for the order (backward compatible).</summary>
         public Prescription GetByOrderId(int orderId) => _prescriptions.GetByOrderId(orderId);
 
         public void DeleteByOrderId(int orderId) => _prescriptions.DeleteByOrderId(orderId);
 
         public bool HasRecentUpload(int customerId) => _prescriptions.HasRecentUpload(customerId);
 
-        /// <summary>Single file name, or "name (+N)" when the order has multiple Rx files.</summary>
         public string GetDisplayName(int orderId)
         {
             var all = GetAllByOrderId(orderId);
@@ -109,7 +101,6 @@ namespace SmartMed.Services
             return $"{named[0]} (+{named.Count - 1})";
         }
 
-        /// <summary>First file path (open-compat). Prefer <see cref="GetFilePaths"/> for multi-Rx.</summary>
         public string GetFilePath(int orderId) => GetByOrderId(orderId)?.PrescriptionFile;
 
         public IReadOnlyList<string> GetFilePaths(int orderId)
@@ -122,10 +113,6 @@ namespace SmartMed.Services
 
         public bool HasPrescription(int orderId) => GetAllByOrderId(orderId).Count > 0;
 
-        /// <summary>
-        /// Order-level aggregate: Pending if any Pending; else Rejected if any Rejected;
-        /// Verified only when every row is Verified.
-        /// </summary>
         public string GetStatus(int orderId)
         {
             var all = GetAllByOrderId(orderId);
@@ -153,10 +140,8 @@ namespace SmartMed.Services
             return string.IsNullOrWhiteSpace(status) ? "—" : status;
         }
 
-        /// <summary>Sets every prescription on the order to Verified (admin order-level).</summary>
         public void Verify(int orderId) => SetOrderStatus(orderId, StatusVerified, StatusPending);
 
-        /// <summary>Sets every prescription on the order to Rejected (admin order-level).</summary>
         public void Reject(int orderId) => SetOrderStatus(orderId, StatusRejected, StatusPending);
 
         public void VerifyById(int orderId, int prescriptionId) =>

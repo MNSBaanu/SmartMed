@@ -484,8 +484,6 @@ namespace SmartMed.UI
 
                 UiTheme.EnableFieldNavigation(btnSave, txtName, txtEmail, txtPhone, txtAddress);
 
-                // Validate/save inside the dialog so it stays open and keeps the entered
-                // values when validation fails, instead of closing on OK first.
                 btnSave.Click += (s, e) =>
                 {
                     var customer = new Customer

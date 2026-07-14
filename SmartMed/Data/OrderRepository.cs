@@ -62,10 +62,6 @@ namespace SmartMed.Data
             return list;
         }
 
-        /// <summary>
-        /// Creates an order in one transaction: insert order/items, reduce stock per line,
-        /// then insert one Prescription row per attachment (medicineId + filePath).
-        /// </summary>
         public int CreateOrder(
             int customerId,
             List<OrderItem> items,
@@ -128,17 +124,13 @@ namespace SmartMed.Data
                     }
                     catch
                     {
-                        try { tx.Rollback(); } catch { /* already completed */ }
+                        try { tx.Rollback(); } catch {  }
                         throw;
                     }
                 }
             }
         }
 
-        /// <summary>
-        /// Backward-compatible stub: wraps a single file as one attachment with MedicineID null.
-        /// Prefer the overload that accepts <see cref="PrescriptionRepository.PrescriptionAttachment"/> list.
-        /// </summary>
         public int CreateOrder(
             int customerId,
             List<OrderItem> items,

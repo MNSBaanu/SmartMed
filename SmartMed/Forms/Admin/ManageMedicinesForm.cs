@@ -128,7 +128,6 @@ namespace SmartMed.UI
             if (_runtimeWired) return;
             _runtimeWired = true;
 
-            // Placeholder chrome cannot be expressed in the Designer.
             UiTheme.WireClinicalPlaceholderTextBox(txtSearch, "Search");
             UiTheme.WireClinicalPlaceholderTextBox(txtMinPrice, "Min");
             UiTheme.WireClinicalPlaceholderTextBox(txtMaxPrice, "Max");
@@ -167,7 +166,7 @@ namespace SmartMed.UI
         private static void ClearFilterInput(TextBox textBox, string placeholder)
         {
             if (textBox == null) return;
-            // Wipe any typed value and show the placeholder again (not kept as filter text).
+
             textBox.ForeColor = UiTheme.PlaceholderText;
             textBox.Text = placeholder;
         }
@@ -740,8 +739,6 @@ namespace SmartMed.UI
                     txtDescription, txtActiveIngredient, txtUsageInstructions,
                     txtWarnings, txtSideEffects, txtPackSize);
 
-                // Validate and save inside the dialog so it stays open (and keeps the
-                // entered values) when validation fails, instead of closing on OK first.
                 btnSave.Click += (s, e) =>
                 {
                     try

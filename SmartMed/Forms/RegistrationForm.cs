@@ -37,7 +37,6 @@ namespace SmartMed.UI
             LayoutRegistrationContent();
         }
 
-        /// <summary>Runtime-only input behavior (placeholders, password masking).</summary>
         private void WireRuntimeBehavior()
         {
             UiTheme.WireClinicalPlaceholderTextBox(txtFullName, "Dr. Jane Smith");

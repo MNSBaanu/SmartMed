@@ -66,7 +66,6 @@ namespace SmartMed.Services
             if (transitionError != null)
                 throw new InvalidOperationException(transitionError);
 
-            // Advancing past Pending requires verified Rx when the order has attachments.
             if (status == StatusReadyForPickup || status == StatusDelivered)
             {
                 if (_prescriptions.HasPrescription(orderId))
@@ -82,7 +81,6 @@ namespace SmartMed.Services
             _orders.UpdateStatus(orderId, status);
         }
 
-        // Allowed flow: Pending → Ready for Pickup → Delivered (Delivered is terminal; no return to Pending).
         private static string GetTransitionError(string currentStatus, string newStatus)
         {
             if (currentStatus == newStatus)
@@ -105,10 +103,6 @@ namespace SmartMed.Services
             return "Invalid order status transition.";
         }
 
-        /// <summary>
-        /// Places an order from cart lines. Each RequiresPrescription line must have PrescriptionPath;
-        /// one Prescription row is stored per (OrderID, MedicineID).
-        /// </summary>
         public int PlaceOrder(int customerId, IReadOnlyList<CartLine> cart,
             string paymentMethod, string paymentStatus, string paymentReference)
         {
@@ -137,7 +131,6 @@ namespace SmartMed.Services
                     rxPaths.Add(new KeyValuePair<int, string>(line.MedicineID, line.PrescriptionPath));
                 }
 
-                // Charge current DB/effective price at pay time — never CartLine.UnitPrice/Subtotal.
                 var unitPrice = _medicineService.GetEffectivePrice(medicine);
                 orderItems.Add(new OrderItem
                 {
@@ -179,18 +172,13 @@ namespace SmartMed.Services
                     {
                         if (attachment == null || string.IsNullOrWhiteSpace(attachment.FilePath))
                             continue;
-                        try { File.Delete(attachment.FilePath); } catch { /* orphan file is acceptable */ }
+                        try { File.Delete(attachment.FilePath); } catch { }
                     }
                 }
                 throw;
             }
         }
 
-        /// <summary>
-        /// Compatibility overload: <paramref name="prescriptionSourcePath"/> is ignored;
-        /// Rx files are taken from each <see cref="CartLine.PrescriptionPath"/>.
-        /// Prefer the overload without this parameter.
-        /// </summary>
         public int PlaceOrder(int customerId, IReadOnlyList<CartLine> cart, string prescriptionSourcePath,
             string paymentMethod, string paymentStatus, string paymentReference)
         {

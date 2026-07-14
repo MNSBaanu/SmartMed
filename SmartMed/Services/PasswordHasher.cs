@@ -5,9 +5,6 @@ using System.Text;
 
 namespace SmartMed.Services
 {
-    /// <summary>
-    /// PBKDF2 password hashing (RFC 2898). Stored format: <c>{iterations}${saltBase64}${hashBase64}</c>.
-    /// </summary>
     public static class PasswordHasher
     {
         public const int DefaultIterations = 100000;
@@ -27,10 +24,6 @@ namespace SmartMed.Services
             return Format(DefaultIterations, salt, hash);
         }
 
-        /// <summary>
-        /// Verifies <paramref name="plain"/> against a stored value.
-        /// Hashed rows use PBKDF2; leftover plain-text rows use a fixed-time byte compare (migration only).
-        /// </summary>
         public static bool Verify(string plain, string stored)
         {
             if (string.IsNullOrEmpty(plain) || string.IsNullOrEmpty(stored))
@@ -48,7 +41,6 @@ namespace SmartMed.Services
             return FixedTimeEquals(actual, expected);
         }
 
-        /// <summary>True when <paramref name="stored"/> matches <c>iterations$salt$hash</c>.</summary>
         public static bool LooksHashed(string stored)
         {
             if (string.IsNullOrWhiteSpace(stored))
@@ -122,7 +114,6 @@ namespace SmartMed.Services
             if (a == null || b == null || a.Length != b.Length)
                 return false;
 
-            // CryptographicOperations.FixedTimeEquals is not on net48; XOR fold is constant-time for equal lengths.
             int diff = 0;
             for (int i = 0; i < a.Length; i++)
                 diff |= a[i] ^ b[i];

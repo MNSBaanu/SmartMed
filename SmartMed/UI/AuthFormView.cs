@@ -2,7 +2,6 @@ using System.Windows.Forms;
 
 namespace SmartMed.UI
 {
-    /// <summary>Visual chrome shared by Login/Registration designer and runtime (borders, theme init).</summary>
     internal static class AuthFormView
     {
         public static void EnsureTheme()
@@ -13,7 +12,6 @@ namespace SmartMed.UI
             }
             catch
             {
-                // Designer host may not load embedded fonts until later.
             }
         }
 

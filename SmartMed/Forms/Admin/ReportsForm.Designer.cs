@@ -88,9 +88,7 @@ namespace SmartMed.UI
             this.panelGridHeader.SuspendLayout();
             this.panelFooter.SuspendLayout();
             this.SuspendLayout();
-            // 
-            // panelScrollHost
-            // 
+
             this.panelScrollHost.AutoScroll = true;
             this.panelScrollHost.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(244)))), ((int)(((byte)(251)))), ((int)(((byte)(250)))));
             this.panelScrollHost.Controls.Add(this.tableLayoutRoot);
@@ -100,9 +98,7 @@ namespace SmartMed.UI
             this.panelScrollHost.Padding = new System.Windows.Forms.Padding(24);
             this.panelScrollHost.Size = new System.Drawing.Size(1060, 720);
             this.panelScrollHost.TabIndex = 0;
-            // 
-            // tableLayoutRoot
-            // 
+
             this.tableLayoutRoot.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(244)))), ((int)(((byte)(251)))), ((int)(((byte)(250)))));
             this.tableLayoutRoot.ColumnCount = 1;
             this.tableLayoutRoot.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
@@ -126,9 +122,7 @@ namespace SmartMed.UI
             this.tableLayoutRoot.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutRoot.Size = new System.Drawing.Size(1012, 900);
             this.tableLayoutRoot.TabIndex = 0;
-            // 
-            // panelHeader
-            // 
+
             this.panelHeader.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(244)))), ((int)(((byte)(251)))), ((int)(((byte)(250)))));
             this.panelHeader.Controls.Add(this.flowHeaderActions);
             this.panelHeader.Controls.Add(this.lblPageSubtitle);
@@ -139,9 +133,7 @@ namespace SmartMed.UI
             this.panelHeader.Name = "panelHeader";
             this.panelHeader.Size = new System.Drawing.Size(1012, 76);
             this.panelHeader.TabIndex = 0;
-            // 
-            // flowHeaderActions
-            // 
+
             this.flowHeaderActions.AutoSize = true;
             this.flowHeaderActions.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(244)))), ((int)(((byte)(251)))), ((int)(((byte)(250)))));
             this.flowHeaderActions.Controls.Add(this.btnViewReport);
@@ -154,9 +146,7 @@ namespace SmartMed.UI
             this.flowHeaderActions.Size = new System.Drawing.Size(332, 76);
             this.flowHeaderActions.TabIndex = 2;
             this.flowHeaderActions.WrapContents = false;
-            // 
-            // btnViewReport
-            // 
+
             this.btnViewReport.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(53)))), ((int)(((byte)(103)))), ((int)(((byte)(94)))));
             this.btnViewReport.Cursor = System.Windows.Forms.Cursors.Hand;
             this.btnViewReport.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(27)))), ((int)(((byte)(79)))), ((int)(((byte)(71)))));
@@ -172,9 +162,7 @@ namespace SmartMed.UI
             this.btnViewReport.Text = "View Report";
             this.btnViewReport.UseVisualStyleBackColor = false;
             this.btnViewReport.Click += new System.EventHandler(this.BtnViewReport_Click);
-            // 
-            // btnExportCsv
-            // 
+
             this.btnExportCsv.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(238)))), ((int)(((byte)(245)))), ((int)(((byte)(244)))));
             this.btnExportCsv.Cursor = System.Windows.Forms.Cursors.Hand;
             this.btnExportCsv.Enabled = false;
@@ -191,9 +179,7 @@ namespace SmartMed.UI
             this.btnExportCsv.Text = "Export CSV";
             this.btnExportCsv.UseVisualStyleBackColor = false;
             this.btnExportCsv.Click += new System.EventHandler(this.BtnExportCsv_Click);
-            // 
-            // btnExportPdf
-            // 
+
             this.btnExportPdf.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(238)))), ((int)(((byte)(245)))), ((int)(((byte)(244)))));
             this.btnExportPdf.Cursor = System.Windows.Forms.Cursors.Hand;
             this.btnExportPdf.Enabled = false;
@@ -210,9 +196,7 @@ namespace SmartMed.UI
             this.btnExportPdf.Text = "Export PDF";
             this.btnExportPdf.UseVisualStyleBackColor = false;
             this.btnExportPdf.Click += new System.EventHandler(this.BtnExportPdf_Click);
-            // 
-            // lblPageSubtitle
-            // 
+
             this.lblPageSubtitle.AutoSize = true;
             this.lblPageSubtitle.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(244)))), ((int)(((byte)(251)))), ((int)(((byte)(250)))));
             this.lblPageSubtitle.Font = new System.Drawing.Font("Hanken Grotesk", 9F);
@@ -222,9 +206,7 @@ namespace SmartMed.UI
             this.lblPageSubtitle.Size = new System.Drawing.Size(520, 18);
             this.lblPageSubtitle.TabIndex = 1;
             this.lblPageSubtitle.Text = "Completed sales, stock alerts, and customer order history for quick decisions.";
-            // 
-            // lblPageTitle
-            // 
+
             this.lblPageTitle.AutoSize = true;
             this.lblPageTitle.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(244)))), ((int)(((byte)(251)))), ((int)(((byte)(250)))));
             this.lblPageTitle.Font = new System.Drawing.Font("Hanken Grotesk", 20F, System.Drawing.FontStyle.Bold);
@@ -234,9 +216,7 @@ namespace SmartMed.UI
             this.lblPageTitle.Size = new System.Drawing.Size(96, 36);
             this.lblPageTitle.TabIndex = 0;
             this.lblPageTitle.Text = "Reports";
-            // 
-            // tableStatsRow
-            // 
+
             this.tableStatsRow.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(244)))), ((int)(((byte)(251)))), ((int)(((byte)(250)))));
             this.tableStatsRow.ColumnCount = 4;
             this.tableStatsRow.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25F));
@@ -255,9 +235,7 @@ namespace SmartMed.UI
             this.tableStatsRow.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tableStatsRow.Size = new System.Drawing.Size(1012, 108);
             this.tableStatsRow.TabIndex = 1;
-            // 
-            // panelStatRevenue
-            // 
+
             this.panelStatRevenue.BackColor = System.Drawing.Color.White;
             this.panelStatRevenue.Controls.Add(this.lblTotalRevenue);
             this.panelStatRevenue.Controls.Add(this.lblStatTitleRevenue);
@@ -268,9 +246,7 @@ namespace SmartMed.UI
             this.panelStatRevenue.Padding = new System.Windows.Forms.Padding(16, 14, 14, 14);
             this.panelStatRevenue.Size = new System.Drawing.Size(239, 108);
             this.panelStatRevenue.TabIndex = 0;
-            // 
-            // lblTotalRevenue
-            // 
+
             this.lblTotalRevenue.BackColor = System.Drawing.Color.White;
             this.lblTotalRevenue.Dock = System.Windows.Forms.DockStyle.Fill;
             this.lblTotalRevenue.Font = new System.Drawing.Font("Hanken Grotesk", 22F, System.Drawing.FontStyle.Bold);
@@ -281,9 +257,7 @@ namespace SmartMed.UI
             this.lblTotalRevenue.TabIndex = 1;
             this.lblTotalRevenue.Text = "-";
             this.lblTotalRevenue.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            // 
-            // lblStatTitleRevenue
-            // 
+
             this.lblStatTitleRevenue.BackColor = System.Drawing.Color.White;
             this.lblStatTitleRevenue.Dock = System.Windows.Forms.DockStyle.Top;
             this.lblStatTitleRevenue.Font = new System.Drawing.Font("Hanken Grotesk", 8.25F, System.Drawing.FontStyle.Bold);
@@ -293,9 +267,7 @@ namespace SmartMed.UI
             this.lblStatTitleRevenue.Size = new System.Drawing.Size(209, 16);
             this.lblStatTitleRevenue.TabIndex = 0;
             this.lblStatTitleRevenue.Text = "COMPLETED REVENUE";
-            // 
-            // panelStatOrders
-            // 
+
             this.panelStatOrders.BackColor = System.Drawing.Color.White;
             this.panelStatOrders.Controls.Add(this.lblTotalOrders);
             this.panelStatOrders.Controls.Add(this.lblStatTitleOrders);
@@ -306,9 +278,7 @@ namespace SmartMed.UI
             this.panelStatOrders.Padding = new System.Windows.Forms.Padding(16, 14, 14, 14);
             this.panelStatOrders.Size = new System.Drawing.Size(239, 108);
             this.panelStatOrders.TabIndex = 1;
-            // 
-            // lblTotalOrders
-            // 
+
             this.lblTotalOrders.BackColor = System.Drawing.Color.White;
             this.lblTotalOrders.Dock = System.Windows.Forms.DockStyle.Fill;
             this.lblTotalOrders.Font = new System.Drawing.Font("Hanken Grotesk", 22F, System.Drawing.FontStyle.Bold);
@@ -319,9 +289,7 @@ namespace SmartMed.UI
             this.lblTotalOrders.TabIndex = 1;
             this.lblTotalOrders.Text = "-";
             this.lblTotalOrders.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            // 
-            // lblStatTitleOrders
-            // 
+
             this.lblStatTitleOrders.BackColor = System.Drawing.Color.White;
             this.lblStatTitleOrders.Dock = System.Windows.Forms.DockStyle.Top;
             this.lblStatTitleOrders.Font = new System.Drawing.Font("Hanken Grotesk", 8.25F, System.Drawing.FontStyle.Bold);
@@ -331,9 +299,7 @@ namespace SmartMed.UI
             this.lblStatTitleOrders.Size = new System.Drawing.Size(209, 16);
             this.lblStatTitleOrders.TabIndex = 0;
             this.lblStatTitleOrders.Text = "COMPLETED ORDERS";
-            // 
-            // panelStatLowStock
-            // 
+
             this.panelStatLowStock.BackColor = System.Drawing.Color.White;
             this.panelStatLowStock.Controls.Add(this.lblLowStock);
             this.panelStatLowStock.Controls.Add(this.lblStatTitleLowStock);
@@ -344,9 +310,7 @@ namespace SmartMed.UI
             this.panelStatLowStock.Padding = new System.Windows.Forms.Padding(16, 14, 14, 14);
             this.panelStatLowStock.Size = new System.Drawing.Size(239, 108);
             this.panelStatLowStock.TabIndex = 2;
-            // 
-            // lblLowStock
-            // 
+
             this.lblLowStock.BackColor = System.Drawing.Color.White;
             this.lblLowStock.Dock = System.Windows.Forms.DockStyle.Fill;
             this.lblLowStock.Font = new System.Drawing.Font("Hanken Grotesk", 22F, System.Drawing.FontStyle.Bold);
@@ -357,9 +321,7 @@ namespace SmartMed.UI
             this.lblLowStock.TabIndex = 1;
             this.lblLowStock.Text = "-";
             this.lblLowStock.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            // 
-            // lblStatTitleLowStock
-            // 
+
             this.lblStatTitleLowStock.BackColor = System.Drawing.Color.White;
             this.lblStatTitleLowStock.Dock = System.Windows.Forms.DockStyle.Top;
             this.lblStatTitleLowStock.Font = new System.Drawing.Font("Hanken Grotesk", 8.25F, System.Drawing.FontStyle.Bold);
@@ -369,9 +331,7 @@ namespace SmartMed.UI
             this.lblStatTitleLowStock.Size = new System.Drawing.Size(209, 16);
             this.lblStatTitleLowStock.TabIndex = 0;
             this.lblStatTitleLowStock.Text = "LOW STOCK ITEMS";
-            // 
-            // panelStatOutstanding
-            // 
+
             this.panelStatOutstanding.BackColor = System.Drawing.Color.White;
             this.panelStatOutstanding.Controls.Add(this.lblOutstanding);
             this.panelStatOutstanding.Controls.Add(this.lblStatTitleOutstanding);
@@ -381,9 +341,7 @@ namespace SmartMed.UI
             this.panelStatOutstanding.Padding = new System.Windows.Forms.Padding(16, 14, 14, 14);
             this.panelStatOutstanding.Size = new System.Drawing.Size(253, 108);
             this.panelStatOutstanding.TabIndex = 3;
-            // 
-            // lblOutstanding
-            // 
+
             this.lblOutstanding.BackColor = System.Drawing.Color.White;
             this.lblOutstanding.Dock = System.Windows.Forms.DockStyle.Fill;
             this.lblOutstanding.Font = new System.Drawing.Font("Hanken Grotesk", 22F, System.Drawing.FontStyle.Bold);
@@ -394,9 +352,7 @@ namespace SmartMed.UI
             this.lblOutstanding.TabIndex = 1;
             this.lblOutstanding.Text = "-";
             this.lblOutstanding.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            // 
-            // lblStatTitleOutstanding
-            // 
+
             this.lblStatTitleOutstanding.BackColor = System.Drawing.Color.White;
             this.lblStatTitleOutstanding.Dock = System.Windows.Forms.DockStyle.Top;
             this.lblStatTitleOutstanding.Font = new System.Drawing.Font("Hanken Grotesk", 8.25F, System.Drawing.FontStyle.Bold);
@@ -406,9 +362,7 @@ namespace SmartMed.UI
             this.lblStatTitleOutstanding.Size = new System.Drawing.Size(223, 16);
             this.lblStatTitleOutstanding.TabIndex = 0;
             this.lblStatTitleOutstanding.Text = "OUTSTANDING";
-            // 
-            // panelTabBar
-            // 
+
             this.panelTabBar.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(238)))), ((int)(((byte)(245)))), ((int)(((byte)(244)))));
             this.panelTabBar.Controls.Add(this.flowTabs);
             this.panelTabBar.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -418,9 +372,7 @@ namespace SmartMed.UI
             this.panelTabBar.Padding = new System.Windows.Forms.Padding(8, 8, 8, 0);
             this.panelTabBar.Size = new System.Drawing.Size(1012, 48);
             this.panelTabBar.TabIndex = 2;
-            // 
-            // flowTabs
-            // 
+
             this.flowTabs.AutoSize = true;
             this.flowTabs.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(238)))), ((int)(((byte)(245)))), ((int)(((byte)(244)))));
             this.flowTabs.Controls.Add(this.btnSalesTab);
@@ -433,9 +385,7 @@ namespace SmartMed.UI
             this.flowTabs.Size = new System.Drawing.Size(996, 32);
             this.flowTabs.TabIndex = 0;
             this.flowTabs.WrapContents = false;
-            // 
-            // btnSalesTab
-            // 
+
             this.btnSalesTab.AutoSize = true;
             this.btnSalesTab.BackColor = System.Drawing.Color.White;
             this.btnSalesTab.Cursor = System.Windows.Forms.Cursors.Hand;
@@ -453,9 +403,7 @@ namespace SmartMed.UI
             this.btnSalesTab.Text = "Sales Performance";
             this.btnSalesTab.UseVisualStyleBackColor = false;
             this.btnSalesTab.Click += new System.EventHandler(this.BtnSalesTab_Click);
-            // 
-            // btnInventoryTab
-            // 
+
             this.btnInventoryTab.AutoSize = true;
             this.btnInventoryTab.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(238)))), ((int)(((byte)(245)))), ((int)(((byte)(244)))));
             this.btnInventoryTab.Cursor = System.Windows.Forms.Cursors.Hand;
@@ -473,9 +421,7 @@ namespace SmartMed.UI
             this.btnInventoryTab.Text = "Medicine Inventory";
             this.btnInventoryTab.UseVisualStyleBackColor = false;
             this.btnInventoryTab.Click += new System.EventHandler(this.BtnInventoryTab_Click);
-            // 
-            // btnHistoryTab
-            // 
+
             this.btnHistoryTab.AutoSize = true;
             this.btnHistoryTab.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(238)))), ((int)(((byte)(245)))), ((int)(((byte)(244)))));
             this.btnHistoryTab.Cursor = System.Windows.Forms.Cursors.Hand;
@@ -492,9 +438,7 @@ namespace SmartMed.UI
             this.btnHistoryTab.Text = "Customer Order History";
             this.btnHistoryTab.UseVisualStyleBackColor = false;
             this.btnHistoryTab.Click += new System.EventHandler(this.BtnHistoryTab_Click);
-            // 
-            // panelPeriodFilter
-            // 
+
             this.panelPeriodFilter.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(244)))), ((int)(((byte)(251)))), ((int)(((byte)(250)))));
             this.panelPeriodFilter.Controls.Add(this.flowPeriodTabs);
             this.panelPeriodFilter.Controls.Add(this.lblPeriodLabel);
@@ -504,9 +448,7 @@ namespace SmartMed.UI
             this.panelPeriodFilter.Name = "panelPeriodFilter";
             this.panelPeriodFilter.Size = new System.Drawing.Size(1012, 44);
             this.panelPeriodFilter.TabIndex = 3;
-            // 
-            // flowPeriodTabs
-            // 
+
             this.flowPeriodTabs.AutoSize = true;
             this.flowPeriodTabs.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(244)))), ((int)(((byte)(251)))), ((int)(((byte)(250)))));
             this.flowPeriodTabs.Controls.Add(this.btnWeekPeriod);
@@ -516,9 +458,7 @@ namespace SmartMed.UI
             this.flowPeriodTabs.Name = "flowPeriodTabs";
             this.flowPeriodTabs.Size = new System.Drawing.Size(210, 28);
             this.flowPeriodTabs.TabIndex = 1;
-            // 
-            // btnWeekPeriod
-            // 
+
             this.btnWeekPeriod.BackColor = System.Drawing.Color.White;
             this.btnWeekPeriod.Cursor = System.Windows.Forms.Cursors.Hand;
             this.btnWeekPeriod.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(193)))), ((int)(((byte)(200)))), ((int)(((byte)(198)))));
@@ -533,9 +473,7 @@ namespace SmartMed.UI
             this.btnWeekPeriod.Text = "Week";
             this.btnWeekPeriod.UseVisualStyleBackColor = false;
             this.btnWeekPeriod.Click += new System.EventHandler(this.BtnWeekPeriod_Click);
-            // 
-            // btnMonthPeriod
-            // 
+
             this.btnMonthPeriod.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(53)))), ((int)(((byte)(103)))), ((int)(((byte)(94)))));
             this.btnMonthPeriod.Cursor = System.Windows.Forms.Cursors.Hand;
             this.btnMonthPeriod.FlatAppearance.BorderSize = 0;
@@ -550,9 +488,7 @@ namespace SmartMed.UI
             this.btnMonthPeriod.Text = "Month";
             this.btnMonthPeriod.UseVisualStyleBackColor = false;
             this.btnMonthPeriod.Click += new System.EventHandler(this.BtnMonthPeriod_Click);
-            // 
-            // btnYearPeriod
-            // 
+
             this.btnYearPeriod.BackColor = System.Drawing.Color.White;
             this.btnYearPeriod.Cursor = System.Windows.Forms.Cursors.Hand;
             this.btnYearPeriod.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(193)))), ((int)(((byte)(200)))), ((int)(((byte)(198)))));
@@ -566,9 +502,7 @@ namespace SmartMed.UI
             this.btnYearPeriod.Text = "Year";
             this.btnYearPeriod.UseVisualStyleBackColor = false;
             this.btnYearPeriod.Click += new System.EventHandler(this.BtnYearPeriod_Click);
-            // 
-            // lblPeriodLabel
-            // 
+
             this.lblPeriodLabel.AutoSize = true;
             this.lblPeriodLabel.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(244)))), ((int)(((byte)(251)))), ((int)(((byte)(250)))));
             this.lblPeriodLabel.Font = new System.Drawing.Font("Hanken Grotesk", 9F);
@@ -578,9 +512,7 @@ namespace SmartMed.UI
             this.lblPeriodLabel.Size = new System.Drawing.Size(46, 18);
             this.lblPeriodLabel.TabIndex = 0;
             this.lblPeriodLabel.Text = "Period:";
-            // 
-            // panelCustomerFilter
-            // 
+
             this.panelCustomerFilter.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(244)))), ((int)(((byte)(251)))), ((int)(((byte)(250)))));
             this.panelCustomerFilter.Controls.Add(this.cmbCustomer);
             this.panelCustomerFilter.Controls.Add(this.lblCustomerLabel);
@@ -591,9 +523,7 @@ namespace SmartMed.UI
             this.panelCustomerFilter.Size = new System.Drawing.Size(1012, 44);
             this.panelCustomerFilter.TabIndex = 4;
             this.panelCustomerFilter.Visible = false;
-            // 
-            // cmbCustomer
-            // 
+
             this.cmbCustomer.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cmbCustomer.Font = new System.Drawing.Font("Hanken Grotesk", 9F);
             this.cmbCustomer.FormattingEnabled = true;
@@ -602,9 +532,7 @@ namespace SmartMed.UI
             this.cmbCustomer.Size = new System.Drawing.Size(320, 26);
             this.cmbCustomer.TabIndex = 1;
             this.cmbCustomer.SelectedIndexChanged += new System.EventHandler(this.CmbCustomer_SelectedIndexChanged);
-            // 
-            // lblCustomerLabel
-            // 
+
             this.lblCustomerLabel.AutoSize = true;
             this.lblCustomerLabel.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(244)))), ((int)(((byte)(251)))), ((int)(((byte)(250)))));
             this.lblCustomerLabel.Font = new System.Drawing.Font("Hanken Grotesk", 9F);
@@ -614,9 +542,7 @@ namespace SmartMed.UI
             this.lblCustomerLabel.Size = new System.Drawing.Size(66, 18);
             this.lblCustomerLabel.TabIndex = 0;
             this.lblCustomerLabel.Text = "Customer:";
-            // 
-            // panelGridOuter
-            // 
+
             this.panelGridOuter.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(193)))), ((int)(((byte)(200)))), ((int)(((byte)(198)))));
             this.panelGridOuter.Controls.Add(this.panelGridInner);
             this.panelGridOuter.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -626,9 +552,7 @@ namespace SmartMed.UI
             this.panelGridOuter.Padding = new System.Windows.Forms.Padding(1);
             this.panelGridOuter.Size = new System.Drawing.Size(1012, 320);
             this.panelGridOuter.TabIndex = 5;
-            // 
-            // panelGridInner
-            // 
+
             this.panelGridInner.BackColor = System.Drawing.Color.White;
             this.panelGridInner.Controls.Add(this.panelGridBody);
             this.panelGridInner.Controls.Add(this.panelGridHeader);
@@ -637,9 +561,7 @@ namespace SmartMed.UI
             this.panelGridInner.Name = "panelGridInner";
             this.panelGridInner.Size = new System.Drawing.Size(1010, 318);
             this.panelGridInner.TabIndex = 0;
-            // 
-            // panelGridBody
-            // 
+
             this.panelGridBody.BackColor = System.Drawing.Color.White;
             this.panelGridBody.Controls.Add(this.gridReport);
             this.panelGridBody.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -648,9 +570,7 @@ namespace SmartMed.UI
             this.panelGridBody.Padding = new System.Windows.Forms.Padding(0, 4, 0, 0);
             this.panelGridBody.Size = new System.Drawing.Size(1010, 282);
             this.panelGridBody.TabIndex = 1;
-            // 
-            // gridReport
-            // 
+
             this.gridReport.AllowUserToAddRows = false;
             this.gridReport.AllowUserToDeleteRows = false;
             dataGridViewCellStyle1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(250)))), ((int)(((byte)(252)))), ((int)(((byte)(252)))));
@@ -697,44 +617,32 @@ namespace SmartMed.UI
             this.gridReport.Size = new System.Drawing.Size(1010, 278);
             this.gridReport.TabIndex = 0;
             this.gridReport.CellFormatting += new System.Windows.Forms.DataGridViewCellFormattingEventHandler(this.GridReport_CellFormatting);
-            // 
-            // colOrderRef
-            // 
+
             this.colOrderRef.HeaderText = "Order Ref";
             this.colOrderRef.MinimumWidth = 6;
             this.colOrderRef.Name = "colOrderRef";
             this.colOrderRef.ReadOnly = true;
-            // 
-            // colCustomer
-            // 
+
             this.colCustomer.HeaderText = "Customer";
             this.colCustomer.MinimumWidth = 6;
             this.colCustomer.Name = "colCustomer";
             this.colCustomer.ReadOnly = true;
-            // 
-            // colOrderDate
-            // 
+
             this.colOrderDate.HeaderText = "Order Date";
             this.colOrderDate.MinimumWidth = 6;
             this.colOrderDate.Name = "colOrderDate";
             this.colOrderDate.ReadOnly = true;
-            // 
-            // colTotalAmount
-            // 
+
             this.colTotalAmount.HeaderText = "Total Amount";
             this.colTotalAmount.MinimumWidth = 6;
             this.colTotalAmount.Name = "colTotalAmount";
             this.colTotalAmount.ReadOnly = true;
-            // 
-            // colStatus
-            // 
+
             this.colStatus.HeaderText = "Status";
             this.colStatus.MinimumWidth = 6;
             this.colStatus.Name = "colStatus";
             this.colStatus.ReadOnly = true;
-            // 
-            // panelGridHeader
-            // 
+
             this.panelGridHeader.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(238)))), ((int)(((byte)(245)))), ((int)(((byte)(244)))));
             this.panelGridHeader.Controls.Add(this.lblGridHeaderTitle);
             this.panelGridHeader.Dock = System.Windows.Forms.DockStyle.Top;
@@ -743,9 +651,7 @@ namespace SmartMed.UI
             this.panelGridHeader.Padding = new System.Windows.Forms.Padding(12, 8, 10, 4);
             this.panelGridHeader.Size = new System.Drawing.Size(1010, 36);
             this.panelGridHeader.TabIndex = 0;
-            // 
-            // lblGridHeaderTitle
-            // 
+
             this.lblGridHeaderTitle.AutoSize = true;
             this.lblGridHeaderTitle.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(238)))), ((int)(((byte)(245)))), ((int)(((byte)(244)))));
             this.lblGridHeaderTitle.Font = new System.Drawing.Font("Hanken Grotesk", 8.25F, System.Drawing.FontStyle.Bold);
@@ -755,9 +661,7 @@ namespace SmartMed.UI
             this.lblGridHeaderTitle.Size = new System.Drawing.Size(98, 16);
             this.lblGridHeaderTitle.TabIndex = 0;
             this.lblGridHeaderTitle.Text = "Report Preview";
-            // 
-            // panelFooter
-            // 
+
             this.panelFooter.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(244)))), ((int)(((byte)(251)))), ((int)(((byte)(250)))));
             this.panelFooter.Controls.Add(this.lblFooterStatus);
             this.panelFooter.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -765,9 +669,7 @@ namespace SmartMed.UI
             this.panelFooter.Name = "panelFooter";
             this.panelFooter.Size = new System.Drawing.Size(1012, 28);
             this.panelFooter.TabIndex = 6;
-            // 
-            // lblFooterStatus
-            // 
+
             this.lblFooterStatus.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(238)))), ((int)(((byte)(245)))), ((int)(((byte)(244)))));
             this.lblFooterStatus.Dock = System.Windows.Forms.DockStyle.Fill;
             this.lblFooterStatus.Font = new System.Drawing.Font("Hanken Grotesk", 9F);
@@ -779,9 +681,7 @@ namespace SmartMed.UI
             this.lblFooterStatus.TabIndex = 0;
             this.lblFooterStatus.Text = "";
             this.lblFooterStatus.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            // 
-            // ReportsForm
-            // 
+
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(244)))), ((int)(((byte)(251)))), ((int)(((byte)(250)))));

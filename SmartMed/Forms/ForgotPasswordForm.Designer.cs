@@ -41,9 +41,7 @@ namespace SmartMed.UI
             this.panelCardHeader.SuspendLayout();
             this.pnlHeaderIcon.SuspendLayout();
             this.SuspendLayout();
-            // 
-            // panelMain
-            // 
+
             this.panelMain.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(244)))), ((int)(((byte)(251)))), ((int)(((byte)(250)))));
             this.panelMain.Controls.Add(this.panelCard);
             this.panelMain.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -53,9 +51,7 @@ namespace SmartMed.UI
             this.panelMain.Size = new System.Drawing.Size(484, 460);
             this.panelMain.TabIndex = 0;
             this.panelMain.Paint += new System.Windows.Forms.PaintEventHandler(this.PanelMain_Paint);
-            // 
-            // panelCard
-            // 
+
             this.panelCard.BackColor = System.Drawing.Color.White;
             this.panelCard.Controls.Add(this.panelBody);
             this.panelCard.Controls.Add(this.panelActions);
@@ -65,9 +61,7 @@ namespace SmartMed.UI
             this.panelCard.Name = "panelCard";
             this.panelCard.Size = new System.Drawing.Size(444, 420);
             this.panelCard.TabIndex = 0;
-            // 
-            // panelActions
-            // 
+
             this.panelActions.BackColor = System.Drawing.Color.White;
             this.panelActions.Controls.Add(this.btnSave);
             this.panelActions.Controls.Add(this.btnCancel);
@@ -77,9 +71,7 @@ namespace SmartMed.UI
             this.panelActions.Padding = new System.Windows.Forms.Padding(24, 8, 24, 16);
             this.panelActions.Size = new System.Drawing.Size(444, 56);
             this.panelActions.TabIndex = 2;
-            // 
-            // btnSave
-            // 
+
             this.btnSave.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.btnSave.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(53)))), ((int)(((byte)(103)))), ((int)(((byte)(94)))));
             this.btnSave.FlatAppearance.BorderSize = 0;
@@ -94,9 +86,7 @@ namespace SmartMed.UI
             this.btnSave.Text = "Reset";
             this.btnSave.UseVisualStyleBackColor = false;
             this.btnSave.Click += new System.EventHandler(this.BtnSave_Click);
-            // 
-            // btnCancel
-            // 
+
             this.btnCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.btnCancel.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(238)))), ((int)(((byte)(245)))), ((int)(((byte)(244)))));
             this.btnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
@@ -111,9 +101,7 @@ namespace SmartMed.UI
             this.btnCancel.Text = "Cancel";
             this.btnCancel.UseVisualStyleBackColor = false;
             this.btnCancel.Click += new System.EventHandler(this.BtnCancel_Click);
-            // 
-            // panelBody
-            // 
+
             this.panelBody.BackColor = System.Drawing.Color.White;
             this.panelBody.Controls.Add(this.txtConfirm);
             this.panelBody.Controls.Add(this.lblConfirm);
@@ -129,9 +117,7 @@ namespace SmartMed.UI
             this.panelBody.Padding = new System.Windows.Forms.Padding(24, 16, 24, 8);
             this.panelBody.Size = new System.Drawing.Size(444, 324);
             this.panelBody.TabIndex = 1;
-            // 
-            // txtConfirm
-            // 
+
             this.txtConfirm.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(238)))), ((int)(((byte)(245)))), ((int)(((byte)(244)))));
             this.txtConfirm.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.txtConfirm.Font = new System.Drawing.Font("Hanken Grotesk", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
@@ -140,9 +126,7 @@ namespace SmartMed.UI
             this.txtConfirm.Name = "txtConfirm";
             this.txtConfirm.Size = new System.Drawing.Size(396, 40);
             this.txtConfirm.TabIndex = 7;
-            // 
-            // lblConfirm
-            // 
+
             this.lblConfirm.AutoSize = true;
             this.lblConfirm.BackColor = System.Drawing.Color.White;
             this.lblConfirm.Font = new System.Drawing.Font("Hanken Grotesk", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
@@ -152,9 +136,7 @@ namespace SmartMed.UI
             this.lblConfirm.Size = new System.Drawing.Size(128, 15);
             this.lblConfirm.TabIndex = 6;
             this.lblConfirm.Text = "CONFIRM PASSWORD";
-            // 
-            // txtNew
-            // 
+
             this.txtNew.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(238)))), ((int)(((byte)(245)))), ((int)(((byte)(244)))));
             this.txtNew.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.txtNew.Font = new System.Drawing.Font("Hanken Grotesk", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
@@ -163,9 +145,7 @@ namespace SmartMed.UI
             this.txtNew.Name = "txtNew";
             this.txtNew.Size = new System.Drawing.Size(396, 40);
             this.txtNew.TabIndex = 5;
-            // 
-            // lblNew
-            // 
+
             this.lblNew.AutoSize = true;
             this.lblNew.BackColor = System.Drawing.Color.White;
             this.lblNew.Font = new System.Drawing.Font("Hanken Grotesk", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
@@ -175,9 +155,7 @@ namespace SmartMed.UI
             this.lblNew.Size = new System.Drawing.Size(96, 15);
             this.lblNew.TabIndex = 4;
             this.lblNew.Text = "NEW PASSWORD";
-            // 
-            // txtIdentity
-            // 
+
             this.txtIdentity.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(238)))), ((int)(((byte)(245)))), ((int)(((byte)(244)))));
             this.txtIdentity.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.txtIdentity.Font = new System.Drawing.Font("Hanken Grotesk", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
@@ -186,9 +164,7 @@ namespace SmartMed.UI
             this.txtIdentity.Name = "txtIdentity";
             this.txtIdentity.Size = new System.Drawing.Size(396, 40);
             this.txtIdentity.TabIndex = 3;
-            // 
-            // lblIdentity
-            // 
+
             this.lblIdentity.AutoSize = true;
             this.lblIdentity.BackColor = System.Drawing.Color.White;
             this.lblIdentity.Font = new System.Drawing.Font("Hanken Grotesk", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
@@ -198,9 +174,7 @@ namespace SmartMed.UI
             this.lblIdentity.Size = new System.Drawing.Size(136, 15);
             this.lblIdentity.TabIndex = 2;
             this.lblIdentity.Text = "EMAIL OR USERNAME";
-            // 
-            // lblPageSubtitle
-            // 
+
             this.lblPageSubtitle.AutoSize = true;
             this.lblPageSubtitle.BackColor = System.Drawing.Color.White;
             this.lblPageSubtitle.Font = new System.Drawing.Font("Hanken Grotesk", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
@@ -210,9 +184,7 @@ namespace SmartMed.UI
             this.lblPageSubtitle.Size = new System.Drawing.Size(360, 15);
             this.lblPageSubtitle.TabIndex = 1;
             this.lblPageSubtitle.Text = "Enter your account email or username and choose a new password.";
-            // 
-            // lblPageTitle
-            // 
+
             this.lblPageTitle.AutoSize = true;
             this.lblPageTitle.BackColor = System.Drawing.Color.White;
             this.lblPageTitle.Font = new System.Drawing.Font("Hanken Grotesk", 14F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
@@ -222,9 +194,7 @@ namespace SmartMed.UI
             this.lblPageTitle.Size = new System.Drawing.Size(150, 20);
             this.lblPageTitle.TabIndex = 0;
             this.lblPageTitle.Text = "Forgot Password";
-            // 
-            // panelCardHeader
-            // 
+
             this.panelCardHeader.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(24)))), ((int)(((byte)(22)))));
             this.panelCardHeader.Controls.Add(this.btnClose);
             this.panelCardHeader.Controls.Add(this.lblCardTitle);
@@ -234,9 +204,7 @@ namespace SmartMed.UI
             this.panelCardHeader.Name = "panelCardHeader";
             this.panelCardHeader.Size = new System.Drawing.Size(444, 40);
             this.panelCardHeader.TabIndex = 0;
-            // 
-            // btnClose
-            // 
+
             this.btnClose.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.btnClose.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(24)))), ((int)(((byte)(22)))));
             this.btnClose.DialogResult = System.Windows.Forms.DialogResult.Cancel;
@@ -252,9 +220,7 @@ namespace SmartMed.UI
             this.btnClose.Text = "\u00d7";
             this.btnClose.UseVisualStyleBackColor = false;
             this.btnClose.Click += new System.EventHandler(this.BtnClose_Click);
-            // 
-            // lblCardTitle
-            // 
+
             this.lblCardTitle.AutoSize = true;
             this.lblCardTitle.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(24)))), ((int)(((byte)(22)))));
             this.lblCardTitle.Font = new System.Drawing.Font("Hanken Grotesk", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
@@ -264,18 +230,14 @@ namespace SmartMed.UI
             this.lblCardTitle.Size = new System.Drawing.Size(200, 15);
             this.lblCardTitle.TabIndex = 1;
             this.lblCardTitle.Text = "SmartMed \u2014 Account Security";
-            // 
-            // pnlHeaderIcon
-            // 
+
             this.pnlHeaderIcon.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(12)))), ((int)(((byte)(46)))), ((int)(((byte)(43)))));
             this.pnlHeaderIcon.Controls.Add(this.lblHeaderIcon);
             this.pnlHeaderIcon.Location = new System.Drawing.Point(12, 10);
             this.pnlHeaderIcon.Name = "pnlHeaderIcon";
             this.pnlHeaderIcon.Size = new System.Drawing.Size(24, 20);
             this.pnlHeaderIcon.TabIndex = 0;
-            // 
-            // lblHeaderIcon
-            // 
+
             this.lblHeaderIcon.Dock = System.Windows.Forms.DockStyle.Fill;
             this.lblHeaderIcon.Font = new System.Drawing.Font("Hanken Grotesk", 6.5F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.lblHeaderIcon.ForeColor = System.Drawing.Color.White;
@@ -285,9 +247,7 @@ namespace SmartMed.UI
             this.lblHeaderIcon.TabIndex = 0;
             this.lblHeaderIcon.Text = "Rx";
             this.lblHeaderIcon.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // ForgotPasswordForm
-            // 
+
             this.AcceptButton = this.btnSave;
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(244)))), ((int)(((byte)(251)))), ((int)(((byte)(250)))));
