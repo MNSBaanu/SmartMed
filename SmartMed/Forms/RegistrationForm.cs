@@ -34,6 +34,8 @@ namespace SmartMed.UI
         private void ApplyViewChrome()
         {
             AuthFormView.ApplyCardBorder(panelRegisterCard);
+            AuthFormView.StyleFieldLabels(lblFullName, lblEmail, lblPhone, lblAddress, lblPassword, lblConfirm);
+            AuthFormView.ApplySoftFieldSurfaces(txtFullName, txtEmail, txtPhone, txtAddress, txtPassword, txtConfirm);
             LayoutRegistrationContent();
         }
 
@@ -45,6 +47,7 @@ namespace SmartMed.UI
             lblAddress.Text = ValidationService.RequiredLabel("HOME ADDRESS");
             lblPassword.Text = ValidationService.RequiredLabel("PASSWORD");
 
+            AuthFormView.ApplySoftFieldSurfaces(txtFullName, txtEmail, txtPhone, txtAddress, txtPassword, txtConfirm);
             UiTheme.WireClinicalPlaceholderTextBox(txtFullName, "Dr. Jane Smith");
             UiTheme.WireClinicalPlaceholderTextBox(txtEmail, "jane@hospital.com");
             UiTheme.WireClinicalPlaceholderTextBox(txtPhone, "0771234567 or +94771234567");

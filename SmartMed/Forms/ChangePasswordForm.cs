@@ -33,6 +33,8 @@ namespace SmartMed.UI
         private void ApplyViewChrome()
         {
             AuthFormView.ApplyCardBorder(panelCard);
+            AuthFormView.StyleFieldLabels(lblCurrent, lblNew, lblConfirm);
+            AuthFormView.ApplySoftFieldSurfaces(txtCurrent, txtNew, txtConfirm);
             UiTheme.ApplyFlatButton(btnSave, UiButtonStyle.Primary);
             UiTheme.ApplyFlatButton(btnCancel, UiButtonStyle.Secondary);
 
@@ -46,6 +48,7 @@ namespace SmartMed.UI
 
         private void WireRuntimeBehavior()
         {
+            AuthFormView.ApplySoftFieldSurfaces(txtCurrent, txtNew, txtConfirm);
             UiTheme.WireClinicalPasswordTextBox(txtCurrent);
             UiTheme.WireClinicalPasswordTextBox(txtNew);
             UiTheme.WireClinicalPasswordTextBox(txtConfirm);

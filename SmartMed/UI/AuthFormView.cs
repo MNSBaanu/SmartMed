@@ -26,5 +26,19 @@ namespace SmartMed.UI
             EnsureTheme();
             UiTheme.ApplyClinicalInputShellBorder(shell);
         }
+
+        public static void ApplySoftFieldSurfaces(params TextBox[] fields)
+        {
+            EnsureTheme();
+            UiTheme.ApplyClinicalAuthFieldSurfaces(fields);
+        }
+
+        public static void StyleFieldLabels(params Label[] labels)
+        {
+            EnsureTheme();
+            if (labels == null) return;
+            foreach (var label in labels)
+                UiTheme.StyleClinicalFieldLabel(label);
+        }
     }
 }

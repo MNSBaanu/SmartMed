@@ -406,16 +406,38 @@ namespace SmartMed.UI
         {
             if (card == null) return;
             card.BackColor = Color.White;
+            EnableDoubleBuffer(card);
             if (card.Tag as string == "clinical-auth-card") return;
             card.Tag = "clinical-auth-card";
             card.Paint += (s, e) =>
             {
                 var rect = card.ClientRectangle;
+                if (rect.Width <= 1 || rect.Height <= 1) return;
                 rect.Width -= 1;
                 rect.Height -= 1;
                 using (var pen = new Pen(AdminOutline))
                     e.Graphics.DrawRectangle(pen, rect);
             };
+        }
+
+        /// <summary>
+        /// Soft clinical input surface: removes System FixedSingle chrome (reads as grey hairlines
+        /// under / around auth field labels) while keeping the mint fill.
+        /// </summary>
+        public static void ApplyClinicalAuthFieldSurface(TextBox textBox)
+        {
+            if (textBox == null) return;
+            textBox.BorderStyle = BorderStyle.None;
+            textBox.BackColor = InputBackground;
+            if (!IsPlaceholderActive(textBox))
+                textBox.ForeColor = AdminOnSurface;
+        }
+
+        public static void ApplyClinicalAuthFieldSurfaces(params TextBox[] textBoxes)
+        {
+            if (textBoxes == null) return;
+            foreach (var textBox in textBoxes)
+                ApplyClinicalAuthFieldSurface(textBox);
         }
 
         public static void DrawOuterPanelBorder(Control control, PaintEventArgs e)
@@ -441,9 +463,12 @@ namespace SmartMed.UI
         public static void StyleClinicalFieldLabel(Label label)
         {
             if (label == null) return;
+            label.BorderStyle = BorderStyle.None;
+            label.FlatStyle = FlatStyle.Standard;
             label.Font = UiFont;
             label.ForeColor = AdminLabelText;
             label.BackColor = Color.White;
+            label.UseMnemonic = false;
         }
 
         public static bool IsPlaceholderActive(TextBox textBox) =>

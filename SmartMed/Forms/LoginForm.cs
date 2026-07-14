@@ -55,6 +55,8 @@ namespace SmartMed.UI
         {
             AuthFormView.ApplyCardBorder(panelLoginCard);
             AuthFormView.ApplyPasswordFieldBorder(pnlPasswordField);
+            AuthFormView.StyleFieldLabels(lblUsername, lblPassword);
+            AuthFormView.ApplySoftFieldSurfaces(txtUsername);
             LayoutLoginContent();
         }
 

@@ -119,7 +119,7 @@ namespace SmartMed.UI
             this.panelBody.TabIndex = 1;
 
             this.txtConfirm.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(238)))), ((int)(((byte)(245)))), ((int)(((byte)(244)))));
-            this.txtConfirm.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.txtConfirm.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.txtConfirm.Font = new System.Drawing.Font("Hanken Grotesk", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.txtConfirm.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(22)))), ((int)(((byte)(29)))), ((int)(((byte)(29)))));
             this.txtConfirm.Location = new System.Drawing.Point(24, 252);
@@ -138,7 +138,7 @@ namespace SmartMed.UI
             this.lblConfirm.Text = "CONFIRM PASSWORD";
 
             this.txtNew.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(238)))), ((int)(((byte)(245)))), ((int)(((byte)(244)))));
-            this.txtNew.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.txtNew.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.txtNew.Font = new System.Drawing.Font("Hanken Grotesk", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.txtNew.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(22)))), ((int)(((byte)(29)))), ((int)(((byte)(29)))));
             this.txtNew.Location = new System.Drawing.Point(24, 176);
@@ -157,7 +157,7 @@ namespace SmartMed.UI
             this.lblNew.Text = "NEW PASSWORD";
 
             this.txtCurrent.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(238)))), ((int)(((byte)(245)))), ((int)(((byte)(244)))));
-            this.txtCurrent.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.txtCurrent.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.txtCurrent.Font = new System.Drawing.Font("Hanken Grotesk", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.txtCurrent.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(22)))), ((int)(((byte)(29)))), ((int)(((byte)(29)))));
             this.txtCurrent.Location = new System.Drawing.Point(24, 100);

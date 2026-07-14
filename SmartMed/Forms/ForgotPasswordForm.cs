@@ -26,12 +26,15 @@ namespace SmartMed.UI
         private void ApplyViewChrome()
         {
             AuthFormView.ApplyCardBorder(panelCard);
+            AuthFormView.StyleFieldLabels(lblIdentity, lblCurrent, lblNew, lblConfirm);
+            AuthFormView.ApplySoftFieldSurfaces(txtIdentity, txtCurrent, txtNew, txtConfirm);
             UiTheme.ApplyFlatButton(btnSave, UiButtonStyle.Primary);
             UiTheme.ApplyFlatButton(btnCancel, UiButtonStyle.Secondary);
         }
 
         private void WireRuntimeBehavior()
         {
+            AuthFormView.ApplySoftFieldSurfaces(txtIdentity, txtCurrent, txtNew, txtConfirm);
             UiTheme.WireClinicalPlaceholderTextBox(txtIdentity, "Email or username");
             UiTheme.WireClinicalPasswordTextBox(txtCurrent);
             UiTheme.WireClinicalPasswordTextBox(txtNew);
