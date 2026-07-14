@@ -39,6 +39,7 @@ namespace SmartMed.Services
 
         private readonly OrderRepository _orders = new OrderRepository();
         private readonly MedicineRepository _medicines = new MedicineRepository();
+        private readonly MedicineService _medicineService = new MedicineService();
         private readonly PrescriptionService _prescriptions = new PrescriptionService();
 
         public List<Order> GetAll() => _orders.GetAll();
@@ -119,12 +120,10 @@ namespace SmartMed.Services
 
             foreach (var line in cart)
             {
-                var medicine = _medicines.GetById(line.MedicineID)
+                var medicine = _medicineService.GetById(line.MedicineID)
                     ?? throw new InvalidOperationException($"Medicine not found: {line.MedicineName}");
-                if (!medicine.IsActive)
-                    throw new InvalidOperationException($"{medicine.MedicineName} is no longer available for purchase.");
-                if (medicine.ExpiryDate.Date < DateTime.Today)
-                    throw new InvalidOperationException($"{medicine.MedicineName} has expired and cannot be ordered.");
+
+                _medicineService.ValidateForCustomerPurchase(medicine);
                 if (medicine.StockQuantity < line.Quantity)
                     throw new InvalidOperationException($"Insufficient stock for {medicine.MedicineName}.");
 
@@ -136,12 +135,14 @@ namespace SmartMed.Services
                     rxPaths.Add(new KeyValuePair<int, string>(line.MedicineID, line.PrescriptionPath));
                 }
 
+                // Charge current DB/effective price at pay time — never CartLine.UnitPrice/Subtotal.
+                var unitPrice = _medicineService.GetEffectivePrice(medicine);
                 orderItems.Add(new OrderItem
                 {
                     MedicineID = line.MedicineID,
                     Quantity = line.Quantity,
-                    UnitPrice = line.UnitPrice,
-                    Subtotal = line.Subtotal
+                    UnitPrice = unitPrice,
+                    Subtotal = unitPrice * line.Quantity
                 });
             }
 

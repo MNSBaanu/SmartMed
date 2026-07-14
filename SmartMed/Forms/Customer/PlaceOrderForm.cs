@@ -77,6 +77,8 @@ namespace SmartMed.UI
             if (PreferDesignTimePreview())
                 return;
 
+            SyncCartPrices();
+
             UiTheme.SetGridDataSource(gridCart, CartService.Items.Select(l => new
             {
                 l.MedicineID,
@@ -94,6 +96,12 @@ namespace SmartMed.UI
             BeautifyCartGrid();
             UpdateCartTotals();
             lblRxNote.Visible = CartService.SelectedRequiresPrescription;
+        }
+
+        private void SyncCartPrices()
+        {
+            if (!_servicesReady || _medicines == null) return;
+            CartService.RefreshPrices(_medicines);
         }
 
         private void UpdateCartTotals()
@@ -367,6 +375,9 @@ namespace SmartMed.UI
                 if (missing.Count > 0)
                     throw new InvalidOperationException(
                         "Upload a prescription for selected Rx items: " + string.Join(", ", missing));
+
+                SyncCartPrices();
+                UpdateCartTotals();
 
                 PaymentResult payment;
                 using (var paymentDialog = new PaymentCheckoutDialog(CartService.SelectedTotal))

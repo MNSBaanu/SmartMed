@@ -224,6 +224,30 @@ namespace SmartMed.Services
             Persist();
         }
 
+        /// <summary>
+        /// Re-prices cart lines from the DB (effective/promo price). Call before showing checkout totals
+        /// so the UI matches what <see cref="OrderService.PlaceOrder"/> will charge.
+        /// </summary>
+        public static void RefreshPrices(MedicineService medicines)
+        {
+            if (medicines == null)
+                throw new ArgumentNullException(nameof(medicines));
+
+            foreach (var line in Lines)
+            {
+                var fresh = medicines.GetById(line.MedicineID);
+                if (fresh == null)
+                    continue;
+
+                line.UnitPrice = medicines.GetEffectivePrice(fresh);
+                line.ListPrice = fresh.Price;
+                line.DiscountPercent = fresh.DiscountPercent;
+                line.PromoApplied = medicines.IsPromotionActive(fresh);
+                line.RequiresPrescription = fresh.RequiresPrescription;
+                line.MedicineName = fresh.MedicineName;
+            }
+        }
+
         private static CartLine BuildLine(Medicine fresh, int quantity, string prescriptionPath, MedicineService medicines)
         {
             return new CartLine
