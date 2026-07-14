@@ -13,7 +13,6 @@ namespace SmartMed.UI
         private const string DemoCustomerEmail = "customer@gmail.com";
         private const string DemoCustomerPassword = "Customer123";
         private const string InvalidCredentialsMessage = "Invalid credentials.";
-        private const int CardFooterGap = 20;
         private const int ContentTopMargin = 32;
 
         private readonly AuthService _auth;
@@ -54,9 +53,12 @@ namespace SmartMed.UI
         private void ApplyViewChrome()
         {
             AuthFormView.ApplyCardBorder(panelLoginCard);
+            AuthFormView.ApplyPasswordFieldBorder(pnlUsernameField);
             AuthFormView.ApplyPasswordFieldBorder(pnlPasswordField);
             AuthFormView.StyleFieldLabels(lblUsername, lblPassword);
-            AuthFormView.ApplySoftFieldSurfaces(txtUsername);
+            AuthFormView.ApplySoftFieldSurfaces(txtUsername, txtPassword);
+            lblUsername.BringToFront();
+            lblPassword.BringToFront();
             LayoutLoginContent();
         }
 
@@ -82,18 +84,37 @@ namespace SmartMed.UI
 
         private void LayoutLoginContent()
         {
-            if (panelLoginCard == null || panelMain == null || panelFooter == null) return;
+            if (panelLoginCard == null || panelMain == null) return;
 
             var left = Math.Max(0, (panelMain.ClientSize.Width - panelLoginCard.Width) / 2);
-            var totalHeight = panelLoginCard.Height + CardFooterGap + panelFooter.Height;
-            var top = Math.Max(ContentTopMargin, (panelMain.ClientSize.Height - totalHeight) / 2);
+            var top = Math.Max(ContentTopMargin, (panelMain.ClientSize.Height - panelLoginCard.Height) / 2);
 
             panelLoginCard.Left = left;
             panelLoginCard.Top = top;
+            CenterHeaderStack();
+        }
 
-            panelFooter.Width = panelLoginCard.Width;
-            panelFooter.Left = left;
-            panelFooter.Top = panelLoginCard.Bottom + CardFooterGap;
+        private void CenterHeaderStack()
+        {
+            var pad = panelLoginCard.Padding;
+            var contentWidth = Math.Max(0, panelLoginCard.ClientSize.Width - pad.Left - pad.Right);
+            var contentLeft = pad.Left;
+
+            if (pnlBrandIcon != null)
+                pnlBrandIcon.Left = contentLeft + Math.Max(0, (contentWidth - pnlBrandIcon.Width) / 2);
+
+            CenterHeaderLabel(lblBrand, contentLeft, contentWidth);
+            CenterHeaderLabel(lblAuthTitle, contentLeft, contentWidth);
+            CenterHeaderLabel(lblAuthSubtitle, contentLeft, contentWidth);
+        }
+
+        private static void CenterHeaderLabel(Label label, int contentLeft, int contentWidth)
+        {
+            if (label == null) return;
+            label.AutoSize = false;
+            label.TextAlign = ContentAlignment.MiddleCenter;
+            label.Left = contentLeft;
+            label.Width = contentWidth;
         }
 
         private void PanelMain_Resize(object sender, EventArgs e) => LayoutLoginContent();
