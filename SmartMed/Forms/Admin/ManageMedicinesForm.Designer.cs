@@ -15,6 +15,7 @@ namespace SmartMed.UI
 
         private void InitializeComponent()
         {
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
             this.panelScrollHost = new System.Windows.Forms.Panel();
             this.tableLayoutRoot = new System.Windows.Forms.TableLayoutPanel();
             this.panelHeader = new System.Windows.Forms.Panel();
@@ -27,6 +28,20 @@ namespace SmartMed.UI
             this.panelGridOuter = new System.Windows.Forms.Panel();
             this.panelGridBody = new System.Windows.Forms.Panel();
             this.gridMedicines = new System.Windows.Forms.DataGridView();
+            this.colMedicineID = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colID = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colName = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colCategory = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colDosage = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colStock = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colPrice = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colExpiry = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colRx = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colDiscount = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colStartDate = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colEndDate = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colPromo = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colStatus = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.panelGridHeader = new System.Windows.Forms.Panel();
             this.tableGridHeader = new System.Windows.Forms.TableLayoutPanel();
             this.lblGridTitle = new System.Windows.Forms.Label();
@@ -203,10 +218,36 @@ namespace SmartMed.UI
 
             this.gridMedicines.AllowUserToAddRows = false;
             this.gridMedicines.AllowUserToDeleteRows = false;
+            this.gridMedicines.AutoGenerateColumns = false;
             this.gridMedicines.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
             this.gridMedicines.BackgroundColor = System.Drawing.Color.White;
             this.gridMedicines.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.gridMedicines.ColumnHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.None;
+            dataGridViewCellStyle1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(232)))), ((int)(((byte)(239)))), ((int)(((byte)(238)))));
+            dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F);
+            dataGridViewCellStyle1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(65)))), ((int)(((byte)(72)))), ((int)(((byte)(71)))));
+            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(232)))), ((int)(((byte)(239)))), ((int)(((byte)(238)))));
+            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.gridMedicines.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
             this.gridMedicines.ColumnHeadersHeight = 36;
+            this.gridMedicines.ColumnHeadersVisible = true;
+            this.gridMedicines.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.colMedicineID,
+            this.colID,
+            this.colName,
+            this.colCategory,
+            this.colDosage,
+            this.colStock,
+            this.colPrice,
+            this.colExpiry,
+            this.colRx,
+            this.colDiscount,
+            this.colStartDate,
+            this.colEndDate,
+            this.colPromo,
+            this.colStatus});
+            this.gridMedicines.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
+            this.gridMedicines.EnableHeadersVisualStyles = false;
             this.gridMedicines.Dock = System.Windows.Forms.DockStyle.Fill;
             this.gridMedicines.GridColor = System.Drawing.Color.FromArgb(((int)(((byte)(238)))), ((int)(((byte)(245)))), ((int)(((byte)(244)))));
             this.gridMedicines.Location = new System.Drawing.Point(0, 4);
@@ -222,6 +263,104 @@ namespace SmartMed.UI
             this.gridMedicines.CellFormatting += new System.Windows.Forms.DataGridViewCellFormattingEventHandler(this.GridMedicines_CellFormatting);
             this.gridMedicines.RowPrePaint += new System.Windows.Forms.DataGridViewRowPrePaintEventHandler(this.GridMedicines_RowPrePaint);
             this.gridMedicines.SelectionChanged += new System.EventHandler(this.GridMedicines_SelectionChanged);
+
+            this.colMedicineID.DataPropertyName = "MedicineID";
+            this.colMedicineID.HeaderText = "MedicineID";
+            this.colMedicineID.MinimumWidth = 40;
+                        this.colMedicineID.Name = "colMedicineID";
+            this.colMedicineID.ReadOnly = true;
+            this.colMedicineID.Visible = false;
+
+            this.colID.DataPropertyName = "ID";
+            this.colID.FillWeight = 70F;
+            this.colID.HeaderText = "ID";
+            this.colID.MinimumWidth = 56;
+            this.colID.Name = "colID";
+            this.colID.ReadOnly = true;
+
+            this.colName.DataPropertyName = "Name";
+            this.colName.FillWeight = 140F;
+            this.colName.HeaderText = "Name";
+            this.colName.MinimumWidth = 90;
+            this.colName.Name = "colName";
+            this.colName.ReadOnly = true;
+
+            this.colCategory.DataPropertyName = "Category";
+            this.colCategory.FillWeight = 100F;
+            this.colCategory.HeaderText = "Category";
+            this.colCategory.MinimumWidth = 72;
+            this.colCategory.Name = "colCategory";
+            this.colCategory.ReadOnly = true;
+
+            this.colDosage.DataPropertyName = "Dosage";
+            this.colDosage.FillWeight = 80F;
+            this.colDosage.HeaderText = "Dosage";
+            this.colDosage.MinimumWidth = 56;
+            this.colDosage.Name = "colDosage";
+            this.colDosage.ReadOnly = true;
+
+            this.colStock.DataPropertyName = "Stock";
+            this.colStock.FillWeight = 60F;
+            this.colStock.HeaderText = "Stock";
+            this.colStock.MinimumWidth = 52;
+            this.colStock.Name = "colStock";
+            this.colStock.ReadOnly = true;
+
+            this.colPrice.DataPropertyName = "Price";
+            this.colPrice.FillWeight = 70F;
+            this.colPrice.HeaderText = "Price";
+            this.colPrice.MinimumWidth = 56;
+            this.colPrice.Name = "colPrice";
+            this.colPrice.ReadOnly = true;
+
+            this.colExpiry.DataPropertyName = "Expiry";
+            this.colExpiry.FillWeight = 90F;
+            this.colExpiry.HeaderText = "Expiry";
+            this.colExpiry.MinimumWidth = 72;
+            this.colExpiry.Name = "colExpiry";
+            this.colExpiry.ReadOnly = true;
+
+            this.colRx.DataPropertyName = "Rx";
+            this.colRx.FillWeight = 40F;
+            this.colRx.HeaderText = "Rx";
+            this.colRx.MinimumWidth = 40;
+            this.colRx.Name = "colRx";
+            this.colRx.ReadOnly = true;
+
+            this.colDiscount.DataPropertyName = "Discount";
+            this.colDiscount.FillWeight = 60F;
+            this.colDiscount.HeaderText = "Discount";
+            this.colDiscount.MinimumWidth = 56;
+            this.colDiscount.Name = "colDiscount";
+            this.colDiscount.ReadOnly = true;
+
+            this.colStartDate.DataPropertyName = "StartDate";
+            this.colStartDate.FillWeight = 80F;
+            this.colStartDate.HeaderText = "Start Date";
+            this.colStartDate.MinimumWidth = 72;
+            this.colStartDate.Name = "colStartDate";
+            this.colStartDate.ReadOnly = true;
+
+            this.colEndDate.DataPropertyName = "EndDate";
+            this.colEndDate.FillWeight = 80F;
+            this.colEndDate.HeaderText = "End Date";
+            this.colEndDate.MinimumWidth = 72;
+            this.colEndDate.Name = "colEndDate";
+            this.colEndDate.ReadOnly = true;
+
+            this.colPromo.DataPropertyName = "Promo";
+            this.colPromo.FillWeight = 60F;
+            this.colPromo.HeaderText = "Promo";
+            this.colPromo.MinimumWidth = 56;
+            this.colPromo.Name = "colPromo";
+            this.colPromo.ReadOnly = true;
+
+            this.colStatus.DataPropertyName = "Status";
+            this.colStatus.FillWeight = 80F;
+            this.colStatus.HeaderText = "Status";
+            this.colStatus.MinimumWidth = 72;
+            this.colStatus.Name = "colStatus";
+            this.colStatus.ReadOnly = true;
 
             this.panelGridHeader.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(238)))), ((int)(((byte)(245)))), ((int)(((byte)(244)))));
             this.panelGridHeader.Controls.Add(this.tableGridHeader);
@@ -532,6 +671,20 @@ namespace SmartMed.UI
         private System.Windows.Forms.Panel panelGridOuter;
         private System.Windows.Forms.Panel panelGridBody;
         private System.Windows.Forms.DataGridView gridMedicines;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colMedicineID;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colID;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colName;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colCategory;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colDosage;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colStock;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colPrice;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colExpiry;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colRx;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colDiscount;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colStartDate;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colEndDate;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colPromo;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colStatus;
         private System.Windows.Forms.Panel panelGridHeader;
         private System.Windows.Forms.TableLayoutPanel tableGridHeader;
         private System.Windows.Forms.FlowLayoutPanel flowGridFilters;

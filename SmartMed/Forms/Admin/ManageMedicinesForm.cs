@@ -54,8 +54,17 @@ namespace SmartMed.UI
         protected override void LoadDesignTimePreview()
         {
             ApplyViewChrome();
-            _allMedicines = new List<Medicine>();
-            BindGrid(_allMedicines);
+            // Do not BindGrid here: an empty BindingList clears Designer columns in the VS host.
+            if (gridMedicines != null)
+            {
+                gridMedicines.DataSource = null;
+                gridMedicines.AutoGenerateColumns = false;
+                gridMedicines.ColumnHeadersVisible = true;
+                EnsureGridActionColumns();
+                gridMedicines.BringToFront();
+            }
+
+            panelGridBody?.BringToFront();
             lblTotalItems.Text = "-";
             lblLowStock.Text = "-";
             lblExpiringSoon.Text = "-";
@@ -232,13 +241,31 @@ namespace SmartMed.UI
         private void BindGrid(List<Medicine> items)
         {
             var keepId = _selectedId;
-            var rows = items.Select(m => new
+            var rowList = (items ?? new List<Medicine>())
+                .Select(ToGridRow)
+                .ToList();
+
+            UiTheme.SetGridDataSource(
+                gridMedicines,
+                new System.ComponentModel.BindingList<MedicineGridRow>(rowList));
+            if (gridMedicines.Columns.Contains("colMedicineID"))
+                gridMedicines.Columns["colMedicineID"].Visible = false;
+            // col* names are skipped by BeautifyGridHeaders (same as Customers).
+            UiTheme.BeautifyGridHeaders(gridMedicines);
+            EnsureGridActionColumns();
+
+            if (keepId.HasValue)
+                SelectGridRowById(keepId.Value);
+        }
+
+        private MedicineGridRow ToGridRow(Medicine m) =>
+            new MedicineGridRow
             {
-                m.MedicineID,
+                MedicineID = m.MedicineID,
                 ID = $"#M-{m.MedicineID:D4}",
                 Name = m.MedicineName,
-                m.Category,
-                m.Dosage,
+                Category = m.Category,
+                Dosage = m.Dosage,
                 Stock = m.StockQuantity,
                 Price = Rules.GetEffectivePrice(m).ToString("N2"),
                 Expiry = m.ExpiryDate.ToString("yyyy-MM-dd"),
@@ -249,16 +276,25 @@ namespace SmartMed.UI
                 Promo = FormatPromotionStatus(m),
                 Status = GetStatusLabel(m),
                 CatalogAction = m.IsActive ? "Deactivate" : "Activate"
-            }).ToList();
+            };
 
-            UiTheme.SetGridDataSource(gridMedicines, rows);
-            if (gridMedicines.Columns.Contains("MedicineID"))
-                gridMedicines.Columns["MedicineID"].Visible = false;
-            UiTheme.BeautifyGridHeaders(gridMedicines);
-            EnsureGridActionColumns();
-
-            if (keepId.HasValue)
-                SelectGridRowById(keepId.Value);
+        public sealed class MedicineGridRow
+        {
+            public int MedicineID { get; set; }
+            public string ID { get; set; }
+            public string Name { get; set; }
+            public string Category { get; set; }
+            public string Dosage { get; set; }
+            public int Stock { get; set; }
+            public string Price { get; set; }
+            public string Expiry { get; set; }
+            public string Rx { get; set; }
+            public string Discount { get; set; }
+            public string StartDate { get; set; }
+            public string EndDate { get; set; }
+            public string Promo { get; set; }
+            public string Status { get; set; }
+            public string CatalogAction { get; set; }
         }
 
         private void EnsureGridActionColumns()
@@ -270,12 +306,22 @@ namespace SmartMed.UI
             if (gridMedicines.Columns.Contains("Deactivate"))
                 gridMedicines.Columns.Remove("Deactivate");
 
+            // Data columns stay at the front; action buttons pinned to the end (Customers pattern).
+            var actionNames = new HashSet<string>(StringComparer.Ordinal) { "Edit", "CatalogAction", "Delete" };
+            var display = 0;
+            foreach (DataGridViewColumn column in gridMedicines.Columns)
+            {
+                if (column == null || !column.Visible || actionNames.Contains(column.Name))
+                    continue;
+                column.DisplayIndex = display++;
+            }
+
             if (gridMedicines.Columns.Contains("Edit"))
-                gridMedicines.Columns["Edit"].DisplayIndex = gridMedicines.Columns.Count - 3;
+                gridMedicines.Columns["Edit"].DisplayIndex = display++;
             if (gridMedicines.Columns.Contains("CatalogAction"))
-                gridMedicines.Columns["CatalogAction"].DisplayIndex = gridMedicines.Columns.Count - 2;
+                gridMedicines.Columns["CatalogAction"].DisplayIndex = display++;
             if (gridMedicines.Columns.Contains("Delete"))
-                gridMedicines.Columns["Delete"].DisplayIndex = gridMedicines.Columns.Count - 1;
+                gridMedicines.Columns["Delete"].DisplayIndex = display;
         }
 
         private void AddOrConfigureButtonColumn(string name, string text, int width, string dataPropertyName = null)
@@ -285,6 +331,7 @@ namespace SmartMed.UI
                 existing.HeaderText = text;
                 existing.Width = width;
                 existing.MinimumWidth = width;
+                existing.AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
                 if (!string.IsNullOrEmpty(dataPropertyName))
                 {
                     existing.DataPropertyName = dataPropertyName;
@@ -339,8 +386,8 @@ namespace SmartMed.UI
         {
             foreach (DataGridViewRow row in gridMedicines.Rows)
             {
-                if (row.IsNewRow || row.Cells["MedicineID"]?.Value == null) continue;
-                if (Convert.ToInt32(row.Cells["MedicineID"].Value) != id) continue;
+                if (row.IsNewRow || row.Cells["colMedicineID"]?.Value == null) continue;
+                if (Convert.ToInt32(row.Cells["colMedicineID"].Value) != id) continue;
                 row.Selected = true;
                 if (row.Cells.Count > 1)
                     gridMedicines.CurrentCell = row.Cells[1];
@@ -416,7 +463,7 @@ namespace SmartMed.UI
             var colName = gridMedicines.Columns[e.ColumnIndex].Name;
             if (colName != "Edit" && colName != "CatalogAction" && colName != "Delete") return;
 
-            var idCell = gridMedicines.Rows[e.RowIndex].Cells["MedicineID"];
+            var idCell = gridMedicines.Rows[e.RowIndex].Cells["colMedicineID"];
             if (idCell?.Value == null) return;
 
             var id = Convert.ToInt32(idCell.Value);
@@ -500,14 +547,14 @@ namespace SmartMed.UI
                 _selectedId = null;
                 return;
             }
-            var cell = gridMedicines.CurrentRow.Cells["MedicineID"];
+            var cell = gridMedicines.CurrentRow.Cells["colMedicineID"];
             _selectedId = cell?.Value != null ? Convert.ToInt32(cell.Value) : (int?)null;
         }
 
         private void GridMedicines_RowPrePaint(object sender, DataGridViewRowPrePaintEventArgs e)
         {
             if (e.RowIndex < 0 || gridMedicines.Rows[e.RowIndex].IsNewRow) return;
-            var idCell = gridMedicines.Rows[e.RowIndex].Cells["MedicineID"];
+            var idCell = gridMedicines.Rows[e.RowIndex].Cells["colMedicineID"];
             if (idCell?.Value == null) return;
             var item = _allMedicines.FirstOrDefault(m => m.MedicineID == Convert.ToInt32(idCell.Value));
             if (item == null) return;
@@ -534,7 +581,7 @@ namespace SmartMed.UI
 
         private void GridMedicines_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
         {
-            if (e.RowIndex < 0 || gridMedicines.Rows[e.RowIndex].Cells["MedicineID"]?.Value == null)
+            if (e.RowIndex < 0 || gridMedicines.Rows[e.RowIndex].Cells["colMedicineID"]?.Value == null)
                 return;
 
             var row = gridMedicines.Rows[e.RowIndex];
@@ -544,14 +591,14 @@ namespace SmartMed.UI
                 return;
             }
 
-            var id = Convert.ToInt32(gridMedicines.Rows[e.RowIndex].Cells["MedicineID"].Value);
+            var id = Convert.ToInt32(gridMedicines.Rows[e.RowIndex].Cells["colMedicineID"].Value);
             var item = _allMedicines.FirstOrDefault(m => m.MedicineID == id);
             if (item == null) return;
 
             var columnName = gridMedicines.Columns[e.ColumnIndex].Name;
             var expiryStatus = Rules.CheckExpiry(item);
 
-            if (columnName == "Stock")
+            if (columnName == "colStock")
             {
                 e.CellStyle.Font = UiTheme.UiFontBold;
                 if (item.StockQuantity <= 20)
@@ -571,7 +618,7 @@ namespace SmartMed.UI
                 }
                 e.Value = $"{item.StockQuantity}";
             }
-            else if (columnName == "Status")
+            else if (columnName == "colStatus")
             {
                 var status = e.Value?.ToString() ?? "";
                 if (string.Equals(status, "Inactive", StringComparison.OrdinalIgnoreCase))
@@ -605,7 +652,7 @@ namespace SmartMed.UI
                     e.CellStyle.Font = UiTheme.UiFontBold;
                 }
             }
-            else if (columnName == "Rx")
+            else if (columnName == "colRx")
             {
                 e.CellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
                 if (item.RequiresPrescription)
@@ -619,7 +666,7 @@ namespace SmartMed.UI
                     e.CellStyle.ForeColor = UiTheme.AdminMuted;
                 }
             }
-            else if (columnName == "Expiry" &&
+            else if (columnName == "colExpiry" &&
                      (expiryStatus == MedicineService.ExpiryExpired || expiryStatus == MedicineService.ExpiryExpiringSoon))
             {
                 e.CellStyle.ForeColor = expiryStatus == MedicineService.ExpiryExpired ? Color.DarkRed : Color.DarkOrange;
