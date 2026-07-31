@@ -26,23 +26,17 @@ namespace SmartMed.UI
         private void ApplyViewChrome()
         {
             AuthFormView.ApplyCardBorder(panelCard);
-            AuthFormView.StyleFieldLabels(lblIdentity, lblCurrent, lblNew, lblConfirm);
-            AuthFormView.ApplySoftFieldSurfaces(txtIdentity, txtCurrent, txtNew, txtConfirm);
+            AuthFormView.StyleFieldLabels(lblIdentity);
+            AuthFormView.ApplySoftFieldSurfaces(txtIdentity);
             UiTheme.ApplyFlatButton(btnSave, UiButtonStyle.Primary);
             UiTheme.ApplyFlatButton(btnCancel, UiButtonStyle.Secondary);
         }
 
         private void WireRuntimeBehavior()
         {
-            AuthFormView.ApplySoftFieldSurfaces(txtIdentity, txtCurrent, txtNew, txtConfirm);
+            AuthFormView.ApplySoftFieldSurfaces(txtIdentity);
             UiTheme.WireClinicalPlaceholderTextBox(txtIdentity, "Email or username");
-            UiTheme.WireClinicalPasswordTextBox(txtCurrent);
-            UiTheme.WireClinicalPasswordTextBox(txtNew);
-            UiTheme.WireClinicalPasswordTextBox(txtConfirm);
-            UiTheme.AddPasswordToggleBeside(txtCurrent);
-            UiTheme.AddPasswordToggleBeside(txtNew);
-            UiTheme.AddPasswordToggleBeside(txtConfirm);
-            UiTheme.EnableFieldNavigation(btnSave, txtIdentity, txtCurrent, txtNew, txtConfirm);
+            UiTheme.EnableFieldNavigation(btnSave, txtIdentity);
         }
 
         private void PanelMain_Paint(object sender, PaintEventArgs e)
@@ -66,20 +60,9 @@ namespace SmartMed.UI
             try
             {
                 var identity = UiTheme.ReadTextBoxValue(txtIdentity);
-                var currentPassword = txtCurrent.Text.Trim();
-                var newPassword = txtNew.Text.Trim();
-                var confirm = txtConfirm.Text.Trim();
-
-                if (newPassword != confirm)
-                {
-                    SmartMedMessageBox.Show("New passwords do not match.", Text,
-                        MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                    return;
-                }
-
-                new AuthService().ResetPassword(identity, currentPassword, newPassword);
+                new AuthService().RequestPasswordRecovery(identity);
                 SmartMedMessageBox.Show(
-                    "Password reset successfully. You can sign in with your new password.",
+                    "Account found. Please contact the pharmacy administrator to reset your password.",
                     Text,
                     MessageBoxButtons.OK,
                     MessageBoxIcon.Information);
@@ -96,7 +79,7 @@ namespace SmartMed.UI
             }
             catch (Exception ex)
             {
-                SmartMedMessageBox.Show("Unable to reset password.\n" + ex.Message, Text,
+                SmartMedMessageBox.Show("Unable to process recovery request.\n" + ex.Message, Text,
                     MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
         }

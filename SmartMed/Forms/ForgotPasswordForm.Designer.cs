@@ -21,12 +21,6 @@ namespace SmartMed.UI
             this.btnSave = new System.Windows.Forms.Button();
             this.btnCancel = new System.Windows.Forms.Button();
             this.panelBody = new System.Windows.Forms.Panel();
-            this.txtConfirm = new System.Windows.Forms.TextBox();
-            this.lblConfirm = new System.Windows.Forms.Label();
-            this.txtNew = new System.Windows.Forms.TextBox();
-            this.lblNew = new System.Windows.Forms.Label();
-            this.txtCurrent = new System.Windows.Forms.TextBox();
-            this.lblCurrent = new System.Windows.Forms.Label();
             this.txtIdentity = new System.Windows.Forms.TextBox();
             this.lblIdentity = new System.Windows.Forms.Label();
             this.lblPageSubtitle = new System.Windows.Forms.Label();
@@ -50,7 +44,7 @@ namespace SmartMed.UI
             this.panelMain.Location = new System.Drawing.Point(0, 0);
             this.panelMain.Name = "panelMain";
             this.panelMain.Padding = new System.Windows.Forms.Padding(20);
-            this.panelMain.Size = new System.Drawing.Size(484, 536);
+            this.panelMain.Size = new System.Drawing.Size(484, 320);
             this.panelMain.TabIndex = 0;
             this.panelMain.Paint += new System.Windows.Forms.PaintEventHandler(this.PanelMain_Paint);
 
@@ -61,14 +55,14 @@ namespace SmartMed.UI
             this.panelCard.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panelCard.Location = new System.Drawing.Point(20, 20);
             this.panelCard.Name = "panelCard";
-            this.panelCard.Size = new System.Drawing.Size(444, 496);
+            this.panelCard.Size = new System.Drawing.Size(444, 280);
             this.panelCard.TabIndex = 0;
 
             this.panelActions.BackColor = System.Drawing.Color.White;
             this.panelActions.Controls.Add(this.btnSave);
             this.panelActions.Controls.Add(this.btnCancel);
             this.panelActions.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.panelActions.Location = new System.Drawing.Point(0, 440);
+            this.panelActions.Location = new System.Drawing.Point(0, 224);
             this.panelActions.Name = "panelActions";
             this.panelActions.Padding = new System.Windows.Forms.Padding(24, 8, 24, 16);
             this.panelActions.Size = new System.Drawing.Size(444, 56);
@@ -85,7 +79,7 @@ namespace SmartMed.UI
             this.btnSave.Name = "btnSave";
             this.btnSave.Size = new System.Drawing.Size(80, 32);
             this.btnSave.TabIndex = 1;
-            this.btnSave.Text = "Reset";
+            this.btnSave.Text = "Submit";
             this.btnSave.UseVisualStyleBackColor = false;
             this.btnSave.Click += new System.EventHandler(this.BtnSave_Click);
 
@@ -105,12 +99,6 @@ namespace SmartMed.UI
             this.btnCancel.Click += new System.EventHandler(this.BtnCancel_Click);
 
             this.panelBody.BackColor = System.Drawing.Color.White;
-            this.panelBody.Controls.Add(this.txtConfirm);
-            this.panelBody.Controls.Add(this.lblConfirm);
-            this.panelBody.Controls.Add(this.txtNew);
-            this.panelBody.Controls.Add(this.lblNew);
-            this.panelBody.Controls.Add(this.txtCurrent);
-            this.panelBody.Controls.Add(this.lblCurrent);
             this.panelBody.Controls.Add(this.txtIdentity);
             this.panelBody.Controls.Add(this.lblIdentity);
             this.panelBody.Controls.Add(this.lblPageSubtitle);
@@ -119,65 +107,8 @@ namespace SmartMed.UI
             this.panelBody.Location = new System.Drawing.Point(0, 40);
             this.panelBody.Name = "panelBody";
             this.panelBody.Padding = new System.Windows.Forms.Padding(24, 16, 24, 8);
-            this.panelBody.Size = new System.Drawing.Size(444, 400);
+            this.panelBody.Size = new System.Drawing.Size(444, 184);
             this.panelBody.TabIndex = 1;
-
-            this.txtConfirm.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(238)))), ((int)(((byte)(245)))), ((int)(((byte)(244)))));
-            this.txtConfirm.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.txtConfirm.Font = new System.Drawing.Font("Hanken Grotesk", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.txtConfirm.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(22)))), ((int)(((byte)(29)))), ((int)(((byte)(29)))));
-            this.txtConfirm.Location = new System.Drawing.Point(24, 328);
-            this.txtConfirm.Name = "txtConfirm";
-            this.txtConfirm.Size = new System.Drawing.Size(396, 40);
-            this.txtConfirm.TabIndex = 9;
-
-            this.lblConfirm.AutoSize = true;
-            this.lblConfirm.BackColor = System.Drawing.Color.White;
-            this.lblConfirm.Font = new System.Drawing.Font("Hanken Grotesk", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.lblConfirm.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(65)))), ((int)(((byte)(72)))), ((int)(((byte)(71)))));
-            this.lblConfirm.Location = new System.Drawing.Point(24, 308);
-            this.lblConfirm.Name = "lblConfirm";
-            this.lblConfirm.Size = new System.Drawing.Size(128, 15);
-            this.lblConfirm.TabIndex = 8;
-            this.lblConfirm.Text = "CONFIRM PASSWORD";
-
-            this.txtNew.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(238)))), ((int)(((byte)(245)))), ((int)(((byte)(244)))));
-            this.txtNew.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.txtNew.Font = new System.Drawing.Font("Hanken Grotesk", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.txtNew.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(22)))), ((int)(((byte)(29)))), ((int)(((byte)(29)))));
-            this.txtNew.Location = new System.Drawing.Point(24, 252);
-            this.txtNew.Name = "txtNew";
-            this.txtNew.Size = new System.Drawing.Size(396, 40);
-            this.txtNew.TabIndex = 7;
-
-            this.lblNew.AutoSize = true;
-            this.lblNew.BackColor = System.Drawing.Color.White;
-            this.lblNew.Font = new System.Drawing.Font("Hanken Grotesk", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.lblNew.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(65)))), ((int)(((byte)(72)))), ((int)(((byte)(71)))));
-            this.lblNew.Location = new System.Drawing.Point(24, 232);
-            this.lblNew.Name = "lblNew";
-            this.lblNew.Size = new System.Drawing.Size(96, 15);
-            this.lblNew.TabIndex = 6;
-            this.lblNew.Text = "NEW PASSWORD";
-
-            this.txtCurrent.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(238)))), ((int)(((byte)(245)))), ((int)(((byte)(244)))));
-            this.txtCurrent.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.txtCurrent.Font = new System.Drawing.Font("Hanken Grotesk", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.txtCurrent.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(22)))), ((int)(((byte)(29)))), ((int)(((byte)(29)))));
-            this.txtCurrent.Location = new System.Drawing.Point(24, 176);
-            this.txtCurrent.Name = "txtCurrent";
-            this.txtCurrent.Size = new System.Drawing.Size(396, 40);
-            this.txtCurrent.TabIndex = 5;
-
-            this.lblCurrent.AutoSize = true;
-            this.lblCurrent.BackColor = System.Drawing.Color.White;
-            this.lblCurrent.Font = new System.Drawing.Font("Hanken Grotesk", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.lblCurrent.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(65)))), ((int)(((byte)(72)))), ((int)(((byte)(71)))));
-            this.lblCurrent.Location = new System.Drawing.Point(24, 156);
-            this.lblCurrent.Name = "lblCurrent";
-            this.lblCurrent.Size = new System.Drawing.Size(120, 15);
-            this.lblCurrent.TabIndex = 4;
-            this.lblCurrent.Text = "CURRENT PASSWORD";
 
             this.txtIdentity.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(238)))), ((int)(((byte)(245)))), ((int)(((byte)(244)))));
             this.txtIdentity.BorderStyle = System.Windows.Forms.BorderStyle.None;
@@ -204,9 +135,9 @@ namespace SmartMed.UI
             this.lblPageSubtitle.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(48)))), ((int)(((byte)(56)))), ((int)(((byte)(55)))));
             this.lblPageSubtitle.Location = new System.Drawing.Point(24, 48);
             this.lblPageSubtitle.Name = "lblPageSubtitle";
-            this.lblPageSubtitle.Size = new System.Drawing.Size(390, 15);
+            this.lblPageSubtitle.Size = new System.Drawing.Size(320, 15);
             this.lblPageSubtitle.TabIndex = 1;
-            this.lblPageSubtitle.Text = "Enter your email/username, current password, and a new password.";
+            this.lblPageSubtitle.Text = "Enter your email or username to recover your account.";
 
             this.lblPageTitle.AutoSize = true;
             this.lblPageTitle.BackColor = System.Drawing.Color.White;
@@ -275,7 +206,7 @@ namespace SmartMed.UI
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(244)))), ((int)(((byte)(251)))), ((int)(((byte)(250)))));
             this.CancelButton = this.btnCancel;
-            this.ClientSize = new System.Drawing.Size(484, 536);
+            this.ClientSize = new System.Drawing.Size(484, 320);
             this.Controls.Add(this.panelMain);
             this.Font = new System.Drawing.Font("Hanken Grotesk", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
@@ -310,12 +241,6 @@ namespace SmartMed.UI
         private System.Windows.Forms.Label lblPageSubtitle;
         private System.Windows.Forms.Label lblIdentity;
         private System.Windows.Forms.TextBox txtIdentity;
-        private System.Windows.Forms.Label lblCurrent;
-        private System.Windows.Forms.TextBox txtCurrent;
-        private System.Windows.Forms.Label lblNew;
-        private System.Windows.Forms.TextBox txtNew;
-        private System.Windows.Forms.Label lblConfirm;
-        private System.Windows.Forms.TextBox txtConfirm;
         private System.Windows.Forms.Panel panelActions;
         private System.Windows.Forms.Button btnCancel;
         private System.Windows.Forms.Button btnSave;

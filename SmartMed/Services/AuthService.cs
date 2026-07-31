@@ -103,6 +103,32 @@ namespace SmartMed.Services
             _adminRepo.UpdatePassword(adminId, PasswordHasher.Hash(newPassword));
         }
 
+        public void RequestPasswordRecovery(string identity)
+        {
+            if (ValidationService.IsNullOrWhiteSpace(identity))
+                throw new System.ArgumentException("Email or username is required.");
+
+            identity = identity.Trim();
+
+            var admin = _adminRepo.GetByUsernameOrEmail(identity);
+            if (admin != null)
+                return;
+
+            if (ValidationService.IsValidEmail(identity))
+            {
+                var customer = _customerRepo.GetByEmail(identity);
+                if (customer != null)
+                {
+                    if (!customer.IsActive)
+                        throw new System.InvalidOperationException(
+                            "This account has been deactivated. Please contact the pharmacy administrator.");
+                    return;
+                }
+            }
+
+            throw new System.InvalidOperationException("Account not found.");
+        }
+
         public void ResetPassword(string identity, string currentPassword, string newPassword)
         {
             // Require the current password so email/username alone cannot reset an account.
