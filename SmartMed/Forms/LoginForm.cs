@@ -8,7 +8,8 @@ namespace SmartMed.UI
 {
     public partial class LoginForm : Form
     {
-        private const string InvalidCredentialsMessage = "Invalid credentials.";
+        private const string PlaceholderCustomerEmail = "Enter your email";
+        private const string PlaceholderAdminUsername = "Enter admin username";
         private const int ContentTopMargin = 32;
 
         private readonly AuthService _auth;
@@ -44,6 +45,7 @@ namespace SmartMed.UI
         {
             base.OnLoad(e);
             ApplyViewChrome();
+            ApplyIdentityFieldForRole(resetPlaceholder: true);
         }
 
         private void ApplyViewChrome()
@@ -51,8 +53,9 @@ namespace SmartMed.UI
             AuthFormView.ApplyCardBorder(panelLoginCard);
             AuthFormView.ApplyPasswordFieldBorder(pnlUsernameField);
             AuthFormView.ApplyPasswordFieldBorder(pnlPasswordField);
-            AuthFormView.StyleFieldLabels(lblUsername, lblPassword);
+            AuthFormView.StyleFieldLabels(lblRole, lblUsername, lblPassword);
             AuthFormView.ApplySoftFieldSurfaces(txtUsername, txtPassword);
+            lblRole.BringToFront();
             lblUsername.BringToFront();
             lblPassword.BringToFront();
             LayoutLoginContent();
@@ -63,18 +66,54 @@ namespace SmartMed.UI
             txtUsername.Clear();
             txtPassword.Clear();
             _passwordVisible = false;
+            if (rdoCustomer != null)
+                rdoCustomer.Checked = true;
             RestoreLoginAppearance();
         }
 
         private void WireRuntimeBehavior()
         {
-            UiTheme.WireClinicalPlaceholderTextBox(txtUsername, "Enter email or username");
+            ApplyIdentityFieldForRole(resetPlaceholder: true);
             UiTheme.WireClinicalPasswordField(pnlPasswordField, txtPassword, btnTogglePassword, "Enter your password");
             SetPasswordVisible(_passwordVisible);
             if (!_fieldNavigationWired)
             {
                 UiTheme.EnableFieldNavigation(btnLogin, txtUsername, txtPassword);
                 _fieldNavigationWired = true;
+            }
+        }
+
+        private bool IsAdminRoleSelected => rdoAdmin != null && rdoAdmin.Checked;
+
+        private string IdentityPlaceholder =>
+            IsAdminRoleSelected ? PlaceholderAdminUsername : PlaceholderCustomerEmail;
+
+        private string IdentityLabel =>
+            IsAdminRoleSelected ? "Username" : "Email";
+
+        private void Role_CheckedChanged(object sender, EventArgs e)
+        {
+            if (sender is RadioButton radio && !radio.Checked)
+                return;
+
+            ApplyIdentityFieldForRole(resetPlaceholder: true);
+        }
+
+        private void ApplyIdentityFieldForRole(bool resetPlaceholder)
+        {
+            if (lblUsername != null)
+                lblUsername.Text = IdentityLabel;
+
+            if (txtUsername == null)
+                return;
+
+            if (resetPlaceholder || UiTheme.IsPlaceholderActive(txtUsername))
+                UiTheme.ResetClinicalPlaceholder(txtUsername, IdentityPlaceholder);
+            else
+            {
+                // Keep typed value; refresh role-specific hint for blur/restore.
+                txtUsername.AccessibleDescription = IdentityPlaceholder;
+                UiTheme.WireClinicalPlaceholderTextBox(txtUsername, IdentityPlaceholder);
             }
         }
 
@@ -126,7 +165,7 @@ namespace SmartMed.UI
 
         internal void RestoreLoginAppearance()
         {
-            UiTheme.ResetClinicalPlaceholder(txtUsername, "Enter email or username");
+            ApplyIdentityFieldForRole(resetPlaceholder: true);
             UiTheme.ResetClinicalPlaceholder(txtPassword, "Enter your password");
             _passwordVisible = false;
             WireRuntimeBehavior();
@@ -199,38 +238,51 @@ namespace SmartMed.UI
 
                 var identity = UiTheme.ReadTextBoxValue(txtUsername);
                 var password = UiTheme.ReadTextBoxValue(txtPassword);
+                var adminRole = IsAdminRoleSelected;
 
                 if (ValidationService.IsNullOrWhiteSpace(identity) || ValidationService.IsNullOrWhiteSpace(password))
                 {
-                    SmartMedMessageBox.Show("Email/username and password are required.", "Login",
+                    var field = adminRole ? "Username" : "Email";
+                    SmartMedMessageBox.Show(field + " and password are required.", "Login",
                         MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     return;
                 }
 
-                // Try admin login first, then customer login when an email was entered.
-                var admin = _auth.AdminLogin(identity, password);
-                if (admin != null)
+                if (adminRole)
                 {
+                    var admin = _auth.AdminLogin(identity, password);
+                    if (admin == null)
+                    {
+                        SmartMedMessageBox.Show("Invalid admin username or password.", "Login",
+                            MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        return;
+                    }
+
                     admin.Password = null;
                     Session.CurrentAdmin = admin;
                     LoginSucceeded?.Invoke(this, EventArgs.Empty);
                     return;
                 }
 
-                if (ValidationService.IsValidEmail(identity))
+                if (!ValidationService.IsValidEmail(identity))
                 {
-                    var customer = _auth.CustomerLogin(identity, password);
-                    if (customer != null)
-                    {
-                        customer.Password = null;
-                        Session.CurrentCustomer = customer;
-                        CartService.LoadForCustomer(customer.CustomerID, new MedicineService());
-                        LoginSucceeded?.Invoke(this, EventArgs.Empty);
-                        return;
-                    }
+                    SmartMedMessageBox.Show("Enter a valid customer email address.", "Login",
+                        MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
                 }
 
-                SmartMedMessageBox.Show(InvalidCredentialsMessage, "Login", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                var customer = _auth.CustomerLogin(identity, password);
+                if (customer == null)
+                {
+                    SmartMedMessageBox.Show("Invalid customer email or password.", "Login",
+                        MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+
+                customer.Password = null;
+                Session.CurrentCustomer = customer;
+                CartService.LoadForCustomer(customer.CustomerID, new MedicineService());
+                LoginSucceeded?.Invoke(this, EventArgs.Empty);
             }
             catch (ArgumentException ex)
             {

@@ -471,8 +471,17 @@ namespace SmartMed.UI
             label.UseMnemonic = false;
         }
 
-        public static bool IsPlaceholderActive(TextBox textBox) =>
-            textBox != null && textBox.ForeColor == PlaceholderText;
+        public static bool IsPlaceholderActive(TextBox textBox)
+        {
+            if (textBox == null) return false;
+            if (textBox.ForeColor == PlaceholderText)
+                return true;
+
+            // Fallback if theme chrome changed ForeColor after placeholder was applied.
+            var hint = textBox.AccessibleDescription;
+            return !string.IsNullOrEmpty(hint)
+                && string.Equals(textBox.Text, hint, StringComparison.Ordinal);
+        }
 
         public static string ReadTextBoxValue(TextBox textBox)
         {
@@ -486,34 +495,38 @@ namespace SmartMed.UI
             if (!string.IsNullOrWhiteSpace(textBox.Text) && !IsPlaceholderActive(textBox))
                 return;
 
+            textBox.AccessibleDescription = placeholder ?? string.Empty;
             textBox.ForeColor = PlaceholderText;
-            textBox.Text = placeholder;
+            textBox.Text = placeholder ?? string.Empty;
             textBox.PasswordChar = '\0';
         }
 
         public static void WireClinicalPlaceholderTextBox(TextBox textBox, string placeholder)
         {
             if (textBox == null) return;
-            if (textBox.Tag as string == "clinical-placeholder-wired")
+
+            textBox.AccessibleDescription = placeholder ?? string.Empty;
+
+            // Always attach focus handlers once. Do not mark as wired in Reset without this,
+            // or placeholder text stays selectable as real input.
+            if (textBox.Tag as string != "clinical-placeholder-wired")
             {
-                ApplyPlaceholder(textBox, placeholder);
-                return;
+                textBox.Tag = "clinical-placeholder-wired";
+                textBox.GotFocus += (s, e) => ClearPlaceholder(textBox);
+                textBox.LostFocus += (s, e) =>
+                    ApplyPlaceholder(textBox, textBox.AccessibleDescription ?? string.Empty);
             }
 
-            textBox.Tag = "clinical-placeholder-wired";
-            textBox.AccessibleDescription = placeholder;
-            textBox.GotFocus += (s, e) => ClearPlaceholder(textBox);
-            textBox.LostFocus += (s, e) => ApplyPlaceholder(textBox, placeholder);
             ApplyPlaceholder(textBox, placeholder);
         }
 
         public static void ResetClinicalPlaceholder(TextBox textBox, string placeholder)
         {
             if (textBox == null) return;
-            textBox.Tag = "clinical-placeholder-wired";
 
             textBox.Text = string.Empty;
-            ApplyPlaceholder(textBox, placeholder);
+            textBox.ForeColor = PlaceholderText;
+            WireClinicalPlaceholderTextBox(textBox, placeholder);
         }
 
         private static void ClearPlaceholder(TextBox textBox)
@@ -523,6 +536,7 @@ namespace SmartMed.UI
 
             textBox.Text = string.Empty;
             textBox.ForeColor = AdminOnSurface;
+            textBox.PasswordChar = '\0';
         }
 
         public static void StyleClinicalTextBox(TextBox textBox, string placeholder)
