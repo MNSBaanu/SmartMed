@@ -15,3 +15,6 @@ packages/
 # Node (Stitch asset fetch — not part of the WinForms app)
 node_modules/
 package-lock.json
+
+# Word lock files (created while a .docx is open)
+~$*
