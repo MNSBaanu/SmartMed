@@ -8,10 +8,6 @@ namespace SmartMed.UI
 {
     public partial class LoginForm : Form
     {
-        private const string DemoAdminUsername = "admin";
-        private const string DemoAdminPassword = "admin123";
-        private const string DemoCustomerEmail = "customer@gmail.com";
-        private const string DemoCustomerPassword = "Customer123";
         private const string InvalidCredentialsMessage = "Invalid credentials.";
         private const int ContentTopMargin = 32;
 
@@ -191,22 +187,6 @@ namespace SmartMed.UI
         }
 
         private void BtnLogin_Click(object sender, EventArgs e) => PerformLogin();
-
-        private void BtnQuickAdmin_Click(object sender, EventArgs e) =>
-            PerformLoginWith(DemoAdminUsername, DemoAdminPassword);
-
-        private void BtnQuickCustomer_Click(object sender, EventArgs e) =>
-            PerformLoginWith(DemoCustomerEmail, DemoCustomerPassword);
-
-        private void PerformLoginWith(string identity, string password)
-        {
-            txtUsername.Text = identity;
-            txtUsername.ForeColor = UiTheme.AdminOnSurface;
-            txtPassword.Text = password;
-            txtPassword.ForeColor = UiTheme.AdminOnSurface;
-            SetPasswordVisible(_passwordVisible);
-            PerformLogin();
-        }
 
         private void PerformLogin()
         {

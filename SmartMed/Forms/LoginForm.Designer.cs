@@ -18,8 +18,6 @@ namespace SmartMed.UI
             this.panelMain = new System.Windows.Forms.Panel();
             this.panelLoginCard = new System.Windows.Forms.Panel();
             this.lnkForgot = new System.Windows.Forms.LinkLabel();
-            this.btnQuickCustomer = new System.Windows.Forms.Button();
-            this.btnQuickAdmin = new System.Windows.Forms.Button();
             this.btnRegister = new System.Windows.Forms.Button();
             this.btnLogin = new System.Windows.Forms.Button();
             this.pnlPasswordField = new System.Windows.Forms.Panel();
@@ -53,8 +51,6 @@ namespace SmartMed.UI
 
             this.panelLoginCard.BackColor = System.Drawing.Color.White;
             this.panelLoginCard.Controls.Add(this.lnkForgot);
-            this.panelLoginCard.Controls.Add(this.btnQuickCustomer);
-            this.panelLoginCard.Controls.Add(this.btnQuickAdmin);
             this.panelLoginCard.Controls.Add(this.btnRegister);
             this.panelLoginCard.Controls.Add(this.btnLogin);
             this.panelLoginCard.Controls.Add(this.pnlPasswordField);
@@ -68,7 +64,7 @@ namespace SmartMed.UI
             this.panelLoginCard.Location = new System.Drawing.Point(140, 32);
             this.panelLoginCard.Name = "panelLoginCard";
             this.panelLoginCard.Padding = new System.Windows.Forms.Padding(32);
-            this.panelLoginCard.Size = new System.Drawing.Size(440, 540);
+            this.panelLoginCard.Size = new System.Drawing.Size(440, 492);
             this.panelLoginCard.TabIndex = 0;
 
             this.lnkForgot.ActiveLinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(12)))), ((int)(((byte)(46)))), ((int)(((byte)(43)))));
@@ -76,42 +72,14 @@ namespace SmartMed.UI
             this.lnkForgot.BackColor = System.Drawing.Color.White;
             this.lnkForgot.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold);
             this.lnkForgot.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(27)))), ((int)(((byte)(79)))), ((int)(((byte)(71)))));
-            this.lnkForgot.Location = new System.Drawing.Point(32, 488);
+            this.lnkForgot.Location = new System.Drawing.Point(32, 440);
             this.lnkForgot.Name = "lnkForgot";
             this.lnkForgot.Size = new System.Drawing.Size(159, 20);
-            this.lnkForgot.TabIndex = 13;
+            this.lnkForgot.TabIndex = 11;
             this.lnkForgot.TabStop = true;
             this.lnkForgot.Text = "Forgot password?";
             this.lnkForgot.VisitedLinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(27)))), ((int)(((byte)(79)))), ((int)(((byte)(71)))));
             this.lnkForgot.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.LnkForgot_LinkClicked);
-
-            this.btnQuickCustomer.BackColor = System.Drawing.Color.White;
-            this.btnQuickCustomer.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(193)))), ((int)(((byte)(200)))), ((int)(((byte)(198)))));
-            this.btnQuickCustomer.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(245)))), ((int)(((byte)(250)))), ((int)(((byte)(249)))));
-            this.btnQuickCustomer.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnQuickCustomer.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold);
-            this.btnQuickCustomer.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(22)))), ((int)(((byte)(29)))), ((int)(((byte)(29)))));
-            this.btnQuickCustomer.Location = new System.Drawing.Point(228, 440);
-            this.btnQuickCustomer.Name = "btnQuickCustomer";
-            this.btnQuickCustomer.Size = new System.Drawing.Size(180, 36);
-            this.btnQuickCustomer.TabIndex = 12;
-            this.btnQuickCustomer.Text = "Customer Login";
-            this.btnQuickCustomer.UseVisualStyleBackColor = false;
-            this.btnQuickCustomer.Click += new System.EventHandler(this.BtnQuickCustomer_Click);
-
-            this.btnQuickAdmin.BackColor = System.Drawing.Color.White;
-            this.btnQuickAdmin.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(193)))), ((int)(((byte)(200)))), ((int)(((byte)(198)))));
-            this.btnQuickAdmin.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(245)))), ((int)(((byte)(250)))), ((int)(((byte)(249)))));
-            this.btnQuickAdmin.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnQuickAdmin.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold);
-            this.btnQuickAdmin.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(22)))), ((int)(((byte)(29)))), ((int)(((byte)(29)))));
-            this.btnQuickAdmin.Location = new System.Drawing.Point(32, 440);
-            this.btnQuickAdmin.Name = "btnQuickAdmin";
-            this.btnQuickAdmin.Size = new System.Drawing.Size(180, 36);
-            this.btnQuickAdmin.TabIndex = 11;
-            this.btnQuickAdmin.Text = "Admin Login";
-            this.btnQuickAdmin.UseVisualStyleBackColor = false;
-            this.btnQuickAdmin.Click += new System.EventHandler(this.BtnQuickAdmin_Click);
 
             this.btnRegister.BackColor = System.Drawing.Color.White;
             this.btnRegister.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(193)))), ((int)(((byte)(200)))), ((int)(((byte)(198)))));
@@ -308,8 +276,6 @@ namespace SmartMed.UI
         private System.Windows.Forms.Button btnTogglePassword;
         private System.Windows.Forms.Button btnLogin;
         private System.Windows.Forms.Button btnRegister;
-        private System.Windows.Forms.Button btnQuickAdmin;
-        private System.Windows.Forms.Button btnQuickCustomer;
         private System.Windows.Forms.LinkLabel lnkForgot;
     }
 }
