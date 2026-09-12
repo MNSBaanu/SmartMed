@@ -3,6 +3,11 @@
 *.user
 *.suo
 
+# Local / non-source
+.cursor/
+Database/
+Docs/
+
 # Build output
 [Bb]in/
 [Oo]bj/
